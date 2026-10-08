@@ -220,7 +220,7 @@ def lan_banner(args: argparse.Namespace) -> str:
         r"      python tools\demo\run_pipeline.py --game phantom_hand --hardware --discovery-port 8791 --lan"
         + (f" --dialect {dialect}" if dialect != "reference" else ""),
         "  Windows Firewall: second PC UDP 8790 + 8792 in; this PC UDP 8791 in for python.exe / Unity.exe, hub TCP 8787 for a Quest.",
-        r"  tools\demo\open_firewall.ps1 reports the current rules (-Twin / -AllowUnity fix them, as Administrator).",
+        r"  tools\demo\open_firewall.ps1 reports the current rules (-RemoveUnityBlock -Apply [-Twin] [-Haptics] fix them, as Administrator).",
         "  Control commands (flinch, off-a, loss ...) work only on the twin's own PC: type them into its console (stdin).",
         "  Unity: with no OPUS_PH_NODE_* the PlayMode test must accept real discovery (CROSS-TRACK REQUEST, see the run log).",
     ])

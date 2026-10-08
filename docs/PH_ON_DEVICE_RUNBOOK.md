@@ -1,0 +1,147 @@
+# Phantom Hand: on-device runbook (bring-up and run across machines)
+
+- **Status box.** Written 2026-10-08 around noon IST, after commit 17ba2ee, from that day's logs and commits (every tag names its source; `PH-...` ids are `logs/sessions/2026-10-08-PH-....md`). Build status: `docs/PH_STATUS.md` (its table stops at the morning; newer facts: those logs and `git log`).
+- Run on this PC: Python suites; rehearsal harness `--no-unity` (plain, `--dialect team`, `--lan`: 7/7 each); Flutter tests +303, Windows build, debug APK build; Unity EditMode 511/511 (9fd4e18); a scripted demo-mode run in the editor against the fake hub and the twin on loopback finishes (11 phases, valid session) but test PH_FullRun is red on one bar, cues acked 90 % vs 95 %, while Gradle and Flutter loaded the PC (15cca8d).
+- NOT run anywhere: any Quest headset; the Quest APK build and install, the endpoint file and the multicast lock (merged in 9fd4e18, never executed); the real nodes over Wi-Fi (electronics team: "not tested yet"); the twin on a second physical PC. On the team phone only the operator app ran (hub + live card against a replayed session, section 2.6).
+- Tags: [VERIFIED: log or commit] ran on this PC with success; [CODE: file] code exists, no log shows a run; [UNRUN] planned, or written but never executed; [HUMAN] only a person can do it.
+- Do not take paths from `docs/TESTING_RUNBOOK.md` or `tools/demo/START_DEMO.md`: they still describe the old PC. Short names: playbook = `docs/agent-briefs/ph/06-TEAM-PLAYBOOK.md` (03-SPEC, 02-RULES, 04-E2E sit beside it); R4 = `docs/agent-briefs/ph/research/R4-demo-and-alternatives.md`; HAPTIC_PROTOCOL = `contracts/`; HANDOFF_FROM_TEAM = `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md`; the other `PH_*`, MANUAL_TODO, CREDITS = `docs/` or the repo root.
+
+## 1. Roles and machines
+Bhavya: operator app and consent line. Garv: Quest, headset, presenter. Vaibhav: sleeve, electrodes, nodes, named safety owner (playbook 1; R4 C2). The nodes need no PC while running; the electronics PC only flashes, reads the serial console and can host the twin.
+
+| Machine | Runs | Ports |
+|---|---|---|
+| Quest 3 | the game (APK) | hears UDP 8788 (hub beacon) and 8791 (node beacons); talks TCP 8787 to the hub, UDP 8790 to the nodes |
+| Operator phone or laptop = the hub | Flutter app; its Monitor tab starts the hub | TCP 8787 (WebSocket `/opus/v1/live`, uploads, `/opus/v1/health`, `/opus/v1/live/last_status`); beacon out on UDP 8788 every second |
+| Node A, Node B on the bank, or the twin on the electronics PC | haptic + IMU; EMG | UDP 8790 in (acks and stream go back to the sender); beacon on UDP 8791 every second. Twin only: Node B on 8792, control 8793 (localhost only) |
+| This PC (dev) | Unity editor, Python harness, firewall script | stands in for hub or headset when rehearsing |
+
+Open question for the electronics team: does the sensor stream go to the sender's source port or to 8790 (MANUAL_TODO.md:511)? Sources disagree on Node A's id: real board `CHETNA_HAPTIC_001` (HANDOFF_FROM_TEAM.md:52) vs `SLEEVE_001` (03-SPEC.md:21); the game matches by device kind, so either works (HAPTIC_PROTOCOL.md:90).
+
+## 2. One-time setup per machine
+1. This PC, firewall report (changes nothing): `powershell -NoProfile -ExecutionPolicy Bypass -File tools\demo\open_firewall.ps1`. On 8 Oct it showed this PC's Wi-Fi as Public and an enabled inbound Block rule for Unity.exe on Public. [VERIFIED: PH-S-XMACHINE-run1 2e]
+2. Firewall fix, in an ELEVATED PowerShell, rehearse then apply: `tools\demo\open_firewall.ps1 -RemoveUnityBlock -Apply -WhatIf`, then the same without `-WhatIf` (Unity.exe UDP + hub TCP 8787; `-Twin` adds UDP 8790/8792 on the twin PC). Agents never run it with a change switch. [HUMAN]
+   - `-Apply` alone has no UDP 8791 rule for python.exe, which `live_plot.py` and the harness need to hear node beacons: also pass `-Haptics` (UDP 8790 + 8791 by port, local subnet only) or use a Private network. [HUMAN]
+3. Python: venvs `analytics/.venv`, `sim/live/.venv`, `sim/haptic/.venv` (3.12.8). The harness runs with `sim\live\.venv\Scripts\python.exe` (aiohttp). [VERIFIED: PH-S-XMACHINE-run1 step 1]
+4. Flutter: `H:\flutter\bin\flutter.bat` 3.47.4, not on PATH, call it by full path (CLAUDE.md:40 still says `C:\flutter`). `flutter test` +303 passed; `flutter build windows --release` built `app\build\windows\x64\runner\Release\opus_app.exe`; `pub get` and `build windows` need Windows Developer Mode (section 8). [VERIFIED: PH-A-SETUP-run1 checkpoints 3-4]
+5. App APK: `H:\flutter\bin\flutter.bat build apk --debug` in `app\` gave `app\build\app\outputs\flutter-apk\app-debug.apk` (first build 82 min of downloads, rebuilds are fast). [VERIFIED: PH-A-SETUP-run1 checkpoint 5]
+6. Team phone: `adb install -r` of the repo APK fails with INSTALL_FAILED_UPDATE_INCOMPATIBLE (the app already on the phone carries another PC's debug key). On 8 Oct the same source was installed beside it under the id `com.opus.opus_app.pc`: its hub answered `/opus/v1/health` and the live card showed phases, SYNC/ASYNC, both chips and the traces for a replayed session. The old app is untouched. [VERIFIED: PH-A-SETUP-run1]
+   - To install the normal build, the old app must be uninstalled first, which wipes its data: the phone's owner decides. [HUMAN]
+7. adb is not on PATH; `tools/demo/tool_paths.py` finds `%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe`. The team phone is authorised (`adb devices` shows `device`); its link flaps, `adb reconnect` restores it. [VERIFIED: PH-O-RESUME-run1, PH-S-XMACHINE-run1 step 3, PH-A-SETUP-run1 checkpoint 5]
+   - A Quest must list as `device` in `adb devices` too (accept the prompt inside the headset; the repo has no Quest developer-mode steps and no Quest has been attached to this PC). [HUMAN]
+8. Unity 6000.4.6f1 (developers only): `python tools/unity_mcp.py register` once (user scope), then `python tools/unity_mcp.py test EditMode` and `... test PlayMode "PhantomHand|PH_"` (always this filter). One Unity driver at a time (`game/.ph_unity.lock`). [VERIFIED: PH-O-RESUME-run1, PH-U-U45FIX-run1]
+9. Electronics PC (second machine): Python 3 only; copy `sim\sleeve\twin.py` or clone the repo; step 2 with `-Apply -Twin` there. Wi-Fi credentials are typed by the electronics team at flash time, never into a file or a log. [HUMAN]
+
+## 3. Network
+- One 2.4 GHz network for Quest, both nodes and the hub (the ESP32 is 2.4 GHz only): a dedicated router or the laptop hotspot on a fixed channel, tested at the venue by 08:30, node IPs written down and also put in the endpoint file (4.10) so the demo does not depend on broadcast. A phone hotspot may block device-to-device broadcast (03-SPEC D8). [HUMAN]
+- A per-program Block rule for Unity.exe on a Public network beats every Allow rule: remove it (2.2) or set the network to Private. A venue network is a new network: run the report (2.1) there. [HUMAN]
+- This PC is multi-homed (Wi-Fi, VPN, Hyper-V, VirtualBox, Tailscale): the twin sends its beacon from every interface (checked here); the app's hub beacon also goes to every interface's subnet (udp_beacon.dart, not run). [VERIFIED: PH-S-XMACHINE-run1 2a]
+- Do beacons arrive? Twin: its first output line `{"event":"ready",...,"lan":{"beacons":[...]}}` must list the Wi-Fi pair. Unity PC: `python tools\demo\live_plot.py` with no arguments finds both nodes on 8791 (two chips OK); close it before the headset joins (section 8). [CODE: sim/sleeve/README.md, tools/demo/live_plot.py]
+- No beacons: hosts by hand (03-SPEC D8): editor env vars `OPUS_PH_HUB`, `OPUS_PH_NODE_A`, `OPUS_PH_NODE_B`, `OPUS_PH_DISCOVERY_PORT`; the `PhantomHandSettings` fields (needs a rebuild); on the Quest the endpoint file (4.10). [CODE: game/Assets/Shell/Runtime/PhantomEndpoints.cs]
+- Casting (Meta casting, scrcpy) is a bonus window, never the audience screen: test both over USB today; passthrough has shown black in PC casts (R4 C5). The audience screen is the app's Observer view. [HUMAN]
+
+## 4. Bring-up order (each step names its check)
+1. Night before: charge Quest, laptop, phone, bank (nodes detached); spares list in 06-TEAM-PLAYBOOK.md:57; one demo-mode run; record a 60 s golden run labelled "recorded at <time>" (MANUAL_TODO.md:512); optional classic rubber-hand kit (:513); the rigged hand needs its credit line on a slide or card (CREDITS.md, CC BY-SA); keep Hindi text off the big screen until it is reviewed. [HUMAN]
+2. Hub. Open the app (Windows `opus_app.exe` from its folder, or the phone), sign in as "Clinician" (mock sign-in, no password), then Monitor: the hub starts by itself ("Start hub" if not). Check: Monitor shows the Wi-Fi IP and `http://<ip>:8787/opus/v1/health` answers `status: ok`. Port 8787 must be free (section 8). [CODE: app/lib/features/live/monitor_home_screen.dart:42]
+   - Rehearsal without the GUI (no operator buttons): `H:\flutter\bin\dart.bat run tool/hub_cli.dart --port 8787` in `app\`, or `tools\demo\start_pc_demo.ps1` (hub + analysis watcher; never `-WithHaptics`). [CODE: tools/demo/start_pc_demo.ps1]
+3. Real nodes, on the power bank only (section 9). Check: each board prints its IP on its serial console (PH_ELECTRONICS_INTERFACE.md section 2; their firmware is theirs to confirm) or the hotspot's DHCP list shows it; `python tools\demo\node_probe.py <ip> 8790` prints [PASS] for ack and sensor_data (status only if their firmware sends one). It buzzes motor A once: not while the headset is connected. Joint test: PH_ELECTRONICS_INTERFACE.md 7.1. [CODE: tools/demo/node_probe.py]
+4. Twin instead of boards, on this PC: `python sim\sleeve\twin.py --kind both --host 0.0.0.0 --port-offset 0 --seed 1`; add `--dialect team` to behave like the team's firmware (ids `CHETNA_*`, telemetry to the last sender only, 4-value chunks). Check: the `ready` line. [VERIFIED: PH-S-XMACHINE-run1 2a-2g]
+5. Twin on the electronics PC: same command there. Check: from this PC the section 3 check shows its Wi-Fi beacon; then section 5 step 4. [UNRUN]
+6. Editor run (developers): `python tools/unity_mcp.py test PlayMode "PhantomHand|PH_"`; PH_FullRun plays a scripted participant through all 11 demo-mode phases (90 strokes) against the fake hub and the twin. Check: 20 of 21 pass; the full run needs a quiet PC (no Gradle, Flutter, builds) or cues arrive late and the 95 % bar fails. [VERIFIED: PH-U-U45FIX-run1 final checkpoint, 15cca8d]
+7. Quest APK (code merged in 9fd4e18, build never run). Development build first, for profiling: editor menu `Tools/OPUS/Build Phantom Hand APK (development)`; release for the demo: `Tools/OPUS/Build Phantom Hand APK`. Batch, editor closed: `Unity.exe -batchmode -projectPath <repo>\game -executeMethod Opus.Shell.Editor.OpusBuildScript.BuildAndroidApkPhantomHand [-phDevelopment] -logFile <log> -quit`.
+   - Check: the log prints output path, size and package id; file `releases\game\0.1.0\chetna-phantom-hand.apk` (dev: `-dev.apk`); then `adb install -r <path>`. Build from a normal user session (Gradle loopback failure on the old PC, MANUAL_TODO.md:120-134); IL2CPP alone took about 13 min there. [UNRUN]
+8. Headset launch. Check: the card loses the "Headset offline" tag; chips "Sleeve" and "Muscle sensor" read Connected; Node A's OLED reads IDLE, then SYNC or ASYNC once "Brush and touch" starts. The launch scene waits up to 3 s for a program from the hub, then opens Phantom Hand. [UNRUN]
+9. Program, headset connected: builder, Game "Phantom Hand", Level "Demo", "Send to headset" -> "Program sent to headset". Skipped, the headset runs the full 3 min 53 s program (PH-U-U6CODE-run1 open issue 4). [CODE: app/lib/features/programs/program_builder_screen.dart:100-241]
+10. Endpoint override when discovery fails: write `phantom_endpoints.json`, e.g. `{"hubHost":"<ip>","nodeAHost":"<ip>","nodeBHost":"<ip>"}` (keys `hubHost`, `hubPort`, `nodeAHost`, `nodeAPort`, `nodeBHost`, `nodeBPort`, `discoveryPort`).
+   - `adb shell mkdir -p /sdcard/Android/data/<package>/files`, `adb push` the file to `.../files/phantom_endpoints.json`, restart the app. Check: `adb logcat -d -s Unity | findstr PhantomHand` shows "phantom_endpoints.json applied". The package id is printed by the build (guess `com.DefaultCompany.OPUS`). Order: env, file, settings asset, discovery. `hubPort` is read but the headset still uses 8787 (PhantomHandSceneController.cs:136-137). [UNRUN]
+11. One hour before: hotspot up, nodes on the bank, card shows both chips Connected, one self-run, Observer view facing the audience (playbook 5). [HUMAN]
+
+## 5. Rehearsal without hardware, and with the twin on a second PC
+Run from the repo root with `sim\live\.venv\Scripts\python.exe`. Always give `--game phantom_hand` (the bare command runs another game). This is the "L3" level of `docs/agent-briefs/ph/04-E2E.md`.
+1. `tools\demo\run_pipeline.py --game phantom_hand --sim --no-unity --out <dir>`: expect "7/7 checks passed -> G2 L3 GREEN", about 2 min, only offset ports (never 8787). Stroke-timing rows use the fixture's stamps; acks, RTT, uploads, analytics are live. [VERIFIED: PH-S-BASELINE-run1]
+2. Add `--faults` (Node A off at 50 %, Node B absent, hub gone 30 s): about 4.5 min, all green with the fake headset. [VERIFIED: PH-S-BASELINE-run1]
+3. Add `--dialect team` (behave like the real boards) and/or `--lan` (twin on 0.0.0.0, prints the second-PC commands): 7/7 on this PC. [VERIFIED: PH-S-XMACHINE-run1 step 4]
+4. Two PCs: on the electronics PC `python sim\sleeve\twin.py --kind both --host 0.0.0.0 --port-offset 0 --seed 1 [--dialect team]`; here `run_pipeline.py --game phantom_hand --hardware --discovery-port 8791 --lan [--dialect team] --no-unity` (the printed banner omits `--no-unity`, which starts Unity in batch mode). Expect `discovered: {'haptic': ..., 'bio': ...}` then 7/7. Twin console commands (flinch, off-a) work only on that PC. [UNRUN]
+5. App hub in the loop: add `--hub flutter`. With Unity: drop `--no-unity`, editor closed (batch, lock file). [CODE: tools/demo/phantom_pipeline.py:138-154,295-317]
+
+## 6. Per visitor (about 4 min) and the two short runs
+Card buttons (Controls): Start, Next phase, Abort phase, Pause, Resume, End, Next person; "Condition order": Sync first / Async first, disabled once a run starts; each press shows Sent, Confirmed or Failed. [CODE: phantom_live_screen.dart:775-792]
+1. Consent, spoken by Bhavya (the morning audit found no consent text in app or headset): "This vibrates gently and reads your muscle activity with stickers. You can stop any time. OK?" [HUMAN]
+2. Sleeve: Motor A 5 cm from the wrist crease (back of the forearm), Motor B 10 cm further toward the elbow, wires to the elbow. Electrodes after an alcohol wipe: IN+ and IN- about 3 cm apart on the inner-forearm flexor belly, REF on the bony elbow. Node B on the bank, bank on the table. [HUMAN]
+3. On the card, before Start: chips Connected; "Condition order" set; program sent (4.9). [CODE: app/lib/features/live/phantom_live_screen.dart:775-792]
+4. Headset on, visitor seated, light on, arm in view. Press Start. Calibrate needs the real wrist within 3 cm for 2 s. [CODE: 03-SPEC.md section 5]
+5. Phases: "Calibrating", "Pointing check, before", "Brush and touch", "Stone drop", "Pointing check, after", "Questions", the second condition, then "Results" (30 s). Calibrate, pointing checks and questions wait up to 60 s for the visitor: Next phase skips the running phase (Abort phase does the same today). Pause/Resume freeze; End asks "End this session?". [CODE: PhaseStateMachine.cs:60,212; PhantomHandModule.cs:125-128]
+6. Results screen "What changed?" (Body, Mind, The one who noticed): Garv says the Theme 5 link while the audience sees the traces. Audience view = the app's Observer view (full-screen icon, top bar): big banner and traces, no buttons; the exit icon brings them back. [CODE: 03-SPEC.md D12; phantom_live_screen.dart:154-190]
+7. Next person: button "Next person" (asks only mid-run) or both hands pinched 1.5 s on the finished screen; the scene reloads and starts at Calibrate once the head has tracked 2.5 s. Wipe headset and sleeve, fresh electrodes. Target under 10 s, never timed. [UNRUN]
+8. After the run the hub keeps the session folder (headless hub: `app\.hub_data\`); the `start_pc_demo.ps1` watcher turns a finished session into a metrics summary. [CODE: tools/demo/start_pc_demo.ps1]
+
+**Default judged run, 3 min, volunteer fitted before the judges come** (R4 C2 with 03-SPEC D18; nothing timed on a device). Calibrate and the first pointing check run during the greeting. The Observer view shows only the SYNC/ASYNC chip, phase, Sleeve/Muscle sensor chips and the two traces with "Stone lands"/"Muscle burst" marks; R4's captions and armed-trace screen are not built. D18 (03-SPEC.md:146) asks a rating after both conditions; the code still asks once, after the last (PhaseStateMachine.cs:125-126).
+
+| Clock | Phase | Audience screen | Operator |
+|---|---|---|---|
+| 0:00-0:45 | Brush and touch, ASYNC (`async_first`) | chip ASYNC, quiet traces | both chips Connected [UNRUN] |
+| 0:45-0:55 | Stone drop, then rating q1 | "Stone lands", small or no burst | Next phase over each pointing check; q1 only once D18 is built [UNRUN] |
+| 0:55-1:40 | Brush and touch, SYNC | chip SYNC | watch the Muscle signal baseline [UNRUN] |
+| 1:40-1:55 | Stone drop, then rating q1 | marker and burst | read out a number only if the device gave it [UNRUN] |
+| 1:55-2:25 | Results (30 s) | headset results; traces stay | let judges photograph it; "one person, indicative" [UNRUN] |
+| 2:25-3:00 | Close | - | Next person; hand over to the rapid run [UNRUN] |
+| optional, +28 s before Results | Fading out (18 s), Reveal (10 s) | arm fades | only if the finale patch is merged and `additionsEnabled` is on (PhantomHandSettings.cs:46, false) [UNRUN] |
+
+**Rapid run, 60 s, sleeve only, a demo and not data.** There is no rapid-mode code or preset (R4 row 6 is a proposal): this is an operator procedure with today's controls, never timed. Before: Level "Demo" sent, "Condition order" = "Sync first".
+- 0:00-0:12 fit: sleeve already strapped, two test buzzes from the team's `chetna_udp_tool.py` (no test-buzz button exists), consent in about 25 words, ask about seizures, pacemaker or implants, skin; headset on. [HUMAN]
+- 0:12-0:56 Start; Calibrate (visitor holds the wrist still 2 s); Next phase over "Pointing check, before"; "Brush and touch" SYNC, Next phase at about 36 s; "Stone drop". [UNRUN]
+- 0:56-1:00 press End right after the stone ("Confirm"); the traces show the spike; no ASYNC, no results screen. Then "Next person". [UNRUN]
+
+Queue: more than two waiting will not sit through a full run; use the rapid run or the classic kit and keep someone in the rig at all times (R4 C5). [HUMAN]
+
+## 7. Operator settings that matter (program builder or live card, set before Start)
+- `demo_mode` (off): the Level "Demo" preset, 45 s inductions today (D18 makes it min(`induction_s`, 60)); use for every public run, leave off in the pilot (full 90 s inductions, a question set per condition). [CODE: game/Assets/Games/PhantomHand/manifest.json presets]
+- `condition_order` (manifest `async_first`; 03-SPEC.md:80,85 still say `sync_first`, D9 at :137 says `async_first`): judged run `async_first`, rapid run `sync_first`, pilot alternates and logs it (never pool it with the judged run). [CODE: manifest.json:66-71]
+- `motor_soa_ms`: 03-SPEC D16 (:144) says default 833, range 60-1700; the tree still has 100, range 60-300 (manifest.json:146-150, PhantomHandParams.cs:23,64). Leave it on the day; change only after the 20 min bench run with the wearer (MANUAL_TODO.md:510). [UNRUN]
+- `tactile_lead_ms` (40, 0-150): re-tune with the wearer in the mode you will demo, APK or Quest Link (display latency differs, the sleeve's does not): 20 SYNC strokes at 0/20/40/60/80 ms, pick the most simultaneous. [HUMAN]
+- `agency_enabled` and `autonomous_close_enabled` (both off): switch on only after Node B streams cleanly and the phase has worked on two teammates (judge sheet section 8); not in the 3 min run. The phase has a slot in the phase machine, but the hand-closing behaviour was listed missing in the morning audit (PH-O-WORKLIST-run1 F) and no commit through 17ba2ee builds it. [UNRUN]
+- `haptic_max_intensity` (1.0 sends 150 of 255): lower only if the wearer finds the buzz too strong; firmware caps at 150 anyway; software allows one tap per motor per 250 ms and 4 sends per second. [CODE: HAPTIC_PROTOCOL.md:55,61]
+
+## 8. If something fails
+Tier ladder, decided by the clock (22:00 on 8 Oct a G2 run recorded; 09:00 on 9 Oct two clean Quest runs and the tier chosen; 11:30 freeze check, the freeze is 12:00). The tier is announced to the judges, never hidden (R4 C1; playbook 2).
+
+| Tier | What runs | Use it when | Say first |
+|---|---|---|---|
+| T1 Full | Quest + sleeve + EMG + Observer view | G2 run exists and two clean Quest runs | "Watch the muscle, not the headset." [UNRUN] |
+| T2 Degraded | Quest + sleeve, flinch from IMU and hand tracking, or visual only = the no-touch control | EMG noisy with motors on, or one node drops | "Two sensors; the second is an accelerometer." [UNRUN] |
+| T3 No headset | sleeve + `tools/demo/sleeve_station.py` (brush your own arm: `sim\live\.venv\Scripts\python.exe tools\demo\sleeve_station.py [--a-ip <Node A ip>]`, headset NOT in a session; green against the twin in both dialects, never run on a real board, see PH-S-STATION-run1) + classic kit + golden video | Quest chain not green by 09:00, or crashes twice | "The headset is off; here is the effect with a brush and a sleeve." [UNRUN] |
+| T4 Recorded | golden video + classic kit + slides + questions | network or Node A down | "This was recorded this morning on a teammate." [UNRUN] |
+
+The three commonest failures (R4 C4), each with the 10 second action:
+
+| Failure | Say | Do |
+|---|---|---|
+| Link to the sleeve drops: no buzz, "Sleeve" chip Offline | "The link to the sleeve dropped, so this is vision without touch, the no-touch control. Watch the trace stay quiet while I reconnect." | re-enter node IPs (4.10); one node down = T3, network down = T4; never present it as the ASYNC condition [UNRUN] |
+| EMG flat or noisy, or no flinch | "Electrodes are the fussy part; the accelerometer needs none. And some people simply don't feel it, which is why we record instead of assume." | point at "Arm movement" and the rating; no hide-EMG control exists, the chip reads "Waiting for signal" [UNRUN] |
+| Headset, app or tracking dies | "That's a live demo. Here is the same run from this morning, and here is the 1998 version with a brush." | golden video and classic kit; one relaunch only if under 20 s [UNRUN] |
+
+Rapid-run wording: sleeve link "You're seeing vision without touch; we reconnect, or I move you to the brush-your-arm station." No electrodes "You have no electrodes on, so no muscle trace; the arm accelerometer is your sensor." Headset stalls "We restart it once, or you watch the recording and try the brush-and-rubber-hand version." [UNRUN]
+
+| Symptom | Check | Fallback |
+|---|---|---|
+| Node A off | "Sleeve" Offline, no buzz | run continues visual-only; harness fault run green with the fake headset [VERIFIED: PH-S-BASELINE-run1] |
+| Node B off | "Muscle sensor" Offline | flinch from IMU and hand tracking, EMG quality flagged: PlayMode test `FullThreat_EmitsImpactAndResponse_WithEmgMissingWhenNodeBIsAbsent` passes [VERIFIED: PH-U-U45FIX-run1 final checkpoint] |
+| Hub off | health URL silent | the game records locally and uploads later; harness fault run green with the fake headset [VERIFIED: PH-S-BASELINE-run1] |
+| Tracking poor | wrist lost in Calibrate | light, arm in view; "Next person" restarts at Calibrate, there is no recalibrate button [CODE: OpusSessionRunner.cs:610] |
+| No beacons | Public profile, Block rule, wrong SSID, hotspot isolation | section 3, hosts by hand [VERIFIED: PH-O-RESUME-run1 firewall finding] |
+| Port 8787 busy | `Get-NetTCPConnection -LocalPort 8787` | on 8 Oct an unrelated local script held it and a scheduled task restarts it at logon: stop it only with its owner's OK; the headset cannot use another hub port yet [VERIFIED: PH-O-RESUME-run1] |
+| Windows Developer Mode | `flutter pub get` or `build windows` say "Building with plugins requires symlink support" | Settings -> System -> For developers -> Developer Mode ON; the junction workaround breaks on plugin changes [HUMAN] |
+| Many "late" cues, acks under 95 % | frames over 120 ms on the editor PC | stop Gradle, Flutter, builds on that PC [VERIFIED: PH-U-U45FIX-run1 final checkpoint] |
+| A test says "twin did not print its ready line", or a port stays busy after a failed run | `Get-NetUDPEndpoint` or `Get-NetTCPConnection` for the harness ports | an orphan twin or hub from the failed run holds them: check its command line, then stop that one process [VERIFIED: PH-S-XMACHINE-run1 finding 2] |
+| Unity bridge dead after a script reload | Editor.log "Failed to start on port 48736" | touch the Unity window once so it reloads; never hold a long request across a reload (poll with short calls, `tools/unity_mcp.py recompile`) [VERIFIED: PH-U-U45FIX-run1 tooling lesson] |
+| Unity APK build stops at Gradle "Unable to establish loopback connection" | the build log | build from a normal user session, not an agent sandbox (seen on the old PC; the Flutter APK built here) [CODE: docs/MANUAL_TODO.md:120-134] |
+
+Audience screen with the real nodes: use the app's Observer view. `live_plot.py` and `sleeve_station.py` take the node stream from the headset because the team's firmware streams only to the last sender (HAPTIC_PROTOCOL.md:94); `live_plot.py` subscribes to the nodes even with `--hub`. Sources disagree: 03-SPEC D3 (:17), 06-TEAM-PLAYBOOK.md:61 and joint test 7 in PH_ELECTRONICS_INTERFACE.md assume 3 subscribers. Settle it on the bench. [HUMAN]
+
+## 9. Safety lines that must not be skipped
+1. **Node B with electrodes on a person runs from the power bank only**: never a laptop USB port, charger or mains; the bank never charges while a node is attached; flash Node B with the bank cable unplugged and electrodes off. [HUMAN]
+2. One board per bank port; never a board from the bank and USB at once; bank on the table, never on the forearm. Two boards on one bank for 30 min is untested, and the team runs separate supplies (HANDOFF_FROM_TEAM.md:50) while 03-SPEC.md:37 says one bank. [HUMAN]
+3. Say before they ask: consent and the right to stop, spoken (signed where electrodes go on); EMG is record-only, no current goes into the body; disposable electrodes, skin prep, ask about skin allergy, no pacemaker or implant, no broken skin. [HUMAN]
+4. Forewarn "a stone will fall on the virtual hand" and allow opt-out; ask about seizures before the headset; seated and short, agree a stop word; wipe the headset between people. [HUMAN]
+5. Limits in software and firmware (do not bypass from Unity): 200 ms pulses, 250 ms per motor, 4 sends per second, intensity 150 of 255, 2 s watchdog. Sessions carry `patient_ref` only, no names. [CODE: 02-RULES.md section 4]
+6. One named safety owner on stage. [HUMAN]

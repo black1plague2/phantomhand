@@ -55,7 +55,7 @@ a "RULE CONFLICT" note in its log.
 - Never block the main thread on network I/O; all transports are fire-and-forget.
 
 **App (A)**
-- Flutter at `C:\flutter\bin`. GoRouter inside a Riverpod provider; each feature exports its RouteBase list.
+- Flutter at `H:\flutter\bin` on the current dev PC (old PC: `C:\flutter\bin`); not on PATH, call it by full path. GoRouter inside a Riverpod provider; each feature exports its RouteBase list.
 - Zero game-specific widgets for parameters (dynamic form from manifest `paramSchema`). Game-specific
   *results* views are allowed only inside the session report's metric sections, keyed by metric names.
 - Goldens at 390×844 / 1280×800 / 1600×1000, light/dark, text scale 1.0/2.0; EN + HI strings for every

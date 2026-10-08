@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """tools/demo/live_plot.py -- laptop live plot for Phantom Hand (PRD FR-AP-01 fallback, 03-SPEC D3/D4).
 
-Subscribes to Node A (haptic + IMU) and Node B (bio / EMG) directly over UDP (the firmware keeps up to 3
-subscribers, so this never steals the stream from the Quest) and plots the last 10 s of
+Subscribes to Node A (haptic + IMU) and Node B (bio / EMG) directly over UDP and plots the last 10 s of
 
     * EMG envelope (Node B `sensor_chunk`, 100 Hz) with the median baseline, `emg_burst` marked
     * |accel| (Node A `sensor_data`, 100 Hz), `threat_impact` marked
@@ -14,6 +13,11 @@ plus SYNC / ASYNC, the phase and the node status taken from the game's live stat
     python tools/demo/live_plot.py --a-ip 127.0.0.1:39790 --b-ip 127.0.0.1:39792 --discovery-port 0   # the twin
     python tools/demo/live_plot.py --hub 192.168.1.10:8787 --fullscreen      # audience screen (Esc leaves)
     python tools/demo/live_plot.py --save-png out.png --duration 10          # headless: collect 10 s, write a PNG
+
+WARNING (contracts/HAPTIC_PROTOCOL.md v1.3): the electronics team's firmware streams telemetry only to the LAST sender (the
+reference firmware and the twin's reference dialect keep up to 3 subscribers). So running this tool -- or
+tools/demo/sleeve_station.py -- while the Quest is in a session takes the sensor stream away from the headset. Use it only when
+the headset is not running, or rely on the app's live card. It prints a one-line reminder to stderr when it starts.
 
 Backends (this machine: no matplotlib, no pyqtgraph -- not installable per the run rules): a tkinter window
 (stdlib) for the live view; for --save-png Pillow if importable, else a built-in pure-python rasteriser
@@ -531,6 +535,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     a = build_parser().parse_args(argv)
     data = LiveData(a.window)
     feeds = Feeds(data, parse_hostport(a.a_ip), parse_hostport(a.b_ip), a.discovery_port, a.hub)
+    print("live_plot: WARNING - subscribing to the nodes directly; the team firmware streams only to the LAST sender, so with the Quest in a "
+          "session this takes the sensor stream away from the headset (use it headset-off, or rely on the app's live card)", file=sys.stderr)
     feeds.start()
     try:
         if a.save_png:
