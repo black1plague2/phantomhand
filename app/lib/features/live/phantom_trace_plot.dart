@@ -6,12 +6,14 @@ import 'package:opus_app/data/models/phantom_live.dart';
 import 'package:opus_app/l10n/app_localizations.dart';
 
 /// One live trace (EMG envelope or |accel|) over the last [windowMs], drawn so
-/// it can prove a flinch: a FIXED y scale ([yMin]..[yMax], labelled at the left,
-/// never rescaled to the data), a dashed resting [baseline], and, when
+/// it can prove a flinch: a y scale ([yMin]..[yMax]) labelled at the left with
+/// the numbers actually drawn, a dashed resting [baseline], and, when
 /// [labelMarkers] is set, the latest stone-impact / muscle-burst markers named
-/// where they happen. Painted directly (no chart package) so the window is
-/// exact: x runs from `endMs - windowMs` to `endMs`, so the newest sample is
-/// always on the right edge. [height] null = fill the height the parent gives.
+/// where they happen. The caller picks the scale: fixed for |accel|, following
+/// the data for EMG (the plot never rescales by itself). Painted directly (no
+/// chart package) so the window is exact: x runs from `endMs - windowMs` to
+/// `endMs`, so the newest sample is always on the right edge. [height] null =
+/// fill the height the parent gives.
 class PhantomTracePlot extends StatelessWidget {
   const new({
     required this.points,
@@ -47,7 +49,7 @@ class PhantomTracePlot extends StatelessWidget {
   final Color burstColor;
   final String semanticLabel;
 
-  /// Fixed y range, in the signal's own unit.
+  /// y range, in the signal's own unit; values outside it sit on the edge.
   final double yMin;
   final double yMax;
 

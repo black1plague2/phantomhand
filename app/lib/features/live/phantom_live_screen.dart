@@ -649,6 +649,11 @@ class _SignalsSection extends StatelessWidget {
     final end = buffer.latestMs ?? buffer.windowMs;
     final plotHeight = fill ? null : (observer ? (MediaQuery.sizeOf(context).height * 0.28).clamp(150.0, 320.0) : 128.0);
     Widget slot(Widget w) => fill ? Expanded(child: w) : w;
+    // The EMG axis follows its samples; before the first one it is the plain default.
+    final emgRange = buffer.emgRange;
+    // |accel|: the resting level and the latest value as a multiple of it, both read off the trace itself.
+    final accel = buffer.accel;
+    final accelResting = restingLevel(accel);
     Widget plot({
       required String id,
       required String label,
@@ -656,12 +661,11 @@ class _SignalsSection extends StatelessWidget {
       required Color color,
       required String unit,
       required ({double min, double max}) scale,
+      required double? resting,
+      required double? ratio,
       required int decimals,
       bool labelMarkers = false,
     }) {
-      // The resting level and the latest value as a multiple of it, both read off the trace itself.
-      final resting = restingLevel(pts);
-      final ratio = resting != null && resting > 0 && pts.isNotEmpty ? pts.last.value / resting : null;
       // Grey when the link is quiet or gone: a frozen trace must not look live.
       final tint = stale ? t.slate : color;
       return slot(
@@ -727,7 +731,10 @@ class _SignalsSection extends StatelessWidget {
             pts: buffer.emg,
             color: OpusTokens.metricColorV3('emg'),
             unit: '',
-            scale: phantomEmgScale,
+            scale: emgRange == null ? phantomEmgScale : (min: emgRange.min, max: emgRange.max),
+            resting: emgRange?.rest,
+            // The newest peak, not the latest sample: a contraction is over in a second.
+            ratio: emgRange?.peakOverRest,
             decimals: 0,
             labelMarkers: true,
           ),
@@ -735,10 +742,12 @@ class _SignalsSection extends StatelessWidget {
           plot(
             id: 'accel',
             label: l.phTraceAccel,
-            pts: buffer.accel,
+            pts: accel,
             color: OpusTokens.metricColorV3('accel'),
             unit: l.phUnitAccel,
             scale: phantomAccelScale,
+            resting: accelResting,
+            ratio: accelResting != null && accelResting > 0 && accel.isNotEmpty ? accel.last.value / accelResting : null,
             decimals: 1,
           ),
         ],

@@ -164,14 +164,18 @@ class TracePoint {
 /// is still on screen while the operator looks back at the phone.
 const phantomTraceWindowMs = 20000.0;
 
-/// Fixed y range of each live trace. The plots never rescale to the data, so a
-/// small flinch looks small and a big one big, and the labelled min / max tell
-/// the reader the size. EMG envelope in raw ADC counts: rest sits near 420 and
-/// a strong flinch reaches about 2500 (the L3 fixture,
-/// `tools/demo/tests/fixtures/ph_l3_main`); retune once real hardware has run.
-/// |accel| in m/s²: rest is gravity (9.8), a jolt peaks at 14 to 24 there.
-const ({double min, double max}) phantomEmgScale = (min: 0, max: 3000);
+/// Fixed y range of the |accel| trace. It never rescales to the data, so a
+/// small jolt looks small and a big one big, and the labelled min / max tell the
+/// reader the size. |accel| in m/s²: rest is gravity (9.8), a jolt peaks at 14
+/// to 24 there.
 const ({double min, double max}) phantomAccelScale = (min: 0, max: 25);
+
+/// y range of the EMG trace until its first sample arrives; after that the plot
+/// follows the data ([traceRange]). Raw ADC counts: the L3 fixture
+/// (`tools/demo/tests/fixtures/ph_l3_main`) rests near 420 and flinches to about
+/// 2500, but a real person rested near 230 and a contraction rose by only a few
+/// tens to a few hundred, which is a flat line on 0 to 3000.
+const ({double min, double max}) phantomEmgScale = (min: 0, max: 3000);
 
 /// Resting level of a trace, estimated in the app (no protocol field): the
 /// median of the samples in view, or null until [minSamples] have arrived (2 s
@@ -182,6 +186,117 @@ double? restingLevel(List<TracePoint> points, {int minSamples = 40}) {
   final v = [for (final p in points) p.value]..sort();
   final mid = v.length ~/ 2;
   return v.length.isOdd ? v[mid] : (v[mid - 1] + v[mid]) / 2;
+}
+
+/// The ESP32 ADC counts 0 to 4095, so the EMG axis stays inside that.
+const _adcMax = 4095.0;
+
+/// Narrowest EMG axis, in counts. A person at rest wanders by about 20 counts, so
+/// a quiet trace fills only part of the height and does not look like activity,
+/// while a rise of a few tens still reads as a rise.
+const traceMinSpan = 60.0;
+
+/// Room above and below the data, as a share of its span, so a peak never
+/// touches the edge of the plot.
+const _rangePad = 0.1;
+
+/// Axis numbers are multiples of this: round labels that change in steps, not
+/// digit by digit.
+const _rangeLabelStep = 10.0;
+
+/// An edge that sits less than this share of the span beyond the data is left
+/// alone, so the noise of a person at rest does not make the axis creep.
+const _rangeSlack = 0.15;
+
+/// A too-wide edge closes half of its gap to the data in this long.
+const _rangeHalfLifeMs = 2000.0;
+
+/// The "newest peak" is the highest sample of this long.
+const _newestPeakMs = 5000.0;
+
+/// The EMG plot's y range, held between status messages, with the two numbers
+/// read off the same samples. Made by [traceRange].
+class TraceRange {
+  const new({required this.low, required this.high, required this.atMs, required this.peak, this.rest});
+
+  /// The held edges, exact. The axis the plot draws and labels is [min]..[max].
+  final double low;
+  final double high;
+
+  /// Session time of the newest sample these were worked out for.
+  final double atMs;
+
+  /// Highest sample of the newest [_newestPeakMs] ms.
+  final double peak;
+
+  /// [restingLevel] of the samples in view, or null until there are enough.
+  final double? rest;
+
+  /// Axis bottom and top as labelled: round numbers just outside [low]..[high]
+  /// and inside the ADC's 0 to 4095, so the labels are the real range drawn.
+  double get min => math.max(0, (low / _rangeLabelStep).floorToDouble() * _rangeLabelStep);
+  double get max => math.min(_adcMax, (high / _rangeLabelStep).ceilToDouble() * _rangeLabelStep);
+
+  /// How big the newest peak is against rest, or null while rest is unknown or zero.
+  double? get peakOverRest {
+    final r = rest;
+    return r != null && r > 0 ? peak / r : null;
+  }
+}
+
+/// The y range for the EMG samples in view, or null when there are none.
+///
+/// The range runs from a little below the lowest sample to a little above the
+/// highest, never narrower than [traceMinSpan] and always inside 0 to 4095. It is
+/// held between calls ([previous] is the last result): it widens at once, so a
+/// spike is never clipped, and it narrows only when an edge is clearly too far
+/// out, and then slowly, so the plot does not twitch with every sample and a
+/// spike that leaves the window lets the scale back down smoothly.
+TraceRange? traceRange(List<TracePoint> points, {TraceRange? previous}) {
+  if (points.isEmpty) return null;
+  final nowMs = points.last.tMs;
+  var lowest = double.infinity;
+  var highest = double.negativeInfinity;
+  var peak = double.negativeInfinity;
+  for (final p in points) {
+    lowest = math.min(lowest, p.value);
+    highest = math.max(highest, p.value);
+    if (p.tMs >= nowMs - _newestPeakMs) peak = math.max(peak, p.value);
+  }
+
+  // Where the edges would sit if drawn fresh: the data and its margin, centred on
+  // the data, then moved (not squeezed) to stay inside the ADC's counts.
+  final span = math.max(traceMinSpan, (highest - lowest) * (1 + 2 * _rangePad));
+  final mid = (lowest + highest) / 2;
+  var fitLow = mid - span / 2;
+  var fitHigh = mid + span / 2;
+  if (fitLow < 0) {
+    fitHigh -= fitLow;
+    fitLow = 0;
+  }
+  if (fitHigh > _adcMax) {
+    fitLow = math.max(0, fitLow - (fitHigh - _adcMax));
+    fitHigh = _adcMax;
+  }
+
+  var low = fitLow;
+  var high = fitHigh;
+  if (previous != null) {
+    final k = 1 - math.pow(0.5, math.max(0, nowMs - previous.atMs) / _rangeHalfLifeMs);
+    final slack = (fitHigh - fitLow) * _rangeSlack;
+    low = _heldEdge(previous.low, fitLow, wider: fitLow <= previous.low, slack: slack, k: k);
+    high = _heldEdge(previous.high, fitHigh, wider: fitHigh >= previous.high, slack: slack, k: k);
+  }
+  return TraceRange(low: low, high: high, atMs: nowMs, peak: peak, rest: restingLevel(points));
+}
+
+/// One edge of the held range: out to [fit] at once when it is [wider] than the
+/// held one, otherwise nowhere unless it is more than [slack] away, and then a
+/// share [k] of the way in.
+double _heldEdge(double held, double fit, {required bool wider, required double slack, required num k}) {
+  if (wider) return fit;
+  final gap = fit - held;
+  return gap.abs() > slack ? held + gap * k : held;
 }
 
 /// Rolling window over successive [TraceChunk]s ("The app concatenates
@@ -196,10 +311,15 @@ class TraceBuffer {
   final List<TracePoint> _accel = [];
   final List<TraceMarker> _markers = [];
   double? _latestMs;
+  TraceRange? _emgRange;
 
   List<TracePoint> get emg => List.unmodifiable(_emg);
   List<TracePoint> get accel => List.unmodifiable(_accel);
   List<TraceMarker> get markers => List.unmodifiable(_markers);
+
+  /// The EMG plot's y range and the numbers read off the same samples
+  /// ([traceRange]), updated with every chunk; null while there is no EMG sample.
+  TraceRange? get emgRange => _emgRange;
 
   /// Session time of the newest sample, or null when empty.
   double? get latestMs => _latestMs;
@@ -227,6 +347,7 @@ class TraceBuffer {
     );
     if (newest >= 0) _latestMs = _latestMs == null ? newest : math.max(_latestMs!, newest);
     _trim();
+    _emgRange = traceRange(_emg, previous: _emgRange);
   }
 
   void addMarker(TraceMarker marker) {
@@ -242,6 +363,7 @@ class TraceBuffer {
     _accel.clear();
     _markers.clear();
     _latestMs = null;
+    _emgRange = null;
   }
 
   void _trim() {

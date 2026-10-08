@@ -81,6 +81,35 @@ PhantomLiveSnapshot _snapshot({PhantomCondition? condition = PhantomCondition.sy
   );
 }
 
+/// Made-up samples at the levels the owner reported from the first real run: EMG
+/// at rest around 230 with about 20 counts of noise and a slow drift down, then
+/// two contractions of about a second, +90 and +260. On a 0 to 3000 axis this was
+/// a flat line.
+PhantomLiveSnapshot _realRunSnapshot() {
+  const n = 400;
+  double bump(int i, int from, double height) => i >= from && i < from + 20 ? height * math.sin(math.pi * (i - from) / 20) : 0;
+  final emg = List<double>.generate(
+    n,
+    (i) => 235 - 20 * i / n + 9 * math.sin(i * 1.7) + 6 * math.sin(i * 0.61 + 1) + bump(i, 150, 90) + bump(i, 330, 260),
+  );
+  final acc = List<double>.generate(n, (i) => 9.8 + 0.3 * math.sin(i / 4));
+  return PhantomLiveSnapshot(
+    runState: PhantomRunState.running,
+    connected: true,
+    game: const PhantomGameState(
+      phase: 'induction',
+      condition: PhantomCondition.sync,
+      remainingS: 41.5,
+      hapticConnected: true,
+      bioConnected: true,
+      emgLevel: 0.1,
+    ),
+    chunk: TraceChunk(emgEnv: emg, accelMag: acc, t0Ms: 0),
+    conditionOrder: 'async_first',
+    rttMs: 18,
+  );
+}
+
 const _viewports = {
   'phone360': Size(360, 800),
   'phone': Size(390, 844),
@@ -96,6 +125,8 @@ Future<void> _golden(
   double textScale = 1,
   bool observer = false,
   Locale locale = const Locale('en'),
+  PhantomLiveSnapshot? snapshot,
+  Finder? scrollTo,
 }) async {
   tester.view.physicalSize = _viewports[viewport]!;
   tester.view.devicePixelRatio = 1;
@@ -119,11 +150,15 @@ Future<void> _golden(
         data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScale)),
         child: child!,
       ),
-      home: PhantomLiveScreen(repository: _Repo(_snapshot()), initialObserver: observer),
+      home: PhantomLiveScreen(repository: _Repo(snapshot ?? _snapshot()), initialObserver: observer),
     ),
   );
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 100));
+  if (scrollTo != null) {
+    await tester.ensureVisible(scrollTo);
+    await tester.pump(const Duration(milliseconds: 100));
+  }
   expect(tester.takeException(), isNull);
   await expectLater(
     find.byType(MaterialApp),
@@ -156,5 +191,17 @@ void main() {
   }
   testWidgets('card phone360 dark Hindi', tags: ['golden'], (tester) async {
     await _golden(tester, name: 'phantom_card_hi', viewport: 'phone360', brightness: Brightness.dark, locale: const Locale('hi'));
+  });
+  // The owner's complaint as a picture: rest near 230, contractions of +90 and +260 must stand out.
+  // Scrolled down to the plots, as on the phone (they sit below the controls).
+  testWidgets('card phone dark real-run EMG levels', tags: ['golden'], (tester) async {
+    await _golden(
+      tester,
+      name: 'phantom_card_realrun',
+      viewport: 'phone',
+      brightness: Brightness.dark,
+      snapshot: _realRunSnapshot(),
+      scrollTo: find.byKey(const ValueKey('ph-plot-accel')),
+    );
   });
 }

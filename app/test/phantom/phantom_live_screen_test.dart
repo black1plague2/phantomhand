@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,6 +12,7 @@ import 'package:opus_app/data/repositories/mock/mock_phantom_live_repository.dar
 import 'package:opus_app/data/repositories/phantom_live_repository.dart';
 import 'package:opus_app/features/live/live_monitor_screen.dart';
 import 'package:opus_app/features/live/phantom_live_screen.dart';
+import 'package:opus_app/features/live/phantom_trace_plot.dart';
 import 'package:opus_app/l10n/app_localizations.dart';
 
 /// Test repository: snapshots are pushed by hand, commands are recorded and
@@ -455,18 +457,87 @@ void main() {
     const impact = TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 17000);
     const burst = TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: 17120);
 
-    testWidgets('fixed scale: min and max are labelled on each plot and do not move with the data', (tester) async {
-      final repo = await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(400)));
+    PhantomTracePlot plotOf(WidgetTester tester, String id) => tester.widget<PhantomTracePlot>(inPlot(id, find.byType(PhantomTracePlot)));
+
+    testWidgets("EMG axis: the plain default until a sample, then the data's own range with its real numbers; |accel| keeps its fixed scale",
+        (tester) async {
+      final repo = await _pump(tester, first: _snap(PhantomRunState.running));
       expect(inPlot('emg', find.text('3000')), findsOneWidget);
       expect(inPlot('emg', find.text('0')), findsOneWidget);
       expect(inPlot('accel', find.text('25')), findsOneWidget);
+
+      // Rest at 420: the axis closes in on it (60 counts at least) and says so.
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(400)));
+      await tester.pump();
+      expect(inPlot('emg', find.text('450')), findsOneWidget);
+      expect(inPlot('emg', find.text('390')), findsOneWidget);
+      expect(inPlot('emg', find.text('3000')), findsNothing);
+      expect(inPlot('accel', find.text('25')), findsOneWidget);
       expect(inPlot('accel', find.text('0')), findsOneWidget);
 
-      // A far bigger signal: the axis stays where it was (auto-scale would have moved it).
-      repo.push(_snap(PhantomRunState.running, chunk: TraceChunk(emgEnv: List.filled(40, 2900), accelMag: List.filled(40, 24), t0Ms: 20000)));
+      // A flinch to 2100: the axis widens in the same message, so the spike is not clipped. |accel| stays put.
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(20, t0: 20000, flinchLast: 20)));
       await tester.pump();
-      expect(inPlot('emg', find.text('3000')), findsOneWidget);
+      expect(inPlot('emg', find.text('2270')), findsOneWidget);
+      expect(inPlot('emg', find.text('250')), findsOneWidget);
       expect(inPlot('accel', find.text('25')), findsOneWidget);
+      expect(inPlot('accel', find.text('0')), findsOneWidget);
+
+      // The labels are the numbers the plot draws with.
+      expect((plotOf(tester, 'emg').yMin, plotOf(tester, 'emg').yMax), (250, 2270));
+      expect((plotOf(tester, 'accel').yMin, plotOf(tester, 'accel').yMax), (0, 25));
+    });
+
+    testWidgets('a contraction of +260 on a rest of 230 is drawn tall, with the rest line low on the same scale', (tester) async {
+      final emg = [
+        for (var i = 0; i < 400; i++) 230 + 10 * math.sin(i * 1.7) + (i >= 330 && i < 350 ? 260 * math.sin(math.pi * (i - 330) / 20) : 0),
+      ];
+      await _pump(tester, first: _snap(PhantomRunState.running, chunk: TraceChunk(emgEnv: emg, accelMag: List.filled(400, 9.8), t0Ms: 0)));
+
+      // Paint the EMG plot into a 300 x 100 test canvas and read back what it drew.
+      final painter = tester.widget<CustomPaint>(inPlot('emg', find.byType(CustomPaint))).painter!;
+      final canvas = TestRecordingCanvas();
+      painter.paint(canvas, const Size(300, 100));
+      final calls = [for (final c in canvas.invocations) c.invocation];
+      Paint paintOf(Invocation c) => c.positionalArguments.last as Paint;
+
+      final trace = calls
+          .where((c) => c.memberName == #drawPath && paintOf(c).style == PaintingStyle.stroke)
+          .map((c) => (c.positionalArguments[0] as Path).getBounds())
+          .single;
+      expect(trace.height, greaterThan(70), reason: 'on 0 to 3000 this contraction was 9 of the 100');
+      expect(trace.top, lessThan(15), reason: 'the peak is near the top edge');
+
+      // The dashed rest line is at the rest level on that same scale (the 8-bit colour: a Paint rounds it).
+      final plot = plotOf(tester, 'emg');
+      expect(plot.baseline, closeTo(230, 3));
+      final slate = OpusTokens.dark.slate.toARGB32();
+      final restLines = calls.where((c) => c.memberName == #drawLine && paintOf(c).color.toARGB32() == slate);
+      expect(restLines, isNotEmpty);
+      final expectedY = 99 - (plot.baseline! - plot.yMin) / (plot.yMax - plot.yMin) * 98;
+      for (final line in restLines) {
+        expect((line.positionalArguments[0] as Offset).dy, closeTo(expectedY, 1e-6));
+      }
+      expect(expectedY, greaterThan(trace.top + 60), reason: 'rest sits low, the spike stands above it');
+    });
+
+    testWidgets('no samples: the plot looks as it did; one sample: a sane axis, no caption, no exception', (tester) async {
+      final repo = await _pump(tester, first: _snap(PhantomRunState.running));
+      expect(inPlot('emg', find.text('Waiting for signal')), findsOneWidget);
+      expect(inPlot('emg', find.text('3000')), findsOneWidget);
+      expect(inPlot('emg', find.text('0')), findsOneWidget);
+      expect(find.byKey(const ValueKey('ph-resting-emg')), findsNothing);
+      expect(plotOf(tester, 'emg').baseline, isNull);
+
+      repo.push(_snap(PhantomRunState.running, chunk: const TraceChunk(emgEnv: [231], accelMag: [9.8], t0Ms: 0)));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(inPlot('emg', find.text('Waiting for signal')), findsNothing);
+      expect(inPlot('emg', find.text('231')), findsOneWidget);
+      expect(inPlot('emg', find.text('270')), findsOneWidget);
+      expect(inPlot('emg', find.text('200')), findsOneWidget);
+      expect(find.byKey(const ValueKey('ph-resting-emg')), findsNothing);
+      expect(plotOf(tester, 'emg').baseline, isNull);
     });
 
     testWidgets('"x resting" is read off the trace: none under 2 s of samples, then the latest value over the median', (tester) async {
@@ -478,6 +549,27 @@ void main() {
       expect(find.text('5.0× resting'), findsOneWidget, reason: '2100 over a resting level of 420');
       expect(inPlot('emg', find.text('5.0× resting')), findsOneWidget);
       expect(inPlot('accel', find.text('1.4× resting')), findsOneWidget, reason: '14.0 over 9.8');
+    });
+
+    testWidgets('on the EMG plot "x resting" is the newest peak, so it outlives the contraction by 5 s; |accel| still shows its latest value',
+        (tester) async {
+      // 19 s at rest (420), then a flinch to 2100 for the last second.
+      final repo = await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(400, flinchLast: 20)));
+      expect(inPlot('emg', find.text('5.0× resting')), findsOneWidget);
+      expect(inPlot('accel', find.text('1.4× resting')), findsOneWidget);
+
+      // 3 s on the signal is back at rest, the flinch is within the last 5 s: still reported.
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(60, t0: 20000)));
+      await tester.pump();
+      expect(inPlot('emg', find.text('420')), findsOneWidget, reason: 'the latest sample is at rest');
+      expect(inPlot('emg', find.text('5.0× resting')), findsOneWidget);
+      expect(inPlot('accel', find.text('1.0× resting')), findsOneWidget, reason: 'its latest value is back at rest');
+
+      // 4 s later still: older than 5 s, so back to 1.0. The axis keeps the flinch in view while it is in the window.
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(80, t0: 23000)));
+      await tester.pump();
+      expect(inPlot('emg', find.text('1.0× resting')), findsOneWidget);
+      expect(inPlot('emg', find.text('2270')), findsOneWidget);
     });
 
     testWidgets('the latest stone and burst are named once, on the EMG plot, just left of their line', (tester) async {
