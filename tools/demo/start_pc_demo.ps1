@@ -56,7 +56,18 @@ $AppDir = Join-Path $RepoRoot 'app'
 $SimDir = Join-Path $RepoRoot 'sim'
 $AnalyticsPython = Join-Path $RepoRoot 'analytics\.venv\Scripts\python.exe'
 $HapticPython = Join-Path $RepoRoot 'sim\haptic\.venv\Scripts\python.exe'
-$DartExe = 'C:\flutter\bin\dart.bat'
+
+# dart (Flutter), same order as tools\demo\tool_paths.py: $env:OPUS_DART, $env:FLUTTER_ROOT, PATH, H:\flutter\bin, and
+# only then the old C:\flutter\bin. Flutter may still be installing, so the file is not required to exist here.
+function Resolve-Dart {
+    if ($env:OPUS_DART) { return $env:OPUS_DART }
+    if ($env:FLUTTER_ROOT -and (Test-Path (Join-Path $env:FLUTTER_ROOT 'bin\dart.bat'))) { return (Join-Path $env:FLUTTER_ROOT 'bin\dart.bat') }
+    $onPath = Get-Command dart -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($onPath) { return $onPath.Source }
+    if (Test-Path 'H:\flutter\bin\dart.bat') { return 'H:\flutter\bin\dart.bat' }
+    return 'C:\flutter\bin\dart.bat'
+}
+$DartExe = Resolve-Dart
 
 Write-Host "OPUS PC demo launcher" -ForegroundColor Cyan
 Write-Host "Repo root: $RepoRoot"

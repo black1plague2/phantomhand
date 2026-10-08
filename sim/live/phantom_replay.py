@@ -135,6 +135,18 @@ def emg_level(env: float) -> float:
     return max(0.0, min(1.0, (env - EMG_BASELINE_ADC) / (EMG_MVC_ADC - EMG_BASELINE_ADC)))
 
 
+def ack_delivered(ack: Optional[Dict[str, Any]]) -> bool:
+    """Was the cue played? Precedence when several fields are present (HAPTIC_PROTOCOL v1.3): `ok`, then `accepted`
+    (the electronics team's ack: false = not played), then `status`. No ack = not delivered."""
+    if not ack:
+        return False
+    if "ok" in ack:
+        return bool(ack["ok"])
+    if "accepted" in ack:
+        return bool(ack["accepted"])
+    return ack.get("status") in ("accepted", "executed")
+
+
 def prepare_session_copy(src: Path, dst: Path, *, drop_bio: bool = False, new_session_id: Optional[str] = None
                          ) -> Tuple[Path, str]:
     """Copy the fixture into `dst` with a fresh session id (uploads from repeated runs never collide), no
@@ -387,9 +399,10 @@ class PhantomHeadset(FakeHeadset):
             self.report["sensor_data"] += 1
             sd = msg.get("sensors") or {}
             if real_time:
-                try:
-                    self.rec_imu.append((sess, *(float(sd[f"imu_{k}"]["value"]) for k in
-                                                 ("accel_x", "accel_y", "accel_z", "gyro_x", "gyro_y", "gyro_z"))))
+                try:       # gyro is optional (the team firmware streams accel only): 0.0 when absent, as the Unity client does
+                    self.rec_imu.append((sess, *(float(sd[f"imu_{k}"]["value"]) for k in ("accel_x", "accel_y", "accel_z")),
+                                         *(float((sd.get(f"imu_{k}") or {}).get("value", 0.0))
+                                           for k in ("gyro_x", "gyro_y", "gyro_z"))))
                 except (KeyError, TypeError, ValueError):
                     pass
             m = accel_magnitude(msg)
@@ -443,6 +456,7 @@ class PhantomHeadset(FakeHeadset):
                 if kind == "haptic":
                     n += 1
                     link.send({"type": "ping", "id": f"ka-{n}"})
+                link.send({"type": "keepalive"})        # contracts v0.2.1: to EACH node, like the Unity client
             await asyncio.sleep(1.0)
 
     async def control_cmd(self, cmd: str) -> None:
@@ -602,7 +616,7 @@ class PhantomHeadset(FakeHeadset):
                "play_at_ms": int(time.time() * 1000)}
         ack, rtt = await link.request(msg, cue_id)
         self.live_status["last_cue_id"] = cue_id
-        ok = bool(ack and ack.get("ok", ack.get("status") in ("accepted", "executed")))
+        ok = ack_delivered(ack)
         d["delivered"] = ok
         d["ack_latency_ms"] = int(round(rtt)) if (ok and rtt is not None) else None
         if ok:

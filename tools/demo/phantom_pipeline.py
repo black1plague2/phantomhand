@@ -9,6 +9,10 @@
     --faults             the three fault runs of the table: Node A off at 50 %, Node B absent, hub absent 30 s.
     --hardware           same checks against real nodes (discovery on the real ports, no twin). Add --spinup to
                          measure motor start delay (IMU spike after a single pulse, median of 10).
+    --lan                the electronics are on another PC (or may be): the twin binds 0.0.0.0 (its control port stays on
+                         127.0.0.1), the Unity PlayMode test gets no OPUS_PH_NODE_* overrides (real discovery), and the exact
+                         command that runs the twin on a second PC is printed. Default behaviour is unchanged without it.
+    --dialect team       the twin speaks the electronics team's own firmware dialect (contracts HAPTIC_PROTOCOL v1.3).
 
 Run with the sim/live venv (aiohttp + numpy):
     sim\\live\\.venv\\Scripts\\python.exe tools\\demo\\run_pipeline.py --game phantom_hand --sim --no-unity
@@ -39,6 +43,7 @@ for _p in (REPO_ROOT / "sim" / "live", REPO_ROOT / "sim", REPO_ROOT, Path(__file
         sys.path.insert(0, str(_p))
 
 import l3_checks as L3  # noqa: E402
+from tool_paths import find_dart, find_unity  # noqa: E402
 
 try:
     from fake_hub import FakeHub  # noqa: E402
@@ -55,8 +60,8 @@ ANALYTICS_DIR = REPO_ROOT / "analytics"
 ANALYTICS_PY = ANALYTICS_DIR / ".venv" / "Scripts" / "python.exe"
 if not ANALYTICS_PY.exists():  # single-venv layout (repo-root .venv): the running interpreter has opus_analytics too
     ANALYTICS_PY = Path(sys.executable)
-DART = Path("C:/flutter/bin/dart.bat")
-UNITY_EXE = Path(r"C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Unity.exe")
+DART = find_dart()          # OPUS_DART, FLUTTER_ROOT, PATH, H:\flutter\bin, then the old C:\flutter (tool_paths.py)
+UNITY_EXE = find_unity()    # OPUS_UNITY_EXE, the Hub editor game/ProjectSettings pins (not PATH), then the old path
 UNITY_LOCK = REPO_ROOT / "game" / ".ph_unity.lock"
 DEFAULT_PORT_OFFSET = 31000
 
@@ -161,14 +166,74 @@ async def stop_hub(hub: Any) -> None:
 
 
 # ============================================================================ the twin
+def twin_command(kind: str, offset: int, seed: int, log_path: Path, host: Optional[str] = None,
+                 dialect: Optional[str] = None) -> List[str]:
+    """argv of sim/sleeve/twin.py as the harness starts it. The defaults (loopback, reference dialect) add no flag."""
+    cmd = [sys.executable, "-m", "sim.sleeve.twin", "--kind", kind, "--port-offset", str(offset), "--seed", str(seed),
+           "--log", str(log_path), "--no-stdin"]
+    if host:
+        cmd += ["--host", host]
+    if dialect and dialect != "reference":
+        cmd += ["--dialect", dialect]
+    return cmd
+
+
+def twin_host(args: argparse.Namespace) -> Optional[str]:
+    """--lan binds the twin to every interface; otherwise None = the twin's own default (127.0.0.1)."""
+    return "0.0.0.0" if getattr(args, "lan", False) else None
+
+
+def unity_env(hub_host: str, hub_port: int, ports: Dict[str, int], lan: bool = False) -> Dict[str, str]:
+    """The OPUS_PH_* endpoints handed to the PlayMode test. With `lan` (or real nodes) there are NO node overrides: the
+    game finds Node A / Node B by their discovery beacons, whichever PC they run on."""
+    env = {"OPUS_PH_HUB": f"{hub_host}:{hub_port}"}
+    if not lan:
+        env["OPUS_PH_NODE_A"] = f"127.0.0.1:{ports['haptic']}"
+        env["OPUS_PH_NODE_B"] = f"127.0.0.1:{ports['bio']}"
+    env["OPUS_PH_DISCOVERY_PORT"] = str(ports["discovery"])
+    return env
+
+
+def second_pc_command(args: argparse.Namespace) -> str:
+    """The command line that runs the twin on another PC (real ports, so a harness or the game finds it by discovery)."""
+    cmd = ["python", r"sim\sleeve\twin.py", "--kind", "both", "--host", "0.0.0.0", "--port-offset", "0",
+           "--seed", str(getattr(args, "seed", 1))]
+    if getattr(args, "dialect", "reference") != "reference":
+        cmd += ["--dialect", args.dialect]
+    return " ".join(cmd)
+
+
+def lan_banner(args: argparse.Namespace) -> str:
+    """What --lan prints once: where the twin runs and how to run it on a second PC instead."""
+    dialect = getattr(args, "dialect", "reference")
+    if getattr(args, "hardware", False):
+        where = f"no twin is started here (--hardware): the nodes are found by discovery on UDP {args.discovery_port}"
+    else:
+        where = (f"the twin runs on THIS PC bound to 0.0.0.0 (control port stays on 127.0.0.1) and announces itself on every "
+                 f"local network, ports {8790 + args.port_offset}/{8791 + args.port_offset}/{8792 + args.port_offset}")
+    return "\n".join([
+        "LAN MODE: " + where,
+        f"  dialect: {dialect}",
+        r"  To run the electronics on a SECOND PC instead (Python only, stdlib: copy sim\sleeve\twin.py or clone the repo):",
+        "      " + second_pc_command(args),
+        "  then, on THIS PC, aim the harness at the real ports (no twin is started here):",
+        r"      python tools\demo\run_pipeline.py --game phantom_hand --hardware --discovery-port 8791 --lan"
+        + (f" --dialect {dialect}" if dialect != "reference" else ""),
+        "  Windows Firewall: second PC UDP 8790 + 8792 in; this PC UDP 8791 in for python.exe / Unity.exe, hub TCP 8787 for a Quest.",
+        r"  tools\demo\open_firewall.ps1 reports the current rules (-Twin / -AllowUnity fix them, as Administrator).",
+        "  Control commands (flinch, off-a, loss ...) work only on the twin's own PC: type them into its console (stdin).",
+        "  Unity: with no OPUS_PH_NODE_* the PlayMode test must accept real discovery (CROSS-TRACK REQUEST, see the run log).",
+    ])
+
+
 class TwinProc:
     """sim/sleeve/twin.py as a subprocess. Ready when it prints {"event":"ready",...} (no sleeping)."""
 
-    def __init__(self, kind: str, offset: int, seed: int, log_path: Path):
+    def __init__(self, kind: str, offset: int, seed: int, log_path: Path, host: Optional[str] = None,
+                 dialect: Optional[str] = None):
         self.kind, self.offset, self.log_path = kind, offset, log_path
         self.proc = subprocess.Popen(
-            [sys.executable, "-m", "sim.sleeve.twin", "--kind", kind, "--port-offset", str(offset), "--seed", str(seed),
-             "--log", str(log_path), "--no-stdin"], cwd=str(REPO_ROOT), stdout=subprocess.PIPE,
+            twin_command(kind, offset, seed, log_path, host, dialect), cwd=str(REPO_ROOT), stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL, text=True)
         self.ready: Dict[str, Any] = {}
         self._evt = threading.Event()
@@ -228,7 +293,7 @@ def run_analytics(session_dir: Path) -> Tuple[int, str, Optional[Dict[str, Any]]
 
 # ============================================================================ Unity path (wired, NOT run by the L3 smoke)
 async def run_unity_playmode(hub_host: str, hub_port: int, ports: Dict[str, int], out_dir: Path,
-                             timeout_s: float = 900.0) -> int:
+                             timeout_s: float = 900.0, lan: bool = False) -> int:
     """Batch PlayMode PH_FullRun (UNITY.md U5/U6). Takes game/.ph_unity.lock (01-ORCHESTRATION section 5), runs
     Unity with the live endpoints in environment variables, releases the lock. NOTE: the env var names are this
     harness's proposal (CROSS-TRACK REQUEST to the Unity track); the test must read them to point at the hub/twin."""
@@ -238,9 +303,7 @@ async def run_unity_playmode(hub_host: str, hub_port: int, ports: Dict[str, int]
     UNITY_LOCK.write_text(f"S2 run_pipeline {time.strftime('%Y-%m-%dT%H:%M:%S')}\n", encoding="utf-8")
     try:
         xml = out_dir / "ph_fullrun_playmode.xml"
-        env = dict(os.environ, OPUS_PH_HUB=f"{hub_host}:{hub_port}",
-                   OPUS_PH_NODE_A=f"127.0.0.1:{ports['haptic']}", OPUS_PH_NODE_B=f"127.0.0.1:{ports['bio']}",
-                   OPUS_PH_DISCOVERY_PORT=str(ports["discovery"]))
+        env = dict(os.environ, **unity_env(hub_host, hub_port, ports, lan))
         cmd = [str(UNITY_EXE), "-batchmode", "-projectPath", str(REPO_ROOT / "game"), "-runTests",
                "-testPlatform", "PlayMode", "-testFilter", "PH_FullRun", "-testResults", str(xml),
                "-logFile", str(out_dir / "unity_playmode.log")]
@@ -272,7 +335,8 @@ async def one_run(args: argparse.Namespace, *, name: str, node_b: bool = True, o
     twin_log.unlink(missing_ok=True)
     try:
         if not args.hardware:
-            twin = TwinProc("both" if node_b else "haptic", args.port_offset, args.seed, twin_log)
+            twin = TwinProc("both" if node_b else "haptic", args.port_offset, args.seed, twin_log,
+                            host=twin_host(args), dialect=getattr(args, "dialect", None))
             ready = await twin.wait_ready()
             print(f"  twin ready: {json.dumps(ready['ports'])} (kinds {ready['kinds']})")
         if ext_hub:
@@ -295,7 +359,8 @@ async def one_run(args: argparse.Namespace, *, name: str, node_b: bool = True, o
         # ---- unity path
         if not args.no_unity:
             banner(f"[{name}] Unity batch PlayMode PH_FullRun (wired, not run by S2)")
-            rc = await run_unity_playmode(hub_host, hub_port, twin.ports, out)
+            rc = await run_unity_playmode(hub_host, hub_port, twin.ports if twin else {"discovery": args.discovery_port},
+                                          out, lan=getattr(args, "lan", False) or twin is None)
             result["unity_rc"] = rc
             sid_dirs = sorted(p for p in hub_out.glob("*") if p.is_dir()) if hub_out.exists() else []
             session_dir = sid_dirs[-1] if sid_dirs else None
@@ -430,7 +495,8 @@ async def run_spinup(args: argparse.Namespace) -> int:
     twin: Optional[TwinProc] = None
     try:
         if args.sim and not args.hardware:
-            twin = TwinProc("haptic", args.port_offset, args.seed, Path(tempfile.mkdtemp(prefix="ph_spinup_")) / "twin.jsonl")
+            twin = TwinProc("haptic", args.port_offset, args.seed, Path(tempfile.mkdtemp(prefix="ph_spinup_")) / "twin.jsonl",
+                            host=twin_host(args), dialect=getattr(args, "dialect", None))
             await twin.wait_ready()
             disc = twin.ports["discovery"]
         else:
@@ -466,6 +532,8 @@ async def run_phantom(args: argparse.Namespace) -> int:
     args.out = args.out or str(Path(tempfile.mkdtemp(prefix=f"ph_l3_{date.today().isoformat()}_")))
     Path(args.out).mkdir(parents=True, exist_ok=True)
     print(f"output dir: {args.out}")
+    if getattr(args, "lan", False):
+        print(lan_banner(args), flush=True)
     runs: List[Dict[str, Any]] = []
     plan: List[Tuple[str, Dict[str, Any]]] = [("main", {})]
     if args.faults:

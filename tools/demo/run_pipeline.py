@@ -739,6 +739,13 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--compress-gap-ms", type=float, default=2500.0, help="cap idle gaps between events (0 = real time)")
     g.add_argument("--hub-outage-s", type=float, default=30.0, help="--faults: how long the hub stays away")
     g.add_argument("--with-main", action="store_true", help="--faults: also run the unfaulted main run first")
+    g.add_argument("--lan", action="store_true",
+                   help="the electronics are (or may be) on another PC: bind the twin to 0.0.0.0 (its control port stays on "
+                        "127.0.0.1), give the Unity test no OPUS_PH_NODE_* overrides (real discovery) and print the command "
+                        "that runs the twin on a second PC. Off by default: nothing changes without it")
+    g.add_argument("--dialect", choices=["reference", "team"], default="reference",
+                   help="twin firmware dialect: reference (default) or team = the electronics team's own firmware "
+                        "(contracts HAPTIC_PROTOCOL v1.3: ack {cue_id, accepted}, telemetry to the last sender, 4-value chunks)")
     return p
 
 

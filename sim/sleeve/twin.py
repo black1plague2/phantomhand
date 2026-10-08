@@ -15,18 +15,28 @@ from __future__ import annotations
 
 import argparse
 import heapq
+import ipaddress
 import json
 import math
 import random
+import re
 import socket
+import subprocess
 import sys
 import threading
 import time
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 FIRMWARE_VERSION = "0.5.0"
 NODE_A_ID = "SLEEVE_001"
 NODE_B_ID = "CHETNA_BIO_001"
+
+# --dialect: "reference" = the reference firmware (opus_sleeve, 03-SPEC); "team" = the electronics team's own sketches
+# (contracts/HAPTIC_PROTOCOL.md v1.3, docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md section A). The default never changes.
+DIALECT_REFERENCE = "reference"
+DIALECT_TEAM = "team"
+TEAM_NODE_A_ID = "CHETNA_HAPTIC_001"
+TEAM_CHUNK_SAMPLES = 4        # Node B team firmware: 4 envelope values per packet, 25 packets/s
 
 # Firmware limits, mirrored from 02-RULES.md 4.2 / 03-SPEC.md 4 (Node A v0.5.0).
 MOTOR_CHANNELS = 4            # addressable (schema enum 0..3)
@@ -79,7 +89,8 @@ JOLT_DUR_MS = 400.0
 
 
 def _num(v: Any) -> bool:
-    return isinstance(v, (int, float)) and not isinstance(v, bool)
+    # finite only: json.loads accepts NaN/Infinity, and int() of those used to raise inside the receive thread
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
 def lan_ip() -> str:
@@ -91,6 +102,122 @@ def lan_ip() -> str:
         return "127.0.0.1"
     finally:
         s.close()
+
+
+# ---- LAN beacons. A discovery receiver (Unity's DiscoveryHub) takes the node's address from the datagram's SOURCE, and
+# on a multi-homed PC (Wi-Fi + VPN + Hyper-V + VirtualBox) the limited broadcast 255.255.255.255 leaves through whichever
+# adapter Windows prefers. So when the twin is not loopback-only it also announces on every local network, from a socket
+# bound to that interface's own address. Stdlib only; every step is best effort and may never stop the twin.
+
+def is_loopback_host(host: str) -> bool:
+    h = (host or "").strip().lower()
+    return h == "localhost" or h.startswith("127.")
+
+
+def _ipv4(s: str) -> Optional[int]:
+    try:
+        return int(ipaddress.IPv4Address(s))
+    except ValueError:
+        return None
+
+
+def _is_netmask(n: int) -> bool:
+    inv = ~n & 0xFFFFFFFF
+    return n != 0 and (inv & (inv + 1)) == 0
+
+
+_QUAD = re.compile(r"(?<![\d.])(\d{1,3}(?:\.\d{1,3}){3})(?![\d.])")
+_IP_ADDR = re.compile(r"\binet\s+(\d{1,3}(?:\.\d{1,3}){3})/(\d{1,2})\b")                       # ip -4 -o addr show
+_IFCONFIG = re.compile(r"\binet\s+(?:addr:)?(\d{1,3}(?:\.\d{1,3}){3})\s.*?(?:netmask\s+|Mask:)"
+                       r"(0x[0-9a-fA-F]{8}|\d{1,3}(?:\.\d{1,3}){3})")                            # ifconfig (macOS, net-tools)
+
+
+def parse_ipv4_interfaces(text: str) -> List[Tuple[str, str]]:
+    """(address, netmask) of every IPv4 interface address in the text of `ipconfig` (Windows), `ip -4 -o addr` (Linux)
+    or `ifconfig` (macOS, BSD). Language independent: for ipconfig an address line is paired with the next line whose
+    only value is a valid netmask; the (localised) labels are never read. Anything else in, [] out; never raises."""
+    out: List[Tuple[str, str]] = []
+    last: Optional[str] = None
+    for line in str(text or "").splitlines():
+        m = _IP_ADDR.search(line)
+        if m:
+            bits = int(m.group(2))
+            if 0 < bits <= 32 and _ipv4(m.group(1)) is not None:
+                out.append((m.group(1), str(ipaddress.IPv4Address((0xFFFFFFFF << (32 - bits)) & 0xFFFFFFFF))))
+            continue
+        m = _IFCONFIG.search(line)
+        if m:
+            raw = m.group(2)
+            mask = int(raw, 16) if raw.lower().startswith("0x") else _ipv4(raw)
+            if mask is not None and _ipv4(m.group(1)) is not None and _is_netmask(mask):
+                out.append((m.group(1), str(ipaddress.IPv4Address(mask))))
+            continue
+        quads = _QUAD.findall(line)
+        if len(quads) != 1:
+            continue
+        n = _ipv4(quads[0])
+        if n is None:
+            continue
+        if _is_netmask(n):
+            if last is not None:
+                out.append((last, quads[0]))
+                last = None
+        else:
+            last = quads[0]
+    return out
+
+
+def local_ipv4_interfaces() -> List[Tuple[str, str]]:
+    """(address, netmask) of this PC's IPv4 interfaces, read from the OS tools; [] when nothing could be read."""
+    cmds = [["ipconfig"]] if sys.platform.startswith("win") else [["ip", "-4", "-o", "addr", "show"], ["ifconfig"]]
+    for cmd in cmds:
+        try:
+            found = parse_ipv4_interfaces(subprocess.run(cmd, capture_output=True, text=True, errors="replace",
+                                                         timeout=5).stdout)
+        except Exception:        # tool missing, timeout, odd output: try the next one, a guess must never crash the twin
+            continue
+        if found:
+            return found
+    return []
+
+
+def beacon_targets(ifaces: Sequence[Tuple[str, str]], host: str, extra: Sequence[str] = ()
+                   ) -> List[Tuple[Optional[str], str]]:
+    """(source address to bind or None, destination) of the beacons to add for a twin bound to `host`: the directed
+    broadcast of every usable interface (loopback, link-local, /31 and /32 skipped; only the bound address when `host`
+    is a single address) plus each `extra` destination (--broadcast-addr: a directed broadcast, or a peer's own address
+    when the network drops broadcasts), sent from the interface whose subnet holds it (None = let the OS choose)."""
+    nets: List[Tuple[str, "ipaddress.IPv4Network"]] = []
+    for ip, mask in ifaces:
+        try:
+            ifc = ipaddress.IPv4Interface(f"{ip}/{mask}")
+        except ValueError:
+            continue
+        if ifc.ip.is_loopback or ifc.ip.is_unspecified or ifc.ip.is_link_local or ifc.network.prefixlen >= 31:
+            continue
+        if host not in ("0.0.0.0", "") and str(ifc.ip) != host:
+            continue
+        nets.append((str(ifc.ip), ifc.network))
+    out: List[Tuple[Optional[str], str]] = [(ip, str(net.broadcast_address)) for ip, net in nets]
+    for e in extra:
+        try:
+            dst = ipaddress.IPv4Address(str(e).strip())
+        except ValueError:
+            continue
+        out.append((next((ip for ip, net in nets if dst in net), None), str(dst)))
+    return list(dict.fromkeys(out))
+
+
+def _with_ip(data: bytes, ip: str) -> bytes:
+    """A beacon as announced from interface `ip`: its own `ip` field (when the dialect has one) names that interface."""
+    try:
+        msg = json.loads(data.decode("utf-8"))
+        if not isinstance(msg, dict) or "ip" not in msg:
+            return data
+        msg["ip"] = ip
+        return json.dumps(msg, separators=(",", ":")).encode("utf-8")
+    except (ValueError, UnicodeDecodeError):
+        return data
 
 
 class EventLog:
@@ -124,6 +251,7 @@ class EventLog:
 class Node:
     kind = ""
     device_id = ""
+    has_status = True        # the 1 Hz `status` message to subscribers (the team firmware has none)
 
     def __init__(self, twin: "Twin", port: int):
         self.twin = twin
@@ -185,6 +313,9 @@ class Node:
     def status_payload(self, now: float) -> Dict[str, Any]:
         raise NotImplementedError
 
+    def on_rx(self, addr: Tuple[str, int], now: float) -> None:
+        """Called for every parsed datagram a powered node accepts, before on_message (team dialect: telemetry target)."""
+
     def on_message(self, msg: Any, addr: Tuple[str, int], now: float) -> None:
         raise NotImplementedError
 
@@ -193,7 +324,7 @@ class Node:
 
     def common_periodic(self, now: float) -> None:
         self.expire_subs(now)
-        if now >= self.next_status:
+        if self.has_status and now >= self.next_status:
             self.next_status = now + STATUS_PERIOD_MS
             self.broadcast_stream(self.status_payload(now), now)
         if now >= self.next_discovery:
@@ -205,6 +336,12 @@ class Node:
         if typ == "subscribe":
             self.subscribe(addr, now)
             return True
+        if typ == "keepalive":
+            # contracts v0.2.1: a known message, never counted as invalid. It feeds the watchdog (every datagram does),
+            # refreshes a live subscriber like ping, and gets no reply.
+            if addr in self.subs:
+                self.subs[addr] = now + SUB_EXPIRY_MS
+            return True
         if typ == "status_request":
             self.twin.tx(self, self.status_payload(now), addr, now)
             return True
@@ -214,6 +351,9 @@ class Node:
 class NodeA(Node):
     kind = "haptic"
     device_id = NODE_A_ID
+    acks_garbage = True                   # an unparseable datagram gets an error ack (the team firmware stays silent)
+    display_keys = ("text", "mode")       # which `display` field wins when both are present (the team firmware reads `mode`)
+    imu_prefix: Optional[str] = None      # None = every IMU channel; the team firmware streams accel only
 
     def __init__(self, twin: "Twin", port: int):
         super().__init__(twin, port)
@@ -362,17 +502,24 @@ class NodeA(Node):
             self.twin.event(self, "unknown_type", now, type=str(typ))
 
     def handle_display(self, msg: Dict[str, Any], now: float) -> None:
-        text = msg.get("text")
+        # `text` and/or `mode` (contracts v0.2.1: the reference firmware reads text, the team firmware mode); every
+        # field present must be a string of <= 12 chars; when both are present `display_keys` says which one wins
+        fields = [msg[k] for k in self.display_keys if msg.get(k) is not None]
+        text = fields[0] if fields else None
+        bad = not fields or any(not isinstance(f, str) or len(f) > DISPLAY_MAX_CHARS for f in fields)
         self.display_times = [t for t in self.display_times if now - t < 1000.0]
-        if not isinstance(text, str) or len(text) > DISPLAY_MAX_CHARS or len(self.display_times) >= DISPLAY_MAX_PER_S:
-            self.twin.event(self, "display_rejected", now, text=str(text)[:40],
-                            reason="rate" if isinstance(text, str) and len(text) <= DISPLAY_MAX_CHARS else "text")
+        if bad or len(self.display_times) >= DISPLAY_MAX_PER_S:
+            self.twin.event(self, "display_rejected", now, text=str(text)[:40], reason="text" if bad else "rate")
             self.stats["rx_invalid"] += 1
             return
         self.display_times.append(now)
         self.display_text = text
         self.twin.emit({"event": "oled", "text": text})
         self.twin.event(self, "oled", now, text=text)
+
+    def extra_reject(self, motor: Dict[str, Any], intensity: int, now: float) -> Optional[Tuple[str, str]]:
+        """Dialect hook after the shared checks: (error_code, text) to reject the cue, None to play it."""
+        return None
 
     def handle_haptic(self, msg: Dict[str, Any], addr: Tuple[str, int], now: float) -> None:
         tw = self.twin
@@ -411,6 +558,9 @@ class NodeA(Node):
             return reject("CUE_GAP", "commands closer than MIN_CUE_GAP_MS", requested)
         if self.duty_pct(requested, now) >= DUTY_LIMIT_PCT:
             return reject("DUTY_CYCLE_LIMIT", "motor duty cycle limit reached, cooling down", requested)
+        bad = self.extra_reject(m, intensity, now)
+        if bad:
+            return reject(bad[0], bad[1], requested)
 
         applied = max(0, min(MAX_INTENSITY, intensity))
         dur = max(MIN_DURATION_MS, min(MAX_DURATION_MS, duration))
@@ -490,13 +640,16 @@ class NodeA(Node):
             return
         vals = self.imu_values(t)
         msg = {"type": "sensor_data", "device_id": self.device_id, "timestamp_ms": self.dev_ms(t),
-               "sensors": {k: {"value": round(v, 4), "unit": u, "status": "ok"} for k, (v, u) in vals.items()}}
+               "sensors": {k: {"value": round(v, 4), "unit": u, "status": "ok"} for k, (v, u) in vals.items()
+                           if self.imu_prefix is None or k.startswith(self.imu_prefix)}}
         self.broadcast_stream(msg, now)
 
 
 class NodeB(Node):
     kind = "bio"
     device_id = NODE_B_ID
+    chunk_samples = CHUNK_SAMPLES         # envelope values per sensor_chunk (the team firmware sends 4 per packet)
+    sends_bursts = True                   # emg_burst messages to subscribers (the team firmware has none)
 
     def __init__(self, twin: "Twin", port: int):
         super().__init__(twin, port)
@@ -588,7 +741,7 @@ class NodeB(Node):
         if not self.buf:
             self.buf_t0 = t  # PRD §9.3 / 03-SPEC §4: chunk timestamp_ms = device time of the FIRST sample
         self.buf.append(round(v, 1))
-        if len(self.buf) >= CHUNK_SAMPLES:
+        if len(self.buf) >= self.chunk_samples:
             msg = {"type": "sensor_chunk", "device_id": self.device_id, "device_kind": "bio",
                    "timestamp_ms": self.dev_ms(self.buf_t0), "sample_rate_hz": 100, "emg_envelope": self.buf,
                    "unit": "raw_adc", "status": "ok"}
@@ -629,13 +782,84 @@ class NodeB(Node):
             msg = {"type": "emg_burst", "device_id": self.device_id, "timestamp_ms": self.dev_ms(self.det_onset),
                    "peak": round(self.det_peak, 1), "baseline_rms": EMG_BASELINE}
             self.burst_events += 1
-            self.broadcast_stream(msg, now)
+            if self.sends_bursts:
+                self.broadcast_stream(msg, now)
             self.twin.event(self, "emg_burst", now, peak=msg["peak"], onset_dev_ms=msg["timestamp_ms"])
         else:
             self.twin.event(self, "emg_burst_suppressed", now)
         self.det_in = False
         self.det_run = 0
         self.det_below = 0
+
+
+class _TeamLink:
+    """What the two team-firmware nodes share (--dialect team; contracts HAPTIC_PROTOCOL v1.3): telemetry goes only to the
+    sender of the LAST packet (one target, no subscriber list), no `status` message, every message type the team
+    firmware does not document is ignored (counted in `ignored`, never an ack, never a motor command)."""
+    has_status = False
+    ignored = 0
+
+    def on_rx(self, addr: Tuple[str, int], now: float) -> None:
+        self.subs = {addr: now + SUB_EXPIRY_MS}
+
+
+class TeamNodeA(_TeamLink, NodeA):
+    """Node A as the team's `node_a_haptic` v0.5.0 behaves: bare cue commands (+ keepalive, stop, display), ack
+    {type, device_id, cue_id, accepted, timestamp_ms} with accepted:false for a motor still running a pulse, the 100 ms
+    gap, the 10 s duty budget or an invalid motor/intensity, accel-only sensor_data, `play_at_ms` ignored."""
+    device_id = TEAM_NODE_A_ID
+    acks_garbage = False
+    display_keys = ("mode", "text")
+    imu_prefix = "imu_accel"
+
+    def ack_msg(self, cue_id: str, status: str, rx_dev: int, start_dev: int, now: float, motor: int = -1,
+                err: Optional[Tuple[str, str]] = None) -> Dict[str, Any]:
+        return {"type": "ack", "device_id": self.device_id, "cue_id": cue_id,
+                "accepted": status in ("accepted", "executed"), "timestamp_ms": self.dev_ms(now)}
+
+    def extra_reject(self, motor: Dict[str, Any], intensity: int, now: float) -> Optional[Tuple[str, str]]:
+        if intensity < 0 or intensity > 255:
+            return "INVALID_INTENSITY", "intensity must be 0-255"
+        if motor["active"] and now < motor["off_ms"]:
+            return "MOTOR_BUSY", "the motor is still running a previous pulse"
+        return None
+
+    def discovery(self, now: float) -> Dict[str, Any]:
+        return {"type": "device_discovery", "device_id": self.device_id, "device_kind": "haptic",
+                "firmware_version": FIRMWARE_VERSION, "command_port": self.port, "status": "available",
+                "motor_count": MOTOR_COUNT, "timestamp_ms": self.dev_ms(now)}
+
+    def on_message(self, msg: Any, addr: Tuple[str, int], now: float) -> None:
+        if not isinstance(msg, dict):
+            self.stats["rx_invalid"] += 1
+            return
+        typ = msg.get("type")
+        if typ is None:
+            self.handle_haptic(msg, addr, now)
+        elif typ == "display":
+            self.handle_display(msg, now)
+        elif typ == "stop":
+            self.stop_all(now, "stop")
+        elif typ != "keepalive":        # keepalive: nothing to do, on_rx made the sender the target and the watchdog saw it
+            self.ignored += 1
+
+
+class TeamNodeB(_TeamLink, NodeB):
+    """Node B as the team's `node_b_bio` v0.5.0 behaves: sensor_chunk with 4 values at 25 packets/s to the last sender,
+    no status and no emg_burst messages. It understands keepalive only."""
+    chunk_samples = TEAM_CHUNK_SAMPLES
+    sends_bursts = False
+
+    def discovery(self, now: float) -> Dict[str, Any]:
+        return {"type": "device_discovery", "device_id": self.device_id, "device_kind": "bio",
+                "firmware_version": FIRMWARE_VERSION, "command_port": self.port, "status": "available",
+                "motor_count": 0, "timestamp_ms": self.dev_ms(now)}
+
+    def on_message(self, msg: Any, addr: Tuple[str, int], now: float) -> None:
+        if not isinstance(msg, dict):
+            self.stats["rx_invalid"] += 1
+        elif msg.get("type") != "keepalive":
+            self.ignored += 1
 
 
 class Twin:
@@ -647,7 +871,11 @@ class Twin:
                  now_fn: Callable[[], float] = lambda: time.monotonic() * 1000.0,
                  send: Optional[Callable[[str, bytes, Tuple[str, int]], None]] = None,
                  broadcast: Optional[Callable[[str, bytes], None]] = None,
-                 emit: Optional[Callable[[Dict[str, Any]], None]] = None, ip: str = "127.0.0.1"):
+                 emit: Optional[Callable[[Dict[str, Any]], None]] = None, ip: str = "127.0.0.1",
+                 dialect: str = DIALECT_REFERENCE):
+        if dialect not in (DIALECT_REFERENCE, DIALECT_TEAM):
+            raise ValueError(f"unknown dialect {dialect!r} (reference | team)")
+        self.dialect = dialect
         self.kinds = tuple(kinds)
         self.seed = seed
         self.port_offset = port_offset
@@ -668,8 +896,9 @@ class Twin:
         self._pending: List[Tuple[float, int, str, bytes, Tuple[str, int]]] = []
         self.mono0 = now_fn()
         self.wall0 = time.time() * 1000.0
-        self.A: Optional[NodeA] = NodeA(self, 8790 + port_offset) if "haptic" in kinds else None
-        self.B: Optional[NodeB] = NodeB(self, 8792 + port_offset) if "bio" in kinds else None
+        team = dialect == DIALECT_TEAM
+        self.A: Optional[NodeA] = (TeamNodeA if team else NodeA)(self, 8790 + port_offset) if "haptic" in kinds else None
+        self.B: Optional[NodeB] = (TeamNodeB if team else NodeB)(self, 8792 + port_offset) if "bio" in kinds else None
         for n in self.nodes():
             n.power_on(self.mono0)
 
@@ -751,10 +980,11 @@ class Twin:
             node.last_rx = now
         if parsed is None:
             node.stats["rx_invalid"] += 1
-            if isinstance(node, NodeA):
+            if isinstance(node, NodeA) and node.acks_garbage:
                 self.tx(node, node.ack_msg("", "error", node.dev_ms(now), 0, now, err=("BAD_JSON", "bad json")),
                         addr, now, delay=self.ack_delay())
             return
+        node.on_rx(addr, now)
         node.on_message(parsed, addr, now)
 
     # ---- time
@@ -840,23 +1070,31 @@ class Twin:
                                  active=[m["active"] for m in self.A.motors[:MOTOR_COUNT]])
         if self.B:
             out["bio"].update(chunks_sent=self.B.chunks_sent, emg_bursts=self.B.burst_events)
+        if self.dialect != DIALECT_REFERENCE:
+            out["dialect"] = self.dialect
+            for n in self.nodes():
+                out[n.kind]["ignored"] = n.ignored          # type: ignore[attr-defined]
         return out
 
 
 class TwinServer:
     """Real sockets + threads around a Twin."""
 
-    def __init__(self, twin: Twin, host: str = "127.0.0.1", control: bool = True, stdin: bool = False):
+    def __init__(self, twin: Twin, host: str = "127.0.0.1", control: bool = True, stdin: bool = False,
+                 broadcast_addrs: Sequence[str] = ()):
         self.twin = twin
         self.host = host
         self.use_control = control
         self.use_stdin = stdin
+        self.broadcast_addrs = list(broadcast_addrs)
         self.lock = threading.RLock()
         self.stop_evt = threading.Event()
         self.socks: Dict[str, socket.socket] = {}
         self.threads: List[threading.Thread] = []
         self.disc_sock: Optional[socket.socket] = None
         self.ctl_sock: Optional[socket.socket] = None
+        # extra beacons for a non-loopback --host: (socket, source address or None, destination), see _open_lan_beacons
+        self.lan_beacons: List[Tuple[socket.socket, Optional[str], str]] = []
         twin._send = self._send
         twin._broadcast = self._broadcast
         twin.ip = host if host != "0.0.0.0" else lan_ip()
@@ -879,6 +1117,53 @@ class TwinServer:
                 s.sendto(data, (target, port))
             except OSError:
                 pass
+        for sock, src, dst in self.lan_beacons:      # empty unless --host is not loopback
+            try:
+                sock.sendto(data if src is None else _with_ip(data, src), (dst, port))
+            except OSError:
+                pass
+
+    def _open_lan_beacons(self) -> None:
+        """Non-loopback --host only: announce on every local network too, each beacon sent from a socket bound to that
+        interface's own address so the receiver sees the LAN address as the node's address (and the beacon's `ip` says
+        the same). Whatever goes wrong here is reported on stderr and skipped; the twin always starts."""
+        if is_loopback_host(self.host):
+            if self.broadcast_addrs:
+                sys.stderr.write("twin: --broadcast-addr ignored: --host is loopback\n")
+            return
+        single = self.host not in ("0.0.0.0", "")
+        ifaces = local_ipv4_interfaces()
+        if not ifaces or (single and not any(ip == self.host for ip, _ in ifaces)):
+            guess = self.host if single else lan_ip()          # listing failed: assume a /24 around our address
+            if not is_loopback_host(guess):
+                ifaces = list(ifaces) + [(guess, "255.255.255.0")]
+                sys.stderr.write(f"twin: {guess} not found among the local interfaces; assuming /24 "
+                                 "(add --broadcast-addr if its network is different)\n")
+        socks: Dict[str, Optional[socket.socket]] = {}
+        for src, dst in beacon_targets(ifaces, self.host, self.broadcast_addrs):
+            if src is None:
+                if self.disc_sock is not None:
+                    self.lan_beacons.append((self.disc_sock, None, dst))
+                continue
+            if src not in socks:
+                try:
+                    socks[src] = self._beacon_socket(src)
+                except OSError as e:
+                    socks[src] = None
+                    sys.stderr.write(f"twin: no beacon from {src}: {e}\n")
+            if socks[src] is not None:
+                self.lan_beacons.append((socks[src], src, dst))     # type: ignore[arg-type]
+
+    def _beacon_socket(self, src: str) -> socket.socket:
+        """A UDP socket bound to the interface address `src` (any port), allowed to broadcast."""
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+            s.bind((src, 0))
+        except OSError:
+            s.close()
+            raise
+        return s
 
     def start(self) -> None:
         tw = self.twin
@@ -894,17 +1179,25 @@ class TwinServer:
             self.disc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         except OSError:
             pass
+        self._open_lan_beacons()
         if self.use_control:
+            # the control port has no authentication (quit, off-a, loss ...): loopback only, whatever --host says
             self.ctl_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.ctl_sock.bind((self.host, tw.ports["control"]))
+            self.ctl_sock.bind(("127.0.0.1", tw.ports["control"]))
             self.ctl_sock.settimeout(0.05)
             self._thread(self._ctl_loop)
         self._thread(self._tick_loop)
         if self.use_stdin:
             t = threading.Thread(target=self._stdin_loop, daemon=True)
             t.start()
-        tw.emit({"event": "ready", "kinds": list(tw.kinds), "ports": tw.ports, "seed": tw.seed,
-                 "pid": __import__("os").getpid()})
+        ready: Dict[str, Any] = {"event": "ready", "kinds": list(tw.kinds), "ports": tw.ports, "seed": tw.seed,
+                                 "pid": __import__("os").getpid()}
+        if tw.dialect != DIALECT_REFERENCE:
+            ready["dialect"] = tw.dialect
+        if not is_loopback_host(self.host):
+            ready["lan"] = {"host": self.host, "control": "127.0.0.1",
+                            "beacons": [[src or "any", dst] for _, src, dst in self.lan_beacons]}
+        tw.emit(ready)
 
     def _thread(self, fn: Callable[..., None], *args: Any) -> None:
         t = threading.Thread(target=fn, args=args, daemon=True)
@@ -959,7 +1252,7 @@ class TwinServer:
         self.stop_evt.set()
         for t in self.threads:
             t.join(timeout=1.0)
-        for s in list(self.socks.values()) + [self.disc_sock, self.ctl_sock]:
+        for s in list(self.socks.values()) + [self.disc_sock, self.ctl_sock] + [b[0] for b in self.lan_beacons]:
             if s is not None:
                 try:
                     s.close()
@@ -980,7 +1273,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--watchdog-s", type=float, default=2.0)
     p.add_argument("--no-stdin", action="store_true")
     p.add_argument("--duration", type=float, default=None, help="exit after N seconds")
-    p.add_argument("--host", default="127.0.0.1", help="bind address (0.0.0.0 for the LAN)")
+    p.add_argument("--host", default="127.0.0.1", help="bind address of the two node ports (0.0.0.0 for the LAN; the "
+                   "control port stays on 127.0.0.1). A non-loopback host also announces on every local network")
+    p.add_argument("--broadcast-addr", action="append", default=[], metavar="IP",
+                   help="extra beacon destination, repeatable: a directed broadcast such as 192.168.1.255, or the "
+                        "other PC's own address when the network drops broadcasts (ignored with a loopback --host)")
+    p.add_argument("--dialect", choices=[DIALECT_REFERENCE, DIALECT_TEAM], default=DIALECT_REFERENCE,
+                   help="reference (default) = the reference firmware; team = the electronics team's own firmware "
+                        "(ids CHETNA_HAPTIC_001 / CHETNA_BIO_001, ack {cue_id, accepted}, telemetry to the last "
+                        "sender only, no status / emg_burst, 4-value chunks at 25/s; contracts HAPTIC_PROTOCOL v1.3)")
     return p
 
 
@@ -994,8 +1295,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     tw = Twin(kinds, seed=a.seed, port_offset=a.port_offset, latency_ms=a.ack_latency_ms,
               jitter_ms=a.ack_jitter_ms, spinup_ms=a.spinup_ms, watchdog_s=a.watchdog_s,
-              log=EventLog(a.log), emit=emit)
-    srv = TwinServer(tw, host=a.host, stdin=not a.no_stdin)
+              log=EventLog(a.log), emit=emit, dialect=a.dialect)
+    srv = TwinServer(tw, host=a.host, stdin=not a.no_stdin, broadcast_addrs=a.broadcast_addr)
     srv.start()
     t_end = None if a.duration is None else time.monotonic() + a.duration
     try:

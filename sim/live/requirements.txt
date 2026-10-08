@@ -3,3 +3,5 @@ jsonschema==4.23.0
 referencing==0.35.1
 pytest==8.3.1
 pytest-asyncio==0.24.0
+# fake_headset --generate (synthetic_patients) and tools/demo/run_pipeline.py need numpy; same version as analytics/requirements.txt
+numpy==2.5.3

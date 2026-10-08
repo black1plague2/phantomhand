@@ -41,9 +41,12 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from tool_paths import find_adb
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-ADB_DEFAULT = r"C:\Users\GARV BANSAL\AppData\Local\Android\sdk\platform-tools\adb.exe"
+# OPUS_ADB, ANDROID_HOME, PATH, this PC's Android SDK / Unity-bundled adb, and only then the old PC's path (tool_paths.py)
+ADB_DEFAULT = str(find_adb())
 PACKAGE = "com.opus.opus_app"
 HUB_FORWARD_PORT = 8787
 

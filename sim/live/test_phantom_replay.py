@@ -24,7 +24,7 @@ sys.path.insert(0, str(REPO))
 
 from fake_hub import FakeHub  # noqa: E402
 from phantom_replay import (DEFAULT_FIXTURE, NodeLink, PhantomHeadset, ReplayClock, accel_magnitude,  # noqa: E402
-                            build_sens_chunks, compress_schedule, discover_nodes, emg_level,
+                            ack_delivered, build_sens_chunks, compress_schedule, discover_nodes, emg_level,
                             prepare_session_copy, real_time_windows)
 from sim.sleeve.twin import EventLog, Twin, TwinServer  # noqa: E402
 
@@ -118,9 +118,9 @@ def test_build_sens_chunks_matches_the_sensor_schema_and_the_input():
 
 # ------------------------------------------------------------------------------ with the real twin
 class TwinRunner:
-    def __init__(self, offset: int, kinds=("haptic", "bio")):
+    def __init__(self, offset: int, kinds=("haptic", "bio"), dialect: str = "reference"):
         self.log = EventLog(None, keep=True)
-        self.twin = Twin(kinds, seed=3, port_offset=offset, log=self.log)
+        self.twin = Twin(kinds, seed=3, port_offset=offset, log=self.log, dialect=dialect)
         self.srv = TwinServer(self.twin, control=True)
 
     def __enter__(self):
@@ -299,3 +299,48 @@ def test_node_b_absent_means_no_emg_anywhere(tmp_path):
     for f in session.glob("sens_*.json"):
         assert "emg_env" not in json.loads(f.read_text())
     assert not [e for e in hs.events_out if e["type"] == "emg_burst"]
+
+
+# ------------------------------------------------------------------------------ the electronics team's firmware dialect
+def test_ack_delivered_follows_the_contract_precedence_ok_then_accepted_then_status():
+    assert ack_delivered({"ok": True, "status": "rejected"}) is True            # ok wins over everything
+    assert ack_delivered({"ok": False, "accepted": True}) is False
+    assert ack_delivered({"accepted": True, "status": "rejected"}) is True       # then accepted
+    assert ack_delivered({"accepted": False, "status": "executed"}) is False
+    assert ack_delivered({"status": "executed"}) is True and ack_delivered({"status": "accepted"}) is True
+    assert ack_delivered({"status": "rejected"}) is False and ack_delivered({"status": "error"}) is False
+    assert ack_delivered({}) is False and ack_delivered(None) is False            # no verdict, no ack: not delivered
+
+
+def test_headset_against_the_team_dialect_twin_delivers_by_accepted_and_records_accel_only_imu(tmp_path):
+    import jsonschema
+    session = mini_session(tmp_path)
+    with TwinRunner(OFFSET + 40, dialect="team") as t:
+        hs, hub = asyncio.run(run_headset(session, t, tmp_path / "hub"))
+        executed = [r for r in t.strokes if r.get("status") == "executed"]
+        keepalives = {r["node"] for r in t.log.records
+                      if r.get("ev") == "rx" and (r.get("msg") or {}).get("type") == "keepalive"}
+    cues = [e for e in hs.events_out if e["type"] == "haptic_cue"]
+    assert len(cues) == 8 and len(executed) == 8                       # their ack has no ok/status: delivered comes from `accepted`
+    assert all(e["data"]["delivered"] is True and isinstance(e["data"]["ack_latency_ms"], int) for e in cues)
+    assert hs.report["cues_acked"] == 8 and hs.report["cue_rejected"] == []
+    assert keepalives == {"A", "B"}                                    # the bare keepalive goes to each node
+    assert hs.report["emg_bursts_from_node"] == 0 and hs.report["flinch_sent"] == 1     # no emg_burst messages in their firmware
+    assert hub.state.invalid_count == 0, hub.state.invalid_messages
+    files = sorted(session.glob("sens_*.json"))
+    assert files
+    imu_n, emg = 0, []
+    for f in files:
+        d = json.loads(f.read_text())
+        jsonschema.validate(d, SENSOR_SCHEMA)
+        if "imu" in d:
+            imu_n += len(d["imu"]["t_ms"])
+            assert set(d["imu"]["gx"]) == set(d["imu"]["gy"]) == set(d["imu"]["gz"]) == {0.0}      # accel only: gyro 0.0, as Unity records it
+            assert any(abs(v) > 1.0 for v in d["imu"]["az"])
+        if "emg_env" in d:
+            emg += list(zip(d["emg_env"]["t_ms"], d["emg_env"]["value"]))
+    assert imu_n > 100
+    impact = next(e["t_ms"] for e in hs.events_out if e["type"] == "threat_impact")
+    peak = max(v for t_, v in emg if impact <= t_ <= impact + 1500)
+    rest = sorted(v for t_, v in emg if impact - 2000 <= t_ < impact)
+    assert rest and peak > 3 * rest[len(rest) // 2]                    # the flinch is still visible in 4-value chunks

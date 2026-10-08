@@ -852,3 +852,657 @@ def test_cli_subprocess_ready_line_log_and_exit(tmp_path):
     s = [r for r in recs if r["ev"] == "stroke"][0]
     assert s["cue_id"] == "cli1" and s["status"] == "executed" and s["spinup_ms"] == 30
     assert s["ack_send_ts_ms"] >= s["recv_ts_ms"]
+
+
+# --------------------------------------------------------------------------- LAN beacons and the control port (cross-machine twin)
+# Canned OS text, no network access: the parser must read ipconfig / ip / ifconfig output of any language.
+
+IPCONFIG_EN = """\
+Windows IP Configuration
+
+
+Unknown adapter Tailscale:
+
+   Connection-specific DNS Suffix  . : tail1234.ts.net
+   IPv4 Address. . . . . . . . . . . : 100.101.102.103
+   Subnet Mask . . . . . . . . . . . : 255.255.255.255
+   Default Gateway . . . . . . . . . :
+
+Wireless LAN adapter Wi-Fi:
+
+   Connection-specific DNS Suffix  . : lan
+   IPv6 Address. . . . . . . . . . . : 2401:4900:1::7
+   Link-local IPv6 Address . . . . . : fe80::1c2b:3d4e:5f60:7182%12
+   IPv4 Address. . . . . . . . . . . : 192.168.242.190
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::a8b7:c6d5:e4f3:2a1b%12
+                                       192.168.242.1
+
+Ethernet adapter vEthernet (Default Switch):
+
+   Link-local IPv6 Address . . . . . : fe80::3c4d:5e6f:7081:92a3%25
+   IPv4 Address. . . . . . . . . . . : 172.26.16.1
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+
+Ethernet adapter VirtualBox Host-Only Network:
+
+   IPv4 Address. . . . . . . . . . . : 192.168.56.1
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+
+Ethernet adapter Ethernet:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Ethernet adapter Ethernet 2:
+
+   Autoconfiguration IPv4 Address. . : 169.254.7.8
+   Subnet Mask . . . . . . . . . . . : 255.255.0.0
+   Default Gateway . . . . . . . . . :
+"""
+
+IPCONFIG_DE = """\
+Windows-IP-Konfiguration
+
+Drahtlos-LAN-Adapter WLAN:
+
+   Verbindungsspezifisches DNS-Suffix: fritz.box
+   IPv4-Adresse  . . . . . . . . . . : 192.168.178.23
+   Subnetzmaske  . . . . . . . . . . : 255.255.255.0
+   Standardgateway . . . . . . . . . : 192.168.178.1
+"""
+
+IP_ADDR_LINUX = """\
+1: lo    inet 127.0.0.1/8 scope host lo\\       valid_lft forever preferred_lft forever
+2: eth0    inet 192.168.1.10/24 brd 192.168.1.255 scope global dynamic eth0\\       valid_lft 86377sec preferred_lft 86377sec
+3: wlan0    inet 10.0.0.7/16 brd 10.0.255.255 scope global wlan0\\       valid_lft forever preferred_lft forever
+4: tun0    inet 10.8.0.2/32 scope global tun0\\       valid_lft forever preferred_lft forever
+"""
+
+IFCONFIG_UNIX = """\
+lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
+\tinet 127.0.0.1 netmask 0xff000000
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+\tinet6 fe80::1c3e:aaaa:bbbb:cccc%en0 prefixlen 64 secured scopeid 0x6
+\tinet 192.168.1.5 netmask 0xffffff00 broadcast 192.168.1.255
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.16.4.9  netmask 255.255.240.0  broadcast 172.16.15.255
+eth1      Link encap:Ethernet  HWaddr 00:11:22:33:44:55
+          inet addr:192.168.7.2  Bcast:192.168.7.255  Mask:255.255.255.0
+"""
+
+
+def test_parse_ipconfig_english_all_adapters():
+    assert T.parse_ipv4_interfaces(IPCONFIG_EN) == [
+        ("100.101.102.103", "255.255.255.255"), ("192.168.242.190", "255.255.255.0"), ("172.26.16.1", "255.255.240.0"),
+        ("192.168.56.1", "255.255.255.0"), ("169.254.7.8", "255.255.0.0")]
+
+
+def test_parse_ipconfig_is_language_independent():
+    assert T.parse_ipv4_interfaces(IPCONFIG_DE) == [("192.168.178.23", "255.255.255.0")]
+
+
+def test_parse_ip_addr_linux():
+    assert T.parse_ipv4_interfaces(IP_ADDR_LINUX) == [
+        ("127.0.0.1", "255.0.0.0"), ("192.168.1.10", "255.255.255.0"), ("10.0.0.7", "255.255.0.0"),
+        ("10.8.0.2", "255.255.255.255")]
+
+
+def test_parse_ifconfig_macos_and_net_tools():
+    assert T.parse_ipv4_interfaces(IFCONFIG_UNIX) == [
+        ("127.0.0.1", "255.0.0.0"), ("192.168.1.5", "255.255.255.0"), ("172.16.4.9", "255.255.240.0"),
+        ("192.168.7.2", "255.255.255.0")]
+
+
+@pytest.mark.parametrize("junk", [
+    "", "   ", None, "\x00\xff\xfe", "inet 999.1.1.1/24", "inet 10.0.0.1/99", "inet 10.0.0.1 netmask 0xzz",
+    "IPv4 Address: 1.2.3.4.5\nSubnet Mask: 255.0.255.0", "255.255.255.0\n192.168.1.1", "Subnet Mask . . : 255.255.255.0",
+    "IPv4 Address: 10.0.0.1\nSubnet Mask: 0.0.0.0", "IPv4 Address: 10.0.0.1\nSubnet Mask: 0.0.0.255"])
+def test_parse_garbage_never_raises_and_finds_nothing(junk):
+    assert T.parse_ipv4_interfaces(junk) == []
+
+
+def test_beacon_targets_one_directed_broadcast_per_usable_interface():
+    ifaces = T.parse_ipv4_interfaces(IPCONFIG_EN)
+    # the /32 VPN address and the link-local one have no usable broadcast; the three real networks do
+    assert T.beacon_targets(ifaces, "0.0.0.0") == [("192.168.242.190", "192.168.242.255"),
+                                                   ("172.26.16.1", "172.26.31.255"), ("192.168.56.1", "192.168.56.255")]
+    assert T.beacon_targets(ifaces, "192.168.242.190") == [("192.168.242.190", "192.168.242.255")]   # bound to one address
+    assert T.beacon_targets(ifaces, "192.168.9.9") == []                                             # not one of ours
+    assert T.beacon_targets([("127.0.0.1", "255.0.0.0"), ("0.0.0.0", "0.0.0.0"), ("1.2.3.4", "bad")], "0.0.0.0") == []
+
+
+def test_beacon_targets_extra_addresses_use_the_interface_that_owns_their_subnet():
+    ifaces = T.parse_ipv4_interfaces(IPCONFIG_EN)
+    got = T.beacon_targets(ifaces, "0.0.0.0", ["192.168.242.77", "10.9.9.9", "not-an-ip", " 192.168.242.77 ", ""])
+    assert got[3:] == [("192.168.242.190", "192.168.242.77"), (None, "10.9.9.9")]       # duplicates and junk dropped
+    assert len(got) == 5
+
+
+def test_with_ip_patches_only_an_ip_field_and_never_raises():
+    d = json.dumps({"type": "device_discovery", "ip": "1.1.1.1", "x": 1}, separators=(",", ":")).encode()
+    assert json.loads(T._with_ip(d, "192.168.0.5")) == {"type": "device_discovery", "ip": "192.168.0.5", "x": 1}
+    no_ip = json.dumps({"type": "device_discovery", "device_id": "CHETNA_HAPTIC_001"}, separators=(",", ":")).encode()
+    assert T._with_ip(no_ip, "192.168.0.5") == no_ip              # team discovery has no ip field: byte for byte
+    assert T._with_ip(b"not json", "x") == b"not json" and T._with_ip(b"[1]", "x") == b"[1]"
+
+
+class FakeSock:
+    def __init__(self, fail=False):
+        self.sent, self.fail = [], fail
+
+    def sendto(self, data, addr):
+        if self.fail:
+            raise OSError("network is unreachable")
+        self.sent.append((data, addr))
+
+    def close(self):
+        pass
+
+
+def _server(host="127.0.0.1", dialect="reference", **kw):
+    tw = T.Twin(("haptic", "bio"), port_offset=next(_offsets), dialect=dialect, emit=lambda ev: None)
+    srv = T.TwinServer(tw, host=host, **kw)
+    srv.disc_sock = FakeSock()
+    return srv
+
+
+def test_loopback_host_sends_exactly_the_old_two_beacons_and_never_enumerates(monkeypatch):
+    monkeypatch.setattr(T, "local_ipv4_interfaces", lambda: pytest.fail("listed the interfaces on a loopback bind"))
+    srv = _server("127.0.0.1", broadcast_addrs=["192.168.1.255"])
+    srv._open_lan_beacons()
+    assert srv.lan_beacons == []
+    data = json.dumps(srv.twin.A.discovery(0), separators=(",", ":")).encode()
+    srv._broadcast("haptic", data)
+    port = srv.twin.ports["discovery"]
+    assert srv.disc_sock.sent == [(data, ("255.255.255.255", port)), (data, ("127.0.0.1", port))]    # byte-identical
+
+
+def test_lan_host_adds_one_beacon_per_interface_from_a_socket_bound_to_it(monkeypatch):
+    monkeypatch.setattr(T, "local_ipv4_interfaces", lambda: T.parse_ipv4_interfaces(IPCONFIG_EN))
+    srv = _server("0.0.0.0", broadcast_addrs=["192.168.242.77", "10.9.9.9"])
+    bound = {}
+    srv._beacon_socket = lambda src: bound.setdefault(src, FakeSock())
+    srv._open_lan_beacons()
+    assert [(src, dst) for _, src, dst in srv.lan_beacons] == [
+        ("192.168.242.190", "192.168.242.255"), ("172.26.16.1", "172.26.31.255"), ("192.168.56.1", "192.168.56.255"),
+        ("192.168.242.190", "192.168.242.77"), (None, "10.9.9.9")]
+    assert sorted(bound) == ["172.26.16.1", "192.168.242.190", "192.168.56.1"]        # one socket per interface
+    data = json.dumps(srv.twin.A.discovery(0), separators=(",", ":")).encode()
+    srv._broadcast("haptic", data)
+    port = srv.twin.ports["discovery"]
+    # the two old beacons are untouched, then the extra destination that no interface owns (unbound socket, unpatched)
+    assert srv.disc_sock.sent == [(data, ("255.255.255.255", port)), (data, ("127.0.0.1", port)),
+                                  (data, ("10.9.9.9", port))]
+    wifi = bound["192.168.242.190"].sent
+    assert [a for _, a in wifi] == [("192.168.242.255", port), ("192.168.242.77", port)]
+    for src, sock in bound.items():                 # every interface announces itself with its own address
+        assert all(json.loads(d)["ip"] == src for d, _ in sock.sent)
+    assert [a for _, a in bound["172.26.16.1"].sent] == [("172.26.31.255", port)]
+
+
+def test_team_beacons_without_an_ip_field_stay_byte_identical_on_every_interface(monkeypatch):
+    monkeypatch.setattr(T, "local_ipv4_interfaces", lambda: T.parse_ipv4_interfaces(IPCONFIG_DE))
+    srv = _server("0.0.0.0", dialect="team")
+    bound = {}
+    srv._beacon_socket = lambda src: bound.setdefault(src, FakeSock())
+    srv._open_lan_beacons()
+    data = json.dumps(srv.twin.A.discovery(0), separators=(",", ":")).encode()
+    srv._broadcast("haptic", data)
+    assert bound["192.168.178.23"].sent == [(data, ("192.168.178.255", srv.twin.ports["discovery"]))]
+
+
+def test_a_failing_interface_never_stops_the_others():
+    srv = _server("0.0.0.0")
+    bad, good = FakeSock(fail=True), FakeSock()
+    srv.lan_beacons = [(bad, "10.0.0.2", "10.0.0.255"), (good, "10.1.0.2", "10.1.0.255")]
+    srv._broadcast("haptic", b'{"ip":"x"}')
+    assert [a for _, a in good.sent] == [("10.1.0.255", srv.twin.ports["discovery"])]
+
+
+def test_unreadable_interface_list_falls_back_to_a_slash24_guess(monkeypatch, capsys):
+    monkeypatch.setattr(T, "local_ipv4_interfaces", lambda: [])
+    monkeypatch.setattr(T, "lan_ip", lambda: "192.168.9.40")
+    srv = _server("0.0.0.0")
+    srv._beacon_socket = lambda src: FakeSock()
+    srv._open_lan_beacons()
+    assert [(s, d) for _, s, d in srv.lan_beacons] == [("192.168.9.40", "192.168.9.255")]
+    assert "assuming /24" in capsys.readouterr().err
+    one = _server("192.168.9.41")                       # a single --host the listing did not show
+    one._beacon_socket = lambda src: FakeSock()
+    one._open_lan_beacons()
+    assert [(s, d) for _, s, d in one.lan_beacons] == [("192.168.9.41", "192.168.9.255")]
+
+
+def test_no_network_at_all_means_no_extra_beacons_and_no_crash(monkeypatch):
+    monkeypatch.setattr(T, "local_ipv4_interfaces", lambda: [])
+    monkeypatch.setattr(T, "lan_ip", lambda: "127.0.0.1")
+    srv = _server("0.0.0.0")
+    srv._open_lan_beacons()
+    assert srv.lan_beacons == []
+
+
+def test_local_ipv4_interfaces_survives_missing_tools(monkeypatch):
+    def boom(*a, **k):
+        raise FileNotFoundError("no such tool")
+    monkeypatch.setattr(T.subprocess, "run", boom)
+    assert T.local_ipv4_interfaces() == []
+
+
+def test_beacon_socket_binds_the_interface_address_so_that_is_the_source():
+    srv = _server("0.0.0.0")
+    lst = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    lst.bind(("127.0.0.1", 0))
+    lst.settimeout(2.0)
+    try:
+        s = srv._beacon_socket("127.0.0.2")
+    except OSError:
+        lst.close()
+        pytest.skip("this OS does not bind 127.0.0.2")
+    try:
+        s.sendto(b"x", lst.getsockname())
+        _, src = lst.recvfrom(16)
+        assert src[0] == "127.0.0.2"
+    finally:
+        s.close()
+        lst.close()
+
+
+def test_a_beacon_socket_that_cannot_bind_is_skipped_not_fatal(monkeypatch, capsys):
+    srv = _server("0.0.0.0")
+    with pytest.raises(OSError):
+        srv._beacon_socket("203.0.113.9")               # TEST-NET-3: not an address of this PC
+    monkeypatch.setattr(T, "local_ipv4_interfaces", lambda: [("203.0.113.9", "255.255.255.0")])
+    srv._open_lan_beacons()
+    assert srv.lan_beacons == [] and "no beacon from 203.0.113.9" in capsys.readouterr().err
+
+
+def test_control_socket_binds_loopback_whatever_the_host_is():
+    # host 127.0.0.2 is not the default 127.0.0.1 but is loopback-only, so this needs no firewall exception
+    tw = T.Twin(("haptic", "bio"), port_offset=next(_offsets), emit=lambda ev: None)
+    srv = T.TwinServer(tw, host="127.0.0.2")
+    try:
+        srv.start()
+    except OSError:
+        srv.stop()
+        pytest.skip("this OS does not bind 127.0.0.2")
+    try:
+        assert srv.ctl_sock.getsockname() == ("127.0.0.1", tw.ports["control"])
+        assert {k: s.getsockname()[0] for k, s in srv.socks.items()} == {"haptic": "127.0.0.2", "bio": "127.0.0.2"}
+        assert srv.lan_beacons == []                          # 127.x is loopback: no LAN announcements
+    finally:
+        srv.stop()
+
+
+def test_control_port_is_not_reachable_through_the_lan_address_when_nodes_bind_all_interfaces():
+    lan = T.lan_ip()
+    if T.is_loopback_host(lan):
+        pytest.skip("no LAN address on this PC")
+    tw = T.Twin(("haptic",), port_offset=next(_offsets), emit=lambda ev: None)
+    srv = T.TwinServer(tw, host="0.0.0.0")
+    srv.start()
+    p = Peer()
+    try:
+        assert srv.socks["haptic"].getsockname()[0] == "0.0.0.0"
+        assert srv.ctl_sock.getsockname()[0] == "127.0.0.1"
+        p.s.sendto(b"status", ("127.0.0.1", tw.ports["control"]))
+        ok, _ = p.recv_until(lambda m: m.get("cmd") == "status")
+        assert ok is not None, "the control port must answer on loopback"
+        probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)    # unbound: a socket bound to loopback cannot reach the LAN
+        probe.settimeout(0.6)
+        try:
+            probe.sendto(b"status", (lan, tw.ports["control"]))      # the same command through the LAN address
+            reply = probe.recvfrom(4096)
+        except (socket.timeout, ConnectionResetError):               # silence, or Windows' "port unreachable": not served
+            reply = None
+        finally:
+            probe.close()
+        assert reply is None
+    finally:
+        p.close()
+        srv.stop()
+
+
+def test_cli_accepts_lan_flags():
+    a = T.build_parser().parse_args(["--host", "0.0.0.0", "--broadcast-addr", "10.0.0.255", "--broadcast-addr", "10.0.0.7"])
+    assert a.host == "0.0.0.0" and a.broadcast_addr == ["10.0.0.255", "10.0.0.7"] and a.dialect == "reference"
+    assert T.build_parser().parse_args([]).broadcast_addr == []
+
+
+# --------------------------------------------------------------------------- contracts v0.2.1: keepalive, display mode, --dialect team
+# Authority: contracts/HAPTIC_PROTOCOL.md v1.3 and docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md section A (their firmware's text).
+
+DIALECTS = ["reference", "team"]
+TEAM_ACK_KEYS = {"type", "device_id", "cue_id", "accepted", "timestamp_ms"}
+
+
+def team(kinds=("haptic",), **kw):
+    return H(kinds, dialect="team", **kw)
+
+
+def accepted(h, cue_id):
+    [a] = acks(h, cue_id)
+    return a["accepted"]
+
+
+def test_reference_dialect_is_the_default_and_keeps_its_identity():
+    h = H(("haptic", "bio"))
+    assert h.tw.dialect == "reference" and type(h.tw.A) is T.NodeA and type(h.tw.B) is T.NodeB
+    assert h.tw.A.device_id == "SLEEVE_001" and h.tw.B.device_id == "CHETNA_BIO_001"
+    assert T.build_parser().parse_args([]).dialect == "reference"
+    assert T.build_parser().parse_args(["--dialect", "team"]).dialect == "team"
+    with pytest.raises(ValueError):
+        T.Twin(("haptic",), dialect="bogus")
+    with pytest.raises(SystemExit):
+        T.build_parser().parse_args(["--dialect", "bogus"])
+    assert "dialect" not in h.tw.control("status")["state"]            # the reference state dict is unchanged
+
+
+# ---- 1. keepalive: a known message in EVERY dialect
+
+@pytest.mark.parametrize("dialect", DIALECTS)
+def test_keepalive_is_a_known_silent_message_on_both_nodes(dialect):
+    h = H(("haptic", "bio"), dialect=dialect)
+    me = ("10.0.0.9", 6000)
+    h.send({"type": "keepalive"}, addr=me, kind="haptic")
+    h.send({"type": "keepalive"}, addr=me, kind="bio")
+    h.run(100)
+    assert h.tw.A.stats["rx_invalid"] == 0 and h.tw.B.stats["rx_invalid"] == 0
+    assert not h.ev("unknown_type") and not h.msgs("ack")             # counted nowhere, answered by nothing
+    if dialect == "team":
+        assert h.tw.A.ignored == 0 and h.tw.B.ignored == 0
+
+
+@pytest.mark.parametrize("dialect", DIALECTS)
+def test_keepalive_feeds_the_watchdog_like_ping(dialect):
+    h = H(dialect=dialect)
+    me = ("10.0.0.9", 6000)
+    h.send(stroke(motor=0, cue_id="k"), addr=me)
+    h.tw.control("stick-a 0")                      # fault: driver latched on after its pulse
+    for _ in range(9):                             # 4.5 s with nothing but a keepalive every 500 ms
+        h.run(500)
+        h.send({"type": "keepalive"}, addr=me)
+    assert not h.ev("watchdog") and h.tw.A.motors[0]["active"]
+    h.run(2100)                                    # the keepalives stop: the watchdog forces the motor off at 2 s
+    wd = h.ev("watchdog")
+    assert len(wd) == 1 and wd[0]["motors_forced_off"] == [0]
+
+
+def test_keepalive_refreshes_a_subscriber_like_ping_but_does_not_subscribe():
+    h = H()
+    sub, other = ("10.0.0.1", 1111), ("10.0.0.2", 2222)
+    h.send({"type": "subscribe"}, addr=sub)
+    for _ in range(12):                            # 6 s: longer than the 5 s expiry
+        h.run(500)
+        h.send({"type": "keepalive"}, addr=sub)
+        h.send({"type": "keepalive"}, addr=other)
+    assert h.tw.A.live_subs(h.clk.t) == [sub]     # refreshed; the non-subscriber was not added (spec D3)
+    assert not h.ev("sub_expired")
+
+
+# ---- 2. display: `mode` as well as `text`, same 12-char rule, in EVERY dialect
+
+@pytest.mark.parametrize("dialect", DIALECTS)
+def test_display_accepts_mode_text_or_both(dialect):
+    h = H(dialect=dialect)
+    h.send({"type": "display", "mode": "SYNC"})                          # the team firmware's field alone
+    assert h.tw.A.display_text == "SYNC"
+    h.run(600)
+    h.send({"type": "display", "text": "ASYNC", "mode": "ASYNC"})        # what the game sends: both, same value
+    assert h.tw.A.display_text == "ASYNC"
+    h.run(1100)
+    h.send({"type": "display", "mode": "1234567890123"})                 # 13 chars: the same rule applies to mode
+    h.send({"type": "display", "text": "OK", "mode": "1234567890123"})   # one bad field rejects the whole message
+    h.send({"type": "display"})                                          # neither field
+    assert h.tw.A.display_text == "ASYNC" and len(h.ev("display_rejected")) == 3
+    h.run(1100)
+    h.send({"type": "display", "text": "SYNC", "mode": "ASYNC"})         # both, different: the dialect's own field wins
+    own = "SYNC" if dialect == "reference" else "ASYNC"
+    assert h.tw.A.display_text == own
+    assert [e["text"] for e in h.events if e["event"] == "oled"] == ["SYNC", "ASYNC", own]
+
+
+@pytest.mark.parametrize("dialect", DIALECTS)
+def test_display_keeps_its_rate_limit_with_mode(dialect):
+    h = H(dialect=dialect)
+    for word in ("A", "B", "C"):
+        h.send({"type": "display", "mode": word})
+    assert h.tw.A.display_text == "B" and len(h.ev("display_rejected")) == 1      # 2 per second
+
+
+# ---- 3. --dialect team
+
+def test_team_ids_and_discovery_are_exactly_their_form():
+    h = team(("haptic", "bio"))
+    h.run(10)
+    a = [m for k, m in h.bcast if k == "haptic"][0]
+    b = [m for k, m in h.bcast if k == "bio"][0]
+    keys = {"type", "device_id", "device_kind", "firmware_version", "command_port", "status", "motor_count",
+            "timestamp_ms"}
+    assert set(a) == keys and set(b) == keys                           # no ip, no legacy opus_haptic / port / fw
+    assert (a["device_id"], a["device_kind"], a["motor_count"], a["command_port"]) == ("CHETNA_HAPTIC_001", "haptic", 2, 8790)
+    assert (b["device_id"], b["device_kind"], b["motor_count"], b["command_port"]) == ("CHETNA_BIO_001", "bio", 0, 8792)
+    assert a["type"] == "device_discovery" and a["status"] == "available" and a["firmware_version"] == "0.5.0"
+
+
+def test_team_ack_is_exactly_their_form_and_play_at_ms_is_ignored():
+    h = team()
+    me = ("10.0.0.9", 6000)
+    h.send(stroke(motor=0, cue_id="ok1", play_at_ms=10 ** 12), addr=me)     # meant for the far future: plays on arrival
+    h.run(30)
+    [a] = acks(h, "ok1")
+    assert set(a) == TEAM_ACK_KEYS and a["device_id"] == "CHETNA_HAPTIC_001" and a["accepted"] is True
+    assert isinstance(a["timestamp_ms"], int)
+    assert [x for k, m, x, _ in h.sent if m.get("cue_id") == "ok1"] == [me]       # to the sender
+    r = h.strokes()[0]
+    assert r["status"] == "executed" and r["motor_on_ms"] - r["recv_ts_ms"] == 30       # the twin's own log still says what happened
+    assert h.tw.A.motors[0]["active"]
+
+
+def test_team_motor_still_running_is_accepted_false():
+    h = team()
+    h.send(stroke(motor=0, dur=400, cue_id="b1"))
+    h.run(150)                                       # past the 100 ms gap, the 400 ms pulse is still running
+    h.send(stroke(motor=0, dur=200, cue_id="b2"))
+    h.run(30)
+    assert accepted(h, "b1") is True and accepted(h, "b2") is False
+    assert h.strokes()[-1]["error_code"] == "MOTOR_BUSY"
+    assert h.strokes()[0]["status"] == "executed" and h.tw.A.motors[0]["active"]         # b1 was not disturbed
+    assert h.tw.A.stroke_count == 1                  # the reference dialect would have re-triggered the pulse
+
+
+def test_team_gap_under_100ms_is_accepted_false():
+    h = team()
+    h.send(stroke(motor=0, dur=50, cue_id="g1"))
+    h.run(60)                                        # pulse over (50 ms) but only 60 ms since its start
+    h.send(stroke(motor=0, dur=50, cue_id="g2"))
+    h.run(40)
+    h.send(stroke(motor=0, dur=50, cue_id="g3"))     # exactly 100 ms after g1
+    h.run(30)
+    assert [accepted(h, c) for c in ("g1", "g2", "g3")] == [True, False, True]
+    assert h.strokes()[1]["error_code"] == "CUE_GAP"
+
+
+def test_team_duty_budget_used_up_is_accepted_false():
+    h = team()
+    for i in range(16):
+        h.send(stroke(motor=0, dur=400, cue_id=f"d{i}"))
+        h.run(500)
+    flags = [accepted(h, f"d{i}") for i in range(16)]
+    first = flags.index(False)
+    assert 10 <= first <= 14 and not any(flags[first:first + 3])
+    assert [r["error_code"] for r in h.strokes() if r["status"] == "rejected"][0] == "DUTY_CYCLE_LIMIT"
+
+
+def test_team_invalid_motor_or_intensity_is_accepted_false_and_nothing_vibrates():
+    h = team()
+    bad = [stroke(motor=2, cue_id="m2"), stroke(motor=3, cue_id="m3"), stroke(motor=4, cue_id="m4"),
+           stroke(motor=-1, cue_id="mneg"), stroke(motor="0", cue_id="mstr"),
+           stroke(intensity=256, cue_id="i256"), stroke(intensity=-1, cue_id="ineg"),
+           stroke(intensity="high", cue_id="istr"), {"cue_id": "imiss", "motor": 0, "duration_ms": 200, "pattern": "pulse"}]
+    for m in bad:
+        h.send(m)
+    h.send(b'{"cue_id":"nan1","motor":0,"intensity":NaN,"duration_ms":200}')
+    h.send(b'{"cue_id":"inf1","motor":0,"intensity":Infinity,"duration_ms":200}')
+    h.run(40)
+    ids = [m["cue_id"] for m in bad] + ["nan1", "inf1"]
+    assert [accepted(h, c) for c in ids] == [False] * len(ids)
+    for a in h.msgs("ack"):
+        assert set(a) == TEAM_ACK_KEYS               # nothing else: no status, no ack_id, no ok, no error_code
+    assert not any(m["active"] for m in h.tw.A.motors) and h.tw.A.stroke_count == 0
+    h.send(stroke(motor=0, cue_id="alive"))          # and the node is still serving (NaN used to kill its receive thread)
+    h.run(30)
+    assert accepted(h, "alive") is True
+
+
+def test_team_intensity_above_150_is_capped_not_rejected_and_duration_is_clamped():
+    h = team()
+    h.send(stroke(motor=0, intensity=255, dur=1000, cue_id="cap"))
+    h.run(30)
+    assert accepted(h, "cap") is True
+    r = h.strokes()[0]
+    assert r["intensity_applied"] == 150 and r["duration_applied"] == 400
+
+
+def test_team_stop_stops_everything_extra_fields_ignored():
+    h = team()
+    h.send(stroke(motor=0, dur=400, cue_id="s0"))
+    h.send(stroke(motor=1, dur=400, cue_id="s1"))
+    h.run(20)
+    assert all(m["active"] for m in h.tw.A.motors[:2])
+    h.send({"type": "stop", "v": 1, "id": "x", "ts_ms": 5})           # the game still sends the v1 form
+    assert not any(m["active"] for m in h.tw.A.motors) and h.tw.A.ignored == 0
+
+
+def test_team_telemetry_goes_only_to_the_last_sender():
+    h = team(("haptic", "bio"))
+    p1, p2, p3 = ("10.0.0.1", 1111), ("10.0.0.2", 2222), ("10.0.0.3", 3333)
+    for p in (p1, p2):
+        h.send({"type": "keepalive"}, addr=p, kind="haptic")
+        h.send({"type": "keepalive"}, addr=p, kind="bio")
+    h.run(500)
+    for kind, typ in (("haptic", "sensor_data"), ("bio", "sensor_chunk")):
+        assert not h.msgs(typ, kind=kind, addr=p1) and h.msgs(typ, kind=kind, addr=p2)   # p1 was replaced, not added
+    assert h.tw.A.stats["sub_rejected"] == 0 and len(h.tw.A.live_subs(h.clk.t)) == 1
+    h.send(stroke(cue_id="c"), addr=p3)               # any packet counts, a command too: p3 takes over node A
+    mark = len(h.sent)
+    h.run(500)
+    after = h.sent[mark:]
+    assert any(a == p3 and m["type"] == "sensor_data" for k, m, a, _ in after)
+    assert not any(a == p2 and m["type"] == "sensor_data" for k, m, a, _ in after)
+    assert any(a == p2 and m["type"] == "sensor_chunk" for k, m, a, _ in after)       # node B still streams to p2
+    h.run(5200)                                       # nothing heard for > 5 s: the target expires (the twin's assumption)
+    assert h.ev("sub_expired") and h.tw.A.live_subs(h.clk.t) == []
+
+
+def test_team_nodes_send_no_status_and_no_emg_burst():
+    h = team(("haptic", "bio"))
+    me = ("10.0.0.1", 1111)
+    h.send({"type": "keepalive"}, addr=me, kind="haptic")
+    h.send({"type": "keepalive"}, addr=me, kind="bio")
+    h.run(1200)
+    h.tw.control("flinch")
+    h.run(1500)
+    h.send({"type": "status_request"}, addr=me, kind="haptic")
+    h.run(50)
+    assert not h.msgs("status") and not h.msgs("emg_burst")
+    assert h.msgs("sensor_data") and h.msgs("sensor_chunk")
+    assert h.tw.B.burst_events >= 1 and h.ev("emg_burst")        # the burst happened; it is only not announced
+    assert h.tw.A.ignored == 1                                   # status_request: not in their firmware
+
+
+def test_team_node_b_sends_4_value_chunks_25_per_second():
+    h = team(("bio",))
+    h.send({"type": "keepalive"}, addr=("10.0.0.1", 1111), kind="bio")
+    h.run(2000)
+    ch = h.msgs("sensor_chunk")
+    assert 49 <= len(ch) <= 51
+    for m in ch:
+        assert set(m) == {"type", "device_id", "device_kind", "timestamp_ms", "sample_rate_hz", "emg_envelope", "unit", "status"}
+        assert m["device_id"] == "CHETNA_BIO_001" and m["device_kind"] == "bio" and m["sample_rate_hz"] == 100
+        assert len(m["emg_envelope"]) == 4 and m["unit"] == "raw_adc" and m["status"] == "ok"
+    ts = [m["timestamp_ms"] for m in ch]
+    assert set(b - a for a, b in zip(ts, ts[1:])) <= {39, 40, 41}                  # 40 ms apart = the first sample of each chunk
+    env = [v for m in ch for v in m["emg_envelope"]]
+    assert abs(statistics.mean(env) - T.EMG_BASELINE) < 3.0
+
+
+def test_team_node_a_sensor_data_is_accel_only_at_100hz():
+    h = team()
+    h.send({"type": "keepalive"}, addr=("10.0.0.1", 1111))
+    h.run(2000)
+    sd = h.msgs("sensor_data")
+    assert 195 <= len(sd) <= 201
+    for m in sd:
+        assert set(m) == {"type", "device_id", "timestamp_ms", "sensors"} and m["device_id"] == "CHETNA_HAPTIC_001"
+        assert set(m["sensors"]) == {"imu_accel_x", "imu_accel_y", "imu_accel_z"}
+        assert all(set(v) == {"value", "unit", "status"} and v["unit"] == "m/s2" and v["status"] == "ok"
+                   for v in m["sensors"].values())
+
+
+def test_team_ignores_what_their_firmware_does_not_know():
+    h = team()
+    me = ("10.0.0.1", 1111)
+    for m in ({"type": "ping", "id": "p"}, {"type": "subscribe"}, {"type": "mystery"}, {"type": "config", "enabled": False},
+              {"v": 1, "type": "cue", "id": "c", "cue": "x", "intensity": 0.6, "duration_ms": 300, "pattern": "pulse"},
+              dict(stroke(cue_id="env"), type="haptic")):
+        h.send(m, addr=me)
+    h.send(b"{not json", addr=me)                     # garbage: no ack either
+    h.send(b"[1, 2]", addr=me)
+    h.run(100)
+    assert not h.msgs("ack") and not h.strokes() and not any(m["active"] for m in h.tw.A.motors)
+    assert h.tw.A.ignored == 6 and h.tw.A.stats["rx_invalid"] == 2
+    st = h.tw.control("status")["state"]
+    assert st["dialect"] == "team" and st["haptic"]["ignored"] == 6
+    # ... while the same node still plays a plain cue
+    h.send(stroke(cue_id="plain"), addr=me)
+    h.run(30)
+    assert accepted(h, "plain") is True
+
+
+def test_team_messages_validate_against_the_contract_schema():
+    jsonschema = pytest.importorskip("jsonschema")
+    schema = json.loads((REPO / "contracts" / "schemas" / "haptic-message.schema.json").read_text(encoding="utf-8"))
+    valid = jsonschema.Draft202012Validator(schema).is_valid
+    for m in ({"type": "keepalive"}, {"type": "display", "mode": "SYNC"}, {"type": "display", "text": "SYNC", "mode": "SYNC"}):
+        assert valid(m), m
+    h = team(("haptic", "bio"))
+    me = ("10.0.0.1", 1111)
+    h.send({"type": "keepalive"}, addr=me, kind="haptic")
+    h.send({"type": "keepalive"}, addr=me, kind="bio")
+    h.send({"type": "display", "mode": "SYNC"}, addr=me)
+    h.send(stroke(motor=0, dur=400, cue_id="v1"), addr=me)
+    h.run(150)
+    h.send(stroke(motor=0, dur=200, cue_id="v2"), addr=me)               # rejected: busy
+    h.tw.control("flinch")
+    h.run(1500)
+    out = [m for _, m in h.bcast] + [m for _, m, _, _ in h.sent]
+    assert {"device_discovery", "ack", "sensor_data", "sensor_chunk"} <= {m["type"] for m in out}
+    for m in out:
+        assert valid(m), m
+
+
+def test_cli_team_dialect_subprocess_speaks_their_form(tmp_path):
+    off = next(_offsets)
+    proc = subprocess.Popen(
+        [sys.executable, "-m", "sim.sleeve.twin", "--kind", "both", "--dialect", "team", "--port-offset", str(off),
+         "--no-stdin", "--duration", "10"], cwd=str(REPO), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    pa, pb = Peer(), Peer()
+    try:
+        ready = json.loads(proc.stdout.readline())
+        assert ready["event"] == "ready" and ready["dialect"] == "team" and "lan" not in ready
+        pb.send({"type": "keepalive"}, ready["ports"]["bio"])
+        c, _ = pb.recv_until(lambda m: m.get("type") == "sensor_chunk")
+        assert c is not None and len(c["emg_envelope"]) == 4 and c["device_id"] == "CHETNA_BIO_001"
+        pa.send(stroke(cue_id="t1"), ready["ports"]["haptic"])
+        a, _ = pa.recv_until(lambda m: m.get("type") == "ack")
+        assert a is not None and set(a) == TEAM_ACK_KEYS and a["cue_id"] == "t1" and a["accepted"] is True
+        assert a["device_id"] == "CHETNA_HAPTIC_001"
+        pb.s.sendto(b"quit", ("127.0.0.1", ready["ports"]["control"]))
+        out, _ = proc.communicate(timeout=10)
+        assert '"event": "exit"' in out
+    finally:
+        pa.close()
+        pb.close()
+        if proc.poll() is None:
+            proc.kill()
