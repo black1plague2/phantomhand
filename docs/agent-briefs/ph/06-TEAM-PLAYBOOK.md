@@ -76,5 +76,9 @@ poor → light, arm in view, recalibrate; APK broken → Quest Link from the lap
 
 1. A hand that is not yours became "yours" in under two minutes, because sight and touch arrived together.
 2. Delay the touch by 600 ms and it stops being yours; we measured both states on you just now.
-3. What timing can build and dissolve is an appearance of self; the one who watched it happen did not change. The
-   same measurement engine is Chetna's rehab product.
+3. What timing can build and dissolve is an appearance of self; you were aware of it the whole time. The same
+   measurement engine is Chetna's rehab product.
+
+Full version (30-second opening, what we claim and never claim, the run as an argument, judge questions):
+`docs/PH_JUDGE_SHEET.md`. Rule: we show an artificial sense of self; we never say we created, measured or proved
+consciousness, and q4 is a pointer, not proof.
