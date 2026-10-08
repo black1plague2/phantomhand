@@ -11,7 +11,7 @@ namespace Opus.Shell
     /// </summary>
     public sealed class PhantomStandbyCard
     {
-        public const float WidthMm = 640f, HeightMm = 400f;
+        public const float WidthMm = 640f, HeightMm = 440f;
 
         private readonly GameObject _go;
         private readonly Text _title, _body, _foot;

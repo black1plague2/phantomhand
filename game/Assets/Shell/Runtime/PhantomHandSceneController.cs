@@ -84,6 +84,7 @@ namespace Opus.Shell
         private PhantomStandbyCard _standby;
         private float _standbyT;
         private string _standbyIp;
+        private string _defaultArm = "right";   // the manifest's stimulated_side, for the Ready card (a program may still choose the other)
         private Func<string> _diag;
 
         private sealed class Ctx : ISessionContext
@@ -143,6 +144,11 @@ namespace Opus.Shell
             if (_ep.HubPort != 0 && _ep.HubPort != PhantomEndpoints.DefaultHubPort)
                 Debug.LogWarning("[PhantomHand] hub port " + _ep.HubPort + " requested but LiveClient always uses " + PhantomEndpoints.DefaultHubPort + " (CROSS-TRACK request to the SDK owner); using host only.");
             LoadManifest();
+            try
+            {
+                if (_manifest != null) _defaultArm = PhantomHandParams.From(ParamBinder.Bind(_manifest.ParamSchema, new JObject()).Params).StimulatedSide;
+            }
+            catch (Exception) { /* the card then says "right", the code's own default */ }
 
             if (anchors == null) anchors = GetComponent<PhantomAnchors>();
             if (anchors == null) anchors = FindFirstObjectByType<PhantomAnchors>();
@@ -331,7 +337,8 @@ namespace Opus.Shell
             string fixedHub = !hub && !string.IsNullOrEmpty(_ep.HubHost) ? "  (only " + _ep.HubHost + " is tried: it was set by hand)" : "";
             string body = "Operator app:   " + (hub ? "connected" : "not found yet") + fixedHub + "\n" +
                           "Sleeve:   " + (_transportA.HasDevice ? "found" : "not found yet") + "\n" +
-                          "Muscle sensor:   " + (_transportB.HasDevice ? "found" : "not found yet") + "\n\n" +
+                          "Muscle sensor:   " + (_transportB.HasDevice ? "found" : "not found yet") + "\n" +
+                          "Sleeve arm:   " + _defaultArm + "  (the other hand points and answers)\n\n" +
                           (_useDemo ? "No headset: the hands are scripted."
                                     : hub ? "The operator starts the run, or pinch both hands for 2 seconds."
                                           : "To start without the app: pinch both hands for 2 seconds.") + "\n" +
@@ -349,6 +356,7 @@ namespace Opus.Shell
         {
             return "phase " + (_module != null ? PhNames.Of(_module.CurrentPhase) : "idle") +
                    ", operator app " + (HubConnected() ? "connected" : "not connected") +
+                   ", arm " + (_module != null ? _module.Params.StimulatedSide : _defaultArm) +
                    ", sleeve " + NodeWord(_transportA, _nodeA) + ", muscle sensor " + NodeWord(_transportB, _nodeB) +
                    ", strokes acked " + HapticEventsDelivered + " of " + HapticEventsScheduled +
                    ", hands " + (_useDemo ? "scripted" : HandWord(HandSide.Left) + "/" + HandWord(HandSide.Right));
