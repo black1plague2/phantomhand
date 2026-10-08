@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 namespace Opus.Shell.Editor
@@ -242,6 +243,38 @@ namespace Opus.Shell.Editor
         {
             try { if (File.Exists(path)) File.Delete(path); }
             catch (System.Exception e) { Debug.LogWarning($"[OPUS] OpusBuildScript(PH): could not delete {path}: {e.Message}"); }
+        }
+    }
+
+    /// <summary>
+    /// The Meta SDK writes this PC's LAN address and the editor bridge's access token into Assets/Resources/DevAgentSettings.asset at the start of EVERY
+    /// build (its DevAgentBuildProcessor, order 1) and puts the old values back afterwards. A development APK wants them (the on-device agent connects back
+    /// to the editor). A release APK must not carry a credential for this PC's editor: the bridge listens on every network interface. This step runs after
+    /// the SDK's and empties both fields in a build that is not a development build. Found on 8 Oct 2026 by looking inside the release APK.
+    /// </summary>
+    internal sealed class ReleaseBuildBridgeSettings : IPreprocessBuildWithReport
+    {
+        public const string AssetPath = "Assets/Resources/DevAgentSettings.asset";
+
+        public int callbackOrder { get { return 1000; } }
+
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            if ((report.summary.options & BuildOptions.Development) != 0) return;
+            var asset = AssetDatabase.LoadMainAssetAtPath(AssetPath);
+            if (asset == null) return;
+            var so = new SerializedObject(asset);
+            var token = so.FindProperty("accessToken");
+            var address = so.FindProperty("serverAddress");
+            if (token == null || address == null)
+            {
+                Debug.LogWarning("[OPUS] OpusBuildScript: DevAgentSettings has no accessToken / serverAddress field any more: check that this release build does not carry the editor bridge token");
+                return;
+            }
+            token.stringValue = ""; address.stringValue = "";
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(asset);
+            Debug.Log("[OPUS] OpusBuildScript: release build, the editor bridge's address and token are left out of DevAgentSettings");
         }
     }
 }
