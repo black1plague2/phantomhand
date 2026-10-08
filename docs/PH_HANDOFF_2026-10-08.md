@@ -5,6 +5,15 @@ different machine. Everything stated as working carries the check that showed it
 run. Event: Vedanta Makeathon, Team Kela; the pitch calls the product MAYA (subtitle Phantom Hand); in code it is Chetna / OPUS.
 **Freeze: 9 Oct 2026, 12:00.**
 
+> **Update, midnight of 8 to 9 Oct, same PC.** The work did not move that night; it went on here. Since this file was written:
+> the Quest APK ran on a headset for the first time; four defects that only a headset shows were found and fixed (the link to
+> the operator app dropping every 2 s, a run that went on while the headset was off the head, a headset shown as offline after
+> any sleep, uploads that waited for the next run); the headset has its own log and file channel over Wi-Fi
+> (`tools/demo/quest_collect.py`, TCP 8796); and one whole run through headset, both boards and the phone is on record: 113 of
+> 113 sent strokes acked, both sensor streams at 100 Hz on the headset, 72 frames per second. **Read
+> `logs/sessions/2026-10-08-PH-U-DIAG-run1.md` first.** Where sections 0, 2 and 4 below say the APK was never started on a
+> headset, they are history. The APKs on the GitHub release are older than these fixes until the release is refreshed.
+
 - Repository: `https://github.com/black1plague2/phantomhand` (public), branch `main`. The commit that carries this file is the state.
 - Built apps (not in git, `*.apk` is ignored): GitHub release **`ph-handoff-2026-10-08`** of the same repository.
 - The deepest record of today: `logs/sessions/2026-10-08-PH-E2E-HW-run1.md` (the real boards), then `docs/PH_STATUS.md`.

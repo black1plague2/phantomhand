@@ -175,12 +175,101 @@ totalWarnings=5`; `adb install -r` `Success` at 23:12:36. [V]
    (analytics, app, tools: no use outside two test files). `impact_pos` is `vec3OrNull` now; the session passes, and so does the
    whole fixture check (`[PASS] All validations passed`). [V]
 
-## 7. Open at 23:30
-- The real run with the sleeve and the pads worn: the owner will say when. The collector is running into
-  `sim/out/quest_logs/run2/` with `--hub 192.168.242.162:8787`.
-- The beacon of the phone app after a doze (a Sonnet builder in a worktree: self-healing socket and tests); then a phone APK,
-  then the hand-set hub address can leave the headset again.
-- Two read-only helpers are looking at the code paths that only a headset exercises (scene reload, pause and resume, uploads)
-  and at the headset's logcat of the first run; their findings go below.
-- The Quest APK on the GitHub release `ph-handoff-2026-10-08` is the one of 21:22: it has the flapping link and no log channel.
-- EMG on a person still shows no muscle activity (hardware side, see the PH-E2E-HW log).
+## 7. What a headset that is taken off does (23:23 to 23:33), and the two fixes
+
+The owner took the headset off during a run (`a3afc35e`, started by the operator's "next person", in its induction) and put it
+on 7 minutes later. From the headset's log: [V]
+
+```
+17:53:03.793 I [health] app paused (headset taken off, or the system menu is open)
+18:00:07.956 I [health] app resumed
+18:00:08.060 I [health] 0 fps, worst frame 424271 ms, ...; phase induction, ..., sleeve ... silent, muscle sensor ... silent, strokes acked 15 of 148, ...
+18:00:08.359 I [OPUS] session a3afc35e-... finished (completed): trials=0 success=0 kinChunks=27 ...
+18:00:19.815 I [OPUS] uploaded session a3afc35e-...: 93 files
+```
+
+1. **The run ended as "completed" 0.4 s after waking.** The phases run on wall time and nothing paused the run, so the 7 minutes
+   off the head were 7 minutes of the run: every remaining phase had expired and 133 of 148 stroke cues were never played. A
+   session like that looks whole in the files and is not.
+   Fix (a4ebee3): `OpusSessionRunner.OnApplicationPause`, Phantom Hand only, pauses the run the way the operator's Pause does
+   (the state machine freezes its timers, a `pause` event is written) and resumes it on waking unless the operator had paused it.
+   Test `PH_Standalone_TakingTheHeadsetOff_PausesTheRun`: phase and time left stand still for 4 s off the head, 2 s pass in 2 s
+   after waking, an operator's pause survives. `DONE PlayMode passed=1 ... duration=83.3s`. [V in the editor; on the headset: not yet]
+2. **The phone said "offline" for a headset that was running.** For 2.5 minutes after the wake the headset's health line read
+   `operator app connected` and its statuses reached the hub (`hub_view.log`: `state finished, phase done` at 23:30:07), while
+   `/opus/v1/health` said `connected_headsets: 0`. `HubConnection._sendPing` marks a headset disconnected after 3 unanswered pings
+   and stops pinging, but left the socket open; the headset had only slept, kept its end, and never said hello again.
+   Fixes on both sides: the hub closes the socket when it writes a headset off (2759d32; two tests; Flutter 496/496), and the
+   headset drops its socket on waking so the connection loop says hello again (`LiveClient.Reconnect`, a4ebee3).
+   Stopgap used at 23:33: the app on the headset restarted with adb; `connected_headsets: 1` ten seconds later. [V]
+3. Third release APK of the night, with both game-side fixes and the Ready card's "set by hand" line: built 23:39 to 23:40,
+   91 850 942 bytes, sha256 `4c547390acbc808b83359092f0d47cbc30f4d9cf3ca0b565270eb23f5e689060`, `result=Succeeded`, the
+   bridge token 0 hits in 875 entries. **Not installed** (the owner asked for 20 minutes without interruption at 23:36). A first
+   attempt at 23:36:36, one second after an EditMode run ended, came back `result=Unknown totalSize=0` within a second and had
+   already moved the good APK to `.apk.prev`: start a build only when the editor is idle. [V]
+
+## 8. The real run: headset, sleeve, sensor and phone, nothing else (23:36 to 23:41)
+
+Session `1b5f6711-e706-442b-b90d-188dcc006e7c`, the 23:12 APK, the Quest on battery and on the hotspot, started by the
+operator's Start on the phone, 287 s, ended by the operator's Stop during the dissolve (so no reveal and no witness screen).
+All numbers are from the headset's own files and log, mirrored over Wi-Fi (119 files), and the session passes
+`contracts/validate.py`. [V]
+
+| | |
+|---|---|
+| Phases | calibrate, then for ASYNC and for SYNC: probe, induction (57 s and 70 s), threat, probe, questionnaire; dissolve. The operator sent "next phase" four times (out of calibrate, out of both inductions, out of the first questionnaire) |
+| Stroke cues | 162 scheduled, 49 cancelled by "next phase", **113 sent, 113 acked** (motor A 57 of 57, motor B 56 of 56) |
+| Ack round trip | median 45 ms, 75 % under 99 ms, 90 % under 184 ms, 95 % under 285 ms, worst 572 ms; 7 over 250 ms, in two clusters (77 to 79 s, 181 to 188 s) |
+| Brush against cue (`timing_err_ms`, 32 strokes) | median 7 ms, worst 13 ms |
+| Sensor streams on the headset | EMG 28 672 samples (99.8 Hz), IMU 28 533 samples (99.4 Hz), 59 sens files |
+| Picture | 72 frames per second in every 5 s window but one (71), worst frame 71 ms, 9 slow frames of 20 548 (0.04 %); logcat: `FPS=72/72`, `Stale=0`, CPU and GPU level 2, app time 6 to 8 ms of 13.9, 43 degrees C, no thermal line, no crash, no ANR, no Unity error |
+| Link to the phone | 0 reconnects in the boot; the hub's view followed every phase within 1 to 2 s |
+| Hand tracking | 71.7 Hz measured |
+| Flinch measure | ASYNC: IMU 0.30, EMG 1.06 times rest, no onset. SYNC: IMU 6.1, EMG 1.39 times rest, onset 157 ms after the impact |
+
+What it does not show: the calibration was skipped by "next phase" at 35.6 s (`calibration ok=false`), so the four `drift_cm`
+values (41, 48, 39, 16) are not drift, they are measured against an arm position that was never taken. The EMG factor of 1.39
+with an onset is the first time the muscle channel moved with an event on a person; one event is not a finding. The session
+was stopped 2 s before the headset came off, so its upload to the phone had not finished when the app was paused (it is queued
+and goes when the headset wakes).
+
+## 9. What the two helpers found (both read-only)
+
+**Code audit of the paths only a headset exercises** (Sonnet, 34 minutes, 57 tool calls; its report is quoted by item number).
+It found the two defects of section 7 from the code alone, before it could see the logs, which is a second witness for them.
+The rest, and what was done:
+
+| # | Finding | Done |
+|---|---|---|
+| 3 | A session that was running when the app died (killed in the background, a crash) is never uploaded: `QueuePendingUploads` skips a folder whose `session.json` has no end. Its files stay on the headset | Not changed. The log channel reaches them (`quest_collect.py`). To do after the event |
+| 4 | Uploads start only when the link comes up and when a run ends, and one session that keeps failing holds the queue's head | Fixed: a retry every 10 s while connected, and a failed session goes to the back of the queue |
+| 5 | An upload has no timeout; a hub that vanished holds every remaining file for the OS connect timeout | Fixed: 15 s per file, and the loop stops when the link is down |
+| 6 | A board that comes back on another address (battery swap, a new DHCP lease) is not found again in that scene: the first beacon is latched | Not changed. Restart the app, or "next person" (a scene reload looks again) |
+| 7 | The game module might be stripped by IL2CPP (it is built by reflection) | Not a defect: four runs on the headset built it |
+| 8 | Before any run, a pause sends a stop and "IDLE" to Node A, which moves that board's stream to the headset | Not changed (only the headset talks to the boards in our set-up) |
+| 9 | Closing the app in the middle of a run lost the closing events: the handlers were taken off before the run was finished | Fixed: the run is finished first |
+| Q5 | The launch scene's hub client asked Unity for the scene list on a background thread | Fixed: asked once on the main thread |
+
+**Logcat of the first run** (Haiku): stopped after 19 minutes without a report; the questions were answered by hand from the
+same file (no crash, no ANR, no Unity error line, `FPS=72/72`, `Stale=0`, CPU and GPU level 2, 43 degrees C; in section 8).
+The first Sonnet helper of the evening (the PC tool) had also produced nothing in 24 minutes; the audit and the beacon builder
+(section 10) both delivered. Two of five stalled tonight: do not put a helper on the critical path.
+
+## 10. The phone app's beacon
+A Sonnet builder in a worktree made `UdpBeacon` replace its own socket (a tick that no target accepted swaps it at once; every
+15 ticks anyway; a failed bind is retried on the next tick), with nine tests on fake sockets and ten deliberate breaks of the
+logic, each caught. Merged as 21c42d5; Flutter suite 505/505 in the main checkout. One of the two hub tests written earlier
+tonight failed once when the whole folder ran in parallel (it read a counter one event-loop turn too early) and was corrected.
+Not yet on the phone: whether it cures the silence after a doze is not known. [V the tests; N the phone]
+
+## 11. Open at 23:50
+- **Install the newest Quest APK** (the build that follows the upload and shutdown fixes of section 9; until then the one of
+  23:40 with the pause and reconnect fixes). The headset has the 23:12 build: on it a run does not pause when the headset comes
+  off, and after a sleep the phone shows the headset as offline until the app is restarted.
+- **Install the phone app** built from 21c42d5 (hub closes a written-off socket; self-healing beacon), sign in, open Monitor;
+  then listen on UDP 8788 from the PC after a doze. If the beacon holds, remove the hand-set hub address from the headset.
+- A full run without "next phase": calibration done, so that the drift numbers mean something; and the witness screen reached.
+- The Quest APK on the GitHub release `ph-handoff-2026-10-08` is still the one of 21:22 (flapping link, no log channel).
+- EMG on a person: one event with a factor of 1.39 and an onset is not yet a working sensor (hardware side, PH-E2E-HW log).
+- The old operator app on the phone is switched off, not uninstalled (the owner's to remove).
+- `tools/demo/unity_phone_hub_run.py` was written at 22:05 and never run; `quest_collect.py --hub` does its job. Not committed.
