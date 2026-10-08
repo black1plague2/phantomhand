@@ -20,7 +20,9 @@ namespace Opus.Sdk
     /// Time: each node's millis() is mapped to session ms with a median offset (<see cref="ClockOffsetEstimator"/>),
     /// one estimator per device id. sensor_chunk.timestamp_ms is the FIRST sample (sample i is at
     /// timestamp_ms + i x 1000 / sample_rate_hz); emg_burst.timestamp_ms is the onset. For the offset a chunk counts
-    /// as sent at its LAST sample.
+    /// as sent at its LAST sample. The electronics team's firmware 0.5.0 stamps the LAST sample instead: the stamp is
+    /// later by (n - 1) samples and the offset comes out smaller by the same amount, so the samples land on the same
+    /// session times (a node must keep to one convention; bursts would be off, that firmware sends none).
     /// </summary>
     public sealed class SleeveSensorClient : IDisposable
     {

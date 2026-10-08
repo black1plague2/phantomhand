@@ -151,7 +151,7 @@
         "type": { "const": "sensor_chunk" },
         "device_id": { "type": "string" },
         "device_kind": { "const": "bio" },
-        "timestamp_ms": { "type": "number", "minimum": 0, "description": "device clock (millis()) of the FIRST sample in the chunk (manager decision); sample i is at timestamp_ms + i * 1000 / sample_rate_hz" },
+        "timestamp_ms": { "type": "number", "minimum": 0, "description": "device clock (millis()) of the FIRST sample in the chunk (manager decision); sample i is at timestamp_ms + i * 1000 / sample_rate_hz. The electronics team's firmware 0.5.0 stamps the LAST value instead (HAPTIC_PROTOCOL.md v1.3): place a chunk by its arrival, not by this field alone" },
         "sample_rate_hz": { "type": "number", "minimum": 1, "maximum": 1000, "description": "envelope rate; 100 for Node B v0.5.0" },
         "emg_envelope": { "type": "array", "items": { "type": "number" }, "minItems": 1, "maxItems": 10 },
         "unit": { "type": "string", "examples": ["raw_adc"] },

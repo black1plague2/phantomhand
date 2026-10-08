@@ -1395,6 +1395,59 @@ def test_team_telemetry_goes_only_to_the_last_sender():
     assert h.ev("sub_expired") and h.tw.A.live_subs(h.clk.t) == []
 
 
+# ---- 3b. --telemetry-port: the real boards send telemetry to the last sender's IP on a FIXED port, acks to its source port
+
+def test_team_telemetry_port_sends_telemetry_to_that_port_and_acks_to_the_source_port():
+    h = team(("haptic", "bio"), telemetry_port=8790)
+    p1, p2 = ("10.0.0.1", 1111), ("10.0.0.2", 2222)
+    for p in (p1, p2):                                # p2 speaks last, to both nodes
+        h.send({"type": "keepalive"}, addr=p, kind="haptic")
+        h.send({"type": "keepalive"}, addr=p, kind="bio")
+    h.send(stroke(cue_id="t1"), addr=p2)
+    h.run(500)
+    fixed2 = ("10.0.0.2", 8790)                        # the last sender's IP, the fixed port: not 2222
+    for kind, typ in (("haptic", "sensor_data"), ("bio", "sensor_chunk")):
+        assert h.msgs(typ, kind=kind, addr=fixed2)
+        assert {a for k, m, a, _ in h.sent if m["type"] == typ} == {fixed2}       # to nobody else, not to a source address
+    assert [a for k, m, a, _ in h.sent if m.get("cue_id") == "t1"] == [p2]        # the ack still goes to the source address
+    assert accepted(h, "t1") is True
+    h.send({"type": "keepalive"}, addr=p1, kind="haptic")                         # any packet switches the target: another IP
+    mark = len(h.sent)
+    h.run(500)
+    after = [(a, m["type"]) for k, m, a, _ in h.sent[mark:]]
+    assert ("10.0.0.1", 8790) in [a for a, t in after if t == "sensor_data"]
+    assert fixed2 not in [a for a, t in after if t == "sensor_data"]
+    assert fixed2 in [a for a, t in after if t == "sensor_chunk"]                  # node B still streams to p2
+
+
+def test_telemetry_port_is_ignored_by_the_reference_dialect_and_checked_as_a_port():
+    h = H(("haptic", "bio"), telemetry_port=8790)
+    me = ("10.0.0.1", 5000)
+    h.send({"type": "subscribe"}, addr=me, kind="haptic")
+    h.send({"type": "subscribe"}, addr=me, kind="bio")
+    h.run(500)
+    assert h.msgs("sensor_data", addr=me) and h.msgs("sensor_chunk", addr=me)     # still the subscriber's source address
+    assert not [1 for k, m, a, _ in h.sent if a == ("10.0.0.1", 8790)]
+    assert T.build_parser().parse_args([]).telemetry_port == 0
+    assert T.build_parser().parse_args(["--telemetry-port", "8794"]).telemetry_port == 8794
+    for bad in (-1, 65536):                            # sendto() would raise OverflowError in the tick thread
+        with pytest.raises(ValueError):
+            T.Twin(("haptic",), dialect="team", telemetry_port=bad)
+
+
+def test_node_b_chunk_stamp_is_the_first_value_in_the_reference_dialect_and_the_last_in_the_team_dialect():
+    stamps = {}
+    for dialect in DIALECTS:
+        h = H(("bio",), dialect=dialect)
+        h.send({"type": "keepalive" if dialect == "team" else "subscribe"}, addr=("10.0.0.1", 5000), kind="bio")
+        h.run(500)
+        stamps[dialect] = [m["timestamp_ms"] for m in h.msgs("sensor_chunk")[:3]]
+    # a value is stored every 10 ms from device time 10. Reference chunks hold 10 values: 1-10, 11-20 ... -> the first is stamped
+    assert stamps["reference"] == [10, 110, 210]
+    # team chunks hold 4: values 1-4 (stored at 10..40), 5-8 ... -> millis() of the 4th, about 30 ms after the first
+    assert stamps["team"] == [40, 80, 120]
+
+
 def test_team_nodes_send_no_status_and_no_emg_burst():
     h = team(("haptic", "bio"))
     me = ("10.0.0.1", 1111)
@@ -1422,7 +1475,7 @@ def test_team_node_b_sends_4_value_chunks_25_per_second():
         assert m["device_id"] == "CHETNA_BIO_001" and m["device_kind"] == "bio" and m["sample_rate_hz"] == 100
         assert len(m["emg_envelope"]) == 4 and m["unit"] == "raw_adc" and m["status"] == "ok"
     ts = [m["timestamp_ms"] for m in ch]
-    assert set(b - a for a, b in zip(ts, ts[1:])) <= {39, 40, 41}                  # 40 ms apart = the first sample of each chunk
+    assert set(b - a for a, b in zip(ts, ts[1:])) <= {39, 40, 41}                  # 40 ms apart (each chunk is stamped at its last value)
     env = [v for m in ch for v in m["emg_envelope"]]
     assert abs(statistics.mean(env) - T.EMG_BASELINE) < 3.0
 
@@ -1506,3 +1559,22 @@ def test_cli_team_dialect_subprocess_speaks_their_form(tmp_path):
         pb.close()
         if proc.poll() is None:
             proc.kill()
+
+
+def test_udp_team_telemetry_arrives_on_the_fixed_port_and_the_ack_on_the_command_socket(server):
+    listener, cmd = Peer(), Peer()                    # the receiver's fixed telemetry port, and a different socket the commands leave from
+    port = listener.s.getsockname()[1]
+    srv = server(("haptic", "bio"), dialect="team", telemetry_port=port)
+    try:
+        cmd.send({"type": "keepalive"}, srv.twin.ports["bio"])
+        cmd.send(stroke(cue_id="u1"), srv.twin.ports["haptic"])
+        ack, got = cmd.recv_until(lambda m: m.get("type") == "ack")
+        assert ack is not None and ack["cue_id"] == "u1" and ack["accepted"] is True
+        data, _ = listener.recv_until(lambda m: m.get("type") == "sensor_data")
+        chunk, _ = listener.recv_until(lambda m: m.get("type") == "sensor_chunk")
+        assert data is not None and chunk is not None
+        _, rest = cmd.recv_until(lambda m: False, timeout=0.3)                   # a bounded look, not a readiness wait
+        assert not [m for m in got + rest if m.get("type") in ("sensor_data", "sensor_chunk")]
+    finally:
+        listener.close()
+        cmd.close()

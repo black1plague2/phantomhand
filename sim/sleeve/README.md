@@ -43,7 +43,8 @@ beacon's own `ip` field names the same interface. `--host 192.168.242.190` annou
 broadcasts. If the interface list cannot be read, a /24 around this PC's address is assumed (stderr says so); a bind or send error skips that
 beacon. The `ready` line then also carries `"lan":{"host","control","beacons":[[source,destination],...]}`.
 
-Firewall (Windows): the PC with the twin needs UDP 8790 + 8792 in; the PC with Unity needs UDP 8791 in for `Unity.exe` (a per-program Block
+Firewall (Windows): the PC with the twin needs UDP 8790 + 8792 in; the PC with Unity needs UDP 8791 in, and UDP 8790 in for the sensor stream of the real boards or of a twin started with
+`--dialect team --telemetry-port 8790`, for `Unity.exe` (a per-program Block
 rule on the Public profile beats any port rule). `tools\demo\open_firewall.ps1` reports the current rules; its change switches are for a
 human in an elevated PowerShell. The control commands work only on the twin's own PC (type them into its console).
 
@@ -82,7 +83,7 @@ contracts/HAPTIC_PROTOCOL.md v1.3, docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md sect
 | telemetry goes to | up to 3 subscribers (`subscribe`) | the sender of the LAST packet only (any packet; 5 s without one and it expires - the twin's assumption) |
 | `status` / `emg_burst` messages | yes | none (the burst is still logged) |
 | Node A `sensor_data` | accel + gyro + temperature | accel only |
-| Node B `sensor_chunk` | 10 values per 100 ms | 4 values, 25 packets/s (`timestamp_ms` = first sample) |
+| Node B `sensor_chunk` | 10 values per 100 ms | 4 values, 25 packets/s (`timestamp_ms` = the LAST value, as the real firmware stamps it) |
 | messages understood | cue (bare, `haptic`, legacy envelope), ping, subscribe, status_request, config, stop, display, keepalive | bare cue, keepalive, stop, display; everything else (ping, subscribe, `type:cue`, ...) is ignored and counted in `status` as `ignored`; garbage gets no ack |
 | `play_at_ms` | ignored | ignored (the cue starts on arrival) |
 

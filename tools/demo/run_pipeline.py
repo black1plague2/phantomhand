@@ -746,6 +746,11 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--dialect", choices=["reference", "team"], default="reference",
                    help="twin firmware dialect: reference (default) or team = the electronics team's own firmware "
                         "(contracts HAPTIC_PROTOCOL v1.3: ack {cue_id, accepted}, telemetry to the last sender, 4-value chunks)")
+    g.add_argument("--telemetry-port", type=int, default=None, metavar="N",
+                   help="UDP port on this PC that takes the nodes' sensor stream. The real boards send it to the IP of the "
+                        "last sender on the FIXED port 8790, not to the port a command came from. Default: 8790 with "
+                        "--hardware; 8794 + --port-offset with --sim --dialect team (the twin is told the same port); none "
+                        "for the reference dialect. 0 = none. Unity gets it as OPUS_PH_TELEMETRY_PORT")
     return p
 
 

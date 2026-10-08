@@ -151,12 +151,12 @@ namespace Opus.Shell
 
             AndroidMulticastLock.Acquire();   // Quest: without it Android drops the node discovery beacons (UDP broadcast)
             _clock = new SessionClock();
-            _transportA = new UdpHapticTransport(_ep.NodeAHost, DiscoveryFilter.Haptic, _ep.NodeAPort, _ep.DiscoveryPort);
+            _transportA = new UdpHapticTransport(_ep.NodeAHost, DiscoveryFilter.Haptic, _ep.NodeAPort, _ep.DiscoveryPort, _ep.TelemetryPort);
             _haptic = new HapticClient(_transportA) { Enabled = false, MaxIntensity = 1.0 };
             _haptic.Clock = () => _clock.NowMs;
             _haptic.OnCueRecorded += OnHapticCue;
             _haptic.Start();
-            _transportB = new UdpHapticTransport(_ep.NodeBHost, DiscoveryFilter.Bio, _ep.NodeBPort, _ep.DiscoveryPort);
+            _transportB = new UdpHapticTransport(_ep.NodeBHost, DiscoveryFilter.Bio, _ep.NodeBPort, _ep.DiscoveryPort, _ep.TelemetryPort);
             _transportB.Start();
 
             if (_useDemo)

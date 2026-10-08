@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import socket
 import sys
 from pathlib import Path
 
@@ -69,6 +70,31 @@ def test_measure_spinup_against_the_twin_sees_its_30ms_model(tmp_path):
     assert 25.0 <= res["median_start_delay_ms"] <= 70.0, res
 
 
+def free_udp_port() -> int:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(("0.0.0.0", 0))
+    port = s.getsockname()[1]
+    s.close()
+    return port
+
+
+def test_measure_spinup_sees_the_imu_a_node_sends_to_a_fixed_port_not_to_the_command_socket(tmp_path):
+    # a real Node A streams its IMU to (our IP, 8790), not back to the socket the pulse leaves from: with no listener
+    # on that port measure_spinup would never see a sample
+    port = free_udp_port()
+
+    async def go():
+        tw = PP.TwinProc("haptic", 14030, 3, tmp_path / "t.jsonl", dialect="team", telemetry_port=port)
+        try:
+            await tw.wait_ready()
+            return await PP.measure_spinup(("127.0.0.1", tw.ports["haptic"]), n=3, telemetry_port=port)
+        finally:
+            await tw.stop()
+
+    res = asyncio.run(go())
+    assert res["detected"] == 3 and all(t["acked"] for t in res["trials"])
+
+
 # ------------------------------------------------------------------ the harness itself
 def test_twin_subprocess_is_ready_when_it_says_so_and_stops_on_quit(tmp_path):
     async def go():
@@ -114,6 +140,20 @@ def test_a_truncated_run_goes_through_the_whole_harness_and_is_not_green(tmp_pat
     assert not all(r.ok for r in res["rows"])
     assert (Path(args.out) / "trunc" / "status_records.json").exists()
     assert res["headset_report"]["cues_acked"] == res["headset_report"]["cues_sent"] > 0
+
+
+def test_a_team_dialect_run_gets_imu_and_emg_through_the_telemetry_port(tmp_path):
+    args = argparse.Namespace(out=str(tmp_path / "out"), hub=None, hub_port=0, hardware=False, no_unity=True,
+                              port_offset=14040, seed=2, discovery_port=8791, fixture=str(truncated_fixture(tmp_path)),
+                              ph_speed=1.0, compress_gap_ms=200.0, dialect="team")
+    assert PP.telemetry_port_for(args) == 8794 + 14040                    # the twin AND the headset get this port
+    res = asyncio.run(PP.one_run(args, name="team"))
+    rpt = res["headset_report"]
+    assert rpt["cues_acked"] == rpt["cues_sent"] > 0                      # acks come back to each command socket as before
+    assert rpt["sensor_data"] > 100 and rpt["sens_chunks"] > 25           # the stream came in on the one fixed port ...
+    assert rpt["sens_samples"]["imu"] > 100 and rpt["sens_samples"]["emg"] > 100        # ... and landed in the sensor files
+    rows = {r.check: r for r in res["rows"]}
+    assert rows["Session valid and uploaded to the hub"].ok, rows["Session valid and uploaded to the hub"].observed
 
 
 def test_write_reports_emits_json_and_markdown(tmp_path):

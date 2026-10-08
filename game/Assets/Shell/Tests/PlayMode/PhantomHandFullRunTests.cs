@@ -73,16 +73,20 @@ namespace Opus.Shell.Tests.PlayMode
             // ---- endpoints (explicit readiness, no sleeps) ------------------------------------------------------------
             string envHub = Environment.GetEnvironmentVariable(PhantomEndpoints.EnvHub);
             string hubHost = "127.0.0.1"; int hubPort = HubPortRequired;
-            string nodeA, nodeB, discovery;
+            string nodeA, nodeB, discovery, telemetry = null;
             string hubOutDir = Path.Combine(simDir, "out", "hub_sessions");
             bool external = !string.IsNullOrEmpty(envHub);
+            // tools/demo/unity_fault_run.py names the fault it injects; only the checks that fault must break are relaxed.
+            string fault = external ? Environment.GetEnvironmentVariable("OPUS_PH_FAULT") : null;   // node_a_off | node_b_absent | hub_absent
+            bool noBio = fault == "node_b_absent", sleeveCut = fault == "node_a_off";
             if (external)
             {
                 PhantomEndpoints.ParseHostPort(envHub, out hubHost, out hubPort);
                 nodeA = Environment.GetEnvironmentVariable(PhantomEndpoints.EnvNodeA);
                 nodeB = Environment.GetEnvironmentVariable(PhantomEndpoints.EnvNodeB);
                 discovery = Environment.GetEnvironmentVariable(PhantomEndpoints.EnvDiscoveryPort);
-                Assert.IsNotNull(nodeA, "OPUS_PH_NODE_A missing"); Assert.IsNotNull(nodeB, "OPUS_PH_NODE_B missing");
+                telemetry = Environment.GetEnvironmentVariable(PhantomEndpoints.EnvTelemetryPort);
+                Assert.IsNotNull(nodeA, "OPUS_PH_NODE_A missing"); if (!noBio) Assert.IsNotNull(nodeB, "OPUS_PH_NODE_B missing");
                 Assert.AreEqual(HubPortRequired, hubPort,
                     "LiveClient.HubPort is a const (8787): the hub must listen there until the SDK takes a port (CROSS-TRACK request, run log U5).");
             }
@@ -90,7 +94,14 @@ namespace Opus.Shell.Tests.PlayMode
             {
                 Assert.IsTrue(File.Exists(py), "venv python not found at " + py + " (sim/live/README.md setup)");
                 _hub = StartProcess(py, "-m live.fake_hub --port " + HubPortRequired, simDir, null, _hubErr);
-                _twin = StartProcess(py, "-m sim.sleeve.twin --kind both --port-offset " + TwinOffset + " --seed 5 --no-stdin", root, _twinOut, null);
+                // The twin speaks the dialect of the boards we have (the electronics team's firmware 0.5.0, HAPTIC_PROTOCOL v1.3: acks with
+                // `accepted`, no status, 4-value chunks stamped at their last value, sensor data to a fixed port of the last sender).
+                // OPUS_PH_TWIN_DIALECT=reference in the editor's environment gives the reference firmware back.
+                bool team = Environment.GetEnvironmentVariable("OPUS_PH_TWIN_DIALECT") != "reference";
+                int telemetryPort = 8794 + TwinOffset;   // 8790 + offset is the simulated Node A itself on this PC
+                if (team) telemetry = telemetryPort.ToString();
+                _twin = StartProcess(py, "-m sim.sleeve.twin --kind both --port-offset " + TwinOffset + " --seed 5 --no-stdin"
+                    + (team ? " --dialect team --telemetry-port " + telemetryPort : ""), root, _twinOut, null);
                 float waited = 0f; JObject ready = null;
                 while (waited < 30f && ready == null)
                 {
@@ -125,6 +136,7 @@ namespace Opus.Shell.Tests.PlayMode
                 { PhantomEndpoints.EnvHub, hubHost + ":" + hubPort }, { PhantomEndpoints.EnvNodeA, nodeA },
                 { PhantomEndpoints.EnvNodeB, nodeB }, { PhantomEndpoints.EnvDiscoveryPort, discovery },
             };
+            if (!string.IsNullOrEmpty(telemetry)) env[PhantomEndpoints.EnvTelemetryPort] = telemetry;
             PhantomHandOverrides.Env = k => env.ContainsKey(k) ? env[k] : null;
             PhantomHandOverrides.ParamOverrides = new JObject { ["demo_mode"] = true };
             PhantomHandOverrides.Seed = 20261008;
@@ -172,9 +184,9 @@ namespace Opus.Shell.Tests.PlayMode
             while (Time.realtimeSinceStartup - t0 < 30f && runner.CurrentPhase != OpusSessionRunner.Phase.Running) yield return null;
             Assert.AreEqual(OpusSessionRunner.Phase.Running, runner.CurrentPhase, "the session never started");
             t0 = Time.realtimeSinceStartup;
-            while (Time.realtimeSinceStartup - t0 < 20f && !(controller.NodeA.Connected && controller.NodeB.Connected)) yield return null;
-            Assert.IsTrue(controller.NodeA.Connected, "Node A (twin) never streamed");
-            Assert.IsTrue(controller.NodeB.Connected, "Node B (twin) never streamed");
+            while (Time.realtimeSinceStartup - t0 < 20f && !(controller.NodeA.Connected && (noBio || controller.NodeB.Connected))) yield return null;
+            Assert.IsTrue(controller.NodeA.Connected, "Node A never streamed");
+            if (!noBio) Assert.IsTrue(controller.NodeB.Connected, "Node B never streamed");
             string sessionDir = runner.LastSessionDir; string sessionId = runner.SessionId;
             Debug.Log("[PH_FullRun] session " + sessionId + " running; nodes streaming; dir=" + sessionDir);
 
@@ -239,10 +251,11 @@ namespace Opus.Shell.Tests.PlayMode
             int late = cues.Count(e => !(bool)e["data"]["delivered"] && (string)e["data"]["reason"] == "late");
             string cueLine = "stroke cues acked: " + delivered + "/" + cues.Count + " (" + late + " dropped as late; frames over " +
                              HapticClient.StrokeLateDropMs + " ms took " + (slowShare * 100).ToString("F1") + " % of the run)";
-            Assert.GreaterOrEqual(delivered / (double)Math.Max(1, cues.Count - late), 0.98, "cues that were sent and acked; " + cueLine);
+            // with Node A switched off mid-run the cue rows belong to the harness's fault table, not to this test
+            if (!sleeveCut) Assert.GreaterOrEqual(delivered / (double)Math.Max(1, cues.Count - late), 0.98, "cues that were sent and acked; " + cueLine);
             string hostTooSlow = null;
             if (delivered / (double)cues.Count < 0.95 && slowShare > 0.03) hostTooSlow = "host too slow to judge cue delivery; " + cueLine;
-            else Assert.GreaterOrEqual(delivered / (double)cues.Count, 0.95, cueLine);
+            else if (!sleeveCut) Assert.GreaterOrEqual(delivered / (double)cues.Count, 0.95, cueLine);
             Assert.AreEqual(1, events.Count(e => (string)e["type"] == "witness_summary"), "witness_summary");
             if (!external)
             {
@@ -272,7 +285,7 @@ namespace Opus.Shell.Tests.PlayMode
             Assert.AreEqual("phantom_hand", (string)sessionJson["blocks"][0]["game_id"]);
             Assert.IsTrue((bool)sessionJson["blocks"][0]["completed"]);
             var sensJson = JObject.Parse(File.ReadAllText(Directory.GetFiles(sessionDir, "sens_*.json").OrderBy(x => x).First()));
-            Assert.IsNotNull(sensJson["emg_env"], "EMG stream in the sens file"); Assert.IsNotNull(sensJson["imu"], "IMU stream in the sens file");
+            if (!noBio) Assert.IsNotNull(sensJson["emg_env"], "EMG stream in the sens file"); Assert.IsNotNull(sensJson["imu"], "IMU stream in the sens file");
 
             // ---- contract validation: local session, then (when the test owns the hub) the hub-stored copy --------------------
             if (File.Exists(analyticsPy) && File.Exists(validatePy))

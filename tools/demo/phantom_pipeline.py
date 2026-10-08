@@ -13,6 +13,10 @@
                          127.0.0.1), the Unity PlayMode test gets no OPUS_PH_NODE_* overrides (real discovery), and the exact
                          command that runs the twin on a second PC is printed. Default behaviour is unchanged without it.
     --dialect team       the twin speaks the electronics team's own firmware dialect (contracts HAPTIC_PROTOCOL v1.3).
+    --telemetry-port N   the UDP port this PC takes the nodes' sensor stream on. The real boards send it to the IP of the last
+                         sender on the FIXED port 8790, not to the port a command came from. Default: 8790 with --hardware;
+                         8794 + --port-offset with --sim --dialect team (the twin gets the same port); none for the reference
+                         dialect (its twin answers to the source port). 0 = none. Unity gets it as OPUS_PH_TELEMETRY_PORT.
 
 Run with the sim/live venv (aiohttp + numpy):
     sim\\live\\.venv\\Scripts\\python.exe tools\\demo\\run_pipeline.py --game phantom_hand --sim --no-unity
@@ -47,11 +51,11 @@ from tool_paths import find_dart, find_unity  # noqa: E402
 
 try:
     from fake_hub import FakeHub  # noqa: E402
-    from phantom_replay import (DEFAULT_FIXTURE, NodeLink, PhantomHeadset, discover_nodes,  # noqa: E402
-                                prepare_session_copy)
+    from phantom_replay import (DEFAULT_FIXTURE, NodeLink, PhantomHeadset, TelemetryListener,  # noqa: E402
+                                discover_nodes, prepare_session_copy)
     SIM_IMPORT_ERROR: Optional[str] = None
 except ImportError as _exc:      # pragma: no cover - wrong venv
-    FakeHub = PhantomHeadset = NodeLink = discover_nodes = prepare_session_copy = None  # type: ignore
+    FakeHub = PhantomHeadset = NodeLink = TelemetryListener = discover_nodes = prepare_session_copy = None  # type: ignore
     DEFAULT_FIXTURE = REPO_ROOT / "contracts" / "fixtures" / "sessions" / "phantom_hand_min"
     SIM_IMPORT_ERROR = f"{type(_exc).__name__}: {_exc}"
 
@@ -64,6 +68,8 @@ DART = find_dart()          # OPUS_DART, FLUTTER_ROOT, PATH, H:\flutter\bin, the
 UNITY_EXE = find_unity()    # OPUS_UNITY_EXE, the Hub editor game/ProjectSettings pins (not PATH), then the old path
 UNITY_LOCK = REPO_ROOT / "game" / ".ph_unity.lock"
 DEFAULT_PORT_OFFSET = 31000
+REAL_TELEMETRY_PORT = 8790       # where the real boards send sensor_data / sensor_chunk: the last sender's IP, this FIXED port
+SIM_TELEMETRY_PORT = 8794        # + --port-offset for the team-dialect twin: right after its own 8790..8793 block
 
 
 def banner(title: str) -> None:
@@ -167,14 +173,17 @@ async def stop_hub(hub: Any) -> None:
 
 # ============================================================================ the twin
 def twin_command(kind: str, offset: int, seed: int, log_path: Path, host: Optional[str] = None,
-                 dialect: Optional[str] = None) -> List[str]:
-    """argv of sim/sleeve/twin.py as the harness starts it. The defaults (loopback, reference dialect) add no flag."""
+                 dialect: Optional[str] = None, telemetry_port: Optional[int] = None) -> List[str]:
+    """argv of sim/sleeve/twin.py as the harness starts it. The defaults (loopback, reference dialect, no telemetry
+    port) add no flag."""
     cmd = [sys.executable, "-m", "sim.sleeve.twin", "--kind", kind, "--port-offset", str(offset), "--seed", str(seed),
            "--log", str(log_path), "--no-stdin"]
     if host:
         cmd += ["--host", host]
     if dialect and dialect != "reference":
         cmd += ["--dialect", dialect]
+    if telemetry_port:
+        cmd += ["--telemetry-port", str(telemetry_port)]
     return cmd
 
 
@@ -183,23 +192,43 @@ def twin_host(args: argparse.Namespace) -> Optional[str]:
     return "0.0.0.0" if getattr(args, "lan", False) else None
 
 
-def unity_env(hub_host: str, hub_port: int, ports: Dict[str, int], lan: bool = False) -> Dict[str, str]:
+def telemetry_port_for(args: argparse.Namespace) -> Optional[int]:
+    """The UDP port this PC takes the nodes' sensor stream on; None = it comes back on the socket the commands left from.
+    --telemetry-port wins (0 = none). Else real nodes (--hardware, or --spinup without --sim): 8790, where their firmware
+    sends it. Else the twin in the team dialect: 8794 + --port-offset (on one PC the real 8790 is the node's own command
+    port). The reference twin answers to the source port: none."""
+    given = getattr(args, "telemetry_port", None)
+    if given is not None:
+        return given or None
+    if getattr(args, "hardware", False) or (getattr(args, "spinup", False) and not getattr(args, "sim", False)):
+        return REAL_TELEMETRY_PORT
+    if getattr(args, "dialect", "reference") == "team":
+        return SIM_TELEMETRY_PORT + args.port_offset
+    return None
+
+
+def unity_env(hub_host: str, hub_port: int, ports: Dict[str, int], lan: bool = False,
+              telemetry_port: Optional[int] = None) -> Dict[str, str]:
     """The OPUS_PH_* endpoints handed to the PlayMode test. With `lan` (or real nodes) there are NO node overrides: the
-    game finds Node A / Node B by their discovery beacons, whichever PC they run on."""
+    game finds Node A / Node B by their discovery beacons, whichever PC they run on. With a `telemetry_port` the game
+    is told where the nodes send their sensor stream (OPUS_PH_TELEMETRY_PORT); without one the variable is not set."""
     env = {"OPUS_PH_HUB": f"{hub_host}:{hub_port}"}
     if not lan:
         env["OPUS_PH_NODE_A"] = f"127.0.0.1:{ports['haptic']}"
         env["OPUS_PH_NODE_B"] = f"127.0.0.1:{ports['bio']}"
     env["OPUS_PH_DISCOVERY_PORT"] = str(ports["discovery"])
+    if telemetry_port:
+        env["OPUS_PH_TELEMETRY_PORT"] = str(telemetry_port)
     return env
 
 
 def second_pc_command(args: argparse.Namespace) -> str:
-    """The command line that runs the twin on another PC (real ports, so a harness or the game finds it by discovery)."""
+    """The command line that runs the twin on another PC (real ports, so a harness or the game finds it by discovery).
+    The team dialect sends its sensor stream to this PC's port 8790 like the real boards (--hardware listens there)."""
     cmd = ["python", r"sim\sleeve\twin.py", "--kind", "both", "--host", "0.0.0.0", "--port-offset", "0",
            "--seed", str(getattr(args, "seed", 1))]
     if getattr(args, "dialect", "reference") != "reference":
-        cmd += ["--dialect", args.dialect]
+        cmd += ["--dialect", args.dialect, "--telemetry-port", str(REAL_TELEMETRY_PORT)]
     return " ".join(cmd)
 
 
@@ -219,7 +248,8 @@ def lan_banner(args: argparse.Namespace) -> str:
         "  then, on THIS PC, aim the harness at the real ports (no twin is started here):",
         r"      python tools\demo\run_pipeline.py --game phantom_hand --hardware --discovery-port 8791 --lan"
         + (f" --dialect {dialect}" if dialect != "reference" else ""),
-        "  Windows Firewall: second PC UDP 8790 + 8792 in; this PC UDP 8791 in for python.exe / Unity.exe, hub TCP 8787 for a Quest.",
+        "  Windows Firewall: second PC UDP 8790 + 8792 in; this PC UDP 8791 (beacons) and UDP 8790 (the boards' sensor stream) in for",
+        "  python.exe / Unity.exe, hub TCP 8787 for a Quest (tools\\demo\\open_firewall.ps1 -Haptics adds the two UDP rules).",
         r"  tools\demo\open_firewall.ps1 reports the current rules (-RemoveUnityBlock -Apply [-Twin] [-Haptics] fix them, as Administrator).",
         "  Control commands (flinch, off-a, loss ...) work only on the twin's own PC: type them into its console (stdin).",
         "  Unity: with no OPUS_PH_NODE_* the PlayMode test must accept real discovery (CROSS-TRACK REQUEST, see the run log).",
@@ -230,11 +260,11 @@ class TwinProc:
     """sim/sleeve/twin.py as a subprocess. Ready when it prints {"event":"ready",...} (no sleeping)."""
 
     def __init__(self, kind: str, offset: int, seed: int, log_path: Path, host: Optional[str] = None,
-                 dialect: Optional[str] = None):
+                 dialect: Optional[str] = None, telemetry_port: Optional[int] = None):
         self.kind, self.offset, self.log_path = kind, offset, log_path
         self.proc = subprocess.Popen(
-            twin_command(kind, offset, seed, log_path, host, dialect), cwd=str(REPO_ROOT), stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL, text=True)
+            twin_command(kind, offset, seed, log_path, host, dialect, telemetry_port), cwd=str(REPO_ROOT),
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
         self.ready: Dict[str, Any] = {}
         self._evt = threading.Event()
         self.lines: List[str] = []
@@ -293,7 +323,7 @@ def run_analytics(session_dir: Path) -> Tuple[int, str, Optional[Dict[str, Any]]
 
 # ============================================================================ Unity path (wired, NOT run by the L3 smoke)
 async def run_unity_playmode(hub_host: str, hub_port: int, ports: Dict[str, int], out_dir: Path,
-                             timeout_s: float = 900.0, lan: bool = False) -> int:
+                             timeout_s: float = 900.0, lan: bool = False, telemetry_port: Optional[int] = None) -> int:
     """Batch PlayMode PH_FullRun (UNITY.md U5/U6). Takes game/.ph_unity.lock (01-ORCHESTRATION section 5), runs
     Unity with the live endpoints in environment variables, releases the lock. NOTE: the env var names are this
     harness's proposal (CROSS-TRACK REQUEST to the Unity track); the test must read them to point at the hub/twin."""
@@ -303,7 +333,7 @@ async def run_unity_playmode(hub_host: str, hub_port: int, ports: Dict[str, int]
     UNITY_LOCK.write_text(f"S2 run_pipeline {time.strftime('%Y-%m-%dT%H:%M:%S')}\n", encoding="utf-8")
     try:
         xml = out_dir / "ph_fullrun_playmode.xml"
-        env = dict(os.environ, **unity_env(hub_host, hub_port, ports, lan))
+        env = dict(os.environ, **unity_env(hub_host, hub_port, ports, lan, telemetry_port))
         cmd = [str(UNITY_EXE), "-batchmode", "-projectPath", str(REPO_ROOT / "game"), "-runTests",
                "-testPlatform", "PlayMode", "-testFilter", "PH_FullRun", "-testResults", str(xml),
                "-logFile", str(out_dir / "unity_playmode.log")]
@@ -333,10 +363,11 @@ async def one_run(args: argparse.Namespace, *, name: str, node_b: bool = True, o
     ext_hub = bool(args.hub) and args.hub not in ("fake", "flutter")
     twin_log = out / "twin.jsonl"
     twin_log.unlink(missing_ok=True)
+    tport = telemetry_port_for(args)
     try:
         if not args.hardware:
             twin = TwinProc("both" if node_b else "haptic", args.port_offset, args.seed, twin_log,
-                            host=twin_host(args), dialect=getattr(args, "dialect", None))
+                            host=twin_host(args), dialect=getattr(args, "dialect", None), telemetry_port=tport)
             ready = await twin.wait_ready()
             print(f"  twin ready: {json.dumps(ready['ports'])} (kinds {ready['kinds']})")
         if ext_hub:
@@ -345,6 +376,8 @@ async def one_run(args: argparse.Namespace, *, name: str, node_b: bool = True, o
         else:
             hub, hub_host, hub_port = await start_hub(args.hub or "fake", hub_out, port=args.hub_port or None)
         print(f"  hub {'external' if ext_hub else (args.hub or 'fake')} at {hub_host}:{hub_port}")
+        if tport:
+            print(f"  telemetry: the nodes send sensor_data / sensor_chunk to UDP {tport} on this PC, not to the port a command came from")
 
         # ---- nodes: discovery is the readiness signal
         banner(f"[{name}] discovery")
@@ -360,7 +393,7 @@ async def one_run(args: argparse.Namespace, *, name: str, node_b: bool = True, o
         if not args.no_unity:
             banner(f"[{name}] Unity batch PlayMode PH_FullRun (wired, not run by S2)")
             rc = await run_unity_playmode(hub_host, hub_port, twin.ports if twin else {"discovery": args.discovery_port},
-                                          out, lan=getattr(args, "lan", False) or twin is None)
+                                          out, lan=getattr(args, "lan", False) or twin is None, telemetry_port=tport)
             result["unity_rc"] = rc
             sid_dirs = sorted(p for p in hub_out.glob("*") if p.is_dir()) if hub_out.exists() else []
             session_dir = sid_dirs[-1] if sid_dirs else None
@@ -372,7 +405,7 @@ async def one_run(args: argparse.Namespace, *, name: str, node_b: bool = True, o
             control = ("127.0.0.1", twin.ports["control"]) if twin else None
             headset = PhantomHeadset(sdir, node_a=found.get("haptic"), node_b=found.get("bio"), control=control,
                                      host=hub_host, port=hub_port, speed=args.ph_speed, patient_ref="ph-demo-001",
-                                     compress_gap_ms=args.compress_gap_ms, off_a_at=off_a_at)
+                                     compress_gap_ms=args.compress_gap_ms, off_a_at=off_a_at, telemetry_port=tport)
             headset.state.session_id = sid
             await headset.start_nodes()
             streams = await headset.wait_node_streams(timeout=8.0)
@@ -493,10 +526,11 @@ def write_reports(out: Path, runs: List[Dict[str, Any]]) -> None:
 async def run_spinup(args: argparse.Namespace) -> int:
     """--spinup: median of 10 single pulses on Node A (real node via discovery / --a-ip, or the twin with --sim)."""
     twin: Optional[TwinProc] = None
+    tport = telemetry_port_for(args)
     try:
         if args.sim and not args.hardware:
             twin = TwinProc("haptic", args.port_offset, args.seed, Path(tempfile.mkdtemp(prefix="ph_spinup_")) / "twin.jsonl",
-                            host=twin_host(args), dialect=getattr(args, "dialect", None))
+                            host=twin_host(args), dialect=getattr(args, "dialect", None), telemetry_port=tport)
             await twin.wait_ready()
             disc = twin.ports["discovery"]
         else:
@@ -511,7 +545,7 @@ async def run_spinup(args: argparse.Namespace) -> int:
                 return 2
             addr = found["haptic"]
         print(f"measuring motor start delay on Node A at {addr[0]}:{addr[1]} (10 single pulses)")
-        res = await measure_spinup(addr, 10)
+        res = await measure_spinup(addr, 10, tport)
         for t in res["trials"]:
             print(f"  pulse {t['trial']}: acked={t['acked']} ack_rtt={t['ack_rtt_ms'] and round(t['ack_rtt_ms'], 1)} ms "
                   f"IMU spike at +{t['spike_ms'] and round(t['spike_ms'], 1)} ms -> start delay "
@@ -584,10 +618,11 @@ def spike_delay_ms(samples: List[Tuple[float, float]], t_send: float, base_mean:
     return None
 
 
-async def measure_spinup(addr: Tuple[str, int], n: int = 10) -> Dict[str, Any]:
+async def measure_spinup(addr: Tuple[str, int], n: int = 10, telemetry_port: Optional[int] = None) -> Dict[str, Any]:
     """Motor start delay on Node A: a single stroke pulse, detect the vibration in the IMU, report the median.
     start_delay = spike arrival - send - ack_rtt/2 (our estimate of the command's one-way trip). Resolution is the
-    IMU's 10 ms sample period. Readiness/settling are awaited on incoming samples, never sleeps."""
+    IMU's 10 ms sample period. Readiness/settling are awaited on incoming samples, never sleeps. A real Node A sends the
+    IMU stream to `telemetry_port` on this PC (8790), not back to the socket the pulse leaves from: a listener takes it."""
     q: "asyncio.Queue[Tuple[float, float]]" = asyncio.Queue()
     from phantom_replay import accel_magnitude
 
@@ -599,6 +634,7 @@ async def measure_spinup(addr: Tuple[str, int], n: int = 10) -> Dict[str, Any]:
 
     link = NodeLink("haptic", addr, on_msg)
     await link.open()
+    listener = await TelemetryListener.open(telemetry_port, {"haptic": link}) if telemetry_port else None
     link.send({"type": "subscribe"})
     results: List[Dict[str, Any]] = []
     try:
@@ -625,6 +661,8 @@ async def measure_spinup(addr: Tuple[str, int], n: int = 10) -> Dict[str, Any]:
                 await asyncio.wait_for(q.get(), 2.0)
     finally:
         link.close()
+        if listener:
+            listener.close()
     vals = [r["start_delay_ms"] for r in results if r["start_delay_ms"] is not None]
     return {"n": n, "detected": len(vals), "median_start_delay_ms": statistics.median(vals) if vals else None,
             "trials": results}

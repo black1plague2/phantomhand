@@ -23,9 +23,9 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(REPO))
 
 from fake_hub import FakeHub  # noqa: E402
-from phantom_replay import (DEFAULT_FIXTURE, NodeLink, PhantomHeadset, ReplayClock, accel_magnitude,  # noqa: E402
-                            ack_delivered, build_sens_chunks, compress_schedule, discover_nodes, emg_level,
-                            prepare_session_copy, real_time_windows)
+from phantom_replay import (DEFAULT_FIXTURE, NodeLink, PhantomHeadset, ReplayClock, TelemetryListener,  # noqa: E402
+                            accel_magnitude, ack_delivered, build_sens_chunks, compress_schedule, discover_nodes,
+                            emg_level, prepare_session_copy, real_time_windows)
 from sim.sleeve.twin import EventLog, Twin, TwinServer  # noqa: E402
 
 SENSOR_SCHEMA = json.loads((REPO / "contracts" / "schemas" / "sensor-file.schema.json").read_text(encoding="utf-8"))
@@ -118,9 +118,9 @@ def test_build_sens_chunks_matches_the_sensor_schema_and_the_input():
 
 # ------------------------------------------------------------------------------ with the real twin
 class TwinRunner:
-    def __init__(self, offset: int, kinds=("haptic", "bio"), dialect: str = "reference"):
+    def __init__(self, offset: int, kinds=("haptic", "bio"), dialect: str = "reference", telemetry_port: int = 0):
         self.log = EventLog(None, keep=True)
-        self.twin = Twin(kinds, seed=3, port_offset=offset, log=self.log, dialect=dialect)
+        self.twin = Twin(kinds, seed=3, port_offset=offset, log=self.log, dialect=dialect, telemetry_port=telemetry_port)
         self.srv = TwinServer(self.twin, control=True)
 
     def __enter__(self):
@@ -207,14 +207,14 @@ class CapturingHub(FakeHub):
 
 
 async def run_headset(session: Path, twin: TwinRunner, hub_out: Path, node_b: bool = True,
-                      off_a_at=None) -> tuple:
+                      off_a_at=None, telemetry_port=None) -> tuple:
     hub = CapturingHub(port=_free_port(), beacon=False, scenario=None, beacon_port=_free_port(), out_dir=hub_out)
     await hub.start()
     try:
         found = await discover_nodes(twin.twin.ports["discovery"], ("haptic", "bio") if node_b else ("haptic",), 5.0)
         hs = PhantomHeadset(session, node_a=found["haptic"], node_b=found.get("bio"),
                             control=("127.0.0.1", twin.twin.ports["control"]), host="127.0.0.1", port=hub.port,
-                            compress_gap_ms=200.0, status_period_s=0.2, off_a_at=off_a_at)
+                            compress_gap_ms=200.0, status_period_s=0.2, off_a_at=off_a_at, telemetry_port=telemetry_port)
         hs.state.session_id = json.loads((session / "session.json").read_text(encoding="utf-8"))["session_id"]
         await hs.start_nodes()
         streams = await hs.wait_node_streams(5.0)
@@ -344,3 +344,71 @@ def test_headset_against_the_team_dialect_twin_delivers_by_accepted_and_records_
     peak = max(v for t_, v in emg if impact <= t_ <= impact + 1500)
     rest = sorted(v for t_, v in emg if impact - 2000 <= t_ < impact)
     assert rest and peak > 3 * rest[len(rest) // 2]                    # the flinch is still visible in 4-value chunks
+
+
+# ------------------------------------------------------------------------------ the real boards' fixed telemetry port
+def _free_udp_port() -> int:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(("0.0.0.0", 0))
+    p = s.getsockname()[1]
+    s.close()
+    return p
+
+
+def test_telemetry_listener_hands_a_datagram_to_the_exact_source_then_the_only_link_with_that_ip_else_nobody():
+    got: List[tuple] = []
+    on_msg = lambda name, msg: got.append((name, msg["type"]))                       # noqa: E731
+    boards = {"haptic": NodeLink("haptic", ("10.0.0.1", 8790), on_msg), "bio": NodeLink("bio", ("10.0.0.2", 8790), on_msg)}
+    lst = TelemetryListener(boards)
+    assert lst.owner(("10.0.0.1", 8790)) is boards["haptic"]                         # exact (ip, port)
+    assert lst.owner(("10.0.0.2", 51234)) is boards["bio"]                           # another source port: the only link on that IP
+    assert lst.owner(("10.0.0.3", 8790)) is None                                     # a stranger
+    twin = {"haptic": NodeLink("haptic", ("127.0.0.1", 39790), on_msg), "bio": NodeLink("bio", ("127.0.0.1", 39792), on_msg)}
+    lst = TelemetryListener(twin)
+    assert lst.owner(("127.0.0.1", 39792)) is twin["bio"]                            # both links on one IP: only the exact port counts
+    assert lst.owner(("127.0.0.1", 5555)) is None                                    # ambiguous: nobody
+    lst.datagram_received(json.dumps({"type": "sensor_chunk", "emg_envelope": [420.0]}).encode(), ("127.0.0.1", 39792))
+    lst.datagram_received(json.dumps({"type": "sensor_data", "sensors": {}}).encode(), ("127.0.0.1", 5555))
+    bio, haptic = twin["bio"], twin["haptic"]
+    assert got == [("bio", "sensor_chunk")] and bio.rx_count == 1 and bio.first_data.is_set() and bio.last_rx > 0
+    assert haptic.rx_count == 0 and not haptic.first_data.is_set() and haptic.last_rx == 0.0     # the stray went nowhere
+
+
+def test_headset_against_the_team_twin_with_a_telemetry_port_still_gets_imu_and_emg(tmp_path):
+    # their boards send sensor_data / sensor_chunk to the last sender's IP on a FIXED port, not to the port a command came
+    # from: with no listener on that port the headset would get acks and no stream at all
+    session = mini_session(tmp_path)
+    port = _free_udp_port()
+    with TwinRunner(OFFSET + 50, dialect="team", telemetry_port=port) as t:
+        hs, hub = asyncio.run(run_headset(session, t, tmp_path / "hub", telemetry_port=port))
+    assert hs.report["cues_acked"] == hs.report["cues_sent"] == 8                     # acks still come back to each command socket
+    assert hs.report["sensor_data"] > 100 and hs.report["sens_chunks"] > 25
+    assert hs.report["sens_samples"]["imu"] > 100 and hs.report["sens_samples"]["emg"] > 100
+    gs = [s["game_state"]["nodes"] for s in hub.statuses if "game_state" in s]
+    assert gs and all(n["haptic"]["connected"] and n["bio"]["connected"] for n in gs[2:])      # the listener feeds last_rx
+
+
+def test_a_telemetry_port_that_cannot_be_bound_is_one_line_on_stderr_and_the_run_goes_on(tmp_path, capsys):
+    session = mini_session(tmp_path)
+    taken = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    taken.bind(("0.0.0.0", 0))
+    port = taken.getsockname()[1]
+
+    async def go(t: TwinRunner):
+        found = await discover_nodes(t.twin.ports["discovery"], ("haptic", "bio"), 5.0)
+        hs = PhantomHeadset(session, node_a=found["haptic"], node_b=found["bio"], telemetry_port=port)
+        await hs.start_nodes()
+        try:
+            return hs.telemetry, await hs.wait_node_streams(5.0)
+        finally:
+            for link in hs.links.values():
+                link.close()
+
+    try:
+        with TwinRunner(OFFSET + 60) as t:                                           # reference dialect: it streams to the source port
+            listener, streams = asyncio.run(go(t))
+    finally:
+        taken.close()
+    assert listener is None and streams == {"haptic": True, "bio": True}
+    lines = [l for l in capsys.readouterr().err.splitlines() if "telemetry listener" in l]
+    assert len(lines) == 1 and str(port) in lines[0]

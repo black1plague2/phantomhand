@@ -807,6 +807,10 @@ async def main():
     parser.add_argument("--node-b", help="phantom_hand: Node B (bio) ip:port; omit to use --discovery-port")
     parser.add_argument("--discovery-port", type=int, default=0,
                         help="phantom_hand: node discovery UDP port (8791 + twin offset); 0 = no discovery")
+    parser.add_argument("--telemetry-port", type=int, default=0,
+                        help="phantom_hand: UDP port on this PC that takes the nodes' sensor stream, the way the real boards "
+                        "send it (to the IP of the last sender on the fixed port 8790, not to the port a command came from); "
+                        "0 = the stream comes back on the socket the commands leave from")
     parser.add_argument("--control", help="phantom_hand: twin control ip:port (flinch at threat_impact)")
     parser.add_argument("--compress-gap-ms", type=float, default=2500.0,
                         help="phantom_hand: cap idle gaps between events (0 = real time)")

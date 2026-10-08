@@ -185,8 +185,8 @@ def test_render_png_uses_whichever_backend_exists_and_writes_a_valid_file(tmp_pa
 
 # ------------------------------------------------------------------ feeds against the real twin
 class TwinCtx:
-    def __init__(self, offset: int, kinds=("haptic", "bio")):
-        self.twin = Twin(kinds, seed=5, port_offset=offset, log=EventLog(None))
+    def __init__(self, offset: int, kinds=("haptic", "bio"), **twin_kw: Any):
+        self.twin = Twin(kinds, seed=5, port_offset=offset, log=EventLog(None), **twin_kw)
         self.srv = TwinServer(self.twin, control=True)
 
     def __enter__(self):
@@ -238,6 +238,53 @@ def test_feeds_discover_nodes_by_announcement_and_a_second_viewer_does_not_steal
         finally:
             f1.stop()
             f2.stop()
+
+
+def free_udp_port() -> int:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(("0.0.0.0", 0))
+    port = s.getsockname()[1]
+    s.close()
+    return port
+
+
+def test_open_node_socket_binds_the_wanted_port_or_falls_back_with_one_line(capsys):
+    port = free_udp_port()
+    first = LP.open_node_socket(port)
+    assert first.getsockname()[1] == port and capsys.readouterr().err == ""
+    second = LP.open_node_socket(port)                                      # taken by `first`
+    try:
+        assert second.getsockname()[1] not in (0, port)                     # still a usable socket, on an ephemeral port
+        lines = capsys.readouterr().err.strip().splitlines()
+        assert len(lines) == 1 and str(port) in lines[0]
+    finally:
+        first.close()
+        second.close()
+
+
+def test_node_of_assigns_a_datagram_by_its_source_address_then_by_the_only_node_on_that_ip():
+    apart = LP.Feeds(LP.LiveData(), ("10.0.0.1", 8790), ("10.0.0.2", 8790), 0, None)
+    assert apart.node_of(("10.0.0.1", 8790)) == "A" and apart.node_of(("10.0.0.2", 8790)) == "B"      # exact
+    assert apart.node_of(("10.0.0.2", 51234)) == "B"                         # another source port: the only node on that IP
+    assert apart.node_of(("10.0.0.3", 8790)) is None                         # a stranger (a third board, a stray datagram)
+    same = LP.Feeds(LP.LiveData(), ("127.0.0.1", 39790), ("127.0.0.1", 39792), 0, None)
+    assert same.node_of(("127.0.0.1", 39792)) == "B" and same.node_of(("127.0.0.1", 5555)) is None   # one IP: only the exact port
+    assert LP.Feeds(LP.LiveData(), None, None, 0, None).node_of(("127.0.0.1", 1)) is None
+
+
+def test_feeds_get_both_streams_when_the_boards_send_them_to_a_fixed_port_like_the_real_ones():
+    port = free_udp_port()
+    with TwinCtx(13050, dialect="team", telemetry_port=port) as t:           # sensor_data / sensor_chunk go to (our IP, port)
+        d = LP.LiveData()
+        f = LP.Feeds(d, ("127.0.0.1", t.twin.ports["haptic"]), ("127.0.0.1", t.twin.ports["bio"]), 0, None, local_port=port)
+        f.start()
+        try:
+            assert d.wait_for(lambda x: x.counts["sensor_chunk"] >= 3 and x.counts["sensor_data"] >= 20, 8.0)
+            s = d.snapshot(__import__("time").monotonic())
+            assert s["a_ok"] and s["b_ok"]                                   # each stream was credited to its own node
+            assert 9.0 < sum(v for _, v in s["acc"]) / len(s["acc"]) < 10.6
+        finally:
+            f.stop()
 
 
 def test_a_node_that_goes_silent_is_shown_offline():

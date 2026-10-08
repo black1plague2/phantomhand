@@ -1,7 +1,23 @@
 # Electronics team handoff (received 2026-10-08) and consistency check
 
 Source: the electronics team's handoff, pasted by Rudra in the project chat on 2026-10-08. Their text is kept
-verbatim in §A; Opus's check against `docs/PH_ELECTRONICS_INTERFACE.md` and contracts v0.2 is §B.
+verbatim in §A; Opus's check against `docs/PH_ELECTRONICS_INTERFACE.md` and contracts v0.2 is §B; the firmware author's
+answers of the same evening are §C.
+
+## C. Answers from the firmware author (2026-10-08 18:09, link board lines 2-10)
+
+Read from the firmware source (v0.5.0) by the session that wrote it. "Seen on the wire" is noted where this PC has
+checked it itself; everything else is their statement.
+
+| Request (§B) | Answer | What it meant for us |
+|---|---|---|
+| Where do replies go? (new question) | acks to the sender's source IP **and source port**; `sensor_data` / `sensor_chunk` to the last sender's IP on the **fixed port 8790** | **A real gap on our side**: the game and the Python tools listened only on the port they sent from, so they would have had acks and no IMU, no EMG. Fixed in software (`TelemetryHub` in the SDK, the tools send from port 8790); contracts HAPTIC_PROTOCOL v1.3 row "Telemetry port". The twin's team dialect did not model this, which is why every simulated run was green |
+| 4. One listener or several? | one: the last sender. Node A switches on any datagram that parses as JSON, Node B on any datagram; a keepalive counts. Node A stops its motors after 2 s without a packet, Node B forgets its peer after 5 s | as assumed; the game's 1 Hz keepalive to both nodes covers both limits |
+| 1. `sensor_chunk.timestamp_ms` | device `millis()` when the 4th value was stored: the **last** value, about 30 ms after the first | no change needed in the game: it places a chunk by its arrival and counts back from the last sample, so both conventions give the same session times. Documented in the contract and the schema |
+| 2. Unknown extra fields | ignored on `stop` and `display`. A packet with a `motor` key is played as a cue whatever its `type`; the v1 cue form without `motor` is ignored without an ack; a float intensity (0.6) is cast to 0 and rejected | the Phantom Hand scene only sends the device form (integer intensity, `motor` key), `stop`, `display`, `keepalive`, `subscribe`, `ping`: none of them carries a `motor` key by accident |
+| 3. `status`, `emg_burst` | neither node sends them. Only `device_discovery`, `sensor_data` (A), `sensor_chunk` (B) and `ack` | as assumed: "connected" from packet age, the flinch from the envelope itself |
+| (their note) EMG baseline | the envelope's resting level moves with the supply and the electrode cable: about 395 on laptop USB with the cable out, about 695 on the bank, about 12 with the cable in and the pads loose | calibrate rest and MVC per person with the pads on (the game's calibration step does); never compare raw levels across power sources |
+| (their test) motors next to the EMG | both boards on one bank, motors stroking, no electrodes: envelope mean 699 sd 27.6 idle, 694 sd 14.1 with motors | no motor artefact seen without a person; on a person not checked yet |
 
 ## B. Consistency check (Opus, 2026-10-08)
 

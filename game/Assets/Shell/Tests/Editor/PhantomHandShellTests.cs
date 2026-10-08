@@ -43,6 +43,10 @@ namespace Opus.Shell.Tests
             Assert.AreEqual("127.0.0.1", e.NodeAHost); Assert.AreEqual(39790, e.NodeAPort);
             Assert.AreEqual(39792, e.NodeBPort); Assert.AreEqual(39791, e.DiscoveryPort);
             Assert.IsTrue(e.FromEnvironment);
+            // the real nodes stream to port 8790 of the sender; only a simulator on the same PC needs another port
+            Assert.AreEqual(8790, none.TelemetryPort); Assert.AreEqual(8790, e.TelemetryPort);
+            env[PhantomEndpoints.EnvTelemetryPort] = "39794";
+            Assert.AreEqual(39794, PhantomEndpoints.Resolve(k => env.ContainsKey(k) ? env[k] : null, s).TelemetryPort);
             UnityEngine.Object.DestroyImmediate(s);
         }
 

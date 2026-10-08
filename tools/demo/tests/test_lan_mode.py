@@ -74,7 +74,7 @@ def test_second_pc_command_is_the_exact_line_for_this_run():
     assert PP.second_pc_command(parse("--lan")) == \
         "python sim\\sleeve\\twin.py --kind both --host 0.0.0.0 --port-offset 0 --seed 42"
     assert PP.second_pc_command(parse("--lan", "--seed", "7", "--dialect", "team")) == \
-        "python sim\\sleeve\\twin.py --kind both --host 0.0.0.0 --port-offset 0 --seed 7 --dialect team"
+        "python sim\\sleeve\\twin.py --kind both --host 0.0.0.0 --port-offset 0 --seed 7 --dialect team --telemetry-port 8790"
 
 
 def test_lan_banner_names_both_machines_and_the_matching_harness_command():
@@ -85,6 +85,34 @@ def test_lan_banner_names_both_machines_and_the_matching_harness_command():
     assert "UDP 8790 + 8792" in sim and "open_firewall.ps1" in sim and "127.0.0.1" in sim
     hw = PP.lan_banner(RP.build_parser().parse_args(["--game", "phantom_hand", "--hardware", "--lan"]))
     assert "no twin is started here" in hw and "UDP 8791" in hw
+
+
+def test_telemetry_port_default_is_8790_for_real_nodes_8794_plus_offset_for_the_team_twin_none_otherwise():
+    hw = lambda *argv: RP.build_parser().parse_args(["--game", "phantom_hand", *argv])         # noqa: E731
+    assert parse().telemetry_port is None and RP.build_parser().parse_args([]).telemetry_port is None
+    assert PP.telemetry_port_for(parse()) is None                                       # reference twin: it answers to the source port
+    assert PP.telemetry_port_for(parse("--dialect", "team")) == 8794 + 31000
+    assert PP.telemetry_port_for(parse("--dialect", "team", "--port-offset", "14000")) == 8794 + 14000
+    assert PP.telemetry_port_for(hw("--hardware")) == 8790 == PP.telemetry_port_for(hw("--hardware", "--dialect", "team"))
+    assert PP.telemetry_port_for(hw("--spinup")) == 8790                                # --spinup alone aims at real nodes
+    assert PP.telemetry_port_for(hw("--spinup", "--sim")) is None
+    assert PP.telemetry_port_for(hw("--spinup", "--sim", "--dialect", "team")) == 8794 + 31000
+    assert PP.telemetry_port_for(parse("--telemetry-port", "9000")) == 9000             # an explicit port wins everywhere
+    assert PP.telemetry_port_for(parse("--dialect", "team", "--telemetry-port", "0")) is None
+    assert PP.telemetry_port_for(hw("--hardware", "--telemetry-port", "0")) is None
+    assert PP.telemetry_port_for(argparse.Namespace(port_offset=14000)) is None         # hand-built namespaces keep working
+
+
+def test_telemetry_port_reaches_the_twin_command_and_the_unity_env_only_when_there_is_one():
+    a = parse("--dialect", "team")
+    port = PP.telemetry_port_for(a)
+    cmd = PP.twin_command("both", 31000, 1, Path("twin.jsonl"), PP.twin_host(a), a.dialect, port)
+    assert cmd == OLD_TWIN_ARGV + ["--dialect", "team", "--telemetry-port", "39794"]
+    assert PP.twin_command("both", 31000, 1, Path("twin.jsonl"), None, "team", None) == OLD_TWIN_ARGV + ["--dialect", "team"]
+    env = PP.unity_env("127.0.0.1", 5555, PORTS, telemetry_port=port)
+    assert env["OPUS_PH_TELEMETRY_PORT"] == "39794" and env["OPUS_PH_NODE_A"] == "127.0.0.1:39790"
+    assert PP.unity_env("127.0.0.1", 5555, {"discovery": 8791}, lan=True, telemetry_port=8790)["OPUS_PH_TELEMETRY_PORT"] == "8790"
+    assert "OPUS_PH_TELEMETRY_PORT" not in PP.unity_env("127.0.0.1", 5555, PORTS)         # none given: the variable is not set
 
 
 def test_run_phantom_prints_the_banner_only_with_lan(monkeypatch, capsys, tmp_path):

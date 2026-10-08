@@ -19,6 +19,10 @@ reference firmware and the twin's reference dialect keep up to 3 subscribers). S
 tools/demo/sleeve_station.py -- while the Quest is in a session takes the sensor stream away from the headset. Use it only when
 the headset is not running, or rely on the app's live card. It prints a one-line reminder to stderr when it starts.
 
+Local port: the real boards send acks to the sender's source port but sensor_data / sensor_chunk to the sender's IP on the FIXED
+port 8790, so the feeds use ONE socket for both nodes and send from local UDP 8790 when it is free (else an ephemeral port and a
+one-line note: acks arrive, a real node's stream will not). Each datagram is assigned to a node by its source address.
+
 Backends (this machine: no matplotlib, no pyqtgraph -- not installable per the run rules): a tkinter window
 (stdlib) for the live view; for --save-png Pillow if importable, else a built-in pure-python rasteriser
 (no text labels). matplotlib / pyqtgraph are NOT wired: they could not be tested here.
@@ -46,6 +50,7 @@ from typing import Any, Deque, Dict, List, Optional, Tuple
 WINDOW_S = 10.0
 STALE_S = 1.5
 EMG_BASELINE_HINT = 420.0
+TELEMETRY_PORT = 8790       # where the real boards send sensor_data / sensor_chunk: the last sender's IP, this FIXED port
 
 # palette (dark, audience-friendly)
 BG = (16, 20, 28)
@@ -163,15 +168,31 @@ def parse_hostport(s: Optional[str], default_port: int = 8790) -> Optional[Tuple
     return host, int(port or default_port)
 
 
+def open_node_socket(port: int = TELEMETRY_PORT) -> socket.socket:
+    """A UDP socket for talking to the nodes, bound to local `port` when that is free. The real firmware acks to the sender's
+    source port but sends sensor_data / sensor_chunk to the sender's IP on the FIXED port 8790, whatever port the command came
+    from: a socket that sends from 8790 gets both. If the port is taken: an ephemeral port and one line on stderr (acks still
+    arrive, a real node's sensor stream, which goes to `port`, will not)."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.bind(("0.0.0.0", port))
+    except OSError as e:
+        print(f"note: local UDP {port} is not free ({e.strerror or e}); sending from an ephemeral port instead - acks arrive, "
+              f"a real node's sensor stream (sent to {port}) will not", file=sys.stderr)
+        s.bind(("0.0.0.0", 0))
+    return s
+
+
 class Feeds:
-    """Background threads: one UDP subscriber per node, optional discovery, optional hub poller."""
+    """Background threads: one UDP subscriber for both nodes, optional discovery, optional hub poller."""
 
     def __init__(self, data: LiveData, a: Optional[Tuple[str, int]], b: Optional[Tuple[str, int]],
-                 discovery_port: int, hub: Optional[str]):
+                 discovery_port: int, hub: Optional[str], local_port: int = TELEMETRY_PORT):
         self.data = data
         self.addr: Dict[str, Optional[Tuple[str, int]]] = {"A": a, "B": b}
         self.discovery_port = discovery_port
         self.hub = hub
+        self.local_port = local_port
         self.stop_evt = threading.Event()
         self.threads: List[threading.Thread] = []
         self.discovered: Dict[str, Tuple[str, int]] = {}
@@ -180,8 +201,7 @@ class Feeds:
     def start(self) -> None:
         if self.discovery_port and (self.addr["A"] is None or self.addr["B"] is None):
             self._spawn(self._discovery_loop)
-        for node in ("A", "B"):
-            self._spawn(self._node_loop, node)
+        self._spawn(self._nodes_loop)
         if self.hub:
             self._spawn(self._hub_loop)
 
@@ -223,23 +243,34 @@ class Feeds:
                     self.discovered[node] = (ip, msg["command_port"])
                     self.addr[node] = self.discovered[node]
 
-    def _node_loop(self, node: str) -> None:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.bind(("0.0.0.0", 0))
+    def node_of(self, src: Tuple[str, int]) -> Optional[str]:
+        """Which node a datagram came from: the one whose address is its source (ip, port); failing that the only node on
+        that IP; failing that none."""
+        known = {n: a for n, a in self.addr.items() if a is not None}
+        for n, a in known.items():
+            if a == src:
+                return n
+        same_ip = [n for n, a in known.items() if a[0] == src[0]]
+        return same_ip[0] if len(same_ip) == 1 else None
+
+    def _nodes_loop(self) -> None:
+        # ONE socket for both nodes, sending from the fixed telemetry port when it is free: the real boards send their sensor
+        # stream to the last sender's IP on that port, so only a socket bound there sees it (and the acks, to the same port).
+        s = open_node_socket(self.local_port)
         s.settimeout(0.05)
         self.socks.append(s)
         next_sub = 0.0
         while not self.stop_evt.is_set():
             now = time.monotonic()
-            addr = self.addr[node]
-            if addr is not None and now >= next_sub:
-                try:
-                    s.sendto(b'{"type":"subscribe"}', addr)      # every <= 2 s keeps the subscription (D3)
-                except OSError:
-                    pass
+            if now >= next_sub:
+                for addr in (a for a in self.addr.values() if a is not None):
+                    try:
+                        s.sendto(b'{"type":"subscribe"}', addr)      # every <= 2 s keeps the subscription (D3)
+                    except OSError:
+                        pass
                 next_sub = now + 1.0
             try:
-                raw, _ = s.recvfrom(4096)
+                raw, src = s.recvfrom(4096)
             except socket.timeout:
                 continue
             except ConnectionResetError:        # Windows: ICMP port-unreachable from a node that is not up YET
@@ -250,7 +281,8 @@ class Feeds:
                 msg = json.loads(raw.decode("utf-8"))
             except (ValueError, UnicodeDecodeError):
                 continue
-            if isinstance(msg, dict):
+            node = self.node_of(src)
+            if node is not None and isinstance(msg, dict):
                 self.data.ingest_node(node, msg, time.monotonic())
 
     def _hub_loop(self) -> None:

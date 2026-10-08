@@ -395,5 +395,98 @@ namespace Opus.Sdk.Tests
                 Assert.IsFalse(got.IsEmpty, "the receive loop must survive WSAECONNRESET and still deliver the node's datagram");
             }
         }
+
+    }
+
+    /// <summary>The real firmware (0.5.0) acks to the port a command came from, but streams sensor_data / sensor_chunk to a FIXED
+    /// port (8790) of the last sender's IP. Without a listener there the game gets acks and no IMU, no EMG.</summary>
+    public class TelemetryHubTests
+    {
+        private static int PortOf(UdpClient c) { return ((IPEndPoint)c.Client.LocalEndPoint).Port; }
+
+        [Test]
+        public void Telemetry_SentToTheFixedPort_ReachesTheTransportOfTheNodeItCameFrom()
+        {
+            const int telemetryPort = 28861;
+            using (var nodeA = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0)))
+            using (var nodeB = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0)))
+            using (var a = new UdpHapticTransport("127.0.0.1", DiscoveryFilter.Haptic, PortOf(nodeA), 28862, telemetryPort))
+            using (var b = new UdpHapticTransport("127.0.0.1", DiscoveryFilter.Bio, PortOf(nodeB), 28862, telemetryPort))
+            {
+                var gotA = new System.Collections.Concurrent.ConcurrentQueue<string>();
+                var gotB = new System.Collections.Concurrent.ConcurrentQueue<string>();
+                a.OnMessage += gotA.Enqueue;
+                b.OnMessage += gotB.Enqueue;
+                a.Start();
+                b.Start();
+                var sw = Stopwatch.StartNew();
+                while (!TelemetryHub.IsListening(telemetryPort) && sw.ElapsedMilliseconds < 5000) Thread.Sleep(10);   // readiness, not a guess
+                Assert.IsTrue(TelemetryHub.IsListening(telemetryPort), "telemetry socket bound");
+
+                var imu = Encoding.UTF8.GetBytes("{\"type\":\"sensor_data\",\"device_id\":\"CHETNA_HAPTIC_001\"}");
+                var emg = Encoding.UTF8.GetBytes("{\"type\":\"sensor_chunk\",\"device_id\":\"CHETNA_BIO_001\"}");
+                var fixedPort = new IPEndPoint(IPAddress.Loopback, telemetryPort);
+                sw.Restart();
+                while ((gotA.IsEmpty || gotB.IsEmpty) && sw.ElapsedMilliseconds < 5000)
+                {
+                    nodeA.Send(imu, imu.Length, fixedPort);   // from each node's own socket, as the firmware does
+                    nodeB.Send(emg, emg.Length, fixedPort);
+                    Thread.Sleep(20);
+                }
+                Assert.IsFalse(gotA.IsEmpty, "Node A's stream never reached its transport");
+                Assert.IsFalse(gotB.IsEmpty, "Node B's stream never reached its transport");
+                foreach (var m in gotA) StringAssert.Contains("sensor_data", m, "Node A's transport got another node's packet");
+                foreach (var m in gotB) StringAssert.Contains("sensor_chunk", m, "Node B's transport got another node's packet");
+            }
+            Assert.IsFalse(TelemetryHub.IsListening(telemetryPort), "the shared socket closes with the last transport");
+        }
+
+        [Test]
+        public void Telemetry_Dispatch_TheNodeItCameFrom_ElseTheOnlyTransportOnThatIp_ElseNobody()
+        {
+            const int port = 28863;
+            // two real nodes: two IPs (TEST-NET addresses, nothing is sent to them)
+            using (var a = new UdpHapticTransport("192.0.2.10", DiscoveryFilter.Haptic, 8790, 28864, port))
+            using (var b = new UdpHapticTransport("192.0.2.11", DiscoveryFilter.Bio, 8790, 28864, port))
+            {
+                int nA = 0, nB = 0;
+                a.OnMessage += _ => nA++;
+                b.OnMessage += _ => nB++;
+                a.Start();
+                b.Start();
+                Assert.AreEqual(1, TelemetryHub.Dispatch(port, "{}", new IPEndPoint(IPAddress.Parse("192.0.2.11"), 8790)));
+                Assert.AreEqual(0, nA); Assert.AreEqual(1, nB);
+                Assert.AreEqual(1, TelemetryHub.Dispatch(port, "{}", new IPEndPoint(IPAddress.Parse("192.0.2.10"), 51000)),
+                    "a stream from another source port still belongs to the only transport on that IP");
+                Assert.AreEqual(1, nA); Assert.AreEqual(1, nB);
+                Assert.AreEqual(0, TelemetryHub.Dispatch(port, "{}", new IPEndPoint(IPAddress.Parse("192.0.2.99"), 8790)), "a stranger");
+                Assert.AreEqual(0, TelemetryHub.Dispatch(port, "{}", null));
+            }
+            // a simulator: both nodes on one IP, told apart by their port only
+            using (var a = new UdpHapticTransport("127.0.0.1", DiscoveryFilter.Haptic, 28871, 28864, port))
+            using (var b = new UdpHapticTransport("127.0.0.1", DiscoveryFilter.Bio, 28872, 28864, port))
+            {
+                int nA = 0, nB = 0;
+                a.OnMessage += _ => nA++;
+                b.OnMessage += _ => nB++;
+                a.Start();
+                b.Start();
+                Assert.AreEqual(0, TelemetryHub.Dispatch(port, "{}", new IPEndPoint(IPAddress.Loopback, 28999)), "two candidates, no port match");
+                Assert.AreEqual(1, TelemetryHub.Dispatch(port, "{}", new IPEndPoint(IPAddress.Loopback, 28872)));
+                Assert.AreEqual(0, nA); Assert.AreEqual(1, nB);
+            }
+            Assert.AreEqual(0, TelemetryHub.Dispatch(port, "{}", new IPEndPoint(IPAddress.Loopback, 28872)), "no transport left on the port");
+        }
+
+        [Test]
+        public void Telemetry_IsOffByDefault_SoATransportOpensNoSecondSocket()
+        {
+            using (var t = new UdpHapticTransport("127.0.0.1", commandPort: 28873, discoveryPort: 28864))
+            {
+                t.Start();
+                Assert.AreEqual(0, TelemetryHub.Dispatch(UdpHapticTransport.DefaultTelemetryPort, "{}", new IPEndPoint(IPAddress.Loopback, 28873)));
+                Assert.IsFalse(TelemetryHub.IsListening(UdpHapticTransport.DefaultTelemetryPort));
+            }
+        }
     }
 }

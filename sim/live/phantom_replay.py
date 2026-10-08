@@ -10,6 +10,9 @@ live protocol AND drives the sleeve twin (or real Node A / Node B) the way the U
     watchdog, 03-SPEC section 4), builds the live `trace` (EMG env + |accel|, 20 Hz) and `game_state`
     (phase, condition, remaining_s, nodes{haptic, bio}) from the real streams and puts them into `status`
     messages (LIVE_PROTOCOL v0.2);
+  * with a `telemetry_port` one shared socket (TelemetryListener) takes the sensor stream the way the real boards
+    send it, to a fixed port (8790) on this PC and not to the port a command came from, and hands it to the node it
+    came from; acks still return on each node's own socket;
   * OLED text `SYNC`/`ASYNC` on each induction, `flinch` on the twin's control port at `threat_impact`;
   * hub outages are survived: events keep going to the outbox, the websocket is re-established with
     `resume_from_seq`, and the end-of-session uploads are retried until they land (PRD 11 fail-safe);
@@ -29,6 +32,7 @@ import json
 import math
 import shutil
 import socket
+import sys
 import time
 import uuid
 from collections import deque
@@ -221,8 +225,9 @@ def build_sens_chunks(session_id: str, emg: List[Tuple[float, float]], imu: List
 
 # ----------------------------------------------------------------------------------- node link
 class NodeLink(asyncio.DatagramProtocol):
-    """One UDP socket to one node (Node A or Node B). The node answers to the sender, so acks and the
-    sensor stream come back on this socket."""
+    """One UDP socket to one node (Node A or Node B). The node acks to the sender's source port, so acks come back
+    on this socket; so does the sensor stream of a node that answers to the sender (the twin's reference dialect). The
+    real boards send the stream to a FIXED port instead: a TelemetryListener then hands it to the link."""
 
     def __init__(self, name: str, addr: Tuple[str, int], on_message: Callable[[str, Dict[str, Any]], None]):
         self.name = name
@@ -290,6 +295,51 @@ class NodeLink(asyncio.DatagramProtocol):
             return None, None
 
 
+class TelemetryListener(asyncio.DatagramProtocol):
+    """The nodes' sensor stream on a FIXED port. The real boards send sensor_data / sensor_chunk to the IP of the last
+    sender on port 8790, whatever port the command came from, so it never comes back on a NodeLink's own socket. One
+    socket bound to 0.0.0.0:<port> hands each datagram to the link it belongs to: the link whose `addr` is the
+    datagram's source (ip, port); failing that the only link with that source IP; failing that nobody. The link counts
+    it (last_rx, rx_count, first_data) like a datagram from its own socket."""
+
+    def __init__(self, links: Dict[str, NodeLink]):
+        self.links = links
+        self.transport: Optional[asyncio.DatagramTransport] = None
+
+    @classmethod
+    async def open(cls, port: int, links: Dict[str, NodeLink]) -> Optional["TelemetryListener"]:
+        """The listener, or None after one line on stderr if the port cannot be bound: the run goes on without it."""
+        try:
+            _, listener = await asyncio.get_running_loop().create_datagram_endpoint(
+                lambda: cls(links), local_addr=("0.0.0.0", port))
+        except OSError as e:
+            print(f"telemetry listener: cannot bind UDP 0.0.0.0:{port} ({e.strerror or e}); sensor data reaches this "
+                  "headset only if the nodes send it to the socket the commands came from", file=sys.stderr, flush=True)
+            return None
+        return listener
+
+    def owner(self, src: Tuple[str, int]) -> Optional[NodeLink]:
+        links = list(self.links.values())
+        for link in links:
+            if link.addr == src:
+                return link
+        same_ip = [link for link in links if link.addr[0] == src[0]]
+        return same_ip[0] if len(same_ip) == 1 else None
+
+    def connection_made(self, transport: Any) -> None:
+        self.transport = transport
+
+    def datagram_received(self, data: bytes, addr: Tuple[str, int]) -> None:
+        link = self.owner(addr)
+        if link is not None:
+            link.datagram_received(data, addr)
+
+    def close(self) -> None:
+        if self.transport:
+            self.transport.close()
+            self.transport = None
+
+
 class _DiscoveryProtocol(asyncio.DatagramProtocol):
     def __init__(self) -> None:
         self.found: Dict[str, Tuple[str, int]] = {}
@@ -348,10 +398,13 @@ class PhantomHeadset(FakeHeadset):
                  node_b: Optional[Tuple[str, int]] = None, control: Optional[Tuple[str, int]] = None,
                  compress_gap_ms: float = 2500.0, status_period_s: float = 0.5,
                  progress_hooks: Optional[List[Tuple[float, Callable[[], Awaitable[None]]]]] = None,
-                 off_a_at: Optional[float] = None, upload_deadline_s: float = 90.0, **kw: Any):
+                 off_a_at: Optional[float] = None, upload_deadline_s: float = 90.0,
+                 telemetry_port: Optional[int] = None, **kw: Any):
         kw.setdefault("stage", "reach")
         super().__init__(session_dir, **kw)
         self.node_addr = {"haptic": node_a, "bio": node_b}
+        self.telemetry_port = telemetry_port          # None: the stream comes back on each link's own socket
+        self.telemetry: Optional[TelemetryListener] = None
         self.control_addr = control
         self.compress_gap_ms = compress_gap_ms
         self.status_period_s = status_period_s
@@ -429,6 +482,8 @@ class PhantomHeadset(FakeHeadset):
             self.report["emg_bursts_from_node"] += 1
 
     async def start_nodes(self) -> None:
+        if self.telemetry_port and any(self.node_addr.values()):     # before the first subscribe: the stream starts at once
+            self.telemetry = await TelemetryListener.open(self.telemetry_port, self.links)
         for kind, addr in self.node_addr.items():
             if addr is None:
                 continue
@@ -691,6 +746,8 @@ class PhantomHeadset(FakeHeadset):
                         pass
             for link in self.links.values():
                 link.close()
+            if self.telemetry:
+                self.telemetry.close()
         self.report["session_id"] = self.state.session_id
         self.report["cue_rtt_p50_ms"] = (sorted(self.report["cue_rtt_ms"])[len(self.report["cue_rtt_ms"]) // 2]
                                          if self.report["cue_rtt_ms"] else None)
@@ -710,7 +767,7 @@ async def run_phantom_cli(args: Any) -> int:
     sdir, sid = prepare_session_copy(src, work, drop_bio=node_b is None)
     hs = PhantomHeadset(sdir, node_a=node_a, node_b=node_b, control=_parse_hostport(args.control),
                         compress_gap_ms=args.compress_gap_ms, host=args.host, port=args.port, speed=args.speed,
-                        beacon_port=args.beacon_port,
+                        beacon_port=args.beacon_port, telemetry_port=args.telemetry_port or None,
                         patient_ref=args.patient_ref, off_a_at=args.off_a_at)
     hs.state.session_id = sid
     await hs.start_nodes()

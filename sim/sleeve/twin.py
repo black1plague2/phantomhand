@@ -650,6 +650,7 @@ class NodeB(Node):
     device_id = NODE_B_ID
     chunk_samples = CHUNK_SAMPLES         # envelope values per sensor_chunk (the team firmware sends 4 per packet)
     sends_bursts = True                   # emg_burst messages to subscribers (the team firmware has none)
+    stamps_last = False                   # sensor_chunk.timestamp_ms = device time of the LAST value, not the first (team firmware)
 
     def __init__(self, twin: "Twin", port: int):
         super().__init__(twin, port)
@@ -739,11 +740,12 @@ class NodeB(Node):
         v = max(0.0, min(4095.0, v))
         self.detect(v, t, now)
         if not self.buf:
-            self.buf_t0 = t  # PRD §9.3 / 03-SPEC §4: chunk timestamp_ms = device time of the FIRST sample
+            self.buf_t0 = t  # PRD §9.3 / 03-SPEC §4: chunk timestamp_ms = device time of the FIRST sample (team: the LAST)
         self.buf.append(round(v, 1))
         if len(self.buf) >= self.chunk_samples:
             msg = {"type": "sensor_chunk", "device_id": self.device_id, "device_kind": "bio",
-                   "timestamp_ms": self.dev_ms(self.buf_t0), "sample_rate_hz": 100, "emg_envelope": self.buf,
+                   "timestamp_ms": self.dev_ms(t if self.stamps_last else self.buf_t0), "sample_rate_hz": 100,
+                   "emg_envelope": self.buf,
                    "unit": "raw_adc", "status": "ok"}
             self.buf = []
             self.chunks_sent += 1
@@ -795,12 +797,15 @@ class NodeB(Node):
 class _TeamLink:
     """What the two team-firmware nodes share (--dialect team; contracts HAPTIC_PROTOCOL v1.3): telemetry goes only to the
     sender of the LAST packet (one target, no subscriber list), no `status` message, every message type the team
-    firmware does not document is ignored (counted in `ignored`, never an ack, never a motor command)."""
+    firmware does not document is ignored (counted in `ignored`, never an ack, never a motor command). The telemetry
+    target is the sender's source address, or with `Twin.telemetry_port` (the real boards: 8790) the sender's IP on that
+    FIXED port; acks always go to the source address."""
     has_status = False
     ignored = 0
 
     def on_rx(self, addr: Tuple[str, int], now: float) -> None:
-        self.subs = {addr: now + SUB_EXPIRY_MS}
+        port = self.twin.telemetry_port
+        self.subs = {(addr[0], port) if port > 0 else addr: now + SUB_EXPIRY_MS}
 
 
 class TeamNodeA(_TeamLink, NodeA):
@@ -846,9 +851,11 @@ class TeamNodeA(_TeamLink, NodeA):
 
 class TeamNodeB(_TeamLink, NodeB):
     """Node B as the team's `node_b_bio` v0.5.0 behaves: sensor_chunk with 4 values at 25 packets/s to the last sender,
-    no status and no emg_burst messages. It understands keepalive only."""
+    stamped with the device time of the chunk's LAST value (about 30 ms after the first), no status and no emg_burst
+    messages. It understands keepalive only."""
     chunk_samples = TEAM_CHUNK_SAMPLES
     sends_bursts = False
+    stamps_last = True
 
     def discovery(self, now: float) -> Dict[str, Any]:
         return {"type": "device_discovery", "device_id": self.device_id, "device_kind": "bio",
@@ -872,10 +879,13 @@ class Twin:
                  send: Optional[Callable[[str, bytes, Tuple[str, int]], None]] = None,
                  broadcast: Optional[Callable[[str, bytes], None]] = None,
                  emit: Optional[Callable[[Dict[str, Any]], None]] = None, ip: str = "127.0.0.1",
-                 dialect: str = DIALECT_REFERENCE):
+                 dialect: str = DIALECT_REFERENCE, telemetry_port: int = 0):
         if dialect not in (DIALECT_REFERENCE, DIALECT_TEAM):
             raise ValueError(f"unknown dialect {dialect!r} (reference | team)")
+        if not 0 <= telemetry_port <= 65535:     # sendto() would raise OverflowError in the tick thread and silence the twin
+            raise ValueError(f"telemetry_port {telemetry_port!r} is not a UDP port (0 = telemetry to the sender's source port)")
         self.dialect = dialect
+        self.telemetry_port = telemetry_port     # team dialect only, see _TeamLink; the reference dialect never reads it
         self.kinds = tuple(kinds)
         self.seed = seed
         self.port_offset = port_offset
@@ -1282,6 +1292,13 @@ def build_parser() -> argparse.ArgumentParser:
                    help="reference (default) = the reference firmware; team = the electronics team's own firmware "
                         "(ids CHETNA_HAPTIC_001 / CHETNA_BIO_001, ack {cue_id, accepted}, telemetry to the last "
                         "sender only, no status / emg_burst, 4-value chunks at 25/s; contracts HAPTIC_PROTOCOL v1.3)")
+    p.add_argument("--telemetry-port", type=int, default=0, metavar="N",
+                   help="--dialect team only: send sensor_data / sensor_chunk to the last sender's IP on this FIXED UDP "
+                        "port, whatever port its packet came from (the real boards do, on 8790); acks still go to the "
+                        "sender's source port. 0 (default) = telemetry to the source address too. A twin on the same PC "
+                        "as its receiver needs a port other than the node's own: the real 8790 is the node's own "
+                        "command port there (--port-offset 0), so the receiver could not bind it. Ignored by the "
+                        "reference dialect")
     return p
 
 
@@ -1295,7 +1312,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     tw = Twin(kinds, seed=a.seed, port_offset=a.port_offset, latency_ms=a.ack_latency_ms,
               jitter_ms=a.ack_jitter_ms, spinup_ms=a.spinup_ms, watchdog_s=a.watchdog_s,
-              log=EventLog(a.log), emit=emit, dialect=a.dialect)
+              log=EventLog(a.log), emit=emit, dialect=a.dialect, telemetry_port=a.telemetry_port)
     srv = TwinServer(tw, host=a.host, stdin=not a.no_stdin, broadcast_addrs=a.broadcast_addr)
     srv.start()
     t_end = None if a.duration is None else time.monotonic() + a.duration

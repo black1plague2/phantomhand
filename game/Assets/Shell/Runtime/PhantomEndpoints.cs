@@ -29,6 +29,8 @@ namespace Opus.Shell
         public const string EnvNodeA = "OPUS_PH_NODE_A";
         public const string EnvNodeB = "OPUS_PH_NODE_B";
         public const string EnvDiscoveryPort = "OPUS_PH_DISCOVERY_PORT";
+        /// <summary>Test knob only: a simulator on the same PC cannot stream to 8790, that port is the simulated node's own.</summary>
+        public const string EnvTelemetryPort = "OPUS_PH_TELEMETRY_PORT";
         public const int DefaultCommandPort = 8790;
         public const int DefaultDiscoveryPort = 8791;
         public const int DefaultHubPort = 8787;
@@ -40,6 +42,9 @@ namespace Opus.Shell
         public string NodeAHost; public int NodeAPort = DefaultCommandPort;
         public string NodeBHost; public int NodeBPort = DefaultCommandPort;
         public int DiscoveryPort = DefaultDiscoveryPort;
+        /// <summary>Local UDP port both node transports also listen on. The real firmware (0.5.0) acks to the port a command came
+        /// from but streams IMU and EMG to port 8790 of the last sender (HAPTIC_PROTOCOL v1.3).</summary>
+        public int TelemetryPort = DefaultCommandPort;
         /// <summary>True when any value came from the environment (the harness is driving: the session runner then runs even without a headset).</summary>
         public bool FromEnvironment;
         /// <summary>"applied hubHost, nodeAHost" when an endpoints file was applied, else null (a rejected file goes to the warn callback).</summary>
@@ -112,6 +117,7 @@ namespace Opus.Shell
                 if (h != null) { e.NodeBHost = h; e.NodeBPort = p > 0 ? p : DefaultCommandPort; e.FromEnvironment = true; }
                 int dp;
                 if (TryPort(env(EnvDiscoveryPort) ?? "", out dp)) { e.DiscoveryPort = dp; e.FromEnvironment = true; }
+                if (TryPort(env(EnvTelemetryPort) ?? "", out dp)) e.TelemetryPort = dp;
             }
             return e;
         }
