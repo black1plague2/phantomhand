@@ -167,3 +167,39 @@ Resume: read this file, then each agent's log above; worktrees are under `.claud
 with `git -C <worktree> diff --binary > patch` + `git apply --3way patch` on main, then recompile and `python tools/unity_mcp.py test EditMode`.
 Opus still owes: O2 of every agent diff; merging MODELS and U6CODE; choosing and assigning features from R1–R4; L3 with Unity; APK;
 Orchard removal; CONTEXT/PH_STATUS refresh; the firewall commands for the user.
+
+## WAVE 4 (10:58-11:50 IST): Theme 5 audit applied, Orchard stopped, research R2/R3 acted on
+
+User input in this window: (1) a Theme 5 audit pasted with "choose what makes sense and apply it"; (2) "why is orchard reach being played ... kindly stop that and ignore that project"; (3) "switch the 3d models, the hand is from sketchfab i downloaded it free"; (4) "you can test phantom hand, just stay away from orchard reach".
+
+### What was taken from the audit (decisions D11-D15 in 03-SPEC)
+| Audit item | Decision | Where |
+|---|---|---|
+| Do not claim the demo proves or measures consciousness; q4 is a pointer | APPLIED | closing copy (builder), docs/PH_JUDGE_SHEET.md, playbook pitch line 3, D11 |
+| Witness screen: what changed / the observer | APPLIED, regrouped as Body (measured) / Mind (reported) / The one who noticed; the audit's "flinch under Mind" was not followed (a reflex is body) | builder step 1, D12 |
+| Invisible-hand finale as the climax | APPLIED: Dissolve made real; Reveal ships as the fallback first (arm glides back onto the tracked real hand); real passthrough only after a headset check | builder steps 2-3, D13 |
+| Agency (EMG closes the hand, then it closes by itself, q5) ahead of the breathing arm | APPLIED as opt-in, once per run in the last condition, hand-tracking fallback without EMG | builder step 4, D14 |
+| Opening pitch, judge questions, mapping table, self vs Self | APPLIED | docs/PH_JUDGE_SHEET.md |
+| Third block sync -> async -> sync | REJECTED: 4-minute budget; machine, events, analytics and witness compare exactly two conditions; D9 already gives unconvinced -> built -> removed | D15 |
+| Audit's run order (sync first) | NOT followed: D9 (async first, user-approved 7 Oct) keeps the strongest illusion right before the finale; `condition_order` still switches it | judge sheet section 4 |
+| Breathing arm, voice-over | stay unbuilt | D14 |
+Audit claim not verified by me: "the theme guide lists a phantom hand in VR among its examples" (I have not seen the PDF); the judge sheet says to check before quoting.
+
+### Orchard Reach
+Cause: the Unity driver's brief said "PlayMode all"; its runner used the filter `.*`, which plays the old Orchard tests. Action 11:05: killed that runner, `TestRunnerTools.CancelTestRun` (only resets state), `EditorApplication.ExitPlaymode` (verified isPlaying false twice), killed the orphan fake_hub and twin it left on 8787 / offset 12100, told the driver: PlayMode filter `PhantomHand|PH_` only, never load or play Orchard. Rule now in 03-SPEC D16 and in memory. Orchard code is not being removed (the PH scene builder still copies the camera rig from OrchardReach.unity); the PH APK plan never includes the Orchard scene.
+
+### Unity driver unblocked
+Its CROSS-TRACK REQUEST S1 confirmed by reading LiveMessage.cs:86-87 and LiveClient.cs:142-146,161,430: every trial_event sat in the live outbox and was re-sent each second (84x duplicates, main-thread hitches, stroke cues dropped as late: 69-92 % acked vs the 95 % bar). The driver was authorised to apply the two-line SDK fix itself plus three tests.
+
+### Research acted on
+- R2 (two-motor stroke): the brush ran at 1 m/s. D16: default `motor_soa_ms` 833 (12 cm/s), one tap per motor as the brush passes, strokes never overlap (+300 ms); flick stays reachable; bench protocol and four firmware questions in MANUAL_TODO.
+- R3 (app UX): D1 (card unreachable before Start and after a run on a real Quest) is the one app defect that can block the demo. D17: questionnaire values 1..7 on the wire, blue/amber for the two conditions.
+
+### Agents (plan lines)
+Constraint: the single open Unity editor (one driver); everything else is parallel and file-disjoint. Failure modes: a builder edits a file the driver holds -> forbidden lists + "integration lines owed by Opus" + `git apply --check` before any merge; code that never ran in Unity -> merged only through the editor queue with EditMode all + PlayMode `PhantomHand|PH_`; plausible-but-wrong UI -> screenshots read by Opus before commit; CPU load from Flutter/pytest spoiling the timing-sensitive full run -> concurrency caps in the briefs, heavy suites not started by Opus while the driver runs.
+Ledger: driver S1 fix = delegate (owns the editor). Finale/witness/slow brush/agency = one Sonnet builder, worktree, steps 1, 2, 3, 3b, 4 (shared files, so one agent, not four). App live card (B1, B2 without a plugin, B3, B7, B8, B12) = Sonnet, worktree. Witness mirror (+ report if time) = Sonnet, worktree, new files only. Judge sheet, spec decisions, MANUAL_TODO, sim review + commit = Opus direct (claims discipline and contracts are not delegated).
+Commits: 9666dd8 (sim: LAN twin, team dialect, firewall report script; re-run by review: sleeve 94, lan/tool_paths 15, phantom_replay 18), ab533e2 (judge sheet, D11-D15, R3), c57e529 (R2, D16-D17, human steps). All pushed; remote main verified at c57e529.
+Open flake: sim/live test_phantom_replay.py failed once (1 of 18) in five full runs while Unity was compiling; not reproduced, test name not captured.
+
+### Queue for the editor (serial), after the driver releases the lock
+1. O2 + commit of the driver's change set. 2. Models merge + bake (user asked: switch to the 3D models). 3. U6 patch + integration lines (multicast lock, Bootstrap advertises only loadable games). 4. Finale/witness/slow-brush/agency patch + owed lines (ModuleTests.cs:130, `additionsEnabled` true in PhantomHandSettings.cs and the asset, manifest copies, full-run phase list). 5. Android target + APK. 6. L3 with Unity, both twin dialects.
