@@ -747,6 +747,82 @@ namespace Opus.Shell.Editor
         }
 
         // ---------------------------------------------------------------------------------------------------------
+        // frame sequences for pitch material
+
+        /// <summary>Frame sequences of the run, rendered in edit mode at 30 fps into outDir (PNG, 1600x900; large, so never a folder of this repository): one brush stroke along
+        /// the arm (stroke_###), the Dissolve, where the arm fades while the brush goes on (dissolve_###), and the stone from telegraph to impact (stone_###).
+        /// The poses come from the code the game runs (BrushRig.PoseAt, VirtualArmRig.Alpha, ThreatDrop.Tick); only the stone's fall is placed by hand, because edit mode has
+        /// no physics. Returns the frame counts and the stroke's times, so a film can line graphics up with the brush.</summary>
+        public static string CaptureDemoSequence(string outDir)
+        {
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var pres = UnityEngine.Object.FindFirstObjectByType<ArmThreatPresenter>();
+            Directory.CreateDirectory(outDir);
+            var p = new PhantomHandParams();
+            pres.arm.Build(p); pres.brush.Build(); pres.threat.Build();
+            var realWrist = new Vector3(ArmX, TableTopY + 0.021f, ElbowZ + ForearmLen);
+            pres.arm.PlaceFromCalibration(realWrist, Vector3.forward, (float)p.OffsetCm);
+            pres.arm.Visible = true;
+            foreach (var smr in pres.arm.GetComponentsInChildren<SkinnedMeshRenderer>(true)) smr.forceMatrixRecalculationPerRender = true;
+            Vector3 eye = SeatedEye, look = pres.arm.AxisWorldPos(0f) + pres.arm.transform.forward * 0.05f, palmTop = pres.arm.PalmTopWorld;
+            const double frameMs = 1000.0 / 30.0;
+
+            // 1 one stroke, wrist to elbow, at the default brush speed
+            pres.brush.Visible = true;
+            pres.brush.SetGeometry(pres.arm.WristWorld, pres.arm.ElbowDirection, pres.arm.ForearmLengthM, pres.arm.MotorAFromWristM, pres.arm.MotorSpacingM, p.MotorSoaMs);
+            var plan = new StrokeScheduler(p, 1).Plan(PhCondition.Sync, 0, 20000);
+            pres.brush.SetPlan(plan);
+            var s1 = plan[1];
+            double a0 = s1.StartMs - 300;
+            int nStroke = 0;
+            for (double t = a0; t <= s1.EndMs + 300; t += frameMs, nStroke++) { pres.brush.PoseAt(t); Shot(outDir, "stroke_" + nStroke.ToString("000"), eye, look, 56f); }
+
+            // 2 the Dissolve: two more strokes while the arm fades
+            double d0 = plan[2].StartMs - 300, d1 = plan[3].EndMs + 300;
+            int nDissolve = 0;
+            for (double t = d0; t <= d1; t += frameMs, nDissolve++)
+            {
+                pres.brush.PoseAt(t);
+                pres.arm.Alpha = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.15f, 0.70f, (float)((t - d0) / (d1 - d0))));
+                Shot(outDir, "dissolve_" + nDissolve.ToString("000"), eye, look, 56f);
+            }
+            pres.arm.Alpha = 1f; pres.brush.Visible = false;
+
+            // 3 the stone: the 0.6 s telegraph, the fall, the dust
+            Vector3 drop = palmTop + Vector3.up * PhantomAnchors.DropHeightM, rest = palmTop + Vector3.up * 0.052f, aim = palmTop + Vector3.up * 0.10f;
+            pres.threat.Begin(drop, palmTop, 0);
+            int nStone = 0;
+            for (double t = 0; t < ThreatDrop.TelegraphMs; t += frameMs, nStone++) { pres.threat.Tick(t); Shot(outDir, "stone_" + nStone.ToString("000"), eye, aim, 62f); }
+            Vector3 from = pres.threat.Body.transform.position;
+            for (float s = (float)(frameMs / 1000.0); ; s += (float)(frameMs / 1000.0))
+            {
+                float y = from.y - 0.5f * 9.81f * s * s;
+                if (y <= rest.y) break;
+                pres.threat.Body.transform.position = new Vector3(from.x, y, from.z);
+                Shot(outDir, "stone_" + nStone.ToString("000"), eye, aim, 62f); nStone++;
+            }
+            int impactFrame = nStone;
+            pres.threat.Body.transform.position = rest;
+            pres.threat.EmitDust(palmTop);
+            var dust = pres.threat.GetComponentsInChildren<ParticleSystem>();
+            for (int i = 0; i < 40; i++, nStone++)
+            {
+                foreach (var ps in dust) ps.Simulate((float)(frameMs / 1000.0), true, i == 0);
+                Shot(outDir, "stone_" + nStone.ToString("000"), eye, aim, 62f);
+            }
+            pres.threat.Cancel();
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);   // discard transient changes
+
+            string msg = "{\"fps\":30,\"stroke\":{\"n\":" + nStroke + ",\"t0\":" + a0.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) +
+                         ",\"start\":" + s1.StartMs.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + ",\"passA\":" + s1.PassAMs.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) +
+                         ",\"passB\":" + s1.PassBMs.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + ",\"end\":" + s1.EndMs.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) +
+                         "},\"dissolve\":{\"n\":" + nDissolve + "},\"stone\":{\"n\":" + nStone + ",\"impact\":" + impactFrame + "}}";
+            File.WriteAllText(Path.Combine(outDir, "seq.json"), msg);
+            Debug.Log("[PH-SEQ] " + msg + " -> " + outDir);
+            return msg;
+        }
+
+        // ---------------------------------------------------------------------------------------------------------
         // budget
 
         /// <summary>What the saved scene and the model wrappers ask the GPU to draw, counted without batching: enabled renderers, draw entries (renderer x

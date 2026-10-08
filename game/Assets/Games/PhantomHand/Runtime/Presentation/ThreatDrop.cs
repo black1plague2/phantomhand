@@ -289,7 +289,9 @@ namespace Opus.Games.PhantomHand.Presentation
                 dm = new Material(shd); dm.color = new Color(0.78f, 0.72f, 0.62f, 1f);
                 dm = PhMaterials.FadeCopy(dm);
             }
-            if (dm.HasProperty("_BaseMap")) { dm = new Material(dm); dm.SetTexture("_BaseMap", SoftDisc()); }
+            // the dust is a soft disc, so its material has to blend whatever was assigned: an opaque one draws squares (seen in the first frame sequence, 8 Oct 2026)
+            dm = dm.IsKeywordEnabled("_SURFACE_TYPE_TRANSPARENT") ? new Material(dm) : PhMaterials.FadeCopy(dm);
+            if (dm.HasProperty("_BaseMap")) dm.SetTexture("_BaseMap", SoftDisc());
             pr.sharedMaterial = dm;
             ps.Play();
             if (Application.isPlaying) Destroy(go, 1.5f);

@@ -177,7 +177,7 @@ namespace Opus.Games.PhantomHand.Presentation
 
         private void Register(Renderer r, Material opaque)
         {
-            _renderers.Add(r); _opaque.Add(opaque); _fade.Add(PhMaterials.FadeCopy(opaque));
+            _renderers.Add(r); _opaque.Add(opaque); _fade.Add(PhMaterials.FadeCopy(opaque, depthWrite: true));
         }
 
         /// <summary>Instantiates a model wrapper under parent; its renderers use overrideMat (when given) or the wrapper's own material.</summary>

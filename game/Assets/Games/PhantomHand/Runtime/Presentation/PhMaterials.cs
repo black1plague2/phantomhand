@@ -18,7 +18,9 @@ namespace Opus.Games.PhantomHand.Presentation
         }
 
         /// <summary>A transparent twin of an opaque URP material (alpha-blended, no depth write).</summary>
-        public static Material FadeCopy(Material src)
+        /// <summary>A transparent twin of src. depthWrite: for a solid thing that fades as a whole (the arm in the Dissolve). Its parts then hide one another as they do when
+        /// opaque; without it the forearm inside the sleeve is drawn over the sleeve the moment the fade starts (seen in the first frame sequence, 8 Oct 2026).</summary>
+        public static Material FadeCopy(Material src, bool depthWrite = false)
         {
             var m = new Material(src) { name = src.name + "_fade" };
             if (m.HasProperty("_Surface")) m.SetFloat("_Surface", 1f);
@@ -27,7 +29,7 @@ namespace Opus.Games.PhantomHand.Presentation
             if (m.HasProperty("_DstBlend")) m.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             if (m.HasProperty("_SrcBlendAlpha")) m.SetFloat("_SrcBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
             if (m.HasProperty("_DstBlendAlpha")) m.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            if (m.HasProperty("_ZWrite")) m.SetFloat("_ZWrite", 0f);
+            if (m.HasProperty("_ZWrite")) m.SetFloat("_ZWrite", depthWrite ? 1f : 0f);
             m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
             m.DisableKeyword("_ALPHATEST_ON");
             m.SetOverrideTag("RenderType", "Transparent");
