@@ -7,18 +7,18 @@ file, with a dated line:
 - 2026-10-07 v2 rewritten for PRD v2: 2× ESP-WROOM-32, power bank, Makeathon 7–9 Oct, MVP/stretch split.
 - 2026-10-07 v3 (Opus): PRD v2 §5.1 additions A1–A5 approved by the user → §12 below; D9 (default order async_first), D10 (passthrough allowed for A2 only).
 - 2026-10-07 v3.1 (Opus, O1 review): contracts v0.2 landed. Adopted as spec: all new event fields live in `data`, `trial` = condition index; phase ids calibrate|probe_pre|induction|self_touch|agency|threat|probe_post|questionnaire|dissolve|reveal|witness|done; condition `sync`|`async` (null outside); drift_cm + toward the virtual hand, positions in metres, calibration space; sensor_chunk.timestamp_ms = first sample, emg_burst.timestamp_ms = onset; embodiment = metric map per condition + sync_minus_async, stroke_timing_err_ms {mean,p95}; `set_condition_order` takes params.condition_order. Electronics/firmware are owned by the separate electronics team (user, 2026-10-07): F1/F2 code in firmware/ is an uncompiled reference only.
-
+- 2026-10-08 v3.2 (Opus): D11–D20 (Theme 5 audit, research R1–R3) and D21–D23 (first replay of a Unity recording through the L3 checks and analytics); §5 and the params synced to the build. This line sits where a blank line was, so cited line numbers above D21 did not move.
 ## 0. Decisions on PRD gaps (proposed by Opus — team confirms or overrides)
 
 | # | Gap in PRD v2 | Decision |
 |---|---|---|
-| D1 | §9.2 "inter-motor delay 60–100 ms" vs a visible brush that must reach motor B at the moment B fires | Bench-tune `motor_soa_ms` (A→B onset gap, start 100, range 60–300). The brush's speed between the two motor positions is derived from it, so sight and touch stay in step: brush speed = 10 cm / motor_soa_ms. The rest of the stroke (wrist→A, B→elbow) runs at the same speed. |
+| D1 | §9.2 "inter-motor delay 60–100 ms" vs a visible brush that must reach motor B at the moment B fires | Bench-tune `motor_soa_ms` (A→B onset gap; default 833, range 60–1700, see D16; it started at 100, range 60–300). The brush's speed between the two motor positions is derived from it, so sight and touch stay in step: brush speed = 10 cm / motor_soa_ms. The rest of the stroke (wrist→A, B→elbow) runs at the same speed. |
 | D2 | FR-VR-01 "virtual arm follows the tracked pose" vs "fingers frozen" and risk row "lock the pose during induction" | The virtual arm follows the real wrist (+ offset) only during calibration and agency. It freezes from induction start through threat and probe, so a flinch never moves the virtual hand and the stone always lands on it. Param `follow_during_induction` (default false). |
-| D3 | Firmware v0.4.0 streams sensors to ONE peer (the last sender). A laptop plot (FR-AP-01 fallback) would steal the stream from the Quest | Firmware keeps up to 3 subscribers. Any device sends `{"type":"subscribe"}` every ≤ 2 s; sensor packets go to every live subscriber (expiry 5 s). Commands still come from anyone. |
+| D3 | Firmware v0.4.0 streams sensors to ONE peer (the last sender). A laptop plot (FR-AP-01 fallback) would steal the stream from the Quest | Firmware keeps up to 3 subscribers. Any device sends `{"type":"subscribe"}` every ≤ 2 s; sensor packets go to every live subscriber (expiry 5 s). Commands still come from anyone. The electronics team's firmware, which the real boards run, does not do this: it streams to the last sender only, so with the real boards no second tool (laptop plot, probe, station) may talk to the nodes during a session (`contracts/HAPTIC_PROTOCOL.md` v1.3). |
 | D4 | FR-AP-01 live traces in the Flutter app — no path defined from nodes to app | The Quest forwards a down-sampled trace (EMG env + |accel|, 20 Hz) inside the live status to the hub. The laptop fallback plot subscribes to the nodes directly (D3). |
 | D5 | Two wire names: PRD `sensor_chunk` (Node B wire message) vs session sensor files | Wire message = `sensor_chunk` (PRD §9.3). Session file = `sens_###.json`, schema `sensor-file.schema.json`. |
 | D6 | Stroke `intensity: 150` vs software max-intensity scaling | Sent intensity = round(150 × haptic_max_intensity), firmware caps at 150 (PWM cap for 3 V motors on 5 V). Default haptic_max_intensity 1.0. |
-| D7 | Device ids | Node A keeps `SLEEVE_001` (existing tests), Node B `CHETNA_BIO_001`. Both firmware 0.5.0. |
+| D7 | Device ids | Node A keeps `SLEEVE_001` (existing tests), Node B `CHETNA_BIO_001`. Both firmware 0.5.0. On the electronics team's real boards Node A is `CHETNA_HAPTIC_001`; the game matches nodes by `device_kind` (`haptic` / `bio`), never by id. |
 | D8 | Phone hotspots sometimes block broadcast between clients | Manual host fields (hub host in the game, node IPs in the game and app) are always available; discovery is the default, not the only path. |
 
 ## 1. Purpose
@@ -34,7 +34,7 @@ Quest 3 standalone (Unity, com.opus.sdk + PhantomHand)
   ├─ WS :8787 / beacon :8788 ─► laptop hub (Flutter app) ─► session files ─► Python analytics ─► report
   ├─ UDP :8790 cmds / :8791 discovery ─► Node A "haptic" ESP-WROOM-32 #1: 2 ERM, MPU6050, OLED
   └─ UDP ◄─ sensor_chunk ─ Node B "bio" ESP-WROOM-32 #2: BioAmp EXG Pill
-URBN 20,000 mAh bank ─► micro-USB 5 V to each board. One 2.4 GHz hotspot for all.
+URBN 20,000 mAh bank ─► micro-USB 5 V to each board (the team's boards use separate supplies, grounds not joined). One 2.4 GHz hotspot for all.
 ```
 Both nodes optional at runtime: missing data → hand-tracking fallback + "Sleeve offline" indicator.
 
@@ -69,25 +69,27 @@ pulse, 100 ms gap, 50 % duty per 10 s, 2 s watchdog, intensity cap 150.
 | # | Phase | Time | Behaviour |
 |---|---|---|---|
 | 0 | Calibrate | ≤ 30 s | Forearm outline; real wrist within 3 cm for 2 s; store wrist pose, forearm axis |
-| 1 | ProbePre | 20 s | Dark room + ruler; dot on the left index tip only; point to where the right index feels; still < 1 cm for 1.5 s |
-| 2 | Induction C1 | 90 s | Virtual right arm 15 cm to the LEFT (toward midline); frozen (D2); brush wrist→elbow at stroke_rate_hz (1); A then B per D1; OLED "SYNC"/"ASYNC" |
-| 3 | Agency | 30 s | **Stretch.** Rest + MVC calibration (FR-VR-07); normalised EMG > emg_threshold closes the virtual hand; real hand still |
+| 1 | ProbePre | 20 s | Before each condition (D21). Dark room + ruler; dot on the left index tip only; point to where the right index feels; still < 1 cm for 1.5 s |
+| 2 | Induction C1 | 90 s | Virtual right arm 15 cm to the LEFT (toward midline); frozen (D2); brush wrist→elbow at stroke_rate_hz (1), about 0.42 strokes/s at the default brush (D16); A then B per D1; OLED "SYNC"/"ASYNC"; no self-touch tail (D13) |
+| 3 | Agency | 30 s | **Stretch, opt-in** (`agency_enabled`). Once, in the last condition only, before Threat (D14). Rest 4 s + squeeze 4 s (MVC calibration, FR-VR-07), then EMG-driven: normalised EMG > emg_threshold closes the virtual hand; real hand still. With `autonomous_close_enabled` the last 10 s: the hand closes by itself twice. Without usable EMG the level comes from the real hand's flexion (D14) |
 | 4 | Threat | 5 s | 0.6 s telegraph, stone (Rigidbody) falls on the virtual hand; record 1.5 s after impact: EMG burst, IMU jolt, real wrist speed |
 | 5 | ProbePost + questions | 20 s + ~30 s | Probe again; 3 items on a 7-point scale, poked |
-| 6 | Condition C2 | same as 2–5 | ASYNC: each motor fires async_delay_ms (600) ± 100 after the brush passes, A/B order random (50 %) |
+| 6 | Condition C2 | same as 2–5 | ASYNC (second only with sync_first, see D9): each motor fires async_delay_ms (600) ± 100 after the brush passes; A/B order random (50 %) only when async_delay_ms − motor_soa_ms ≥ 300, so never at the default brush (D19) |
+| 6a | Dissolve | 18 s | Once, after the last condition; only with `additionsEnabled` (on by default) and `dissolve_enabled`. Arm placed and frozen as in an induction, fully visible 4 s, then fades 1 → 0 over 3 s; brush and touch go on for the whole 18 s with the last condition's timing (D13). Event `dissolve_start`; its strokes carry no trial |
+| 6b | Reveal | 10 s | Once, after the Dissolve; only with `additionsEnabled` and `passthrough_reveal`. Fallback only (D13): the arm fades in over 1 s and glides from the offset onto the tracked real hand over 3 s (onto the calibrated wrist if the hand is not tracked); event `passthrough_on {fallback: true}`. Real passthrough (D10) waits for a headset check and is not in the build |
 | 7 | Witness | 30 s | SYNC vs ASYNC: drift change, flinch latency/size, ownership; closing line |
 
-condition_order: sync_first default; counterbalancing = stretch (param exists, UI to alternate is stretch).
+condition_order: async_first default (D9, the manifest), so ASYNC runs first and SYNC second unless the operator picks sync_first; counterbalancing = stretch (param exists, UI to alternate is stretch).
 
 ## 6. Params (manifest; PRD FR-VR-06 core + build params)
 
 Core (PRD): offset_cm 5–30 (15) · stroke_rate_hz 0.5–1.5 (1.0) · induction_s 30–180 (90) ·
-async_delay_ms 300–1000 (600) · condition_order sync_first|async_first (sync_first) · threat_enabled (true) ·
+async_delay_ms 300–1000 (600) · condition_order sync_first|async_first (async_first, D9) · threat_enabled (true) ·
 agency_enabled (false — stretch) · emg_threshold 0–1 (0.3) · tactile_lead_ms 0–150 (40).
-Build: motor_soa_ms 60–300 (100) · stroke_jitter_ms 0–300 (150) · motor_a_from_wrist_cm 2–10 (5) ·
+Build: motor_soa_ms 60–1700 (833, D16) · stroke_jitter_ms 0–300 (150) · motor_a_from_wrist_cm 2–10 (5) ·
 motor_spacing_cm 5–15 (10) · forearm_length_cm 20–30 (25) · haptics_enabled (true) ·
-haptic_max_intensity 0–1 (1.0) · follow_during_induction (false) · demo_mode (false: when true, induction 45 s
-and one questionnaire at the end) · stimulated_side right only for MVP (left = stretch).
+haptic_max_intensity 0–1 (1.0) · follow_during_induction (false) · demo_mode (false: when true, induction min(`induction_s`, 60) s
+and a short rating after each condition, D18) · stimulated_side right only for MVP (left = stretch).
 
 ## 7. Events (events.ndjson; trial = condition index)
 
@@ -112,7 +114,7 @@ stroke_timing_err_ms {mean,p95}, cue_delivery_rate, emg_windows_excluded. EMG sa
 
 MVP: phantom_hand in the program builder from the manifest; live card with phase, condition, node status,
 EMG envelope + |accel| traces (from `trace`), operator buttons (start, next phase, abort phase, pause, end).
-Laptop fallback: `tools/demo/live_plot.py` subscribes to both nodes and plots EMG + accel.
+Laptop fallback: `tools/demo/live_plot.py` subscribes to both nodes and plots EMG + accel (with the team's boards only while the headset is off, see D3).
 Stretch: Embodiment report section, witness mirror, devices screen bio row.
 
 ## 10. KPIs (PRD §12) → acceptance
@@ -146,11 +148,14 @@ witness takes a row list, the brush/stroke path runs without the arm visible.
 | D18 | (8 Oct, research R1) `demo_mode` asks a rating after BOTH conditions: q1 alone after the first, q1 (+ q4, + q5 when agency ran) after the last; outside demo mode nothing changes. Before this the witness had ownership for one condition only. `demo_mode` induction becomes min(`induction_s`, 60) instead of a fixed 45 s (fewer taps per second with the slow brush; the rating gap grows with induction time). |
 | D19 | (8 Oct, research R1) In the delayed condition the A/B swap is used only when `async_delay_ms - motor_soa_ms >= 300`. With the slow brush (833) a swapped B tap would land about 230 ms before the brush reaches B, i.e. nearly in step, so the default never swaps. |
 | D20 | (8 Oct, research R1) The stone's thud and creak play at half volume: a loud sound startles with or without ownership and blurs the contrast. Open, not done: the on-device and analytics flinch baseline is the 2 s before impact, which includes the 0.6 s telegraph and the fall (anticipatory tensing can inflate it, so the flinch ratio is conservative); moving the window before the telegraph needs the game and analytics changed together. |
+| D21 | (8 Oct, first replay of a Unity recording through `tools/demo/l3_checks.py`) As built, and kept: the game runs ProbePre before EVERY condition (each condition gets its own baseline; analytics marks the one-probe shape `shared_pre_probe`), and it writes no `phase_start` for Done: a run ends with `block_end {aborted: false}` and `session_end {end_reason: "completed"}`. `done` stays a phase id for the live status only. The L3 phase check accepts both shapes (the game's, and the fake headset's fixture with one probe and a `done` event). |
+| D22 | (8 Oct) The ASYNC delay of the G2 table is the delay the skin gets: `cue_send - brush_pass + tactile_lead_ms` (every cue, delayed ones too, leaves the headset `tactile_lead_ms` early). A measured delay also carries the send error the SYNC row allows, so the check takes 500–700 ms widened by 40 ms at both ends. Before this the check compared the raw send stamps with 500–700 and a correct run failed it (Unity recording: raw 472–669 ms = felt 512–709 ms). |
+| D23 | (8 Oct) Analytics follows D18: in a `demo_mode` session one ownership item (q1) is the planned measure, quality `ok` with the reason `single_item_demo_mode`; outside demo mode one of q1/q2 stays `degraded` (`only_one_of_q1_q2`). Before this every demo run's ownership was shown as "Partial" on the phone's result page and left out of its summary line. |
 
 Revised phase order (per condition, then the finale, `demo_mode` timings in PRD §5.1):
-Calibrate → ProbePre → [C1: Induction (+SelfTouch tail if self_touch_s > 0) → Agency? → Threat → ProbePost →
-Questionnaire] → [C2: same] → Dissolve? → Reveal? → Witness → Done. Dissolve/Reveal run once, after the last
-condition, only when `dissolve_enabled` / `passthrough_reveal`.
+Calibrate → [C1: ProbePre → Induction (+SelfTouch tail if self_touch_s > 0) → Agency? → Threat → ProbePost →
+Questionnaire] → [C2: same] → Dissolve? → Reveal? → Witness → Done (D21: no event for Done). Dissolve/Reveal run
+once, after the last condition, only when `dissolve_enabled` / `passthrough_reveal`.
 
 | # | Behaviour |
 |---|---|

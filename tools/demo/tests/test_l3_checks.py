@@ -106,6 +106,42 @@ def test_phases_missing_witness_or_done_fails(events):
     assert not phases([e for e in events if not (e["type"] == "phase_start" and e["data"]["phase"] == "done")]).ok
 
 
+def as_the_game_records(events, aborted=False, second_probe="sync"):
+    """The same run in the shape Unity writes: a probe_pre before each condition (carrying it), no `done`
+    phase_start, block_end + session_end {end_reason} instead."""
+    ev = [copy.deepcopy(e) for e in events if not (e["type"] == "phase_start" and e["data"]["phase"] == "done")]
+    for e in ev:
+        if e["type"] == "phase_start" and e["data"]["phase"] == "probe_pre":
+            e["data"]["condition"], e["trial"] = "async", 0
+        if e["type"] == "session_end":
+            e["data"] = {"end_reason": "aborted" if aborted else "completed"}
+    at = next(i for i, e in enumerate(ev) if e["type"] == "phase_start" and e["data"]["phase"] == "induction" and e["trial"] == 1)
+    ev.insert(at, {"t_ms": ev[at]["t_ms"] - 1, "seq": 0, "block": 0, "trial": 1, "type": "phase_start",
+                   "data": {"phase": "probe_pre", "condition": second_probe}})
+    end = next(i for i, e in enumerate(ev) if e["type"] == "session_end")
+    ev.insert(end, {"t_ms": ev[end]["t_ms"], "seq": 0, "block": 0, "trial": None, "type": "block_end", "data": {"aborted": aborted}})
+    return ev
+
+
+def test_phases_the_shape_the_game_records_passes(events):
+    r = phases(as_the_game_records(events))
+    assert r.ok, r.observed
+
+
+def test_phases_game_shape_aborted_run_fails(events):
+    assert not phases(as_the_game_records(events, aborted=True)).ok
+
+
+def test_phases_probe_pre_of_the_other_condition_fails(events):
+    assert not phases(as_the_game_records(events, second_probe="async")).ok
+
+
+def test_phases_probe_pre_without_an_induction_fails(events):
+    ev = [e for e in as_the_game_records(events)
+          if not (e["type"] == "phase_start" and e["data"]["phase"] == "induction" and e["trial"] == 1)]
+    assert not phases(ev).ok
+
+
 def test_phases_missing_calibration_fails(events):
     assert not phases([e for e in events if not (e["type"] == "phase_start" and e["data"]["phase"] == "calibrate")]).ok
 
@@ -240,6 +276,24 @@ def test_async_delay_when_sync_strokes_look_delayed_too_fails(events):
     for e in sync_strokes(ev):
         e["data"]["cue_a_send_ms"] = e["data"]["brush_pass_a_ms"] + 600
     assert not L3.check_async_delay(ev).ok
+
+
+def test_async_delay_is_the_felt_delay_with_the_send_allowance(events):
+    """Every cue leaves tactile_lead_ms (40) early, so send - pass = planned delay - 40; the window is 500-700 on
+    the felt delay, widened by the 40 ms the SYNC row allows a send to be off."""
+    def with_raw(raw_ms):
+        ev = copy.deepcopy(events)
+        for e in async_strokes(ev):
+            e["data"]["cue_a_send_ms"] = e["data"]["brush_pass_a_ms"] + raw_ms
+            e["data"]["cue_b_send_ms"] = e["data"]["brush_pass_b_ms"] + raw_ms
+        return L3.check_async_delay(ev, tactile_lead_ms=40.0)
+
+    assert with_raw(465).ok          # planned 505, on time
+    assert with_raw(669).ok          # planned 700, one frame late (the Unity recording's own worst case)
+    assert with_raw(425).ok          # planned 500, 35 ms early: inside the allowance
+    assert not with_raw(415).ok      # felt 455: under 500 - 40
+    assert not with_raw(705).ok      # felt 745: over 700 + 40
+    assert not L3.check_async_delay(events, tactile_lead_ms=200.0).ok    # a wrong lead param is noticed
 
 
 def test_async_delay_without_async_strokes_fails(events):

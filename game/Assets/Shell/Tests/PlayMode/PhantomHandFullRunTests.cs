@@ -169,12 +169,14 @@ namespace Opus.Shell.Tests.PlayMode
             // ---- run to the end, sampling RTT; a phase-time watchdog fails a stuck run with its phase -----------------------
             var rtt = new List<double>(); double lastRtt = -1; var phasesSeen = new List<string>();
             float lastPhaseChange = Time.realtimeSinceStartup; string lastPhase = null;
+            float slowMs = 0f;   // time spent in frames longer than the 50 ms a stroke cue may be late: the host's share of dropped cues
             int hitches = 0; float hitchMs = 0f, worstHitchMs = 0f; int gc0 = GC.CollectionCount(0), gc2 = GC.CollectionCount(2);   // main-thread hitches drop cues as "late": count them
             t0 = Time.realtimeSinceStartup;
             while (runner.CurrentPhase == OpusSessionRunner.Phase.Running || runner.CurrentPhase == OpusSessionRunner.Phase.Paused)
             {
                 if (runner.Client != null && runner.Client.LastRttMs > 0 && Math.Abs(runner.Client.LastRttMs - lastRtt) > 1e-6) { lastRtt = runner.Client.LastRttMs; rtt.Add(lastRtt); }
                 string ph = controller.Module != null ? Opus.Games.PhantomHand.PhNames.Of(controller.Module.CurrentPhase) : "?";
+                if (Time.unscaledDeltaTime * 1000f > HapticClient.StrokeLateDropMs) slowMs += Time.unscaledDeltaTime * 1000f;
                 if (Time.unscaledDeltaTime > 0.12f)
                 {
                     float ms = Time.unscaledDeltaTime * 1000f; hitches++; hitchMs += ms; worstHitchMs = Mathf.Max(worstHitchMs, ms);
@@ -188,6 +190,7 @@ namespace Opus.Shell.Tests.PlayMode
                 yield return null;
             }
             Assert.AreEqual(OpusSessionRunner.Phase.Finished, runner.CurrentPhase);
+            double slowShare = slowMs / Math.Max(1f, (Time.realtimeSinceStartup - t0) * 1000f);
             Debug.Log("[PH_FullRun] run finished in " + (Time.realtimeSinceStartup - t0).ToString("F0") + " s; phases " + string.Join(",", phasesSeen) +
                       "; frames over 120 ms: " + hitches + " (total " + hitchMs.ToString("F0") + " ms, worst " + worstHitchMs.ToString("F0") + " ms)");
             if (rtt.Count > 0) { var r = rtt.OrderBy(x => x).ToList(); Debug.Log("[PH_FullRun] RTT so far: n=" + r.Count + " p50=" + r[r.Count / 2].ToString("F1") + " p95=" + r[(int)(r.Count * 0.95)].ToString("F1") + " ms"); }
@@ -216,7 +219,18 @@ namespace Opus.Shell.Tests.PlayMode
             var cues = events.Where(e => (string)e["type"] == "haptic_cue").ToList();
             int delivered = cues.Count(e => (bool)e["data"]["delivered"]);
             Assert.GreaterOrEqual(cues.Count, 2 * 30, "haptic_cue events (two per stroke)");
-            Assert.GreaterOrEqual(delivered / (double)cues.Count, 0.95, "stroke cues acked: " + delivered + "/" + cues.Count);
+            // Two different questions. (1) The pipeline: every cue the game SENT must come back acked, whatever the host does.
+            // (2) The host: a cue whose frame arrives more than 50 ms after its time is dropped as "late" (never touch late), so a
+            // host that cannot hold its frames loses touches without anything being wrong in the game. 8 Oct 2026: this laptop's CPU
+            // ran at about a third of its speed for most of each run and 9-17 % of the cues were dropped that way. Such a run says
+            // nothing about cue delivery, so it ends Inconclusive (after every other check below), not green and not red.
+            int late = cues.Count(e => !(bool)e["data"]["delivered"] && (string)e["data"]["reason"] == "late");
+            string cueLine = "stroke cues acked: " + delivered + "/" + cues.Count + " (" + late + " dropped as late; frames over " +
+                             HapticClient.StrokeLateDropMs + " ms took " + (slowShare * 100).ToString("F1") + " % of the run)";
+            Assert.GreaterOrEqual(delivered / (double)Math.Max(1, cues.Count - late), 0.98, "cues that were sent and acked; " + cueLine);
+            string hostTooSlow = null;
+            if (delivered / (double)cues.Count < 0.95 && slowShare > 0.03) hostTooSlow = "host too slow to judge cue delivery; " + cueLine;
+            else Assert.GreaterOrEqual(delivered / (double)cues.Count, 0.95, cueLine);
             Assert.AreEqual(1, events.Count(e => (string)e["type"] == "witness_summary"), "witness_summary");
             Assert.AreEqual(3, events.Count(e => (string)e["type"] == "questionnaire_item"), "questionnaire items");
             Assert.AreEqual("block_end", (string)events.First(e => (string)e["type"] == "block_end")["type"]);
@@ -259,6 +273,7 @@ namespace Opus.Shell.Tests.PlayMode
                 int invalid = CountOccurrences(err, "[MSG] Validation failed") + CountOccurrences(err, "Failed to parse JSON");
                 Assert.AreEqual(0, invalid, "invalid messages seen by the hub:\n" + err);
             }
+            if (hostTooSlow != null) Assert.Inconclusive(hostTooSlow);
         }
 
         /// <summary>Messages the fake hub logged as received, by type (from its stderr): a diagnostic for duplicate floods.</summary>

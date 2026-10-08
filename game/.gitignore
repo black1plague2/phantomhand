@@ -6,6 +6,8 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /[Mm]emoryCaptures/
+# Android build scratch (Gradle/IL2CPP), written by the first Quest APK build on 8 Oct 2026
+/.utmp/
 
 *.csproj
 *.unityproj

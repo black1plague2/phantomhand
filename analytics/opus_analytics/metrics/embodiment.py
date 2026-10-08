@@ -319,7 +319,13 @@ def _drift(events, trial, t_cond_start):
     return _val(b["drift_cm"] - a["drift_cm"], "cm", "ok", reasons, 2)
 
 
-def _questionnaire(events, trial):
+def _short_form(data) -> bool:
+    """demo_mode asks q1 alone after each condition (03-SPEC D18): one ownership item is then the planned measure."""
+    blocks = (getattr(data, "envelope", None) or {}).get("blocks") or []
+    return any((b.get("params") or {}).get("demo_mode") for b in blocks if b.get("game_id") == "phantom_hand")
+
+
+def _questionnaire(events, trial, short_form=False):
     items: dict[str, float] = {}
     for e in events:
         if e.get("type") == "questionnaire_item" and e.get("trial") == trial:
@@ -328,6 +334,8 @@ def _questionnaire(events, trial):
     own = [items[k] for k in ("q1", "q2") if k in items]
     if len(own) == 2:
         out["ownership"] = _val(np.mean(own), "likert_1_7", "ok", None, 2)
+    elif len(own) == 1 and short_form and "q1" in items:
+        out["ownership"] = _val(own[0], "likert_1_7", "ok", ["single_item_demo_mode"], 1)
     elif len(own) == 1:
         out["ownership"] = _val(own[0], "likert_1_7", "degraded", ["only_one_of_q1_q2"], 1)
     else:
@@ -400,9 +408,9 @@ def condition_metrics(events, data, trial, wins):
                   default=0.0)
     m: dict = {}
     m["drift_change_cm"] = _drift(events, trial, t_start)
-    m.update(_questionnaire(events, trial))
+    m.update(_questionnaire(events, trial, _short_form(data)))
 
-    impacts = [e for e in events if e.get("type") == "threat_impact" and e.get("trial") == trial]
+    impacts =[e for e in events if e.get("type") == "threat_impact" and e.get("trial") == trial]
     if not impacts or not impacts[0]["data"].get("ok", True):
         why = "threat_impact_absent" if not impacts else "threat_impact_not_ok"
         for k, u in (("flinch_emg_peak_x", "x_baseline_rms"), ("flinch_emg_latency_ms", "ms"),

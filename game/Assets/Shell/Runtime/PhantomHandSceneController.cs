@@ -129,6 +129,7 @@ namespace Opus.Shell
 
         private void Awake()
         {
+            _mainThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
             _env = PhantomHandOverrides.Env ?? Environment.GetEnvironmentVariable;
             if (settings == null) settings = Resources.Load<PhantomHandSettings>(PhantomHandSettings.ResourcePath);
             if (settings == null) settings = ScriptableObject.CreateInstance<PhantomHandSettings>(); // defaults: discovery everywhere
@@ -274,6 +275,7 @@ namespace Opus.Shell
 
             // 1. clients Pump
             _haptic.Pump(now);
+            DrainCueAcks();
             if (_nodeA != null) _nodeA.Pump();
             if (_nodeB != null) _nodeB.Pump();
 
@@ -348,9 +350,22 @@ namespace Opus.Shell
             if (h != null) h(e);
         }
 
+        // Acks reach OnHapticCue on the transport's receive thread (HapticClient.HandleMessage). The adapter, the event file and the
+        // live link are main-thread only, so those records wait here until Update, or until the session ends.
+        private readonly System.Collections.Concurrent.ConcurrentQueue<HapticCueRecord> _cueAcks = new System.Collections.Concurrent.ConcurrentQueue<HapticCueRecord>();
+        private int _mainThreadId;
+
         private void OnHapticCue(HapticCueRecord r)
         {
+            if (_mainThreadId != 0 && System.Threading.Thread.CurrentThread.ManagedThreadId != _mainThreadId) { _cueAcks.Enqueue(r); return; }
             if (_cues != null) _cues.OnRecord(r, _clock.NowMs);
+        }
+
+        private void DrainCueAcks()
+        {
+            HapticCueRecord r;
+            while (_cueAcks.TryDequeue(out r))
+                if (_cues != null && _clock != null) _cues.OnRecord(r, _clock.NowMs);
         }
 
         // ---- session ------------------------------------------------------------------------------------------------
@@ -456,6 +471,7 @@ namespace Opus.Shell
         public void EndSession()
         {
             if (_module != null) _module.End();
+            DrainCueAcks();
             if (_cues != null) _cues.FlushAll();
             StopSleeveSafely("end");
             if (_haptic != null) _haptic.StopKeepalive();
@@ -484,6 +500,7 @@ namespace Opus.Shell
 
         public int StopKinematicsRecording()
         {
+            DrainCueAcks();
             if (_cues != null) _cues.FlushAll();
             int n = 0;
             if (_kinRecorder != null)

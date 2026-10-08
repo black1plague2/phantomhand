@@ -225,6 +225,23 @@ def test_questionnaire_ownership_control_q4():
     assert own["quality"] == "degraded" and own["value"] == 4
 
 
+def test_demo_mode_single_ownership_item_is_the_planned_measure():
+    """03-SPEC D18: demo_mode asks q1 alone after each condition, so one item is not a data loss there."""
+    events = cond_events(0, "sync", extra=[ev(9500, "questionnaire_item", 0, item="q1", value=6)])
+
+    def own(params, game_id="phantom_hand", item="q1"):
+        evs = [dict(e, data=dict(e["data"], item=item)) if e["type"] == "questionnaire_item" else e for e in events]
+        data = session(evs)
+        data.envelope["blocks"] = [{"game_id": game_id, "params": params}]
+        return emb.compute_embodiment(evs, data)["sync"]["ownership"]
+
+    o = own({"demo_mode": True})
+    assert (o["value"], o["quality"], o["quality_reasons"], o["n"]) == (6, "ok", ["single_item_demo_mode"], 1)
+    assert own({"demo_mode": False})["quality"] == "degraded"          # the full form asked q2 and it is absent
+    assert own({"demo_mode": True}, game_id="another_game")["quality"] == "degraded"
+    assert own({"demo_mode": True}, item="q2")["quality"] == "degraded"  # the short form asks q1, not q2
+
+
 def test_stroke_timing_and_delivery():
     strokes = [ev(1000 + 1000 * i, "stroke", 0, index=i, brush_pass_a_ms=1000 + 1000 * i,
                   brush_pass_b_ms=1100 + 1000 * i, cue_a_send_ms=962 + 1000 * i, cue_b_send_ms=1062 + 1000 * i,
