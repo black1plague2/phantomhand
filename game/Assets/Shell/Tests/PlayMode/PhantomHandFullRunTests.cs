@@ -152,6 +152,18 @@ namespace Opus.Shell.Tests.PlayMode
             var runner = controller.GetComponent<OpusSessionRunner>();
             Assert.IsNotNull(runner, "the controller must bring its OpusSessionRunner");
 
+            // A flinch at each stone impact: the twin answers "flinch" on its control port with an EMG burst (x6 from +120 ms, 350 ms
+            // long) and an IMU jolt (+150 ms). The game's own threat analysis over the live node streams has to see it; without this the
+            // run only ever produced "no flinch", so that path (node time -> session time -> ThreatResponseAnalyzer -> witness) was untested.
+            int flinchesSent = 0;
+            Action<TrialEvent> flinchAtImpact = e =>
+            {
+                if (e == null || e.Type != "threat_impact" || _controlPort <= 0) return;
+                using (var s = new System.Net.Sockets.UdpClient()) s.Send(Encoding.ASCII.GetBytes("flinch"), 6, "127.0.0.1", _controlPort);
+                flinchesSent++;
+            };
+            if (!external) controller.OnTrialEvent += flinchAtImpact;
+
             // ---- wait: hub link up, session started, nodes streaming ------------------------------------------------------
             float t0 = Time.realtimeSinceStartup;
             while (Time.realtimeSinceStartup - t0 < 30f && !(runner.Client != null && runner.Client.IsConnected)) yield return null;
@@ -232,6 +244,25 @@ namespace Opus.Shell.Tests.PlayMode
             if (delivered / (double)cues.Count < 0.95 && slowShare > 0.03) hostTooSlow = "host too slow to judge cue delivery; " + cueLine;
             else Assert.GreaterOrEqual(delivered / (double)cues.Count, 0.95, cueLine);
             Assert.AreEqual(1, events.Count(e => (string)e["type"] == "witness_summary"), "witness_summary");
+            if (!external)
+            {
+                // the simulated flinch, as the game measured it: EMG peak at least 3x the resting level (the twin's burst is x6) and an onset
+                // after the impact, inside the 1.5 s the analyzer looks at (the twin starts the burst 120 ms after it gets the command)
+                Assert.AreEqual(2, flinchesSent, "one flinch command per stone impact");
+                var responses = events.Where(e => (string)e["type"] == "threat_response").ToList();
+                Assert.AreEqual(2, responses.Count, "threat_response events");
+                foreach (var r in responses)
+                {
+                    var d = r["data"]; string line = d.ToString(Newtonsoft.Json.Formatting.None);
+                    Assert.IsTrue(d["emg_peak_x"].Type != JTokenType.Null && (double)d["emg_peak_x"] >= 3.0, "EMG flinch peak (x resting level): " + line);
+                    Assert.IsTrue(d["emg_latency_ms"].Type != JTokenType.Null, "EMG flinch onset found: " + line);
+                    Assert.That((double)d["emg_latency_ms"], Is.InRange(60.0, 900.0), "EMG flinch onset after the impact (ms): " + line);
+                    Assert.IsTrue(d["imu_peak"].Type != JTokenType.Null && (double)d["imu_peak"] > 1.0, "IMU jolt (m/s2 over rest): " + line);
+                }
+                var witness = events.First(e => (string)e["type"] == "witness_summary")["data"];
+                foreach (var c in new[] { "sync", "async" })
+                    Assert.AreNotEqual("none", (string)witness[c]["flinch_strength"], "the witness shows the flinch (" + c + "): " + witness[c].ToString(Newtonsoft.Json.Formatting.None));
+            }
             Assert.AreEqual(3, events.Count(e => (string)e["type"] == "questionnaire_item"), "questionnaire items");
             Assert.AreEqual("block_end", (string)events.First(e => (string)e["type"] == "block_end")["type"]);
             int sens = Directory.GetFiles(sessionDir, "sens_*.json").Length, kin = Directory.GetFiles(sessionDir, "kin_*.json").Length;

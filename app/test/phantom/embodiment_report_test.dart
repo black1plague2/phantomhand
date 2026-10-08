@@ -323,6 +323,24 @@ void main() {
       expect(_textIn(find.byKey(const ValueKey('ph-embodiment-flinchSpeed-missing')), 'Delayed: No hand movement seen'), findsOneWidget);
     });
 
+    testWidgets('demo mode: a question that was not asked in a round says so, not "not answered" (03-SPEC D18)', (tester) async {
+      await _pump(
+        tester,
+        _make(
+          sync: {'ownership': _v(6, unit: 'likert_1_7', reasons: ['single_item_demo_mode']), 'witness_q4': _v(4, unit: 'likert_1_7')},
+          async: {
+            'ownership': _v(3, unit: 'likert_1_7', reasons: ['single_item_demo_mode']),
+            'witness_q4': _v(null, quality: 'missing', reasons: ['q4_not_asked']),
+          },
+        ),
+      );
+      expect(_textIn(find.byKey(const ValueKey('ph-embodiment-awareness-missing')), 'Delayed: Not asked in this round'), findsOneWidget);
+      // one planned item is a full number: no "Partial", and it carries the verdict
+      final ownership = find.byKey(const ValueKey('ph-embodiment-ownership'));
+      expect(find.descendant(of: ownership, matching: find.textContaining('Partial')), findsNothing);
+      expect(_verdictOn(tester), contains('the hand felt more like yours (6.0 vs 3.0)'));
+    });
+
     testWidgets('an off-scale answer says "Not usable"; an unknown reason code is shown as it is', (tester) async {
       await _pump(
         tester,

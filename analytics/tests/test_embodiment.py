@@ -242,6 +242,24 @@ def test_demo_mode_single_ownership_item_is_the_planned_measure():
     assert own({"demo_mode": True}, item="q2")["quality"] == "degraded"  # the short form asks q1, not q2
 
 
+def test_demo_mode_says_not_asked_for_the_questions_the_short_form_leaves_out():
+    """D18: q3 is never asked and q4 only after the last condition. The phone shows the reason, so it must not read as 'not answered'."""
+    events = cond_events(0, "async", impact=10_000.0, extra=[ev(9500, "questionnaire_item", 0, item="q1", value=3)]) + \
+        cond_events(1, "sync", impact=30_000.0, extra=[ev(29500, "questionnaire_item", 1, item="q1", value=6)])
+
+    def reasons(params):
+        data = session(events)
+        data.envelope["blocks"] = [{"game_id": "phantom_hand", "params": params}]
+        e = emb.compute_embodiment(events, data)
+        return {c: (e[c]["control"]["quality_reasons"], e[c]["witness_q4"]["quality_reasons"]) for c in ("async", "sync")}
+
+    demo = reasons({"demo_mode": True})
+    assert demo["async"] == (["q3_not_asked"], ["q4_not_asked"])      # first condition: neither is asked
+    assert demo["sync"] == (["q3_not_asked"], ["q4_absent"])          # last condition: q4 was due and is missing
+    full = reasons({"demo_mode": False})
+    assert full["async"] == full["sync"] == (["q3_absent"], ["q4_absent"])
+
+
 def test_stroke_timing_and_delivery():
     strokes = [ev(1000 + 1000 * i, "stroke", 0, index=i, brush_pass_a_ms=1000 + 1000 * i,
                   brush_pass_b_ms=1100 + 1000 * i, cue_a_send_ms=962 + 1000 * i, cue_b_send_ms=1062 + 1000 * i,

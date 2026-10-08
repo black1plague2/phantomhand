@@ -325,7 +325,7 @@ def _short_form(data) -> bool:
     return any((b.get("params") or {}).get("demo_mode") for b in blocks if b.get("game_id") == "phantom_hand")
 
 
-def _questionnaire(events, trial, short_form=False):
+def _questionnaire(events, trial, short_form=False, last=True):
     items: dict[str, float] = {}
     for e in events:
         if e.get("type") == "questionnaire_item" and e.get("trial") == trial:
@@ -340,10 +340,11 @@ def _questionnaire(events, trial, short_form=False):
         out["ownership"] = _val(own[0], "likert_1_7", "degraded", ["only_one_of_q1_q2"], 1)
     else:
         out["ownership"] = _missing("likert_1_7", "questionnaire_absent")
+    # the short form never asks q3 and asks q4 once, after the last condition: "not asked" is not "not answered"
     out["control"] = _val(items["q3"], "likert_1_7", "ok", None, 1) if "q3" in items else \
-        _missing("likert_1_7", "q3_absent")
+        _missing("likert_1_7", "q3_not_asked" if short_form else "q3_absent")
     out["witness_q4"] = _val(items["q4"], "likert_1_7", "ok", None, 1) if "q4" in items else \
-        _missing("likert_1_7", "q4_absent")
+        _missing("likert_1_7", "q4_not_asked" if short_form and not last else "q4_absent")
     return out
 
 
@@ -403,12 +404,12 @@ def _degrade(v, *reasons):
             rs.append(r)
 
 
-def condition_metrics(events, data, trial, wins):
+def condition_metrics(events, data, trial, wins, last=True):
     t_start = min((e["t_ms"] for e in events if e.get("trial") == trial and e.get("type") == "phase_start"),
                   default=0.0)
     m: dict = {}
     m["drift_change_cm"] = _drift(events, trial, t_start)
-    m.update(_questionnaire(events, trial, _short_form(data)))
+    m.update(_questionnaire(events, trial, _short_form(data), last))
 
     impacts =[e for e in events if e.get("type") == "threat_impact" and e.get("trial") == trial]
     if not impacts or not impacts[0]["data"].get("ok", True):
@@ -461,7 +462,7 @@ def compute_embodiment(events: list[dict], data) -> dict:
     wins = cue_windows(events)
     emb: dict = {"condition_order": [name for _, name in conds]}
     for trial, name in conds:
-        emb[name] = condition_metrics(events, data, trial, wins)
+        emb[name] = condition_metrics(events, data, trial, wins, last=(trial == conds[-1][0]))
     if "sync" in emb and "async" in emb:
         emb["sync_minus_async"] = _contrast(emb["sync"], emb["async"])
     return emb
