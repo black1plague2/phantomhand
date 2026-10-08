@@ -56,6 +56,23 @@ Notes on the table:
 
 ## Latest test counts (one line per suite)
 
+### On the new machine, 2026-10-08
+
+| Suite | Count | Log |
+|---|---|---|
+| Unity EditMode (all) | 343 (329 pass / 14 fail) | logs/sessions/2026-10-08-PH-O-WORKLIST-run1.md |
+| Unity PlayMode (all) | 29 (25 pass / 4 fail) | logs/sessions/2026-10-08-PH-O-WORKLIST-run1.md |
+| Analytics `pytest` | 83 passed | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| `sim/haptic` (Python fake) | 26 passed | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| `sim/sleeve` | 38 passed | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| `sim/live` | 45 passed | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| `tools/demo/tests` | 106 passed, 8 skipped (missing fixture) | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| L3 smoke `--sim --no-unity` | 7/7 checks PHANTOM HAND GREEN | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| L3 `--faults` | all green (A 6/6+5/5, B 7/7+3/3, C 7/7+4/4) | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+| `contracts/validate.py` | All validations passed (105 PASS) | logs/sessions/2026-10-08-PH-S-BASELINE-run1.md |
+
+### Previous machine results
+
 | Suite | Count | Log |
 |---|---|---|
 | Unity EditMode (all) | 290/290 passed | logs/sessions/2026-10-08-PH-U-U3-run1.md |
@@ -72,9 +89,7 @@ Notes on the table:
 
 ## Next (in this order)
 
-1. **Restart this Claude Code session** so the Unity MCP reconnects. `claude mcp get` shows `meta-xr-unity-runtime` as
-   registered and connected, but this session's client stays disconnected; re-adding the server does not help (manager report
-   2026-10-08). Then `CompilationTools(method: "GetCompilationStatus")` must answer clean (MANUAL_TODO, Phantom Hand human steps).
+1. **Unity MCP client registration fix (manager, 2026-10-08).** The issue: `claude mcp add` (what the editor's Register button runs, cwd `game/`) stores a **local-scope** entry keyed by git root `H:/Chenta/phantomhand`. A session opened in any other folder never loads it. Fix: register at **user scope** via `python tools/unity_mcp.py register` (reads the token from the local asset, never prints it). Once reconnected via `/mcp`, run `CompilationTools(method: "GetCompilationStatus")` — expect `{"success":true,"status":"clean","errorCount":0}` (logs/sessions/2026-10-08-PH-O-RESUME-run1.md, "Unity MCP root cause"; MANUAL_TODO, Phantom Hand human steps).
 2. **Unity test driver (one agent, one driver):** run EditMode (all) and PlayMode. U4 tests (`UiModelTests`, `UiPanelTests`) and
    `CaptureU4Shots()` (source: U4 log, Next step); U5 `Opus.Shell.Tests` (25) and `PH_FullRun` (source: U5 log, item 9); the
    Orchard totals must not drop (EditMode ≥ 107, PlayMode ≥ 6, 02-RULES §2). Then bake the models (`EnsureWrappers`, see item 3).
@@ -147,6 +162,8 @@ Notes on the table:
   PhantomHand references), written before the fix.
 - `logs/sessions/2026-10-08-PH-U-U5-run1.md` (CHECKPOINT 1) says the asmdef fix was made and the Editor.log has 0 `error CS` after line 10202.
 - These are not a contradiction in time order, but neither log has a Unity compile since. Opus to confirm with the next compile.
+
+**Flag 5: Shell compile state (Editor.log).** On the new machine (2026-10-08), Editor.log contains 0 `error CS` lines after the CHECKPOINT lines in both logs/sessions/2026-10-08-PH-U-MODELS-run1.md (CHECKPOINT 2) and logs/sessions/2026-10-08-PH-U-U5-run1.md (CHECKPOINT 1). Compile status: **CLEAN**. (logs/sessions/2026-10-08-PH-O-RESUME-run1.md, logs/sessions/2026-10-08-PH-O-WORKLIST-run1.md)
 
 **FLAG FOR OPUS (6): which firmware the boards run.**
 - `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §A: the team flashed `node_a_haptic` v0.5.0 and `node_b_bio` v0.5.0 (sketch names as the team wrote them).

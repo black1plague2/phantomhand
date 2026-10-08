@@ -503,6 +503,14 @@ CompilationTools(method: "GetCompilationStatus")  ->  {"success":true,"status":"
 
 If the ports are still held after step 3, a reboot clears orphaned sockets unconditionally.
 
+## Phantom Hand — human steps (new machine, 2026-10-08)
+
+- [ ] (human, phone) **Tap "Allow USB debugging" on the phone.** Phone serial 164cd676 (M2101K6P) shows `unauthorized` on adb until you tap the prompt on-device. If no prompt shows: re-plug the USB cable, or in Developer options use "Revoke USB debugging authorisations" and re-plug. `adb devices` must then say `device`. Source: manager, 2026-10-08.
+- [ ] (human, network) **Windows Firewall for the Unity editor.** The Wi-Fi network is Public. The inbound firewall rule for the Unity editor has a **BLOCK entry on Public networks**, so node/hub UDP beacons on 8791, 8788 cannot reach the editor until a human fixes it in an elevated PowerShell. `tools\demo\open_firewall.ps1` is being updated to report and fix this. Source: manager, 2026-10-08.
+- [ ] (optional, human) **Add H:\flutter\bin to PATH.** Flutter is being installed at `H:\flutter` (not `C:\flutter`) with your approval. Once installed, add `H:\flutter\bin` to your system PATH so commands like `dart` and `flutter` are available in the terminal. Source: manager, 2026-10-08.
+- [ ] (optional, human, Unity) **"Activate XR Operator" in the Unity AI Tools window.** Only needed for XR Operator runtime tests on a headset. Source: manager, 2026-10-08.
+- [ ] (human, pending) **Rigged hand licence and credit line.** Files: `game/Assets/Art/PhantomHand/Models/RiggedHand/` (`handRig_02.fbx`, `hand_Co/No/Ro/Sp` textures). Licence and source are unknown. Check the download page or the author's terms, write the credit line (or "none required") and send it to Opus. Blocks: shipping the rigged hand and the credit text. Source: manager, 2026-10-08; PH_STATUS.md.
+
 ## Phantom Hand — firmware
 
 ### Node A firmware v0.5.0 is UNCOMPILED — compile it before flashing (F1, 2026-10-07)
@@ -541,11 +549,7 @@ Source of each item: `docs/PH_STATUS.md` (written 2026-10-08) and the CONTEXT.md
   2026-10-08; `logs/sessions/2026-10-08-PH-U-U3-run1.md` (procedural hand; A5 via `arm.Curl`).
   **Update 2026-10-08:** a rigged skin hand is now in the repo (`game/Assets/Art/PhantomHand/Models/RiggedHand/handRig_02.fbx`,
   right hand `hand.R`, 68 bones; commit `5c0b12d`). It is the hand the arm wiring will switch to. Its licence is still open (next item).
-- [ ] (human) **Restart this Claude Code session to reconnect the Unity MCP.** `claude mcp get` shows `meta-xr-unity-runtime`
-  as registered and connected, but this session's MCP client stays disconnected. Adding the server again does not help.
-  Quit and reopen Claude Code in this folder, then run `CompilationTools(method: "GetCompilationStatus")`; expect
-  `{"success":true,"status":"clean","errorCount":0}`. Blocks: every Unity run (U4/U5/MODELS tests, the model bake).
-  Source: manager report 2026-10-08; `docs/PH_STATUS.md` Next 1.
+- [x] (human, 2026-10-08) **Restart this Claude Code session to reconnect the Unity MCP.** CLOSED (manager fix is the user-scope registration via `python tools/unity_mcp.py register`; session restart no longer needed). Source: manager report 2026-10-08; `logs/sessions/2026-10-08-PH-O-RESUME-run1.md` "Unity MCP root cause"; `docs/PH_STATUS.md` Next 1.
 - [ ] (human) **Check the rigged hand's licence and source, then send Opus the credit line.** Files:
   `game/Assets/Art/PhantomHand/Models/RiggedHand/` (`handRig_02.fbx`, `hand_Co/No/Ro/Sp` textures). Licence and source are
   unknown. Check the download page or the author's terms, write the credit line (or "none required") and send it to Opus.

@@ -71,8 +71,62 @@ Docs sweep findings that matter here: `docs/TESTING_RUNBOOK.md` is stale (old PC
 (needs an admin prompt: human step).
 
 ## Results
-(filled in as runs complete)
+
+### Baselines on this machine (before any fix)
+| Suite | Result | Evidence |
+|---|---|---|
+| Unity EditMode (all) | 343 tests: **329 passed, 14 failed** | `python tools/unity_mcp.py test EditMode` (run `b249c159`, 35.6 s) |
+| Unity PlayMode (all) | 29 tests: **25 passed, 4 failed** (all 4 environment: `sim/live/.venv` python missing; hub upload) | run `a8648869`, 64.4 s |
+| `contracts/validate.py` | All validations passed (105 PASS) | `logs/sessions/2026-10-08-PH-S-BASELINE-run1.md` |
+| analytics / sim haptic / sleeve / live | 83 / 26 / 38 / 45 passed | same log |
+| `tools/demo/tests` | 106 passed, 8 skipped (recorded Orchard session `app/.hub_data/c93ae4fa-…` was never committed) | same log |
+| L3 `--game phantom_hand --sim --no-unity` | 7/7; `--faults` A/B/C all green | same log |
+
+EditMode failures (all in code that had never run): 12 × `UiPanelTests` (`MissingComponentException: no 'Canvas' attached` in
+`PhUiKit.PreparePanel` — `GetComponent<T>() ?? AddComponent<T>()` never adds in the Editor, Unity fake null);
+`PhantomLiveStatusTests.Trace_20HzBins_AreAveragedAndAligned` (expected 422.5, was 420.0);
+`PhantomHandRigValidatorTest.Scene_HasAnchorsComponent_AndEveryAnchorIsWired` (committed scene is still the U3 scene).
+By namespace: Sdk 123, OrchardReach 45, PhantomHand 135, Shell 39, 1 Addressables stub.
+
+### Second root cause found: test runs never start while the editor is unfocused
+Meta's bridge (`com.meta.xr.sdk.core/Editor/MCPBridge/TestRunnerTools.cs`) hands `ListTests`/`RunFiltered`/`RunAll` to the main
+thread with `EditorApplication.delayCall`, which does not fire while the editor window is unfocused (their own
+`CompilationTools.cs` comment says so and uses `SynchronizationContext.Post` instead). Symptom: `RunAll` hangs for ever, `GetResults`
+shows `runId: null`. Window messages (WM_NULL, repaint, mouse move) do not wake it. Fix in `tools/unity_mcp.py`: while waiting,
+call `EditorApplication.Internal_CallDelayFunctions` through the reflection tool (`pumped()`, used by `call` and `test`).
+Also: the bridge records every result twice (686 results for 343 tests); `test` de-duplicates by full name.
+EditMode and PlayMode both run fine with the editor in the background this way.
+
+### Findings that change the plan
+- **Firewall (human, admin):** Wi-Fi "Chulbul" is a *Public* network and the inbound rule "Unity 6000.4.6f1 Editor" has
+  Allow/Domain + **Block/Public** (verified with `Get-NetFirewallRule`). Node beacons (UDP 8791) and hub beacons (UDP 8788) cannot reach
+  the editor from another machine until that Block rule is removed. Loopback runs are not affected.
+- **Scene/boot path not wired:** committed `PhantomHand.unity` has no U4 UI, no `PhantomHandSceneController`, no Bootstrap scene;
+  build settings boot OrchardReach. An APK built now would boot Orchard.
+- **Orchard removal is deferred until the demo path is green:** `PhantomHandSceneBuilder.BuildScene` copies the Meta camera rig from
+  `OrchardReach.unity` (lines 52–57), so deleting Orchard first breaks every scene rebuild. Order now: U4/U5 fix + scene → SDK merge
+  → L3 with Unity → APK → models/rigged hand → Orchard removal.
+- Cross-machine blockers (network audit, 13 items) → SDK change set, U6 code (Quest endpoint file, multicast lock), sim agent (twin on LAN).
+- `emg_burst` is never written by Unity (`PhantomHandModule.SubmitEmgBurst` has no caller) → in the Unity driver's list (B6).
+
+### User decisions today (asked 09:40)
+Flutter → install to `H:\flutter`. Port 8787 → stop the user's dashboard (done 09:45, port free). Phone `164cd676` → plugged in,
+`unauthorized`, user will tap Allow later. Commits → commit + push to `main` at verified gates.
+
+### Commits
+`018682b` ph(o): new-machine baseline, Unity MCP client, single-venv fallback (pushed).
+
+## Agents — wave 2 (09:50)
+| Agent | Model | Scope | Log |
+|---|---|---|---|
+| Unity driver (holds the editor) | Sonnet | `??` fix, live-status bin test, hooks B2/B6, BuildScene, BuildBootstrap, EditMode + PlayMode green, PH_FullRun, U4 shots | `2026-10-08-PH-U-U45FIX-run1.md` |
+| Sim | Sonnet | per-folder venvs (unblocks PlayMode), twin on LAN, harness `--lan`, firewall script, old-PC paths | `2026-10-08-PH-S-XMACHINE-run1.md` |
+| App | Sonnet | Flutter at `H:\flutter`, pub get, test, analyze, Windows build, debug APK | `2026-10-08-PH-A-SETUP-run1.md` |
+| U6 code (worktree) | Sonnet | PH APK build method, demo mode, Quest endpoint file, multicast lock | `2026-10-08-PH-U-U6CODE-run1.md` |
+| SDK change set (worktree, from wave 1) | Sonnet | 7 items | `2026-10-08-PH-U-SDKB-run1.md` |
+| Scribe | Haiku | CHANGELOG, PH_STATUS, MANUAL_TODO | — |
 
 ## CHECKPOINT
-08:50 — baselines in flight. Unity EditMode all (343 tests listed) started through the bridge by Opus; nothing committed.
-Resume: read this file, then `logs/sessions/2026-10-08-PH-O-WORKLIST-run1.md`; re-run `python tools/unity_mcp.py call CompilationTools '{"method":"GetCompilationStatus"}'`.
+09:55 — baseline committed and pushed (`018682b`); wave 2 running; the Unity driver holds `game/.ph_unity.lock`.
+Resume: read this file, then `logs/sessions/2026-10-08-PH-O-WORKLIST-run1.md` and the wave-2 logs above. Opus still owes: O2 review
+of each agent diff, merging the two worktree patches (SDKB, U6CODE), contract requests, L3 with Unity, APK build, models, Orchard removal.
