@@ -2,7 +2,7 @@
 {"t_ms": 100, "seq": 1, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "calibrate", "condition": null}}
 {"t_ms": 4200, "seq": 2, "block": 0, "trial": null, "type": "calibration", "data": {"wrist_pos": [0.12, 0.95, 0.31], "forearm_axis": [0.0, 0.0, 1.0], "ok": true}}
 {"t_ms": 5000, "seq": 3, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "probe_pre", "condition": null}}
-{"t_ms": 21800, "seq": 4, "block": 0, "trial": null, "type": "drift_probe", "data": {"when": "pre", "perceived_x": 0.004, "actual_x": 0.0, "drift_cm": 0.4, "confirmed": true}}
+{"t_ms": 21800, "seq": 4, "block": 0, "trial": null, "type": "drift_probe", "data": {"when": "pre", "perceived_x": -0.004, "actual_x": 0.0, "drift_cm": 0.4, "confirmed": true}}
 {"t_ms": 25000, "seq": 5, "block": 0, "trial": 0, "type": "phase_start", "data": {"phase": "induction", "condition": "async"}}
 {"t_ms": 26000, "seq": 6, "block": 0, "trial": 0, "type": "stroke", "data": {"index": 0, "brush_pass_a_ms": 26000, "brush_pass_b_ms": 26100, "cue_a_send_ms": 26562, "cue_b_send_ms": 26663, "swapped": false, "timing_err_ms": 2}}
 {"t_ms": 26562, "seq": 7, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 16}}
@@ -68,6 +68,6 @@
 {"t_ms": 106500, "seq": 67, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "reveal", "condition": null}}
 {"t_ms": 106700, "seq": 68, "block": 0, "trial": null, "type": "passthrough_on", "data": {"fallback": false}}
 {"t_ms": 116500, "seq": 69, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "witness", "condition": null}}
-{"t_ms": 117000, "seq": 70, "block": 0, "trial": null, "type": "witness_summary", "data": {"condition_order": ["async", "sync"], "sync": {"drift_change_cm": -2.4, "ownership": 5.5, "control": 3.0, "flinch_emg_peak_x": 6.4, "witness_q4": 6}, "async": {"drift_change_cm": -0.4, "ownership": 2.5, "control": 3.0, "flinch_emg_peak_x": 2.1, "witness_q4": 6}}}
+{"t_ms": 117000, "seq": 70, "block": 0, "trial": null, "type": "witness_summary", "data": {"condition_order": ["async", "sync"], "sync": {"drift_change_cm": 2.0, "ownership": 5.5, "control": 3.0, "flinch_emg_peak_x": 6.4, "witness_q4": 6}, "async": {"drift_change_cm": 0.0, "ownership": 2.5, "control": 3.0, "flinch_emg_peak_x": 2.1, "witness_q4": 6}}}
 {"t_ms": 146500, "seq": 71, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "done", "condition": null}}
 {"t_ms": 147000, "seq": 72, "block": 0, "trial": null, "type": "session_end"}
