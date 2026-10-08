@@ -512,7 +512,9 @@ If the ports are still held after step 3, a reboot clears orphaned sockets uncon
 - [ ] (optional, human) **Windows Developer Mode for Flutter desktop builds.** `flutter pub get` / `flutter build windows` need symlinks; the agents used a build-tree junction workaround that breaks whenever the plugin list changes. Settings → System → For developers → Developer Mode ON removes the problem. Not needed for the phone APK. Source: app setup run, 2026-10-08.
 - [ ] (optional, human) **Add H:\flutter\bin to PATH.** Flutter is being installed at `H:\flutter` (not `C:\flutter`) with your approval. Once installed, add `H:\flutter\bin` to your system PATH so commands like `dart` and `flutter` are available in the terminal. Source: manager, 2026-10-08.
 - [ ] (optional, human, Unity) **"Activate XR Operator" in the Unity AI Tools window.** Only needed for XR Operator runtime tests on a headset. Source: manager, 2026-10-08.
-- [ ] (human, 2 min) **Rigged hand credit line.** Files: `game/Assets/Art/PhantomHand/Models/RiggedHand/` (`handRig_02.fbx`, `hand_Co/No/Ro/Sp` textures). The user confirmed (2026-10-08) it is a free download from Sketchfab; the game is being switched to it. Still needed because this repo is public: the model's page URL, the author name and the licence shown on that page (most free Sketchfab models are CC BY: credit required). Send them and Opus adds the credit to the README and the About text. Source: manager, 2026-10-08.
+- [x] (human) **Rigged hand credit line.** Done 2026-10-08: the user sent the Sketchfab page; "Rigged hand" by Elena FF, CC BY-SA 4.0, recorded in `CREDITS.md` (README links to it).
+- [ ] (human, pitch) **Show the hand's credit.** CC BY-SA 4.0 requires credit wherever the model is shown publicly: put the one-line credit from `CREDITS.md` on a slide or a card on the demo table. Modified versions of the model stay under the same licence.
+- [ ] (human, before a public release build) **Licence terms of the Meta asset-library models** in `game/Assets/MetaAssets/` (table, stone, brush, sleeve, glove): check Meta's terms for redistribution in a public repo and add them to `CREDITS.md`.
 
 ## Phantom Hand — firmware
 

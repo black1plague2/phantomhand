@@ -73,6 +73,7 @@ to `black1plague2/chetna` — old URLs redirect.
 - [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) — contracts-first ground rules
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — module + data-flow detail
 - [analytics/VALIDATION.md](analytics/VALIDATION.md) — metrics, quality gates, synthetic ground truth
+- [CREDITS.md](CREDITS.md) — third-party assets and their licences (rigged hand: Elena FF, CC BY-SA 4.0)
 
 ---
 *Contracts-first: `contracts/schemas/` is the only coupling between the game, the app, and
