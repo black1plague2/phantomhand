@@ -48,10 +48,34 @@ namespace Opus.Shell.Editor
         private const float WallLeftInnerX = -2.45f, WindowZ = 1.65f, WindowCenterY = 1.45f;
         private const float BowlX = 0.49f, BowlZ = 0.64f, CupX = 0.34f, CupZ = 0.71f;
 
+        // Asset Store props (PhLocalProps): they exist only on the build PC, so the committed scene holds just these slots. Books: the table's far LEFT corner, clear of the ruler (x +-0.5, z .325-.375),
+        // the virtual arm (x -.014-.074), the real-arm area (x .136-.224, z .15-.58) and the table edges, for a footprint up to PhantomModelImporter.LocalBookDesignM square: centre (-0.40, 0.62) is 9.5 cm
+        // from the ruler, 23.6 cm from the virtual arm, 38.6 cm from the real arm and 5.0 cm from the table edges. Sideboard: back face on the right wall's inner face, front to -x, z 0.9.
+        public const float WallRightInnerX = 2.45f;
+        public const float BooksX = -0.40f, BooksZ = 0.62f, SideboardZ = 0.90f;
+
+        public static PhLocalProps.Slot[] LocalSlots()
+        {
+            return new[]
+            {
+                new PhLocalProps.Slot(PhModels.Books, new Vector3(BooksX, TableTopY, BooksZ), 0f),
+                new PhLocalProps.Slot(PhModels.Sideboard, new Vector3(WallRightInnerX, 0f, SideboardZ), 270f),      // yaw 270: the front (+z) turns to -x, into the room
+            };
+        }
+
         [MenuItem("Tools/OPUS/Build PhantomHand Scene")]
         public static string BuildMenu() { return BuildScene(); }
 
         public static string BuildScene()
+        {
+            // the committed scene must never point at an Asset Store pack: while it is built PhModels hands out the committed wrappers only (the local ones are for the game at run time)
+            bool useLocal = PhModels.UseLocal;
+            PhModels.UseLocal = false;
+            try { return BuildSceneCore(); }
+            finally { PhModels.UseLocal = useLocal; }
+        }
+
+        private static string BuildSceneCore()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Leave Play mode before building the scene.");
             EnsureDir(AssetDir);
@@ -163,6 +187,7 @@ namespace Opus.Shell.Editor
             Place(PhModels.Cup, tableProps, new Vector3(CupX, TableTopY, CupZ), Quaternion.Euler(0f, 205f, 0f), placed);
             foreach (var t in env.GetComponentsInChildren<Transform>(true))
                 GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.ContributeGI);
+            env.gameObject.AddComponent<PhLocalProps>().slots = LocalSlots();      // only the slots are saved; the wrappers are spawned at run time on a machine that has them
 
             // 5. lighting: warm key + ambient + light fog (shadows off on Quest; the stone gets its own blob shadow in U6)
             var lighting = new GameObject("Lighting").transform; lighting.SetParent(root.transform, false);
@@ -679,7 +704,8 @@ namespace Opus.Shell.Editor
         /// <summary>Renders the model bake into logs/sessions/screens/ph/models/ so it can be judged in one call: the arm with the hand from the participant's eye (arm_eye), the hand
         /// from above (hand_top) and from a low side view at curl 0 / 0.5 / 1 with the table hidden (hand_side_curl0/50/100: the finger bones), the brush at contact (brush_contact,
         /// brush_contact_close), the stone at telegraph and impact, the table and the whole room, the room from the seated eye (room_eye) and the props on the table's far right
-        /// corner (table_props). Edit mode, no physics; restores the scene. Run
+        /// corner (table_props). When this machine has the Asset Store packs and BuildLocal has baked them, the shots show them too (PhLocalProps.Spawn before, Clear after): the pack table, the
+        /// sideboard against the right wall (room_eye_right) and the book stack on the table's far left corner (table_left). Edit mode, no physics; restores the scene. Run
         /// PhantomModelImporter.RunBatch() and BuildScene() first so the wrappers exist and the scene holds the model table.</summary>
         public static string CaptureModelShots()
         {
@@ -692,6 +718,8 @@ namespace Opus.Shell.Editor
             var realWrist = new Vector3(ArmX, TableTopY + 0.021f, ElbowZ + ForearmLen);
             pres.arm.PlaceFromCalibration(realWrist, Vector3.forward, (float)p.OffsetCm);
             pres.arm.Visible = true; pres.brush.Visible = false;
+            var local = UnityEngine.Object.FindAnyObjectByType<PhLocalProps>();     // null in a scene built before the component existed
+            if (local != null) local.Spawn();
             var written = new List<string>();
             Vector3 eye = SeatedEye;
             Vector3 look = pres.arm.AxisWorldPos(0f) + pres.arm.transform.forward * 0.05f;
@@ -740,8 +768,11 @@ namespace Opus.Shell.Editor
             // 6 the room as the seated participant sees it when looking straight ahead (the window at the left edge, the pendant above the table, the picture and the plant on the far wall),
             // and the bowl and the tea cup on the table's far right corner
             written.Add(Shot(dir, "room_eye", eye, new Vector3(eye.x, eye.y, 2.65f), 80f));
-            written.Add(Shot(dir, "room_eye_right", eye, new Vector3(2.45f, eye.y, -0.6f), 80f));     // turned right and a little back: the right and back walls close the room
+            // turned right: the sideboard on the right wall (any size the bake accepts is in frame), the back-right corner that closes the room at the right edge, the table's far right corner at the left edge
+            written.Add(Shot(dir, "room_eye_right", eye, new Vector3(WallRightInnerX, 1.0f, 0.1f), 80f));
             written.Add(Shot(dir, "table_props", eye, new Vector3(0.42f, TableTopY + 0.04f, 0.68f), 40f));
+            written.Add(Shot(dir, "table_left", eye, new Vector3(BooksX, TableTopY + 0.06f, BooksZ), 40f));      // the book stack on the table's far left corner
+            if (local != null) local.Clear();
             EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);   // discard transient changes
             return string.Join(";", written);
         }

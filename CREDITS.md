@@ -29,7 +29,11 @@ The Unity Asset Store licence lets a team use a package in its built game but no
 - Dark Wave Paint Table 01: <https://assetstore.unity.com/packages/3d/props/dark-wave-paint-table-01-306300>
 - Mobile Books: <https://assetstore.unity.com/packages/3d/props/interior/mobile-books-3356>
 
-None of them is imported yet (8 Oct 2026).
+Imported on the build PC on 8 Oct 2026 (Package Manager, My Assets) into git-ignored folders. What the built game uses from
+them, through wrappers baked on that PC (`Tools/OPUS/Bake local Asset Store props`, also git-ignored): the table
+(Dark Wave Paint Table 01), the falling stone (Stones, `Stone_3`), a stack of four books (Mobile Books) and a chest of
+drawers against the right wall (Pack Gesta Furniture #1, `tumba_fur`). A clone without the packs shows the repository's own
+table and stone and no books or chest; the committed scene holds only the two empty slots.
 
 ## Meta asset-library models
 

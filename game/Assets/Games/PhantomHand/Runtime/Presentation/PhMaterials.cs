@@ -66,6 +66,11 @@ namespace Opus.Games.PhantomHand.Presentation
         public const string Lamp = "PH_PendantLamp", Plant = "PH_Plant", Window = "PH_Window", Bowl = "PH_SingingBowl", Cup = "PH_TeaCup", Picture = "PH_FramedPicture";
         public const string ResourceFolder = "PhantomModels/";
 
+        /// <summary>Wrappers baked on the build PC from Unity Asset Store packs (PhantomModelImporter.BuildLocal) into a git-ignored folder, so a clone without the packs has none. They are not in
+        /// <see cref="All"/>. PH_Stone and PH_Table also exist as committed wrappers (the local one wins); Books and Sideboard exist only here.</summary>
+        public const string Books = "PH_Books", Sideboard = "PH_Sideboard";
+        public const string LocalFolder = "PhantomModelsLocal/";
+
         /// <summary>Every wrapper the importer bakes, in build order.</summary>
         public static readonly string[] All = { Hand, Forearm, Sleeve, Brush, Stone, Table, Lamp, Plant, Window, Bowl, Cup, Picture };
 
@@ -81,10 +86,23 @@ namespace Opus.Games.PhantomHand.Presentation
         /// <summary>Master switch (tests / A-B captures can turn the models off).</summary>
         public static bool UseModels = true;
 
+        /// <summary>Switch for the wrappers of <see cref="LocalFolder"/>. The scene builder turns it off while it builds the committed scene, so that nothing in the scene can point at a pack;
+        /// A/B captures can turn it off to get the committed look.</summary>
+        public static bool UseLocal = true;
+
+        /// <summary>The local wrapper when one exists, else the committed one (null when neither does, or when <see cref="UseModels"/> is off).</summary>
         public static GameObject Load(string name)
         {
             if (!UseModels) return null;
-            return Resources.Load<GameObject>(ResourceFolder + name);
+            var local = LoadLocal(name);
+            return local != null ? local : Resources.Load<GameObject>(ResourceFolder + name);
+        }
+
+        /// <summary>Only the wrapper baked from an Asset Store pack, or null: always null in a clone without the packs, and while <see cref="UseLocal"/> is off.</summary>
+        public static GameObject LoadLocal(string name)
+        {
+            if (!UseModels || !UseLocal) return null;
+            return Resources.Load<GameObject>(LocalFolder + name);
         }
 
         /// <summary>Instantiates a wrapper under parent (or null when the model is not available).</summary>

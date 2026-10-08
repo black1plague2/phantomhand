@@ -18,6 +18,9 @@
 /[Aa]ssets/Dark Wave Paint.meta
 /[Aa]ssets/Furniture_ges1/
 /[Aa]ssets/Furniture_ges1.meta
+# wrappers baked from those packs (Tools/OPUS/Bake local Asset Store props): they reference the packs, so they are never committed either
+/[Aa]ssets/Art/PhantomHand/Models/Local/
+/[Aa]ssets/Art/PhantomHand/Models/Local.meta
 # scenes Unity sets aside after a crash
 /[Aa]ssets/_Recovery/0 (*).unity
 /[Aa]ssets/_Recovery/0 (*).unity.meta

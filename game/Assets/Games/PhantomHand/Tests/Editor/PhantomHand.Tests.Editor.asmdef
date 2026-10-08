@@ -6,6 +6,7 @@
         "PhantomHand.Runtime",
         "PhantomHand.Presentation",
         "PhantomHand.Editor",
+        "Shell.Editor",
         "UnityEngine.UI",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
