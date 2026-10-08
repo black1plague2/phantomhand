@@ -1,0 +1,66 @@
+{
+  "session_id": "aa4c9386-f524-47df-a240-fee1df4ca4ff",
+  "contracts_version": "0.1",
+  "patient_ref": "synthetic-healthy-42",
+  "program_ref": "synthetic-program",
+  "mode": "simulation",
+  "started_at": "2026-01-01T09:00:00Z",
+  "ended_at": null,
+  "end_reason": "completed",
+  "device": {
+    "model": "synthetic",
+    "device_id": "sim-0",
+    "os": "sim",
+    "tracking_rate_hz": 72.0
+  },
+  "versions": {
+    "shell": "0.0.0-sim",
+    "sdk": "0.0.0-sim",
+    "games": {
+      "orchard_reach": "0.1.0"
+    }
+  },
+  "calibration": {
+    "affected_side": "right",
+    "dominant_side": "right",
+    "arm_length_m": {
+      "left": 0.6,
+      "right": 0.6
+    },
+    "posture": "seated",
+    "chest_reference": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "blocks": [
+    {
+      "index": 0,
+      "game_id": "orchard_reach",
+      "game_version": "0.1.0",
+      "params": {
+        "trialCount": 5,
+        "side": "alternate",
+        "reachPercent": [
+          50,
+          85
+        ],
+        "azimuthRangeDeg": [
+          -45,
+          45
+        ],
+        "elevationRangeDeg": [
+          0,
+          40
+        ],
+        "holdMs": 300,
+        "timeLimitMs": 15000
+      },
+      "started_t_ms": 60.0,
+      "ended_t_ms": 13111.11111111111,
+      "completed": true
+    }
+  ],
+  "chunks": 3
+}

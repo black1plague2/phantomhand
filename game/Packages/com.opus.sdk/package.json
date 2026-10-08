@@ -1,0 +1,13 @@
+{
+  "name": "com.opus.sdk",
+  "version": "0.1.0",
+  "displayName": "OPUS Game SDK",
+  "description": "Contract-first plug-in game SDK for the OPUS VR rehab shell: IGameModule, GameManifest/ParamBinder, GameRegistry, SessionClock, TrialRecorder, KinematicsRecorder, SessionWriter, Outbox and ITransport. Hand tracking is Meta XR SDK/OVRSkeleton, accessed only through IHandSource so recorders and games stay input-agnostic (SyntheticHandDriver feeds the same interface).",
+  "unity": "6000.4",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.test-framework": "1.4.6"
+  },
+  "keywords": ["opus", "rehab", "xr"],
+  "author": { "name": "OPUS" }
+}

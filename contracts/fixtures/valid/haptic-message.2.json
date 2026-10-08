@@ -1,0 +1,10 @@
+{
+  "type": "device_discovery",
+  "device_id": "CHETNA_BIO_001",
+  "device_kind": "bio",
+  "firmware_version": "0.5.0",
+  "command_port": 8790,
+  "status": "available",
+  "motor_count": 0,
+  "timestamp_ms": 142050
+}

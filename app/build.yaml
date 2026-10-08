@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # contracts/schemas/* are all snake_case; keep Dart models idiomatic
+          # camelCase and let json_serializable do the mapping both ways.
+          field_rename: snake
+          explicit_to_json: true

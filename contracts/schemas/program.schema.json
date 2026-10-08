@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/program.schema.json",
+  "title": "Program",
+  "description": "A clinician prescription: a repeatable schedule of ordered game blocks. Replaces the old single-game, single-use prescription.",
+  "type": "object",
+  "required": ["program_id", "patient_ref", "created_by", "blocks", "schedule"],
+  "properties": {
+    "program_id": { "type": "string" },
+    "patient_ref": { "type": "string" },
+    "created_by": { "type": "string" },
+    "title": { "type": "string" },
+    "notes_for_patient": { "type": "string" },
+    "schedule": {
+      "type": "object",
+      "required": ["start_date"],
+      "properties": {
+        "start_date": { "type": "string", "format": "date" },
+        "end_date": { "type": ["string", "null"], "format": "date" },
+        "sessions_per_week": { "type": "integer", "minimum": 1, "maximum": 14 },
+        "max_session_minutes": { "type": "integer", "minimum": 1 },
+        "location": { "enum": ["clinic", "home", "either"] }
+      }
+    },
+    "requires_supervision": { "type": "boolean", "default": false },
+    "blocks": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["game_id", "game_version_range", "params"],
+        "properties": {
+          "game_id": { "type": "string" },
+          "game_version_range": { "type": "string", "examples": ["^0.1.0"] },
+          "params": { "type": "object", "description": "validated against that game's manifest paramSchema" },
+          "duration_sec": { "type": "integer", "minimum": 10 },
+          "rest_after_sec": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "status": { "enum": ["draft", "active", "paused", "completed", "archived"] }
+  }
+}

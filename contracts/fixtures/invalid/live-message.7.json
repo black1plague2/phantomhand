@@ -1,0 +1,21 @@
+{
+  "v": 1,
+  "type": "status",
+  "id": "550e8400-e29b-41d4-a716-4466554400aa",
+  "seq": 4,
+  "ts_ms": 1791367200000,
+  "from": "headset",
+  "payload": {
+    "state": "running",
+    "trace": {
+      "emg_env": [
+        1
+      ],
+      "accel_mag": [
+        1
+      ],
+      "t0_ms": 0,
+      "fs_hz": 50
+    }
+  }
+}

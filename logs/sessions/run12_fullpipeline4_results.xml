@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.7317814">
+  <test-suite type="TestSuite" id="1027" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.731781" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1019" name="Shell.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.723579" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="37568" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1020" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.722840" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1021" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.722448" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1022" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.722067" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1023" name="PlayMode" fullname="Opus.Shell.Tests.PlayMode" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.721713" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1009" name="FullPipelineIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests" classname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.720196" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1010" name="FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession" fullname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests.FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession" methodname="FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession" classname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests" runstate="Runnable" seed="959777644" result="Passed" start-time="2026-09-18 19:06:34Z" end-time="2026-09-18 19:06:48Z" duration="13.696896" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests.FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession
+[OPUS] FullPipeline: found a hub listening on 127.0.0.1:8787
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+Unable to process a controller whose SampleRateHz is 0 now.
+Unable to process a controller whose SampleRateHz is 0 now.
+[OPUS] FullPipeline: haptic sleeve connected=True after 0.3s 
+[OPUS] FullPipeline: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run12\02_grasp.png
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] FullPipeline: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run12\03_placed.png
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] sending cue=low_confidence motor=1 cueId=f5c92e74-c5da-47de-a4e6-ddbfe187f4ec nowMs=2523
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] FullPipeline: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run12\01_mid_reach.png
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] FullPipeline: session 27a6c781-834f-4444-970f-865e808804b6 finished after 9.2s — trialsCompleted=6 trialEvents=27 formWarnings=2 hapticCues=2 cueOrder=[low_confidence] kinChunks=2 hubSaidStart=False
+[OPUS] FullPipeline: uploaded 4 files to the hub (session.json, events.ndjson, kin_000.json, kin_001.json)
+[OPUS] FullPipeline: live-link RTT to the app hub — samples=9 p50=165.1ms p95=167.8ms max=167.8ms (G2 target < 250 ms on LAN)
+[OPUS] FullPipeline: contracts/validate.py --session exit=0
+[PASS] 27a6c781-834f-4444-970f-865e808804b6/session.json
+[PASS] 27a6c781-834f-4444-970f-865e808804b6/events.ndjson: 31 events validated
+[PASS] 27a6c781-834f-4444-970f-865e808804b6/kin_000.json
+[PASS] 27a6c781-834f-4444-970f-865e808804b6/kin_001.json
+[WARN] 27a6c781-834f-4444-970f-865e808804b6/metrics.json not found
+
+[PASS] All validations passed
+
+
+[OPUS] FullPipeline: session dir for analytics -> C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\unity_logs\run12_full_pipeline\27a6c781-834f-4444-970f-865e808804b6
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests.FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession, ResultState: Passed, Duration: 13.697s
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

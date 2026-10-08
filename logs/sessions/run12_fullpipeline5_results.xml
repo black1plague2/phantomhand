@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.7129639">
+  <test-suite type="TestSuite" id="1027" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.712964" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1019" name="Shell.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.706140" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="17848" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1020" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.705409" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1021" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.704679" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1022" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.704229" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1023" name="PlayMode" fullname="Opus.Shell.Tests.PlayMode" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.703789" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1009" name="FullPipelineIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests" classname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.702192" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1010" name="FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession" fullname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests.FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession" methodname="FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession" classname="Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests" runstate="Runnable" seed="843327816" result="Passed" start-time="2026-09-18 19:08:54Z" end-time="2026-09-18 19:09:08Z" duration="13.682474" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests.FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession
+[OPUS] FullPipeline: found a hub listening on 127.0.0.1:8787
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+Unable to process a controller whose SampleRateHz is 0 now.
+Unable to process a controller whose SampleRateHz is 0 now.
+[HapticClient] cue dropped for motor 0: no haptic device known yet (HasDevice=false).
+[OPUS] FullPipeline: haptic sleeve connected=True after 0.5s 
+[HapticClient] sending cue=trunk_lean motor=0 cueId=32eeb65f-02c9-4927-a69b-137996960093 nowMs=1407
+[HapticClient] sending cue=success motor=0 cueId=8acb3252-1527-49bc-a2f7-2a5e841a5828 nowMs=1535
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] FullPipeline: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run12\02_grasp.png
+[OPUS] FullPipeline: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run12\03_placed.png
+[HapticClient] sending cue=success motor=0 cueId=5adefcdc-cfd2-4026-81f3-d98a778b0d2b nowMs=2509
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 1: per-zone min gap (800ms) not elapsed (last=2509 now=2872).
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] FullPipeline: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run12\01_mid_reach.png
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] FullPipeline: session 81f5a097-c280-4556-92a1-e35350263a9e finished after 9.0s — trialsCompleted=6 trialEvents=29 formWarnings=4 hapticCues=6 cueOrder=[trunk_lean,success] kinChunks=2 hubSaidStart=False
+[OPUS] FullPipeline: uploaded 4 files to the hub (session.json, events.ndjson, kin_000.json, kin_001.json)
+[OPUS] FullPipeline: live-link RTT to the app hub — samples=7 p50=269.1ms p95=269.3ms max=269.3ms (G2 target < 250 ms on LAN)
+[OPUS] FullPipeline: contracts/validate.py --session exit=0
+[PASS] 81f5a097-c280-4556-92a1-e35350263a9e/session.json
+[PASS] 81f5a097-c280-4556-92a1-e35350263a9e/events.ndjson: 39 events validated
+[PASS] 81f5a097-c280-4556-92a1-e35350263a9e/kin_000.json
+[PASS] 81f5a097-c280-4556-92a1-e35350263a9e/kin_001.json
+[WARN] 81f5a097-c280-4556-92a1-e35350263a9e/metrics.json not found
+
+[PASS] All validations passed
+
+
+[OPUS] FullPipeline: session dir for analytics -> C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\unity_logs\run12_full_pipeline\81f5a097-c280-4556-92a1-e35350263a9e
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.FullPipelineIntegrationTests.FullPipeline_AppHub_Headset_Sleeve_ProducesAnalysableSession, ResultState: Passed, Duration: 13.682s
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

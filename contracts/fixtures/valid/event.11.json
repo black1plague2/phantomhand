@@ -1,0 +1,27 @@
+{
+  "t_ms": 1011,
+  "seq": 11,
+  "block": 0,
+  "trial": 0,
+  "type": "witness_summary",
+  "data": {
+    "condition_order": [
+      "async",
+      "sync"
+    ],
+    "sync": {
+      "drift_change_cm": -2.4,
+      "ownership": 5.5,
+      "control": 3.0,
+      "flinch_emg_peak_x": 6.4,
+      "witness_q4": 6
+    },
+    "async": {
+      "drift_change_cm": -0.4,
+      "ownership": 2.5,
+      "control": 3.0,
+      "flinch_emg_peak_x": 2.1,
+      "witness_q4": 6
+    }
+  }
+}

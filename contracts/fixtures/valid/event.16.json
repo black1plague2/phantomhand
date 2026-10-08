@@ -1,0 +1,10 @@
+{
+  "t_ms": 1016,
+  "seq": 16,
+  "block": 0,
+  "trial": 0,
+  "type": "autonomous_close",
+  "data": {
+    "emg_level": 0.04
+  }
+}

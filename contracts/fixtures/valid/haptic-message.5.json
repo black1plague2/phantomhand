@@ -1,0 +1,21 @@
+{
+  "type": "sensor_chunk",
+  "device_id": "CHETNA_BIO_001",
+  "device_kind": "bio",
+  "timestamp_ms": 143100,
+  "sample_rate_hz": 100,
+  "emg_envelope": [
+    412.5,
+    415.1,
+    418.9,
+    421.3,
+    419.0,
+    416.2,
+    414.8,
+    413.9,
+    415.5,
+    417.0
+  ],
+  "unit": "raw_adc",
+  "status": "ok"
+}

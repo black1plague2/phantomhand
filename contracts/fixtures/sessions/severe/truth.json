@@ -1,0 +1,152 @@
+{
+  "profile": "severe",
+  "seed": 42,
+  "generator_version": "0.1.0",
+  "knobs": {
+    "rt_ms_mean": 600,
+    "rt_ms_sd": 90,
+    "mt_scale": 2.3,
+    "reach_scale": 0.65,
+    "n_submovements": 5,
+    "submovement_frac": 0.16,
+    "tremor_hz_range": [
+      6.0,
+      10.0
+    ],
+    "tremor_amp_m": 0.0045,
+    "trunk_compensation": 0.6,
+    "jitter_std_m": 0.0045,
+    "dropout_rate": 0.06,
+    "fatigue_rate": 0.2,
+    "neglect_bias": 0.0,
+    "miss_rate": 0.22,
+    "tracking_rate_hz": 72.0
+  },
+  "sample_rate_hz": 72.0,
+  "tracking_rate_hz": 72.0,
+  "trials": [
+    {
+      "index": 0,
+      "side": "left",
+      "outcome": "miss",
+      "reaction_time_ms": 424.40683302115474,
+      "movement_time_ms": 1820.4841968883038,
+      "peak_speed_mps": 0.6753086903047109,
+      "time_to_peak_speed_pct": 93.07658079870754,
+      "n_submovements": 5,
+      "endpoint_error_cm": 22.88752509849205,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 1.7012308078700937,
+      "target_azimuth_deg": -5.5009404223152885,
+      "target_elevation_deg": 34.3439167964553,
+      "target_reach_percent": 77.08846169945872
+    },
+    {
+      "index": 1,
+      "side": "right",
+      "outcome": "miss",
+      "reaction_time_ms": 537.70056592539,
+      "movement_time_ms": 1910.5618429059432,
+      "peak_speed_mps": 0.651938613501341,
+      "time_to_peak_speed_pct": 93.77695222582074,
+      "n_submovements": 5,
+      "endpoint_error_cm": 19.89346640788043,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 2.111197551474971,
+      "target_azimuth_deg": -5.092722105540197,
+      "target_elevation_deg": 9.089548871391075,
+      "target_reach_percent": 78.79665646447904
+    },
+    {
+      "index": 2,
+      "side": "left",
+      "outcome": "miss",
+      "reaction_time_ms": 840.7482840783415,
+      "movement_time_ms": 1656.3748477545885,
+      "peak_speed_mps": 0.5118767104352847,
+      "time_to_peak_speed_pct": 93.07474505282289,
+      "n_submovements": 5,
+      "endpoint_error_cm": 17.62254142950879,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": -41.05766107914941,
+      "target_elevation_deg": 6.171579682701913,
+      "target_reach_percent": 66.3352351304462
+    },
+    {
+      "index": 3,
+      "side": "right",
+      "outcome": "miss",
+      "reaction_time_ms": 720.8838841474677,
+      "movement_time_ms": 1965.7022024773623,
+      "peak_speed_mps": 0.6126291113202535,
+      "time_to_peak_speed_pct": 94.67919956367572,
+      "n_submovements": 5,
+      "endpoint_error_cm": 23.683674841596904,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.826437555333088,
+      "target_azimuth_deg": -5.656327301490236,
+      "target_elevation_deg": 33.3071278423135,
+      "target_reach_percent": 73.44348981388787
+    },
+    {
+      "index": 4,
+      "side": "left",
+      "outcome": "miss",
+      "reaction_time_ms": 653.6664611136486,
+      "movement_time_ms": 2017.9465493305227,
+      "peak_speed_mps": 0.6049154733869768,
+      "time_to_peak_speed_pct": 94.29277392947036,
+      "n_submovements": 5,
+      "endpoint_error_cm": 24.411107313355593,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 1.810164771017966,
+      "target_azimuth_deg": 14.83657709328289,
+      "target_elevation_deg": 28.206615145053405,
+      "target_reach_percent": 77.54235321257485
+    },
+    {
+      "index": 5,
+      "side": "right",
+      "outcome": "timeout",
+      "reaction_time_ms": null,
+      "movement_time_ms": null,
+      "peak_speed_mps": null,
+      "time_to_peak_speed_pct": null,
+      "n_submovements": null,
+      "endpoint_error_cm": null,
+      "path_length_ratio": null,
+      "target_azimuth_deg": 5.328644467087216,
+      "target_elevation_deg": 12.158003922504488,
+      "target_reach_percent": 69.37527902302986
+    }
+  ],
+  "dropout_spans": [
+    {
+      "joint": "r_index_tip",
+      "start_frame": 1400,
+      "end_frame": 1426
+    },
+    {
+      "joint": "l_wrist",
+      "start_frame": 1856,
+      "end_frame": 1907
+    },
+    {
+      "joint": "r_wrist",
+      "start_frame": 2329,
+      "end_frame": 2384
+    },
+    {
+      "joint": "l_wrist",
+      "start_frame": 2521,
+      "end_frame": 2553
+    },
+    {
+      "joint": "l_index_tip",
+      "start_frame": 2539,
+      "end_frame": 2566
+    }
+  ],
+  "session_id": "04c25a8d-49f0-48ae-992a-4035490c4e4e"
+}

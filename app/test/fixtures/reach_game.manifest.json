@@ -1,0 +1,23 @@
+{
+  "id": "reach_game",
+  "version": "2.1.3",
+  "sdkVersion": "^0.2.0",
+  "displayName": { "en": "Reach Game", "es": "Juego de Alcance" },
+  "description": { "en": "A reach-to-grasp game" },
+  "input": ["hands", "controllers"],
+  "posture": "standing",
+  "bodyRegions": ["shoulder", "elbow", "wrist"],
+  "paramSchema": {
+    "type": "object",
+    "required": ["side"],
+    "properties": {
+      "side": { "enum": ["left", "right"] },
+      "speed": { "type": "number", "minimum": 0.1, "maximum": 2.0 }
+    }
+  },
+  "presets": [
+    { "id": "fast", "label": { "en": "Fast" }, "params": { "side": "right", "speed": 1.5 } }
+  ],
+  "events": ["trial_start", "trial_end", "grasp"],
+  "metrics": ["movement_time_ms", "peak_speed_mps"]
+}

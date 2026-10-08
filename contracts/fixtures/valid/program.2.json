@@ -1,0 +1,32 @@
+{
+  "program_id": "prog_002",
+  "patient_ref": "pat_002",
+  "created_by": "clinician_002",
+  "title": "Upper Limb Rehabilitation",
+  "notes_for_patient": "Perform 3 sessions per week. Increase difficulty as tolerated.",
+  "blocks": [
+    {
+      "game_id": "orchard_reach",
+      "game_version_range": "^0.1.0",
+      "params": { "side": "right", "trialCount": 20, "reachPercent": [50, 85], "adaptive": true },
+      "duration_sec": 600,
+      "rest_after_sec": 60
+    },
+    {
+      "game_id": "reach_game",
+      "game_version_range": "^2.0.0",
+      "params": { "side": "left", "speed": 1.0 },
+      "duration_sec": 300,
+      "rest_after_sec": 30
+    }
+  ],
+  "schedule": {
+    "start_date": "2026-09-14",
+    "end_date": "2026-12-14",
+    "sessions_per_week": 3,
+    "max_session_minutes": 45,
+    "location": "clinic"
+  },
+  "requires_supervision": true,
+  "status": "active"
+}

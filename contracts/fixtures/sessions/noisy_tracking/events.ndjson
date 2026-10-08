@@ -1,0 +1,54 @@
+{"t_ms": 0.0, "seq": 0, "block": 0, "type": "session_start", "trial": null}
+{"t_ms": 0.0, "seq": 1, "block": 0, "type": "calibration_start", "trial": null}
+{"t_ms": 44.444, "seq": 2, "block": 0, "type": "calibration_end", "trial": null}
+{"t_ms": 55.556, "seq": 3, "block": 0, "type": "block_start", "trial": null}
+{"t_ms": 55.556, "seq": 4, "block": 0, "trial": 0, "hand": null, "outcome": null, "type": "trial_start"}
+{"t_ms": 155.556, "seq": 5, "block": 0, "target": {"id": "fruit_0", "pos": [-0.216609347277339, 0.2609409345466758, 0.40013720910828443], "azimuthDeg": -5.5009404223152885, "elevationDeg": 34.3439167964553, "reachPercent": 77.08846169945872}, "trial": 0, "hand": null, "outcome": null, "type": "target_shown"}
+{"t_ms": 357.024, "seq": 6, "block": 0, "hand": "left", "trial": 0, "outcome": null, "type": "movement_onset"}
+{"t_ms": 1188.115, "seq": 7, "block": 0, "hand": "left", "trial": 0, "outcome": null, "type": "contact"}
+{"t_ms": 1208.115, "seq": 8, "block": 0, "hand": "left", "trial": 0, "outcome": null, "type": "grasp"}
+{"t_ms": 1488.115, "seq": 9, "block": 0, "hand": "left", "trial": 0, "outcome": null, "type": "release"}
+{"t_ms": 1538.115, "seq": 10, "block": 0, "hand": "left", "trial": 0, "outcome": null, "type": "placed"}
+{"t_ms": 1588.115, "seq": 11, "block": 0, "outcome": "success", "trial": 0, "hand": null, "type": "trial_end"}
+{"t_ms": 2666.667, "seq": 12, "block": 0, "trial": 1, "hand": null, "outcome": null, "type": "trial_start"}
+{"t_ms": 2766.667, "seq": 13, "block": 0, "target": {"id": "fruit_1", "pos": [0.11654225176720377, 0.23785291865376676, 0.3283720251508453], "azimuthDeg": -11.628177819067687, "elevationDeg": 37.07059955394407, "reachPercent": 65.76350782634485}, "trial": 1, "hand": null, "outcome": null, "type": "target_shown"}
+{"t_ms": 3060.484, "seq": 14, "block": 0, "hand": "right", "trial": 1, "outcome": null, "type": "movement_onset"}
+{"t_ms": 3944.349, "seq": 15, "block": 0, "hand": "right", "trial": 1, "outcome": null, "type": "contact"}
+{"t_ms": 3964.349, "seq": 16, "block": 0, "hand": "right", "trial": 1, "outcome": null, "type": "grasp"}
+{"t_ms": 4244.349, "seq": 17, "block": 0, "hand": "right", "trial": 1, "outcome": null, "type": "release"}
+{"t_ms": 4294.349, "seq": 18, "block": 0, "hand": "right", "trial": 1, "outcome": null, "type": "placed"}
+{"t_ms": 4344.349, "seq": 19, "block": 0, "outcome": "success", "trial": 1, "hand": null, "type": "trial_end"}
+{"t_ms": 5416.667, "seq": 20, "block": 0, "trial": 2, "hand": null, "outcome": null, "type": "trial_start"}
+{"t_ms": 5516.667, "seq": 21, "block": 0, "target": {"id": "fruit_2", "pos": [-0.09601711938886777, 0.23921430591620255, 0.4202652174716213], "azimuthDeg": 11.849795920985834, "elevationDeg": 30.323509603414955, "reachPercent": 78.96709101974037}, "trial": 2, "hand": null, "outcome": null, "type": "target_shown"}
+{"t_ms": 5813.343, "seq": 22, "block": 0, "hand": "left", "trial": 2, "outcome": null, "type": "movement_onset"}
+{"t_ms": 6704.127, "seq": 23, "block": 0, "hand": "left", "trial": 2, "outcome": null, "type": "contact"}
+{"t_ms": 6724.127, "seq": 24, "block": 0, "hand": "left", "trial": 2, "outcome": null, "type": "grasp"}
+{"t_ms": 7004.127, "seq": 25, "block": 0, "hand": "left", "trial": 2, "outcome": null, "type": "release"}
+{"t_ms": 7054.127, "seq": 26, "block": 0, "hand": "left", "trial": 2, "outcome": null, "type": "placed"}
+{"t_ms": 7104.127, "seq": 27, "block": 0, "outcome": "success", "trial": 2, "hand": null, "type": "trial_end"}
+{"t_ms": 8180.556, "seq": 28, "block": 0, "trial": 3, "hand": null, "outcome": null, "type": "trial_start"}
+{"t_ms": 8280.556, "seq": 29, "block": 0, "target": {"id": "fruit_3", "pos": [0.03804846125373487, 0.14191917647631083, 0.25518630963027616], "azimuthDeg": -31.113945713920696, "elevationDeg": 27.321958129698185, "reachPercent": 51.53313180255301}, "trial": 3, "hand": null, "outcome": null, "type": "target_shown"}
+{"t_ms": 8528.363, "seq": 30, "block": 0, "hand": "right", "trial": 3, "outcome": null, "type": "movement_onset"}
+{"t_ms": 9281.06, "seq": 31, "block": 0, "hand": "right", "trial": 3, "outcome": null, "type": "contact"}
+{"t_ms": 9301.06, "seq": 32, "block": 0, "hand": "right", "trial": 3, "outcome": null, "type": "grasp"}
+{"t_ms": 9581.06, "seq": 33, "block": 0, "hand": "right", "trial": 3, "outcome": null, "type": "release"}
+{"t_ms": 9631.06, "seq": 34, "block": 0, "hand": "right", "trial": 3, "outcome": null, "type": "placed"}
+{"t_ms": 9681.06, "seq": 35, "block": 0, "outcome": "success", "trial": 3, "hand": null, "type": "trial_end"}
+{"t_ms": 10750.0, "seq": 36, "block": 0, "trial": 4, "hand": null, "outcome": null, "type": "trial_start"}
+{"t_ms": 10850.0, "seq": 37, "block": 0, "target": {"id": "fruit_4", "pos": [-0.19233061255218356, 0.051629266477930244, 0.34295026669938367], "azimuthDeg": -2.186556639665966, "elevationDeg": 9.076373962035365, "reachPercent": 54.54725268674151}, "trial": 4, "hand": null, "outcome": null, "type": "target_shown"}
+{"t_ms": 11132.298, "seq": 38, "block": 0, "hand": "left", "trial": 4, "outcome": null, "type": "movement_onset"}
+{"t_ms": 11867.45, "seq": 39, "block": 0, "hand": "left", "trial": 4, "outcome": null, "type": "contact"}
+{"t_ms": 11887.45, "seq": 40, "block": 0, "hand": "left", "trial": 4, "outcome": null, "type": "grasp"}
+{"t_ms": 12167.45, "seq": 41, "block": 0, "hand": "left", "trial": 4, "outcome": null, "type": "release"}
+{"t_ms": 12217.45, "seq": 42, "block": 0, "hand": "left", "trial": 4, "outcome": null, "type": "placed"}
+{"t_ms": 12267.45, "seq": 43, "block": 0, "outcome": "success", "trial": 4, "hand": null, "type": "trial_end"}
+{"t_ms": 13347.222, "seq": 44, "block": 0, "trial": 5, "hand": null, "outcome": null, "type": "trial_start"}
+{"t_ms": 13447.222, "seq": 45, "block": 0, "target": {"id": "fruit_5", "pos": [0.28146153683541086, 0.03512140166137517, 0.36419115952592923], "azimuthDeg": 16.424595357747798, "elevationDeg": 5.590099344372392, "reachPercent": 60.09148363755854}, "trial": 5, "hand": null, "outcome": null, "type": "target_shown"}
+{"t_ms": 13709.25, "seq": 46, "block": 0, "hand": "right", "trial": 5, "outcome": null, "type": "movement_onset"}
+{"t_ms": 14436.913, "seq": 47, "block": 0, "hand": "right", "trial": 5, "outcome": null, "type": "contact"}
+{"t_ms": 14456.913, "seq": 48, "block": 0, "hand": "right", "trial": 5, "outcome": null, "type": "grasp"}
+{"t_ms": 14736.913, "seq": 49, "block": 0, "hand": "right", "trial": 5, "outcome": null, "type": "release"}
+{"t_ms": 14786.913, "seq": 50, "block": 0, "hand": "right", "trial": 5, "outcome": null, "type": "placed"}
+{"t_ms": 14836.913, "seq": 51, "block": 0, "outcome": "success", "trial": 5, "hand": null, "type": "trial_end"}
+{"t_ms": 15902.778, "seq": 52, "block": 0, "type": "block_end", "trial": null}
+{"t_ms": 15916.667, "seq": 53, "block": 0, "type": "session_end", "trial": null}

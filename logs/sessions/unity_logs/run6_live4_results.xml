@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.5850043">
+  <test-suite type="TestSuite" id="1019" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.585004" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1011" name="Shell.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.576663" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="28828" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1012" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.575962" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1013" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.575417" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1014" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.575010" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1015" name="PlayMode" fullname="Opus.Shell.Tests.PlayMode" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.574569" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1009" name="LiveLinkIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.573298" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1010" name="LiveClient_CompletesScenarioBasic_AgainstFakeHub" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub" methodname="LiveClient_CompletesScenarioBasic_AgainstFakeHub" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" seed="891958576" result="Passed" start-time="2026-09-17 11:01:37Z" end-time="2026-09-17 11:01:54Z" duration="17.557634" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub
+[OPUS] LiveLinkTest: started fake_hub.py, PID=27996
+[OPUS] LiveLinkTest: hub health check -> True after wait
+[OPUS] LiveLinkTest: OnCommand 'assign_program' ackId=761900de-ce7d-4a84-881b-c996e4b748cc
+[OPUS] LiveLinkTest: OnCommand 'start' ackId=357c8d89-bb80-451e-8965-41b212e2113e
+[OPUS] LiveLinkTest: OnCommand 'pause' ackId=128d4c7a-2551-4ff0-94ef-433956b91ce8
+[OPUS] LiveLinkTest: OnCommand 'resume' ackId=c92c0a91-8bd7-4ebd-84aa-91ec6bf03757
+[OPUS] LiveLinkTest: OnCommand 'stop' ackId=a4a51c88-623c-4213-a1c0-f8e78d8a8abb
+[OPUS] LiveLinkTest: scenario loop ended after 13.1s, sessionStarted=True, sessionStopped=True, rttSamples=0
+[OPUS] LiveLinkTest: file uploads -> session.json=True events.ndjson=True
+[OPUS] LiveLinkTest: hub stored session dir C:\Users\GARV BANSAL\Documents\VR_games\OPUS\sim\out\hub_sessions\9251c323-ddf8-4d70-a563-62ccbdc66312 exists-with-files=True
+[OPUS] LiveLinkTest: no ping/pong RTT samples captured (LastRttMs never updated) — see MANUAL_TODO.
+[OPUS] LiveLinkTest: validate.py exit=0
+stdout=[PASS] 9251c323-ddf8-4d70-a563-62ccbdc66312/session.json
+[PASS] 9251c323-ddf8-4d70-a563-62ccbdc66312/events.ndjson: 3 events validated
+[WARN] 9251c323-ddf8-4d70-a563-62ccbdc66312: no kin_*.json files found
+[WARN] 9251c323-ddf8-4d70-a563-62ccbdc66312/metrics.json not found
+
+[PASS] All validations passed
+
+stderr=
+[OPUS] LiveLinkTest: fake_hub.py stdout tail (for invalid-message-count evidence):
+
+[OPUS] LiveLinkTest: DONE
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub, ResultState: Passed, Duration: 17.558s
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

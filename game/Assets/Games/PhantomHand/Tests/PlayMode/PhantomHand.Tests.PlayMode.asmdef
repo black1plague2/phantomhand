@@ -1,0 +1,27 @@
+{
+    "name": "PhantomHand.Tests.PlayMode",
+    "rootNamespace": "Opus.Games.PhantomHand.Tests.PlayMode",
+    "references": [
+        "Opus.Sdk.Runtime",
+        "PhantomHand.Runtime",
+        "PhantomHand.Presentation",
+        "Oculus.Interaction",
+        "UnityEngine.UI",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

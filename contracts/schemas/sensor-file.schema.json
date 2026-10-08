@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/sensor-file.schema.json",
+  "title": "SensorFile",
+  "description": "sens_###.json in a session directory (v0.2): ~5 s of wearable-node samples (Node B EMG envelope, Node A IMU), COLUMNAR like kin_###.json. t_ms arrays are session ms on the same clock as events.ndjson and kin chunks (the game maps device time to session time and records the mapping offset in session.json versions/device notes). Within each stream every array has the same length as its t_ms (not expressible in JSON Schema; validate.py --session checks it). At least one of emg_env / imu must be present.",
+  "type": "object",
+  "required": ["session_id", "chunk_seq", "t0_ms", "source"],
+  "properties": {
+    "session_id": { "type": "string" },
+    "chunk_seq": { "type": "integer", "minimum": 0, "description": "matches the sens_<seq> file name" },
+    "t0_ms": { "type": "number", "minimum": 0, "description": "session ms of the first sample of the chunk" },
+    "source": { "enum": ["udp", "synthetic", "replay"], "description": "udp = received from the nodes over Wi-Fi" },
+    "emg_env": {
+      "type": "object",
+      "description": "EMG envelope from Node B at 100 Hz, raw ADC units",
+      "required": ["device_id", "t_ms", "value"],
+      "properties": {
+        "device_id": { "type": "string", "examples": ["CHETNA_BIO_001"] },
+        "rate_hz": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string", "examples": ["raw_adc"] },
+        "t_ms": { "type": "array", "items": { "type": "number" } },
+        "value": { "type": "array", "items": { "type": "number" } },
+        "motor_excl": { "type": "array", "items": { "type": "boolean" }, "description": "optional per-sample flag: true when within a motor pulse + 50 ms (FR-AN-01 exclusion); same length as t_ms" }
+      }
+    },
+    "imu": {
+      "type": "object",
+      "description": "MPU6050 from Node A at 100 Hz: accel m/s2, gyro rad/s",
+      "required": ["device_id", "t_ms", "ax", "ay", "az", "gx", "gy", "gz"],
+      "properties": {
+        "device_id": { "type": "string", "examples": ["SLEEVE_001"] },
+        "rate_hz": { "type": "number", "minimum": 0 },
+        "t_ms": { "type": "array", "items": { "type": "number" } },
+        "ax": { "type": "array", "items": { "type": "number" } },
+        "ay": { "type": "array", "items": { "type": "number" } },
+        "az": { "type": "array", "items": { "type": "number" } },
+        "gx": { "type": "array", "items": { "type": "number" } },
+        "gy": { "type": "array", "items": { "type": "number" } },
+        "gz": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "ground_truth": { "type": "object", "description": "only for source=synthetic" }
+  },
+  "anyOf": [ { "required": ["emg_env"] }, { "required": ["imu"] } ]
+}

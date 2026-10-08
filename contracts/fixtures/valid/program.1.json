@@ -1,0 +1,13 @@
+{
+  "program_id": "prog_001",
+  "patient_ref": "pat_001",
+  "created_by": "clinician_001",
+  "blocks": [
+    {
+      "game_id": "orchard_reach",
+      "game_version_range": "^0.1.0",
+      "params": { "side": "right", "trialCount": 15 }
+    }
+  ],
+  "schedule": { "start_date": "2026-09-14" }
+}

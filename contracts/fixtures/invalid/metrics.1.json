@@ -1,0 +1,25 @@
+{
+  "session_id": "test-session-invalid-metrics",
+  "computed_at": "2026-09-14T15:34:12.464506+00:00",
+  "trials": [
+    {
+      "block": 0,
+      "trial": 0,
+      "hand": "left",
+      "outcome": "success",
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 300.0,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      }
+    }
+  ],
+  "session": {
+    "by_side": {
+      "left": {}
+    }
+  }
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "synthetic-healthy-42",
+    "display_name": "Asha Rao",
+    "age": 58,
+    "gender": "female",
+    "affected_side": "right",
+    "diagnosis": "Post-stroke (ischemic, MCA), mild residual right-sided weakness",
+    "onset_date": "2025-11-02"
+  },
+  {
+    "id": "synthetic-mild-42",
+    "display_name": "Vikram Sinha",
+    "age": 64,
+    "gender": "male",
+    "affected_side": "right",
+    "diagnosis": "Post-stroke hemiparesis, mild upper-limb impairment",
+    "onset_date": "2025-12-10"
+  },
+  {
+    "id": "synthetic-moderate-42",
+    "display_name": "Meera Iyer",
+    "age": 61,
+    "gender": "female",
+    "affected_side": "right",
+    "diagnosis": "Post-stroke hemiparesis, moderate upper-limb impairment",
+    "onset_date": "2025-10-21"
+  },
+  {
+    "id": "synthetic-severe-42",
+    "display_name": "Rakesh Verma",
+    "age": 69,
+    "gender": "male",
+    "affected_side": "right",
+    "diagnosis": "Post-stroke hemiparesis, severe upper-limb impairment",
+    "onset_date": "2025-09-14"
+  },
+  {
+    "id": "synthetic-left_neglect-42",
+    "display_name": "Sunita Desai",
+    "age": 72,
+    "gender": "female",
+    "affected_side": "both",
+    "diagnosis": "Right MCA stroke with left hemispatial neglect",
+    "onset_date": "2025-08-30"
+  },
+  {
+    "id": "synthetic-noisy_tracking-42",
+    "display_name": "Farhan Sheikh",
+    "age": 55,
+    "gender": "male",
+    "affected_side": "right",
+    "diagnosis": "Post-stroke hemiparesis, mild impairment (device tracking noisy this session)",
+    "onset_date": "2026-01-05"
+  },
+  {
+    "id": "synthetic-longitudinal-9000",
+    "display_name": "Priya Nair",
+    "age": 60,
+    "gender": "female",
+    "affected_side": "right",
+    "diagnosis": "Post-stroke hemiparesis, on a 6-week Orchard Reach program",
+    "onset_date": "2025-11-20"
+  }
+]

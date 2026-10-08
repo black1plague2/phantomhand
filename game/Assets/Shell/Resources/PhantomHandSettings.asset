@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d6600795f4d6044aa414fe13004ede7, type: 3}
+  m_Name: PhantomHandSettings
+  m_EditorClassIdentifier: Shell.Runtime::Opus.Shell.PhantomHandSettings
+  hubHost: 
+  nodeAHost: 
+  nodeACommandPort: 8790
+  nodeBHost: 
+  nodeBCommandPort: 8790
+  discoveryPort: 8791
+  manifest: {fileID: 4900000, guid: aff01c0fb1487c84cb494575f3215a29, type: 3}
+  defaultGameId: phantom_hand
+  bootstrapProgramWaitSec: 3
+  autoStartOnHeadset: 0
+  additionsEnabled: 0
+  scriptedParticipantWithoutHeadset: 1
+  seed: 0

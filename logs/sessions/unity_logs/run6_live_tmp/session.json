@@ -1,0 +1,33 @@
+{
+  "session_id": "eee94054-7b0f-4ee3-a036-bac79a155d01",
+  "contracts_version": "0.1",
+  "patient_ref": "run6-live-test-patient",
+  "program_ref": "run6-live-test-program",
+  "mode": "simulation",
+  "started_at": "2026-09-18T19:20:17.0141104+00:00",
+  "ended_at": "2026-09-18T19:20:30.0701093+00:00",
+  "end_reason": "completed",
+  "device": {
+    "model": "editor-playmode-test",
+    "device_id": "run6-editor-playmode-test",
+    "os": "windows-editor",
+    "tracking_rate_hz": 72.0
+  },
+  "versions": {
+    "shell": "0.1.0",
+    "sdk": "0.1.0",
+    "games": {
+      "orchard_reach": "0.1.0"
+    }
+  },
+  "calibration": {
+    "affected_side": "right",
+    "dominant_side": "right",
+    "arm_length_m": {
+      "left": 0.55,
+      "right": 0.55
+    },
+    "posture": "seated"
+  },
+  "blocks": []
+}

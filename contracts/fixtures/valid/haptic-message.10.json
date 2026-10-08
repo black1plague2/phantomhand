@@ -1,0 +1,8 @@
+{
+  "type": "status",
+  "device_id": "CHETNA_BIO_001",
+  "device_kind": "bio",
+  "battery_pct": null,
+  "subscribers": 1,
+  "timestamp_ms": 145000
+}

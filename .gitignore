@@ -1,0 +1,62 @@
+# Unity (project currently at repo root, created by user 2026-09-14)
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+# Unity writes to Logs/ which on Windows IS our logs/ folder: ignore only Unity's files
+/logs/*.log
+/logs/*.txt
+/[Uu]ser[Ss]ettings/
+/[Bb]uild/
+/[Bb]uilds/
+/*.csproj
+/*.sln
+/*.slnx
+# Unity (if moved into game/)
+game/[Ll]ibrary/
+game/[Tt]emp/
+game/[Oo]bj/
+game/[Bb]uild/
+game/[Bb]uilds/
+game/[Ll]ogs/
+game/[Uu]ser[Ss]ettings/
+game/*.csproj
+game/*.sln
+game/*.slnx
+game/*_BurstDebugInformation_DoNotShip/
+*.apk
+*.aab
+
+# Flutter
+app/.dart_tool/
+app/build/
+app/.flutter-plugins*
+app/**/generated_plugin_registrant.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Generated data / artifacts
+sim/out/
+releases/*/
+!releases/VERSIONS.md
+
+# Secrets / local
+.env
+.env.*
+!.env.example
+.mcp.json
+.vscode/
+.idea/
+/logs/*.jsonl
+
+# Unity PlayMode test-runner scratch scene (created per batch run)
+game/Assets/InitTestScene*.unity
+game/Assets/InitTestScene*.unity.meta
+
+# Phantom Hand: Unity agent lock
+game/.ph_unity.lock

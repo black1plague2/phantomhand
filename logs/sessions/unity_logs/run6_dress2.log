@@ -1,0 +1,799 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.6f1 (0b051c2e5d54) revision 722204'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-GARV BANSAL" at "2026-09-17T10:17:15.5883526Z"
+OS: 'Windows 11  (10.0.26200) CoreSingleLanguage' Language: 'en' Physical Memory: 16010 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-09-17T10:17:15Z
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 5116, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              36bab044c3554a45accb2b2b98697f3b
+  Correlation Id:          d14de35f03e99a97646a83cbbf2457fb
+  External correlation Id: 3018597859684761837
+  Machine Id:              kImHo2x28Ujte4rhYvWcdMgf4I8=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-GARV BANSAL" (connect: 0.00s, validation: 0.04s, handshake: 0.10s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-GARV BANSAL-notifications" at "2026-09-17T10:17:15.7245738Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 13469799320789-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.03
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.24s
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Unity.exe
+-batchmode
+-projectPath
+C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+-logFile
+C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\unity_logs\run6_dress2.log
+-executeMethod
+Opus.Shell.Editor.OrchardSceneDressingTool.BatchDressOrchardScene
+-quit
+Successfully changed project path to: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [17148]  Target information:
+
+Player connection [17148]  * "[IP] 169.254.83.107 [Port] 55504 [Flags] 2 [Guid] 4094349657 [EditorId] 4094349657 [Version] 1048832 [Id] WindowsEditor(7,LAPTOP-EF95960B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [17148]  * "[IP] 172.17.99.2 [Port] 55504 [Flags] 2 [Guid] 4094349657 [EditorId] 4094349657 [Version] 1048832 [Id] WindowsEditor(7,LAPTOP-EF95960B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [17148] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [17148] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-26916" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Artifact Garbage Collection - Removed 1 unused hashed content files
+[Licensing::Client] Successfully resolved entitlement details
+Refreshing native plugins compatible for Editor in 4.19 ms, found 0 plugins.
+Initialize engine version: 6000.4.6f1 (0b051c2e5d54)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28a1)
+    Vendor:   NVIDIA
+    VRAM:     5921 MB
+    Driver:   32.0.15.5597
+Shader 'Oculus/OVRMRCameraFrameLit': fallback shader 'Alpha-Diffuse' not found
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56916
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.003386 seconds.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.461 seconds
+Domain Reload Profiling: 962ms
+	BeginReloadAssembly (150ms)
+		CreateAndSetChildDomain (13ms)
+	RebuildCommonClasses (42ms)
+	RebuildNativeTypeToScriptingClass (13ms)
+	initialDomainReloadingComplete (77ms)
+	LoadAllAssembliesAndSetupDomain (217ms)
+		LoadAssemblies (134ms)
+		AnalyzeDomain (208ms)
+			TypeCache.Refresh (206ms)
+				TypeCache.ScanAssembly (191ms)
+	FinalizeReload (463ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (64ms)
+			BeforeProcessingInitializeOnLoad (90ms)
+			ProcessInitializeOnLoadAttributes (120ms)
+			ProcessInitializeOnLoadMethodAttributes (120ms)
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 65 packages:
+  Packages from [https://npm.developer.oculus.com]:
+    com.meta.xr.sdk.core@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.core@4ea2676097b9)
+    com.meta.xr.sdk.interaction.ovr@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.interaction.ovr@08728e3e2bb2)
+    com.meta.xr.sdk.interaction@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.interaction@875abb30439c)
+  Packages from [https://packages.unity.com]:
+    com.unity.xr.openxr@1.16.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf)
+    com.unity.xr.management@4.5.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.management@20be87dea580)
+    com.unity.inputsystem@1.11.2 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.inputsystem@3c4a97c3950f)
+    com.unity.addressables@2.3.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.addressables@5d870284b3d9)
+    com.unity.profiling.core@1.0.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.xr.hands@1.7.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.hands@3e241be20642)
+    com.unity.xr.core-utils@2.6.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.core-utils@a8b900321199)
+    com.unity.xr.legacyinputhelpers@3.0.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.legacyinputhelpers@3f62d634f63b)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.mathematics@1.3.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.searcher@4.9.4 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.searcher@d45a78918735)
+    com.unity.burst@1.8.29 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.burst@6bb9aca3ef38)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.test-framework.performance@aa81a99c4a75)
+  Built-in packages:
+    com.unity.multiplayer.center@1.0.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.multiplayer.center@f01f4ba8d00a)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.universal@0d0659f1368d)
+    com.unity.test-framework@1.6.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.modules.accessibility@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.0.5 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.core@630143bbfe2b)
+    com.unity.shadergraph@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.shadergraph@04a6ef07359e)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.textmeshpro@5.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.textmeshpro@53f43edfd2e0)
+    com.unity.ugui@2.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.ugui@473409526770)
+    com.unity.collections@6.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.collections@65f499a3cc26)
+  Embedded packages:
+    com.opus.sdk@file:C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Packages\com.opus.sdk (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Packages\com.opus.sdk)
+[Subsystems] Looking for new subsystems at path C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf
+[Subsystems] Novel subsystem found at Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Assets
+[Subsystems] Discovering subsystems at path C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf
+[Subsystems] No descriptors matched for  examples in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json.
+[Subsystems] 1 'inputs' descriptors matched in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] 1 'displays' descriptors matched in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] No descriptors matched for  meshings in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json.
+[Package Manager] Done registering packages in 0.08 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Assembly for Assembly Definition File 'Packages/com.opus.sdk/Editor/Opus.Sdk.Editor.asmdef' will not be compiled, because it has no scripts associated with it.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:LogFormat (UnityEngine.LogType,string,object[])
+UnityEngine.Debug:LogWarningFormat (string,object[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:WarnIfThereAreAssembliesWithoutAnyScripts (UnityEditor.Scripting.ScriptCompilation.ScriptAssemblySettings,UnityEditor.Scripting.ScriptCompilation.ScriptAssembly[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:CompileScriptsWithSettings (UnityEditor.Scripting.ScriptCompilation.ScriptAssemblySettings)
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:CompileScripts (UnityEditor.Scripting.ScriptCompilation.EditorScriptCompilationOptions,UnityEditor.BuildTarget,int,string[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface/<>c__DisplayClass21_0:<CompileScripts>b__0 ()
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface:EmitExceptionAsError<UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus> (System.Func`1<UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus>,UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus)
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface:CompileScripts (UnityEditor.Scripting.ScriptCompilation.EditorScriptCompilationOptions,UnityEditor.BuildTarget,int,string[])
+
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 36.4263ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1300b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+DisplayProgressbar: Compiling Scripts
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.6.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@6bb9aca3ef38\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 91.5632ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll, with 154 defines and 281 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - 200 - application/grpc 15.0260ms
+ExitCode: 0 Duration: 1s169ms
+[1266/1709  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1705/1709  0s] Csc Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll (+2 others)
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(248,53): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(249,74): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+[1706/1709  0s] ILPostProcess Library/Bee/artifacts/1300b0aE.dag/post-processed/Shell.Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll, with 154 defines and 281 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1707/1709  0s] CopyFiles Library/ScriptAssemblies/Shell.Editor.pdb
+[1708/1709  0s] CopyFiles Library/ScriptAssemblies/Shell.Editor.dll
+*** Tundra build success (1.10 seconds), 5 items updated, 1709 evaluated
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(248,53): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(249,74): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+AssetDatabase: script compilation time: 1.751590s
+Begin MonoManager ReloadAssembly
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-Editor.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp.dll at Library/ScriptAssemblies/Assembly-CSharp.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.Editor.Reflection.Tests.dll at Library/ScriptAssemblies/Meta.XR.Editor.Reflection.Tests.dll not valid. Loading of assembly skipped.
+Assembly meta.xr.hand.readiness.tests.editmode.dll at Library/ScriptAssemblies/meta.xr.hand.readiness.tests.editmode.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.Input.Editor.Tests.dll at Library/ScriptAssemblies/Meta.XR.Input.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.MultiplayerBlocks.Fusion.dll at Library/ScriptAssemblies/Meta.XR.MultiplayerBlocks.Fusion.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.MultiplayerBlocks.NGO.dll at Library/ScriptAssemblies/Meta.XR.MultiplayerBlocks.NGO.dll not valid. Loading of assembly skipped.
+Assembly Opus.Sdk.Editor.dll at Library/ScriptAssemblies/Opus.Sdk.Editor.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Addressables.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Addressables.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Addressables.Tests.dll at Library/ScriptAssemblies/Unity.Addressables.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ResourceManager.Tests.dll at Library/ScriptAssemblies/Unity.ResourceManager.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.CodeSamples.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.CodeSamples.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Hands.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.Hands.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Hands.Tests.dll at Library/ScriptAssemblies/Unity.XR.Hands.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.EditorTests.dll at Library/ScriptAssemblies/Unity.XR.Management.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.TestPackage.dll at Library/ScriptAssemblies/Unity.XR.Management.TestPackage.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.TestPackage.Editor.dll at Library/ScriptAssemblies/Unity.XR.Management.TestPackage.Editor.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.Tests.dll at Library/ScriptAssemblies/Unity.XR.Management.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.Tests.Standalone.dll at Library/ScriptAssemblies/Unity.XR.Management.Tests.Standalone.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Ubuntu.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Ubuntu.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.TestSupport.dll at Library/ScriptAssemblies/Unity.XR.TestSupport.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.XR.LegacyInputHelpers.Tests.dll at Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.SpatialTracking.Tests.dll at Library/ScriptAssemblies/UnityEngine.SpatialTracking.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.XR.OpenXR.CodeSamples.Editor.Tests.dll at Library/ScriptAssemblies/UnityEngine.XR.OpenXR.CodeSamples.Editor.Tests.dll not valid. Loading of assembly skipped.
+Symbol file LoadedFromMemory is not a mono symbol file
+Script 'CharacterController' has the same name as built-in Unity component.
+AddComponent and GetComponent will not work with this script.
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindowDetailsExtension.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizer.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindow.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindowCollectionsPageExtension.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizerNetworking.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizerStyles.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Refreshing native plugins compatible for Editor in 16.04 ms, found 12 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 14.47 ms, found 12 plugins.
+I0917 15:47:26.166739 17148 OVRTelemetry.cpp:57] Telemetry_Init: calling startSession with engineName=Unity, pluginVersion=1.205.0
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+I0917 15:47:28.487234 17148 OVRTelemetry.cpp:61] Telemetry_Init: startSession completed successfully
+I0917 15:47:28.806174 17148 OVRTelemetry.cpp:57] Telemetry_Init: calling startSession with engineName=Unity, pluginVersion=1.204.0
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+I0917 15:47:31.417362 17148 OVRTelemetry.cpp:61] Telemetry_Init: startSession completed successfully
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in 10.635 seconds
+Domain Reload Profiling: 11964ms
+	BeginReloadAssembly (427ms)
+		DisableScriptedObjects (35ms)
+		CreateAndSetChildDomain (154ms)
+	RebuildCommonClasses (59ms)
+	RebuildNativeTypeToScriptingClass (17ms)
+	initialDomainReloadingComplete (160ms)
+	LoadAllAssembliesAndSetupDomain (665ms)
+		LoadAssemblies (532ms)
+		AnalyzeDomain (296ms)
+			TypeCache.Refresh (196ms)
+				TypeCache.ScanAssembly (177ms)
+			BuildScriptInfoCaches (80ms)
+			ResolveRequiredComponents (18ms)
+	FinalizeReload (10635ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (40ms)
+			BeforeProcessingInitializeOnLoad (245ms)
+			ProcessInitializeOnLoadAttributes (9958ms)
+			ProcessInitializeOnLoadMethodAttributes (121ms)
+			AfterProcessingInitializeOnLoad (10ms)
+		AwakeInstancesAfterBackupRestoration (27ms)
+Refreshing native plugins compatible for Editor in 15.61 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=d78919a3fe61bac4bbca91e47cb909ca): Total: 16.214 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=11456 ms
+		Asset DB Callback time: managed=1420 ms, native=106 ms
+		Scripting: domain reloads=1, domain reload time=1340 ms, compile time=1754 ms, other=134 ms
+		Project Asset Count: scripts=2180, non-scripts=3850
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 84.580ms
+	ApplyChangesToAssetFolders: 1.649ms
+	Scan: 247.258ms
+	OnSourceAssetsModified: 1.014ms
+	CategorizeScriptCompilationAssets: 58.920ms
+	ProcessAssetsWithTransientArtifactChanges: 106.119ms
+	CategorizeAssets: 125.804ms
+	CompileScripts: 1754.109ms
+	ImportOutOfDateAssets: 10685.211ms (10680.035ms without children)
+		UnloadImportedAssets: 2.389ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 1.530ms
+		OnDemandSchedulerStart: 1.237ms
+	PostProcessAllAssets: 1429.661ms
+		XRBuildSystem.XRAssetImported 6.992ms
+		VCAutoAddAssetPostprocess 1.644ms
+		PostProcessCallbackCreateDeferredMaterials 0.054ms
+		MonoPostProcessAllAssets: 1420.144ms
+			AssetPostprocessor.OnPostprocessAllAssets 172.125ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 105.811ms
+			AssetCallbacks.OnPostprocessAllAssets 31.565ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 20.837ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 7.745ms
+			SyncVS.PostprocessSyncProject 3.118ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 2.637ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 2.627ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 2.096ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.541ms
+			AssetChangedListener.OnPostprocessAllAssets 1.524ms
+			AddressablesAssetPostProcessor.OnPostprocessAllAssets 1.319ms
+			AssetPostProcessor.OnPostprocessAllAssets 1.059ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.886ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.590ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.459ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.449ms
+			AssetEvents.OnPostprocessAllAssets 0.439ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.399ms
+			AssetPathToTypes.OnPostprocessAllAssets 0.380ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.378ms
+			PostProcessor.OnPostprocessAllAssets 0.349ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.323ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.321ms
+			SceneRenameHandler.OnPostprocessAllAssets 0.292ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.279ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.260ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.202ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.145ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.137ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.104ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.082ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.074ms
+	PostAssetChangesProfiler: 17.496ms
+	UnloadStreamsBegin: 4.766ms
+	PersistCurrentRevisions: 0.300ms
+	GenerateScriptTypeHashes: 16.259ms
+	GenerateScriptTypeSerializationHashes: 23.459ms
+	Untracked: 1690.466ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Shader 'Oculus/OVRMRCameraFrameLit': fallback shader 'Alpha-Diffuse' not found
+Scanning for USB devices : 2.215ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-OPUS
+[HRT] RulesProvider: loaded 4 remote rule(s) (schema v1).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Meta.HandReadinessTool.Editor.HandReadinessRulesProvider:EmitSuccess (int,int) (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs:175)
+Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/<FetchAndSwap>d__11:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs:125)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>)
+Meta.XR.Editor.UserInterface.RemoteJsonContent`1/<Create>d__1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/UserInterface/RemoteJsonContent.cs:56)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<Fetch>d__3:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:374)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteContentDownloader`1/<Fetch>d__31`1<Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader, string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:309)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<string>:TrySetResult (string)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:SetResult (string)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<ReadFromCache>d__5`1<string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:401)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs Line: 175)
+
+[HRT] PromptProvider: loaded remote prompt (systemPrompt=4925c, references=2, schema v1).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Meta.HandReadinessTool.Editor.HandReadinessPromptProvider:EmitSuccess (int,int,int) (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs:159)
+Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/<FetchAndSwap>d__11:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs:122)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>)
+Meta.XR.Editor.UserInterface.RemoteJsonContent`1/<Create>d__1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/UserInterface/RemoteJsonContent.cs:56)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<Fetch>d__3:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:374)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteContentDownloader`1/<Fetch>d__31`1<Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader, string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:309)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<string>:TrySetResult (string)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:SetResult (string)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<ReadFromCache>d__5`1<string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:401)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs Line: 159)
+
+Unloading 259 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 6877 unused Assets / (7.3 MB). Loaded Objects now: 8974.
+Memory consumption went from 289.2 MB to 281.9 MB.
+Total: 20.851000 ms (FindLiveObjects: 1.152500 ms CreateObjectMapping: 0.808400 ms MarkObjects: 12.824600 ms  DeleteObjects: 6.056300 ms)
+
+[OPUS] BatchDressOrchardScene: starting
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:46)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 46)
+
+Loaded scene 'Library/Unused/9ae1dd867f8c9b34a809f585d1d9bc55'
+	Deserialize:            0.786 ms
+	Integration:            3.483 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.050 ms
+	Total Operation Time:   4.320 ms
+Start importing Assets/Art/Prefabs/fruit_apple/fruit_apple.prefab using Guid(80788ccea32252c41976b9007b7b11be) (PrefabImporter) -> (Import Result ID: '0e2853baba1574155686c5726343c328') in 0.0134638 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=077a66b194f14f097baa4845dcbaf0f6 DependenciesID=e02912d6c5d80f7d1df753b923f8f9dc StaticDependenciesID=2822bd1ff0ef293cbfc3fb0ab749c1e0 
+Refreshing native plugins compatible for Editor in 20.34 ms, found 12 plugins.
+Asset Pipeline Refresh (id=aafdaac86d1436e4988cad4dccf37fe7): Total: 0.208 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Loaded scene 'Library/Unused/27b200a21e92b4a479b1730d2e093587'
+	Deserialize:            0.459 ms
+	Integration:            38.384 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.019 ms
+	Total Operation Time:   38.863 ms
+Start importing Assets/Art/Prefabs/fruit_apple_green/fruit_apple_green.prefab using Guid(93f25d42f2dc79f45af3b9d72f91fec8) (PrefabImporter) -> (Import Result ID: '803ddd8129bcf6dcc66c278ff4884af2') in 0.0058692 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d643b9a0fe8e2e4716d659ed740b9b61 DependenciesID=2333173ed9ce6dcd157c0113e405f98a StaticDependenciesID=3a44d6dbfa32be52e5dd79d893a7114b 
+Refreshing native plugins compatible for Editor in 13.80 ms, found 12 plugins.
+Asset Pipeline Refresh (id=f38c3579159385d4ab713878b7517420): Total: 0.083 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Loaded scene 'Library/Unused/40daaa4e00668484e9ba6b3505816ba6'
+	Deserialize:            0.346 ms
+	Integration:            30.779 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.021 ms
+	Total Operation Time:   31.147 ms
+Start importing Assets/Art/Prefabs/basket/basket.prefab using Guid(0907e5d9e145b334690abc9e456741eb) (PrefabImporter) -> (Import Result ID: 'd4d1ca4d4ee8b5a18701b40f97c0fa76') in 0.0038849 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d93ff9b8695dd390336f8c419fdea2d8 DependenciesID=9536ca8112dfa597261894fd4fb9f284 StaticDependenciesID=ad0e8f361e44e3d09d96368e69f363b4 
+Refreshing native plugins compatible for Editor in 11.21 ms, found 12 plugins.
+Asset Pipeline Refresh (id=ac5d02817bb693242b8d2f50adc6239d): Total: 0.067 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Opening scene 'Assets/Scenes/OrchardReach.unity'
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/OrchardReach.unity'
+	Deserialize:            2.336 ms
+	Integration:            418.073 ms
+	Integration of assets:  0.003 ms
+	Thread Wait Time:       0.121 ms
+	Total Operation Time:   420.532 ms
+Unloading 189 unused Assets / (42.2 KB). Loaded Objects now: 18428.
+Memory consumption went from 248.7 MB to 248.6 MB.
+Total: 14.743600 ms (FindLiveObjects: 1.195800 ms CreateObjectMapping: 0.586000 ms MarkObjects: 12.627800 ms  DeleteObjects: 0.333200 ms)
+
+Start importing Assets/Scenes/OrchardReach.unity using Guid(401fef11057b04f419bd44010d43a62a) (DefaultImporter) -> (Import Result ID: '7623bf06aef5105c3c43e9e2e3354fe2') in 0.0020865 seconds [static dependencies only]. Details - ImportResultOutputID=6c8f5108d61891e9722f30b6512214a1 DependenciesID=575470113b0935d77337c11e3742cff7 StaticDependenciesID=dda1dc45a1df4732a0a5bbf828bfe30c 
+Refreshing native plugins compatible for Editor in 13.08 ms, found 12 plugins.
+Asset Pipeline Refresh (id=2dd17437bc1b01f41bd94da46f38077a): Total: 0.102 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[OPUS] BatchDressOrchardScene: DressOrchardScene() -> dressed scene: table=True, basket=True, centerEye=CenterEyeAnchor, controller wired
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:50)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 50)
+
+Asset Pipeline Refresh (id=674eada5d2e83ef409a42fc02866cc89): Total: 0.018 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[OPUS] BatchDressOrchardScene: assets + scenes saved
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:55)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 55)
+
+Loaded scene 'Library/Unused/f1e7a6c475abfcd4f84789f37de558eb'
+	Deserialize:            0.605 ms
+	Integration:            1.301 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.057 ms
+	Total Operation Time:   1.964 ms
+[OPUS] verify fruit_apple: HandGrabInteractable=True Grabbable=True SphereCollider=True
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:63)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 63)
+
+Loaded scene 'Library/Unused/25577e2904656bf489551b0dcf725d80'
+	Deserialize:            0.375 ms
+	Integration:            0.620 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.014 ms
+	Total Operation Time:   1.010 ms
+[OPUS] verify basket: BasketTrigger=True TriggerCollider=True
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:69)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 69)
+
+[OPUS] verify scene: table=True basket=True tree1=True sun=True controller=True
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:78)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 78)
+
+[OPUS] BatchDressOrchardScene: DONE
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OrchardSceneDressingTool:BatchDressOrchardScene () (at Assets/Shell/Editor/OrchardSceneDressingTool.cs:80)
+
+(Filename: Assets/Shell/Editor/OrchardSceneDressingTool.cs Line: 80)
+
+[Licensing::Client] Successfully resolved entitlement details
+Batchmode quit successfully invoked - shutting down!
+E0917 15:48:16.479510 30244 TigonCurlRequestAdapter.cpp:901] [1037576570353bf1] Request failed from curl: curl (28): Timeout was reached: Operation timed out after 5005 milliseconds with 0 bytes received
+Killing ADB server in 2.0894558 seconds.
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-GARV BANSAL-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-GARV BANSAL channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+abort_threads: Failed aborting id: 0000000000005CDC, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000000E94, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000005CDC, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000000E94, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3904
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0

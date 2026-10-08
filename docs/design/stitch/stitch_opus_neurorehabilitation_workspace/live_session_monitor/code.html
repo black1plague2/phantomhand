@@ -1,0 +1,167 @@
+<!DOCTYPE html><html class="dark" lang="en"><head></head><body class="bg-[#080B11] font-sans text-slate-100 flex flex-col min-h-screen antialiased"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface-container-lowest": "#101623",
+        "surface-container-low": "#161E2F",
+        "surface": "#161E2F",
+        "background": "#161E2F",
+        "surface-container": "#1E273D",
+        "surface-container-high": "#242F49",
+        "surface-container-highest": "#2D3A59",
+        "surface-variant": "#242F49",
+        "outline": "#5A6882",
+        "outline-variant": "#384358",
+        "on-surface": "#F3F6FA",
+        "on-surface-variant": "#9AA7B8",
+        "primary": "#FFA586",
+        "primary-container": "#FFA586",
+        "on-primary": "#411406",
+        "on-primary-container": "#340E04",
+        "secondary": "#7FB1E0",
+        "secondary-container": "#384358",
+        "on-secondary": "#0A2540",
+        "on-secondary-container": "#D3E4F6",
+        "tertiary": "#FFA586",
+        "tertiary-container": "#541A2E",
+        "on-tertiary-container": "#FFA586",
+        "error": "#FF858D",
+        "error-container": "#B51A2B",
+        "on-error": "#FFFFFF",
+        "on-error-container": "#FFFFFF",
+        "deep-wine": "#541A2E",
+        "steel-border": "#384358"
+      },
+      borderRadius: {
+        "DEFAULT": "0.375rem",
+        "lg": "0.625rem",
+        "xl": "0.875rem",
+        "2xl": "1.125rem",
+        "full": "9999px"
+      },
+      spacing: {
+        "gutter-desktop": "1.5rem",
+        "space-lg": "1.5rem",
+        "space-xs": "0.25rem",
+        "gutter": "1rem",
+        "space-md": "1rem",
+        "space-xl": "2rem",
+        "space-sm": "0.5rem"
+      },
+      fontFamily: {
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Text",
+          "SF Pro Display",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script><style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+        font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+        letter-spacing: -0.012em;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style><header class="fixed top-0 w-full z-50 pt-safe bg-[#080B11]/90 backdrop-blur-xl border-b border-[#222E3F]"><div class="h-16 px-gutter flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><div class="flex flex-col min-w-0"><span class="text-[19px] font-semibold text-white tracking-tight truncate">Live Monitor</span><div class="flex items-center gap-1.5 mt-0.5"><span class="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse"></span><span class="text-[12px] font-medium text-slate-400 tracking-normal truncate">Quest 3 · 18ms latency</span></div></div></div><div class="flex items-center gap-2"><button aria-label="Session alerts" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0F1622] border border-[#222E3F] text-slate-300 hover:text-white transition-colors"><span class="material-symbols-outlined text-[19px]">vital_signs</span></button><div class="w-9 h-9 rounded-full bg-[#1E293B] border border-[#334155] text-white flex items-center justify-center font-semibold text-sm shadow-sm"><span class="material-symbols-outlined text-[20px] text-[#EF4444]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-[#080B11] flex-grow"><div class="flex flex-col w-full px-gutter pb-6">
+<!-- Status Badges Row -->
+<div class="flex items-center gap-2 pt-3 mb-3 flex-wrap"><div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0F1622] border border-[#222E3F] text-[12px] font-medium text-white shadow-sm"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span id="sessionStatus" class="font-semibold text-emerald-400">Live Stream</span><span class="text-slate-600">•</span><span class="text-slate-400 font-normal tracking-tight" id="sessionPrompt">Target Phase</span></div><div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#0F1622] border border-[#222E3F] text-[12px] font-medium text-[#38BDF8]"><span class="material-symbols-outlined text-[14px]">wifi_tethering</span><span class="">Optimal Sync</span></div></div>
+<!-- Trial Counter Display -->
+<div class="flex flex-col mb-4"><div class="flex items-baseline justify-between"><h1 class="text-[28px] font-bold text-white tracking-tight">Trial <span class="text-[#EF4444]" id="currentTrial">3</span> of 20</h1><span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 px-2.5 py-1 rounded-md bg-[#0F1622] border border-[#222E3F]">Bilateral Protocol</span></div><div class="w-full h-[2px] bg-gradient-to-r from-[#EF4444] via-[#38BDF8] to-transparent rounded-full mt-2.5 opacity-80"></div></div>
+<!-- Workspace Top-Down Reach Trace Arc (Kinematic Hero Visualizer) -->
+<div class="relative w-full rounded-2xl bg-[#0F1622] border border-[#222E3F] p-4 flex flex-col items-center justify-between mb-3.5 overflow-hidden shadow-xl shadow-black/40"><div class="w-full flex items-center justify-between mb-1 z-10"><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#EF4444] text-[11px] font-semibold"><span class="w-2 h-2 rounded-full bg-[#EF4444]"></span><span class="">Left Reach (Hemiparetic)</span></div><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/30 text-[#38BDF8] text-[11px] font-semibold"><span class="w-2 h-2 rounded-full bg-[#38BDF8]"></span><span class="">Right Reach</span></div></div><div class="relative w-full aspect-[4/3] max-h-[290px] flex items-center justify-center"><svg aria-label="Top-down workspace reach trace visualization" class="w-full h-full drop-shadow-sm" fill="none" viewBox="0 0 360 270" xmlns="http://www.w3.org/2000/svg"><defs><filter height="140%" id="redGlow" width="140%" x="-20%" y="-20%"><feGaussianBlur result="coloredBlur" stdDeviation="2.5"></feGaussianBlur><feMerge><feMergeNode in="coloredBlur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs><path d="M 30 235 A 150 150 0 0 1 330 235" fill="none" stroke="#222E3F" stroke-dasharray="3 4" stroke-width="1.5"></path><path d="M 75 235 A 105 105 0 0 1 285 235" fill="none" stroke="#192333" stroke-dasharray="2 3" stroke-width="1.2"></path><path d="M 125 235 A 55 55 0 0 1 235 235" fill="none" stroke="#192333" stroke-dasharray="2 2" stroke-width="1"></path><circle cx="140" cy="85" fill="#080B11" r="14" stroke="#222E3F" stroke-dasharray="3 3" stroke-width="1.2"></circle><circle cx="140" cy="85" fill="#EF4444" fill-opacity="0.3" r="5" stroke="#EF4444" stroke-width="2"></circle><circle cx="180" cy="65" fill="#080B11" r="10" stroke="#222E3F" stroke-dasharray="2 2" stroke-width="1"></circle><circle cx="180" cy="65" fill="#64748B" r="3.5"></circle><circle cx="230" cy="95" fill="#080B11" r="14" stroke="#222E3F" stroke-dasharray="3 3" stroke-width="1.2"></circle><circle cx="230" cy="95" fill="#38BDF8" fill-opacity="0.3" r="5" stroke="#38BDF8" stroke-width="2"></circle><g id="leftTraceGroup"><path d="M 132 215 C 130 185, 126 155, 128 128 C 129 116, 133 98, 139 88 L 145 92 C 141 104, 137 122, 137 136 C 137 160, 142 188, 142 215 Z" fill="#EF4444" fill-opacity="0.2"></path><path d="M 134 212 C 132 182, 127 150, 130 120 C 131 108, 134 94, 139 86" filter="url(#redGlow)" stroke="#EF4444" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.5"></path><path d="M 133 162 C 139 140, 147 120, 154 100" opacity="0.8" stroke="#F87171" stroke-linecap="round" stroke-width="4"></path><circle cx="139" cy="86" fill="#FFFFFF" r="5.5" stroke="#EF4444" stroke-width="2"></circle></g><g id="rightTraceGroup"><path d="M 226 215 C 228 190, 233 165, 237 138 C 240 122, 245 106, 248 94" stroke="#38BDF8" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.5"></path><path d="M 230 176 C 220 162, 208 148, 196 134" stroke="#38BDF8" stroke-linecap="round" stroke-width="5.5"></path><path d="M 233 148 L 244 110" opacity="0.85" stroke="#7DD3FC" stroke-linecap="round" stroke-width="4"></path><circle cx="248" cy="94" fill="#FFFFFF" r="5" stroke="#38BDF8" stroke-width="2"></circle></g><circle cx="180" cy="235" fill="#141C2A" r="13" stroke="#222E3F" stroke-width="1.5"></circle><path d="M 171 235 H 189" stroke="#64748B" stroke-linecap="round" stroke-width="1.5"></path><path d="M 180 226 V 244" stroke="#64748B" stroke-linecap="round" stroke-width="1.5"></path><circle cx="180" cy="235" fill="#EF4444" r="3"></circle></svg><div class="absolute bottom-2.5 left-3 flex items-center gap-1.5 text-slate-300 text-[11px] font-medium bg-[#080B11]/85 border border-[#222E3F] px-2.5 py-1 rounded-md backdrop-blur-md"><span class="material-symbols-outlined text-[13px] text-[#EF4444]">tune</span><span class="text-white font-semibold">MDC 0.12m</span></div><div class="absolute bottom-2.5 right-3 flex items-center gap-1.5 text-slate-300 text-[11px] font-medium bg-[#080B11]/85 border border-[#222E3F] px-2.5 py-1 rounded-md backdrop-blur-md"><span class="material-symbols-outlined text-[13px] text-[#38BDF8]">speed</span><span class="text-white font-semibold">60 Hz Kinematics</span></div></div><div class="w-full flex items-center justify-between pt-2.5 px-0.5 text-slate-400 text-[12px] font-mono border-t border-[#222E3F]"><div class="flex items-center gap-2 tracking-tight"><span class="text-[11px] font-semibold text-slate-500 uppercase">Left</span><span class="font-mono text-white"><span class="text-[#EF4444] font-semibold">-0.14</span>, 0.42 <span class="text-[10px] text-slate-400 font-sans">m</span></span></div><div class="h-3 w-[1px] bg-[#222E3F]"></div><div class="flex items-center gap-2 tracking-tight"><span class="text-[11px] font-semibold text-slate-500 uppercase">Right</span><span class="font-mono text-white"><span class="text-[#38BDF8] font-semibold">+0.19</span>, 0.38 <span class="text-[10px] text-slate-400 font-sans">m</span></span></div></div></div>
+<!-- Real-time Kinematic Metric Readout Cards -->
+<div class="grid grid-cols-2 gap-space-sm mb-3"><div class="flex flex-col p-4 rounded-2xl bg-[#0F1622] border border-[#222E3F] shadow-sm"><div class="flex items-center justify-between mb-1.5"><span class="text-[13px] font-medium text-slate-400">Reaction time</span><span class="material-symbols-outlined text-[17px] text-[#EF4444]" title="Within normal baseline">timer</span></div><div class="flex items-baseline gap-1.5"><span class="text-[32px] font-bold text-white tracking-tight" id="metricReaction">400</span><span class="text-[14px] font-medium text-slate-400">ms</span></div><div class="inline-flex items-center gap-1 text-[11px] font-medium text-[#EF4444] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20 mt-2 self-start"><span class="material-symbols-outlined text-[13px]">trending_down</span><span class="">-24ms baseline</span></div></div><div class="flex flex-col p-4 rounded-2xl bg-[#0F1622] border border-[#222E3F] shadow-sm"><div class="flex items-center justify-between mb-1.5"><span class="text-[13px] font-medium text-slate-400">Peak speed</span><span class="material-symbols-outlined text-[17px] text-[#38BDF8]" title="Measured at mid-trajectory">trending_up</span></div><div class="flex items-baseline gap-1.5"><span class="text-[32px] font-bold text-white tracking-tight" id="metricSpeed">1.03</span><span class="text-[14px] font-medium text-slate-400">m/s</span></div><div class="inline-flex items-center gap-1 text-[11px] font-medium text-[#38BDF8] bg-[#38BDF8]/10 px-2 py-0.5 rounded border border-[#38BDF8]/20 mt-2 self-start"><span class="material-symbols-outlined text-[13px]">check</span><span class="">In envelope</span></div></div></div>
+<!-- Secondary Neuromotor Parameter Tiles (SPARC & Trunk Compensation) -->
+<div class="grid grid-cols-2 gap-space-sm mb-4"><div class="flex items-center justify-between p-3.5 rounded-xl bg-[#0F1622] border border-[#222E3F]"><div class="flex flex-col min-w-0 pr-1"><span class="text-[11px] font-medium text-slate-400 truncate">Smoothness (SPARC)</span><span class="text-[19px] font-bold text-white tracking-tight mt-0.5">-1.42</span></div><span class="px-2.5 py-1 rounded-full text-[11px] bg-[#221017] text-[#EF4444] border border-[#EF4444]/30 font-semibold tracking-tight">MDC Cleared</span></div><div class="flex items-center justify-between p-3.5 rounded-xl bg-[#0F1622] border border-[#222E3F]"><div class="flex flex-col min-w-0 pr-1"><span class="text-[11px] font-medium text-slate-400 truncate">Trunk Lean</span><span class="text-[19px] font-bold text-white tracking-tight mt-0.5">2.8°</span></div><span class="px-2.5 py-1 rounded-full text-[11px] bg-[#141C2A] text-slate-300 border border-[#222E3F] font-medium">&lt; 5° safe</span></div></div>
+<!-- Action Controls (Thumb-reachable 56dp Ergonomic Bar) -->
+<div class="grid grid-cols-2 gap-space-sm"><button aria-label="Pause rehabilitation session" class="flex items-center justify-center gap-2 h-14 rounded-xl bg-[#1E293B] hover:bg-[#334155] border border-[#334155] text-white text-[15px] font-semibold tracking-normal active:scale-[0.98] transition-all shadow-md" id="pauseBtn"><span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pause</span><span id="pauseBtnText" class="">Pause</span></button><button aria-label="Stop current protocol session" class="flex items-center justify-center gap-2 h-14 rounded-xl bg-[#D92D20] hover:bg-[#b91c1c] text-white text-[15px] font-semibold tracking-normal active:scale-[0.98] transition-all shadow-md" id="stopBtn"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stop</span><span class="">Stop session</span></button></div>
+</div>
+<script>
+  (function() {
+    let isPaused = false;
+    let trialIndex = 3;
+    const maxTrials = 20;
+
+    const pauseBtn = document.getElementById('pauseBtn');
+    const pauseBtnText = document.getElementById('pauseBtnText');
+    const stopBtn = document.getElementById('stopBtn');
+    const sessionStatus = document.getElementById('sessionStatus');
+    const sessionPrompt = document.getElementById('sessionPrompt');
+    const metricSpeed = document.getElementById('metricSpeed');
+
+    // Pause Toggle Handler
+    pauseBtn.addEventListener('click', () => {
+      isPaused = !isPaused;
+      if (isPaused) {
+        pauseBtnText.textContent = 'Resume';
+        pauseBtn.firstElementChild.textContent = 'play_arrow';
+        pauseBtn.classList.remove('bg-[#FFA586]', 'text-[#340E04]');
+        pauseBtn.classList.add('bg-[#7FB1E0]', 'text-[#0A2540]');
+        sessionStatus.textContent = 'Paused';
+        sessionPrompt.textContent = 'Session on hold · Resting position';
+      } else {
+        pauseBtnText.textContent = 'Pause';
+        pauseBtn.firstElementChild.textContent = 'pause';
+        pauseBtn.classList.remove('bg-[#7FB1E0]', 'text-[#0A2540]');
+        pauseBtn.classList.add('bg-[#FFA586]', 'text-[#340E04]');
+        sessionStatus.textContent = 'Running';
+        sessionPrompt.textContent = 'Active trial · Reaching target zone';
+      }
+    });
+
+    // Safety Stop Action
+    stopBtn.addEventListener('click', () => {
+      const confirmEnd = window.confirm('Conclude active protocol? Kinematic data will be logged.');
+      if (confirmEnd) {
+        sessionStatus.textContent = 'Completed';
+        sessionPrompt.textContent = 'Saving trial kinematic stream...';
+        stopBtn.setAttribute('disabled', 'true');
+        stopBtn.classList.add('opacity-50', 'pointer-events-none');
+        pauseBtn.setAttribute('disabled', 'true');
+        pauseBtn.classList.add('opacity-50', 'pointer-events-none');
+      }
+    });
+
+    // Subtle Live Data Micro-Fluctuations (VR telemetry stream)
+    setInterval(() => {
+      if (!isPaused && trialIndex < maxTrials) {
+        const dynamicSpeed = (0.98 + Math.random() * 0.10).toFixed(2);
+        metricSpeed.textContent = dynamicSpeed;
+      }
+    }, 2400);
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#080B11]/95 backdrop-blur-xl border-t border-[#222E3F]" data-active-classes="text-[#EF4444] font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-space-xs py-1 text-slate-400 hover:text-white transition-colors" data-path="patients" href="#"><span class="material-symbols-outlined text-[22px]">group</span><span class="text-[11px] font-medium tracking-tight mt-0.5">Patients</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-space-xs py-1 transition-colors text-[#EF4444] font-semibold" data-path="live-monitor" href="#"><span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">vital_signs</span><span class="text-[11px] font-medium tracking-tight mt-0.5">Monitor</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-space-xs py-1 text-slate-400 hover:text-white transition-colors" data-path="programs" href="#"><span class="material-symbols-outlined text-[22px]">assignment</span><span class="text-[11px] font-medium tracking-tight mt-0.5">Programs</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-space-xs py-1 text-slate-400 hover:text-white transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[22px]">analytics</span><span class="text-[11px] font-medium tracking-tight mt-0.5">Reports</span></a></div></nav>
+
+</body></html>

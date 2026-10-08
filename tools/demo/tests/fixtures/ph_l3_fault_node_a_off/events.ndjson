@@ -1,0 +1,73 @@
+{"t_ms": 0, "seq": 0, "block": 0, "trial": null, "type": "session_start"}
+{"t_ms": 100, "seq": 1, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "calibrate", "condition": null}}
+{"t_ms": 4200, "seq": 2, "block": 0, "trial": null, "type": "calibration", "data": {"wrist_pos": [0.12, 0.95, 0.31], "forearm_axis": [0.0, 0.0, 1.0], "ok": true}}
+{"t_ms": 5000, "seq": 3, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "probe_pre", "condition": null}}
+{"t_ms": 21800, "seq": 4, "block": 0, "trial": null, "type": "drift_probe", "data": {"when": "pre", "perceived_x": 0.004, "actual_x": 0.0, "drift_cm": 0.4, "confirmed": true}}
+{"t_ms": 25000, "seq": 5, "block": 0, "trial": 0, "type": "phase_start", "data": {"phase": "induction", "condition": "async"}}
+{"t_ms": 26000, "seq": 6, "block": 0, "trial": 0, "type": "stroke", "data": {"index": 0, "brush_pass_a_ms": 26000, "brush_pass_b_ms": 26100, "cue_a_send_ms": 26562, "cue_b_send_ms": 26663, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 26562, "seq": 7, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 16}}
+{"t_ms": 26664, "seq": 8, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": true, "ack_latency_ms": 15}}
+{"t_ms": 27000, "seq": 9, "block": 0, "trial": 0, "type": "stroke", "data": {"index": 1, "brush_pass_a_ms": 27000, "brush_pass_b_ms": 27100, "cue_a_send_ms": 27562, "cue_b_send_ms": 27663, "swapped": true, "timing_err_ms": 2}}
+{"t_ms": 27562, "seq": 10, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": true, "ack_latency_ms": 16}}
+{"t_ms": 27664, "seq": 11, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 15}}
+{"t_ms": 28000, "seq": 12, "block": 0, "trial": 0, "type": "stroke", "data": {"index": 2, "brush_pass_a_ms": 28000, "brush_pass_b_ms": 28100, "cue_a_send_ms": 28562, "cue_b_send_ms": 28663, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 28562, "seq": 13, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 16}}
+{"t_ms": 28664, "seq": 14, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": true, "ack_latency_ms": 15}}
+{"t_ms": 29000, "seq": 15, "block": 0, "trial": 0, "type": "stroke", "data": {"index": 3, "brush_pass_a_ms": 29000, "brush_pass_b_ms": 29100, "cue_a_send_ms": 29562, "cue_b_send_ms": 29663, "swapped": true, "timing_err_ms": 2}}
+{"t_ms": 29562, "seq": 16, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": true, "ack_latency_ms": 16}}
+{"t_ms": 29664, "seq": 17, "block": 0, "trial": 0, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 15}}
+{"t_ms": 30000, "seq": 18, "block": 0, "trial": 0, "type": "breath_env", "data": {"t0_ms": 29000, "fs_hz": 20, "values": [0.5, 0.519, 0.538, 0.556, 0.575, 0.593, 0.61, 0.628, 0.645, 0.661, 0.676, 0.691, 0.705, 0.719, 0.731, 0.743, 0.753, 0.763, 0.771, 0.779], "source": "replay"}}
+{"t_ms": 31000, "seq": 19, "block": 0, "trial": 0, "type": "self_touch", "data": {"band": "a", "motor": 0, "cue_send_ms": 31603, "finger_speed_mps": 0.21}}
+{"t_ms": 31600, "seq": 20, "block": 0, "trial": 0, "type": "self_touch", "data": {"band": "b", "motor": 1, "cue_send_ms": 32203, "finger_speed_mps": 0.24}}
+{"t_ms": 33000, "seq": 21, "block": 0, "trial": 0, "type": "phase_start", "data": {"phase": "threat", "condition": "async"}}
+{"t_ms": 34000, "seq": 22, "block": 0, "trial": 0, "type": "threat_impact", "data": {"impact_ms": 34000, "impact_pos": [-0.15, 0.92, 0.33], "ok": true}}
+{"t_ms": 34100, "seq": 23, "block": 0, "trial": 0, "type": "emg_burst", "data": {"peak": 110.5, "baseline_rms": 52.3, "device_ms": 39096}}
+{"t_ms": 35600, "seq": 24, "block": 0, "trial": 0, "type": "threat_response", "data": {"wrist_peak_mps": 0.18, "wrist_latency_ms": null, "imu_peak": 1.2, "emg_peak_x": 2.1, "emg_latency_ms": 140, "quality": "degraded"}}
+{"t_ms": 36000, "seq": 25, "block": 0, "trial": 0, "type": "phase_start", "data": {"phase": "probe_post", "condition": "async"}}
+{"t_ms": 44000, "seq": 26, "block": 0, "trial": 0, "type": "drift_probe", "data": {"when": "post", "perceived_x": -0.004, "actual_x": 0.0, "drift_cm": 0.4, "confirmed": true}}
+{"t_ms": 45000, "seq": 27, "block": 0, "trial": 0, "type": "phase_start", "data": {"phase": "questionnaire", "condition": "async"}}
+{"t_ms": 46500, "seq": 28, "block": 0, "trial": 0, "type": "questionnaire_item", "data": {"item": "q1", "value": 2}}
+{"t_ms": 48000, "seq": 29, "block": 0, "trial": 0, "type": "questionnaire_item", "data": {"item": "q2", "value": 3}}
+{"t_ms": 49500, "seq": 30, "block": 0, "trial": 0, "type": "questionnaire_item", "data": {"item": "q3", "value": 3}}
+{"t_ms": 51000, "seq": 31, "block": 0, "trial": 0, "type": "questionnaire_item", "data": {"item": "q4", "value": 6}}
+{"t_ms": 53000, "seq": 32, "block": 0, "trial": 1, "type": "phase_start", "data": {"phase": "induction", "condition": "sync"}}
+{"t_ms": 53962, "seq": 33, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 15}}
+{"t_ms": 54000, "seq": 34, "block": 0, "trial": 1, "type": "stroke", "data": {"index": 0, "brush_pass_a_ms": 54000, "brush_pass_b_ms": 54100, "cue_a_send_ms": 53962, "cue_b_send_ms": 54063, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 54064, "seq": 35, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": true, "ack_latency_ms": 16}}
+{"t_ms": 54962, "seq": 36, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": true, "ack_latency_ms": 15}}
+{"t_ms": 55000, "seq": 37, "block": 0, "trial": 1, "type": "stroke", "data": {"index": 1, "brush_pass_a_ms": 55000, "brush_pass_b_ms": 55100, "cue_a_send_ms": 54962, "cue_b_send_ms": 55063, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 55064, "seq": 38, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": false, "ack_latency_ms": null}}
+{"t_ms": 55962, "seq": 39, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": false, "ack_latency_ms": null}}
+{"t_ms": 56000, "seq": 40, "block": 0, "trial": 1, "type": "stroke", "data": {"index": 2, "brush_pass_a_ms": 56000, "brush_pass_b_ms": 56100, "cue_a_send_ms": 55962, "cue_b_send_ms": 56063, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 56064, "seq": 41, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": false, "ack_latency_ms": null}}
+{"t_ms": 56962, "seq": 42, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 0, "delivered": false, "ack_latency_ms": null}}
+{"t_ms": 57000, "seq": 43, "block": 0, "trial": 1, "type": "stroke", "data": {"index": 3, "brush_pass_a_ms": 57000, "brush_pass_b_ms": 57100, "cue_a_send_ms": 56962, "cue_b_send_ms": 57063, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 57064, "seq": 44, "block": 0, "trial": 1, "type": "haptic_cue", "data": {"cue": "stroke", "motor": 1, "delivered": false, "ack_latency_ms": null}}
+{"t_ms": 58000, "seq": 45, "block": 0, "trial": 1, "type": "breath_env", "data": {"t0_ms": 57000, "fs_hz": 20, "values": [0.556, 0.575, 0.593, 0.61, 0.628, 0.645, 0.661, 0.676, 0.691, 0.705, 0.719, 0.731, 0.743, 0.753, 0.763, 0.771, 0.779, 0.785, 0.791, 0.795], "source": "mic"}}
+{"t_ms": 59000, "seq": 46, "block": 0, "trial": 1, "type": "self_touch", "data": {"band": "a", "motor": 0, "cue_send_ms": 59003, "finger_speed_mps": 0.21}}
+{"t_ms": 59600, "seq": 47, "block": 0, "trial": 1, "type": "self_touch", "data": {"band": "b", "motor": 1, "cue_send_ms": 59603, "finger_speed_mps": 0.24}}
+{"t_ms": 61000, "seq": 48, "block": 0, "trial": 1, "type": "phase_start", "data": {"phase": "agency", "condition": "sync"}}
+{"t_ms": 63200, "seq": 49, "block": 0, "trial": 1, "type": "emg_burst", "data": {"peak": 980.0, "baseline_rms": 51.8, "device_ms": 68190}}
+{"t_ms": 66200, "seq": 50, "block": 0, "trial": 1, "type": "autonomous_close", "data": {"emg_level": 0.04}}
+{"t_ms": 67000, "seq": 51, "block": 0, "trial": 1, "type": "phase_start", "data": {"phase": "threat", "condition": "sync"}}
+{"t_ms": 68000, "seq": 52, "block": 0, "trial": 1, "type": "threat_impact", "data": {"impact_ms": 68000, "impact_pos": [-0.15, 0.92, 0.33], "ok": true}}
+{"t_ms": 68100, "seq": 53, "block": 0, "trial": 1, "type": "emg_burst", "data": {"peak": 1480.5, "baseline_rms": 52.3, "device_ms": 73096}}
+{"t_ms": 69600, "seq": 54, "block": 0, "trial": 1, "type": "threat_response", "data": {"wrist_peak_mps": 0.42, "wrist_latency_ms": 182, "imu_peak": 3.1, "emg_peak_x": 6.4, "emg_latency_ms": 96, "quality": "ok"}}
+{"t_ms": 70000, "seq": 55, "block": 0, "trial": 1, "type": "phase_start", "data": {"phase": "probe_post", "condition": "sync"}}
+{"t_ms": 78000, "seq": 56, "block": 0, "trial": 1, "type": "drift_probe", "data": {"when": "post", "perceived_x": -0.024, "actual_x": 0.0, "drift_cm": 2.4, "confirmed": true}}
+{"t_ms": 79000, "seq": 57, "block": 0, "trial": 1, "type": "phase_start", "data": {"phase": "questionnaire", "condition": "sync"}}
+{"t_ms": 80500, "seq": 58, "block": 0, "trial": 1, "type": "questionnaire_item", "data": {"item": "q1", "value": 6}}
+{"t_ms": 82000, "seq": 59, "block": 0, "trial": 1, "type": "questionnaire_item", "data": {"item": "q2", "value": 5}}
+{"t_ms": 83500, "seq": 60, "block": 0, "trial": 1, "type": "questionnaire_item", "data": {"item": "q3", "value": 3}}
+{"t_ms": 85000, "seq": 61, "block": 0, "trial": 1, "type": "questionnaire_item", "data": {"item": "q4", "value": 6}}
+{"t_ms": 86500, "seq": 62, "block": 0, "trial": 1, "type": "questionnaire_item", "data": {"item": "q5", "value": 5}}
+{"t_ms": 88500, "seq": 63, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "dissolve", "condition": null}}
+{"t_ms": 88600, "seq": 64, "block": 0, "trial": null, "type": "dissolve_start", "data": {"condition": "sync"}}
+{"t_ms": 91500, "seq": 65, "block": 0, "trial": 1, "type": "stroke", "data": {"index": 0, "brush_pass_a_ms": 91500, "brush_pass_b_ms": 91600, "cue_a_send_ms": 91462, "cue_b_send_ms": 91562, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 92500, "seq": 66, "block": 0, "trial": 1, "type": "stroke", "data": {"index": 1, "brush_pass_a_ms": 92500, "brush_pass_b_ms": 92600, "cue_a_send_ms": 92462, "cue_b_send_ms": 92562, "swapped": false, "timing_err_ms": 2}}
+{"t_ms": 106500, "seq": 67, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "reveal", "condition": null}}
+{"t_ms": 106700, "seq": 68, "block": 0, "trial": null, "type": "passthrough_on", "data": {"fallback": false}}
+{"t_ms": 116500, "seq": 69, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "witness", "condition": null}}
+{"t_ms": 117000, "seq": 70, "block": 0, "trial": null, "type": "witness_summary", "data": {"condition_order": ["async", "sync"], "sync": {"drift_change_cm": -2.4, "ownership": 5.5, "control": 3.0, "flinch_emg_peak_x": 6.4, "witness_q4": 6}, "async": {"drift_change_cm": -0.4, "ownership": 2.5, "control": 3.0, "flinch_emg_peak_x": 2.1, "witness_q4": 6}}}
+{"t_ms": 146500, "seq": 71, "block": 0, "trial": null, "type": "phase_start", "data": {"phase": "done", "condition": null}}
+{"t_ms": 147000, "seq": 72, "block": 0, "trial": null, "type": "session_end"}

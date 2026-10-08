@@ -1,0 +1,16 @@
+{
+  "t_ms": 1007,
+  "seq": 7,
+  "block": 0,
+  "trial": 0,
+  "type": "threat_impact",
+  "data": {
+    "impact_ms": 98200,
+    "impact_pos": [
+      -0.15,
+      0.92,
+      0.33
+    ],
+    "ok": true
+  }
+}

@@ -1,0 +1,28 @@
+{
+    "name": "Shell.Tests.Editor",
+    "rootNamespace": "Opus.Shell.Tests",
+    "references": [
+        "Shell.Runtime",
+        "OrchardReach.Runtime",
+        "PhantomHand.Runtime",
+        "Opus.Sdk.Runtime",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

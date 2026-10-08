@@ -1,0 +1,509 @@
+{
+  "id": "orchard_reach",
+  "version": "0.4.0",
+  "sdkVersion": "^0.1.0",
+  "displayName": {
+    "en": "Orchard Reach",
+    "hi": "बाग़ में पहुँच"
+  },
+  "description": {
+    "en": "Reach, pick the fruit, place it in the basket. Upper-limb reach-to-grasp with kinematic analysis."
+  },
+  "input": [
+    "hands"
+  ],
+  "posture": "seated",
+  "bodyRegions": [
+    "shoulder",
+    "elbow",
+    "hand",
+    "trunk",
+    "visuospatial"
+  ],
+  "paramSchema": {
+    "type": "object",
+    "required": [
+      "side",
+      "trialCount"
+    ],
+    "properties": {
+      "side": {
+        "enum": [
+          "left",
+          "right",
+          "alternate",
+          "both"
+        ],
+        "default": "right",
+        "x-ui": {
+          "title": { "en": "Which arm", "hi": "कौन सी बाँह" },
+          "widget": "segmented",
+          "group": "Setup",
+          "order": 1
+        }
+      },
+      "trialCount": {
+        "type": "integer",
+        "minimum": 3,
+        "maximum": 100,
+        "default": 20,
+        "x-ui": {
+          "title": { "en": "Number of reaches", "hi": "पहुँचने की संख्या" },
+          "widget": "stepper",
+          "group": "Setup",
+          "order": 2
+        }
+      },
+      "reachPercent": {
+        "type": "array",
+        "items": {
+          "type": "number",
+          "minimum": 20,
+          "maximum": 110
+        },
+        "minItems": 2,
+        "maxItems": 2,
+        "default": [
+          50,
+          85
+        ],
+        "x-ui": {
+          "title": { "en": "How far to reach", "hi": "कितनी दूर तक पहुँचना है" },
+          "widget": "range",
+          "unit": "% arm length",
+          "group": "Workspace",
+          "order": 1
+        }
+      },
+      "azimuthRangeDeg": {
+        "type": "array",
+        "items": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "minItems": 2,
+        "maxItems": 2,
+        "default": [
+          -45,
+          45
+        ],
+        "x-ui": {
+          "title": { "en": "Left-right spread", "hi": "बाएँ-दाएँ फैलाव" },
+          "widget": "range",
+          "unit": "°",
+          "group": "Workspace",
+          "order": 2
+        }
+      },
+      "elevationRangeDeg": {
+        "type": "array",
+        "items": {
+          "type": "number",
+          "minimum": -30,
+          "maximum": 80
+        },
+        "minItems": 2,
+        "maxItems": 2,
+        "default": [
+          0,
+          40
+        ],
+        "x-ui": {
+          "title": { "en": "Up-down spread", "hi": "ऊपर-नीचे फैलाव" },
+          "widget": "range",
+          "unit": "°",
+          "group": "Workspace",
+          "order": 3
+        }
+      },
+      "graspType": {
+        "enum": [
+          "pinch",
+          "whole_hand",
+          "any"
+        ],
+        "default": "any",
+        "x-ui": {
+          "title": { "en": "Type of grip", "hi": "पकड़ का प्रकार" },
+          "widget": "segmented",
+          "group": "Task",
+          "order": 1
+        }
+      },
+      "holdMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 5000,
+        "default": 300,
+        "x-ui": {
+          "title": { "en": "Hold time", "hi": "पकड़े रखने का समय" },
+          "widget": "slider",
+          "unit": "ms",
+          "group": "Task",
+          "order": 2
+        }
+      },
+      "timeLimitMs": {
+        "type": "integer",
+        "minimum": 2000,
+        "maximum": 60000,
+        "default": 15000,
+        "x-ui": {
+          "title": { "en": "Time allowed", "hi": "दिया गया समय" },
+          "widget": "slider",
+          "unit": "ms",
+          "group": "Task",
+          "order": 3
+        }
+      },
+      "distractors": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4,
+        "default": 0,
+        "x-ui": {
+          "title": { "en": "Distracting fruits", "hi": "ध्यान भटकाने वाले फल" },
+          "widget": "stepper",
+          "group": "Cognitive",
+          "order": 1
+        }
+      },
+      "neglectBias": {
+        "type": "number",
+        "minimum": -1,
+        "maximum": 1,
+        "default": 0,
+        "x-ui": {
+          "title": { "en": "Left-right balance", "hi": "बाएँ-दाएँ संतुलन" },
+          "widget": "slider",
+          "group": "Cognitive",
+          "order": 2,
+          "help": "-1 = more targets on the left, +1 = right"
+        }
+      },
+      "adaptive": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Adjust difficulty automatically", "hi": "कठिनाई अपने आप बदलें" },
+          "widget": "switch",
+          "group": "Difficulty",
+          "order": 1,
+          "help": "2-down/1-up staircase on reach %"
+        }
+      },
+      "trunkLeanWarningCm": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 30,
+        "default": 8,
+        "x-ui": {
+          "title": { "en": "Warn when leaning", "hi": "झुकने पर चेतावनी" },
+          "widget": "slider",
+          "unit": "cm",
+          "group": "Feedback",
+          "order": 1
+        }
+      },
+      "ghostGuide": {
+        "type": "boolean",
+        "default": true,
+        "x-ui": {
+          "title": { "en": "Show a guide hand", "hi": "मार्गदर्शक हाथ दिखाएँ" },
+          "widget": "switch",
+          "group": "Feedback",
+          "order": 2
+        }
+      },
+      "hapticsEnabled": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Sleeve vibration", "hi": "स्लीव का कंपन" },
+          "widget": "switch",
+          "group": "Feedback",
+          "order": 3,
+          "help": "Vibration cues on the haptic sleeve, if one is paired"
+        }
+      },
+      "hapticMaxIntensity": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.8,
+        "x-ui": {
+          "title": { "en": "Vibration strength", "hi": "कंपन की तीव्रता" },
+          "widget": "slider",
+          "group": "Feedback",
+          "order": 4,
+          "help": "Upper limit for cue strength"
+        }
+      },
+      "stage": {
+        "enum": [
+          "A_touch",
+          "B_grasp_place",
+          "C_precision",
+          "D_sorting",
+          "E_sequencing"
+        ],
+        "default": "B_grasp_place",
+        "x-ui": {
+          "title": { "en": "Task level", "hi": "कार्य का स्तर" },
+          "widget": "segmented",
+          "group": "Progression",
+          "order": 1,
+          "help": "A=reach-to-touch, B=grasp+place (default/current), C=precision (upright placement), D=sorting (rule-based, multi-container), E=sequencing (optional, multi-step)"
+        }
+      },
+      "autoAdvance": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Move up levels automatically", "hi": "स्तर अपने आप बढ़ाएँ" },
+          "widget": "switch",
+          "group": "Progression",
+          "order": 2,
+          "help": "Advance to the next stage automatically once rolling success is >=80% over the last 5 trials"
+        }
+      },
+      "sortRule": {
+        "enum": [
+          "red_only",
+          "green_only",
+          "ripe_only",
+          "unripe_only",
+          "color_match",
+          "none"
+        ],
+        "default": "none",
+        "x-ui": {
+          "title": { "en": "Sorting rule", "hi": "छाँटने का नियम" },
+          "widget": "segmented",
+          "group": "Stage D (sorting)",
+          "order": 1,
+          "help": "Shown on the HUD as the block rule, e.g. \"Only RED apples in the red basket\". Only applies in stage D."
+        }
+      },
+      "containerCount": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3,
+        "default": 1,
+        "x-ui": {
+          "title": { "en": "Number of baskets", "hi": "टोकरियों की संख्या" },
+          "widget": "stepper",
+          "group": "Stage D (sorting)",
+          "order": 2,
+          "help": "1 = single basket (stages A-C). 2-3 = sorting containers (red basket, green basket, compost) for stage D."
+        }
+      },
+      "targetSizeScale": {
+        "type": "number",
+        "minimum": 0.4,
+        "maximum": 1.5,
+        "default": 1.0,
+        "x-ui": {
+          "title": { "en": "Fruit size", "hi": "फल का आकार" },
+          "widget": "slider",
+          "group": "Difficulty",
+          "order": 2,
+          "help": "Fruit/target scale multiplier; smaller = harder (used by stage C precision and adaptive difficulty)"
+        }
+      },
+      "successBandMin": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.7,
+        "x-ui": {
+          "title": { "en": "Lowest success rate wanted", "hi": "न्यूनतम वांछित सफलता दर" },
+          "widget": "slider",
+          "group": "Difficulty",
+          "order": 3,
+          "help": "Adaptive difficulty target band lower bound (rolling success rate)"
+        }
+      },
+      "successBandMax": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.85,
+        "x-ui": {
+          "title": { "en": "Highest success rate wanted", "hi": "अधिकतम वांछित सफलता दर" },
+          "widget": "slider",
+          "group": "Difficulty",
+          "order": 4,
+          "help": "Adaptive difficulty target band upper bound (rolling success rate)"
+        }
+      },
+      "adaptiveWindow": {
+        "type": "integer",
+        "minimum": 3,
+        "maximum": 20,
+        "default": 5,
+        "x-ui": {
+          "title": { "en": "Trials used to adjust", "hi": "समायोजन के लिए प्रयासों की संख्या" },
+          "widget": "stepper",
+          "group": "Difficulty",
+          "order": 5,
+          "help": "Number of most-recent trials used for the rolling success rate (auto-advance and adaptive difficulty)"
+        }
+      },
+      "ghostTrajectory": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Replay the patient's path", "hi": "मरीज़ के रास्ते का पुनः प्रदर्शन" },
+          "widget": "switch",
+          "group": "Feedback",
+          "order": 5,
+          "help": "Clinician-only: show a faint replay of the patient's own path on a failed reach"
+        }
+      },
+      "variableRewardRate": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.25,
+        "x-ui": {
+          "title": { "en": "Bonus sparkle chance", "hi": "बोनस चमक की संभावना" },
+          "widget": "slider",
+          "group": "Feedback",
+          "order": 6,
+          "help": "Probability a success also gets a bonus sparkle/chime (variable-ratio reinforcement, ~1 in 4 by default)"
+        }
+      },
+      "compensationShoulder": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Allow shoulder help", "hi": "कंधे की मदद की अनुमति" },
+          "widget": "switch",
+          "group": "Difficulty",
+          "order": 6,
+          "help": "Allow shoulder-hike/trunk compensation instead of flagging it (looser trunk-lean gating for early-stage patients)"
+        }
+      }
+    }
+  },
+  "presets": [
+    {
+      "id": "easy",
+      "label": {
+        "en": "Easy"
+      },
+      "params": {
+        "stage": "B_grasp_place",
+        "trialCount": 10,
+        "reachPercent": [
+          35,
+          60
+        ],
+        "azimuthRangeDeg": [
+          -25,
+          25
+        ],
+        "elevationRangeDeg": [
+          0,
+          20
+        ],
+        "targetSizeScale": 1.4,
+        "holdMs": 200,
+        "timeLimitMs": 30000,
+        "ghostGuide": true
+      }
+    },
+    {
+      "id": "medium",
+      "label": {
+        "en": "Medium"
+      },
+      "params": {
+        "stage": "B_grasp_place",
+        "trialCount": 20,
+        "reachPercent": [
+          50,
+          85
+        ],
+        "azimuthRangeDeg": [
+          -45,
+          45
+        ],
+        "elevationRangeDeg": [
+          0,
+          40
+        ],
+        "targetSizeScale": 1.0,
+        "holdMs": 300,
+        "timeLimitMs": 15000,
+        "ghostGuide": true
+      }
+    },
+    {
+      "id": "hard",
+      "label": {
+        "en": "Hard"
+      },
+      "params": {
+        "stage": "B_grasp_place",
+        "trialCount": 30,
+        "reachPercent": [
+          70,
+          100
+        ],
+        "azimuthRangeDeg": [
+          -60,
+          60
+        ],
+        "elevationRangeDeg": [
+          0,
+          55
+        ],
+        "targetSizeScale": 0.6,
+        "holdMs": 500,
+        "timeLimitMs": 8000,
+        "ghostGuide": false
+      }
+    }
+  ],
+  "events": [
+    "session_start",
+    "session_end",
+    "block_start",
+    "block_end",
+    "trial_start",
+    "target_shown",
+    "movement_onset",
+    "grasp",
+    "release",
+    "placed",
+    "trial_end",
+    "pause",
+    "resume",
+    "difficulty_changed",
+    "tracking_lost",
+    "tracking_regained",
+    "form_warning",
+    "guide_shown",
+    "haptic_cue"
+  ],
+  "metrics": [
+    "reaction_time_ms",
+    "movement_time_ms",
+    "peak_speed_mps",
+    "time_to_peak_speed_pct",
+    "sparc",
+    "ldlj",
+    "n_submovements",
+    "path_length_ratio",
+    "endpoint_error_cm",
+    "trunk_displacement_cm",
+    "success_rate",
+    "neglect_index",
+    "fatigue_slope",
+    "reach_envelope_area_m2",
+    "tracking_loss_pct"
+  ]
+}

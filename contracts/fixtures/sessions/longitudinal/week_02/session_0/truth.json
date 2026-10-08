@@ -1,0 +1,132 @@
+{
+  "profile": "longitudinal",
+  "seed": 9200,
+  "generator_version": "0.1.0",
+  "knobs": {
+    "rt_ms_mean": 363.3333333333333,
+    "rt_ms_sd": 50.0,
+    "mt_scale": 1.4000000000000001,
+    "reach_scale": 0.8966666666666666,
+    "n_submovements": 2,
+    "submovement_frac": 0.10666666666666667,
+    "tremor_hz_range": [
+      3.3333333333333335,
+      5.333333333333334
+    ],
+    "tremor_amp_m": 0.0016666666666666668,
+    "trunk_compensation": 0.25,
+    "jitter_std_m": 0.0028333333333333335,
+    "dropout_rate": 0.02,
+    "fatigue_rate": 0.08,
+    "neglect_bias": 0.0,
+    "miss_rate": 0.07333333333333333,
+    "tracking_rate_hz": 72.0
+  },
+  "sample_rate_hz": 72.0,
+  "tracking_rate_hz": 72.0,
+  "trials": [
+    {
+      "index": 0,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 395.92851183960573,
+      "movement_time_ms": 931.9235269336943,
+      "peak_speed_mps": 1.287017600541464,
+      "time_to_peak_speed_pct": 32.787621164681205,
+      "n_submovements": 2,
+      "endpoint_error_cm": 5.366632364758859,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.8156415428684258,
+      "target_azimuth_deg": 1.1127278871134934,
+      "target_elevation_deg": 2.208690707231553,
+      "target_reach_percent": 78.15641542868426
+    },
+    {
+      "index": 1,
+      "side": "right",
+      "outcome": "timeout",
+      "reaction_time_ms": null,
+      "movement_time_ms": null,
+      "peak_speed_mps": null,
+      "time_to_peak_speed_pct": null,
+      "n_submovements": null,
+      "endpoint_error_cm": null,
+      "path_length_ratio": null,
+      "target_azimuth_deg": 35.7500850697767,
+      "target_elevation_deg": 22.854970527641946,
+      "target_reach_percent": 58.92547940694741
+    },
+    {
+      "index": 2,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 345.6467352676415,
+      "movement_time_ms": 1053.8823242304559,
+      "peak_speed_mps": 1.3353851365804021,
+      "time_to_peak_speed_pct": 28.99332767334076,
+      "n_submovements": 2,
+      "endpoint_error_cm": 6.186102176472116,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.8193834178748737,
+      "target_azimuth_deg": 5.021042014328138,
+      "target_elevation_deg": 7.80925027313657,
+      "target_reach_percent": 78.19383417874873
+    },
+    {
+      "index": 3,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 471.2195879674842,
+      "movement_time_ms": 989.2958358766717,
+      "peak_speed_mps": 1.2105747470509167,
+      "time_to_peak_speed_pct": 32.29008279018646,
+      "n_submovements": 2,
+      "endpoint_error_cm": 6.044614564794629,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": -41.44924316393561,
+      "target_elevation_deg": 12.080012496221265,
+      "target_reach_percent": 62.28252229043041
+    },
+    {
+      "index": 4,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 425.82962601944666,
+      "movement_time_ms": 981.4553204347372,
+      "peak_speed_mps": 1.2108608008701802,
+      "time_to_peak_speed_pct": 32.54803736791054,
+      "n_submovements": 2,
+      "endpoint_error_cm": 6.323667028710463,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": -23.298446999905842,
+      "target_elevation_deg": 32.85005415559554,
+      "target_reach_percent": 51.9090526952523
+    },
+    {
+      "index": 5,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 321.0461205226311,
+      "movement_time_ms": 1178.7968540538275,
+      "peak_speed_mps": 1.179800074282167,
+      "time_to_peak_speed_pct": 30.63387129591217,
+      "n_submovements": 2,
+      "endpoint_error_cm": 7.298820374963196,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": 40.054474712639504,
+      "target_elevation_deg": 39.921322096140784,
+      "target_reach_percent": 59.80279553250229
+    }
+  ],
+  "dropout_spans": [
+    {
+      "joint": "l_index_tip",
+      "start_frame": 1832,
+      "end_frame": 1871
+    }
+  ],
+  "session_id": "6c719af4-2157-4fa2-9af0-9072e7019d77"
+}

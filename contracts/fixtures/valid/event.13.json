@@ -1,0 +1,10 @@
+{
+  "t_ms": 1013,
+  "seq": 13,
+  "block": 0,
+  "trial": 0,
+  "type": "dissolve_start",
+  "data": {
+    "condition": "sync"
+  }
+}

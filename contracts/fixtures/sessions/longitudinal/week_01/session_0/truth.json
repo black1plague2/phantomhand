@@ -1,0 +1,138 @@
+{
+  "profile": "longitudinal",
+  "seed": 9100,
+  "generator_version": "0.1.0",
+  "knobs": {
+    "rt_ms_mean": 391.6666666666667,
+    "rt_ms_sd": 55.0,
+    "mt_scale": 1.5,
+    "reach_scale": 0.8733333333333333,
+    "n_submovements": 3,
+    "submovement_frac": 0.13333333333333333,
+    "tremor_hz_range": [
+      4.166666666666667,
+      6.666666666666667
+    ],
+    "tremor_amp_m": 0.0020833333333333333,
+    "trunk_compensation": 0.3,
+    "jitter_std_m": 0.0031666666666666666,
+    "dropout_rate": 0.025,
+    "fatigue_rate": 0.1,
+    "neglect_bias": 0.0,
+    "miss_rate": 0.08666666666666667,
+    "tracking_rate_hz": 72.0
+  },
+  "sample_rate_hz": 72.0,
+  "tracking_rate_hz": 72.0,
+  "trials": [
+    {
+      "index": 0,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 422.58063310019617,
+      "movement_time_ms": 1312.6512475751208,
+      "peak_speed_mps": 0.9281233863894267,
+      "time_to_peak_speed_pct": 28.56813648657576,
+      "n_submovements": 3,
+      "endpoint_error_cm": 7.399873997168576,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": 1.5929821318989283,
+      "target_elevation_deg": 28.113238626736305,
+      "target_reach_percent": 67.82947266140565
+    },
+    {
+      "index": 1,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 441.6418744612874,
+      "movement_time_ms": 1098.1409439401734,
+      "peak_speed_mps": 0.9030859598437947,
+      "time_to_peak_speed_pct": 31.619094446690518,
+      "n_submovements": 3,
+      "endpoint_error_cm": 6.9403195441026275,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.9209421516129549,
+      "target_azimuth_deg": 11.339831863687856,
+      "target_elevation_deg": 5.242688408171099,
+      "target_reach_percent": 77.67451793010795
+    },
+    {
+      "index": 2,
+      "side": "left",
+      "outcome": "miss",
+      "reaction_time_ms": 456.3115886869898,
+      "movement_time_ms": 1213.7329145764083,
+      "peak_speed_mps": 1.0139101619065372,
+      "time_to_peak_speed_pct": 32.04073023137967,
+      "n_submovements": 3,
+      "endpoint_error_cm": 8.87587704424972,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.49867824329747135,
+      "target_azimuth_deg": 13.829523826829671,
+      "target_elevation_deg": 34.05939379857866,
+      "target_reach_percent": 74.15565202747892
+    },
+    {
+      "index": 3,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 497.2220225487048,
+      "movement_time_ms": 1128.8532109685332,
+      "peak_speed_mps": 0.8358478392696541,
+      "time_to_peak_speed_pct": 28.298138441787977,
+      "n_submovements": 3,
+      "endpoint_error_cm": 6.496519002657895,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": 30.205641208353285,
+      "target_elevation_deg": 14.569386510696738,
+      "target_reach_percent": 51.85374908218521
+    },
+    {
+      "index": 4,
+      "side": "left",
+      "outcome": "miss",
+      "reaction_time_ms": 349.2267990186838,
+      "movement_time_ms": 1232.7150747777498,
+      "peak_speed_mps": 0.9560933069120164,
+      "time_to_peak_speed_pct": 28.16727314580979,
+      "n_submovements": 3,
+      "endpoint_error_cm": 8.732546133865057,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.8334505046953031,
+      "target_azimuth_deg": 10.471794131492778,
+      "target_elevation_deg": 17.675115066931166,
+      "target_reach_percent": 76.94542087246086
+    },
+    {
+      "index": 5,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 410.2828709850688,
+      "movement_time_ms": 1127.960573274295,
+      "peak_speed_mps": 0.7807365136833685,
+      "time_to_peak_speed_pct": 30.783187856849448,
+      "n_submovements": 3,
+      "endpoint_error_cm": 7.192539942204894,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": 31.121400179992946,
+      "target_elevation_deg": 6.996889207566128,
+      "target_reach_percent": 62.646755495935075
+    }
+  ],
+  "dropout_spans": [
+    {
+      "joint": "l_wrist",
+      "start_frame": 576,
+      "end_frame": 595
+    },
+    {
+      "joint": "r_wrist",
+      "start_frame": 670,
+      "end_frame": 697
+    }
+  ],
+  "session_id": "d18e5cb3-d65d-42e2-b39c-ae081d332b4b"
+}

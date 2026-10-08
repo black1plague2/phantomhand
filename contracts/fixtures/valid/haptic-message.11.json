@@ -1,0 +1,14 @@
+{
+  "type": "ack",
+  "cue_id": "stroke_017",
+  "status": "executed",
+  "timestamp_ms": 143262,
+  "received_ms": 143255,
+  "vibration_start_ms": 143256,
+  "motor": 0,
+  "v": 1,
+  "id": "SLEEVE_001-143262-8",
+  "ts_ms": 143262,
+  "ack_id": "stroke_017",
+  "ok": true
+}

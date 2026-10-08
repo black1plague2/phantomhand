@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/haptic-message.schema.json",
+  "title": "HapticMessage",
+  "description": "OPUS Haptic Protocol (see contracts/HAPTIC_PROTOCOL.md, v1.2). One JSON datagram per message, UDP 8790 (game->node, node replies on the same socket) and UDP 8791 (node discovery broadcast). TWO MESSAGE FAMILIES share this schema; a message is valid when it matches EITHER: (1) '#/$defs/internalV1': the game's internal v1 envelope, which always carries v:1, id and ts_ms (cue, stop, config, ping, status, ack, imu); (2) '#/$defs/wire': device-level wire messages as the firmware and Node B emit them, which do NOT carry v/id/ts_ms (device_discovery, the legacy opus_haptic hello, sensor_data, sensor_chunk, emg_burst, display, subscribe, status, ack). Firmware v0.5.0 deliberately emits status and ack with both dialects merged in one packet (v/id/ts_ms/ack_id/ok AND cue_id/status/timestamp_ms), so those match both families; that is fine because the top level is anyOf. The haptic DEVICE COMMAND (motor/intensity/duration_ms/pattern, optional cue 'stroke' and play_at_ms) is a separate schema: haptic-device-command.schema.json.",
+  "type": "object",
+  "anyOf": [
+    { "$ref": "#/$defs/internalV1" },
+    { "$ref": "#/$defs/wire" }
+  ],
+  "$defs": {
+    "internalV1": {
+      "description": "Family 1: internal v1 envelope. Requires v, type, id, ts_ms.",
+      "type": "object",
+      "required": ["v", "type", "id", "ts_ms"],
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "enum": ["cue", "stop", "config", "ping", "status", "ack", "imu"] },
+        "id": { "type": "string" },
+        "ts_ms": { "type": "number" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "cue" } } }, "then": {
+          "required": ["cue", "intensity", "duration_ms", "pattern"],
+          "properties": {
+            "cue": { "enum": ["trunk_lean", "low_confidence", "success"] },
+            "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "duration_ms": { "type": "integer", "minimum": 20, "maximum": 1000 },
+            "pattern": { "enum": ["pulse", "double_tap", "buzz", "ramp"] },
+            "zone": { "enum": ["upper_arm", "forearm", "wrist", "all"], "default": "upper_arm" },
+            "repeat": { "type": "integer", "minimum": 1, "maximum": 5, "default": 1 },
+            "gap_ms": { "type": "integer", "minimum": 0, "maximum": 2000, "default": 0 }
+          } } },
+        { "if": { "properties": { "type": { "const": "stop" } } }, "then": {
+          "properties": { "zone": { "enum": ["upper_arm", "forearm", "wrist", "all"], "default": "all" } } } },
+        { "if": { "properties": { "type": { "const": "config" } } }, "then": {
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "max_intensity": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.8 },
+            "min_gap_ms": { "type": "integer", "minimum": 0, "maximum": 5000, "default": 800 }
+          } } },
+        { "if": { "properties": { "type": { "const": "status" } } }, "then": {
+          "required": ["device_id"],
+          "properties": {
+            "device_id": { "type": "string" },
+            "device_kind": { "enum": ["haptic", "bio"], "description": "v1.2" },
+            "battery_pct": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "description": "null when the node runs from a power bank (no battery sense)" },
+            "subscribers": { "type": "integer", "minimum": 0, "maximum": 3, "description": "v1.2: live subscribers (max 3, expiry 5 s)" },
+            "motors_ok": { "type": "boolean" },
+            "imu_ok": { "type": "boolean" },
+            "oled_available": { "type": "boolean", "description": "v1.2, Node A" },
+            "unknown_msgs": { "type": "integer", "minimum": 0, "description": "v1.2: ignored message types since boot" },
+            "fw": { "type": "string" },
+            "last_cue_id": { "type": ["string", "null"] },
+            "temperature_c": { "type": ["number", "null"] }
+          } } },
+        { "if": { "properties": { "type": { "const": "ack" } } }, "then": {
+          "required": ["ack_id", "ok"],
+          "properties": { "ack_id": { "type": "string" }, "ok": { "type": "boolean" }, "error": { "type": ["string", "null"] } } } },
+        { "if": { "properties": { "type": { "const": "imu" } } }, "then": {
+          "required": ["seq", "ax", "ay", "az", "gx", "gy", "gz"],
+          "properties": {
+            "seq": { "type": "integer", "minimum": 0 },
+            "ax": { "type": "number" }, "ay": { "type": "number" }, "az": { "type": "number" },
+            "gx": { "type": "number" }, "gy": { "type": "number" }, "gz": { "type": "number" }
+          } } }
+      ]
+    },
+
+    "wire": {
+      "description": "Family 2: device-level wire messages (no v/id/ts_ms). Matches when ANY member matches.",
+      "anyOf": [
+        { "$ref": "#/$defs/deviceDiscovery" },
+        { "$ref": "#/$defs/legacyHello" },
+        { "$ref": "#/$defs/sensorData" },
+        { "$ref": "#/$defs/sensorChunk" },
+        { "$ref": "#/$defs/emgBurst" },
+        { "$ref": "#/$defs/display" },
+        { "$ref": "#/$defs/subscribe" },
+        { "$ref": "#/$defs/deviceStatus" },
+        { "$ref": "#/$defs/deviceAck" }
+      ]
+    },
+
+    "deviceDiscovery": {
+      "description": "PRD v2 section 9.1. Broadcast to UDP 8791 every 1000 ms by Node A (device_kind haptic, motor_count 2) and Node B (device_kind bio, motor_count 0). Node A's packet also carries the legacy hello fields (opus_haptic, port) and extra fields (device_name, protocol_version, ip, motor_channels), which are allowed.",
+      "type": "object",
+      "required": ["type", "device_id", "device_kind", "firmware_version", "command_port", "status", "motor_count", "timestamp_ms"],
+      "properties": {
+        "type": { "const": "device_discovery" },
+        "device_id": { "type": "string", "minLength": 1, "examples": ["SLEEVE_001", "CHETNA_BIO_001"] },
+        "device_kind": { "enum": ["haptic", "bio"] },
+        "firmware_version": { "type": "string", "examples": ["0.5.0"] },
+        "command_port": { "type": "integer", "minimum": 1, "maximum": 65535, "examples": [8790] },
+        "status": { "type": "string", "examples": ["available"] },
+        "motor_count": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "timestamp_ms": { "type": "number", "minimum": 0, "description": "device monotonic clock (millis())" },
+        "device_name": { "type": "string" },
+        "protocol_version": { "type": "string" },
+        "ip": { "type": "string" },
+        "motor_channels": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "opus_haptic": { "const": 1 },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      }
+    },
+
+    "legacyHello": {
+      "description": "The original discovery hello the Unity HapticClient parses: {\"opus_haptic\":1,\"device_id\":...,\"port\":8790,\"fw\":...}. No 'type' field. Node A still emits these fields inside its device_discovery packet.",
+      "type": "object",
+      "required": ["opus_haptic", "port"],
+      "properties": {
+        "opus_haptic": { "const": 1 },
+        "device_id": { "type": "string" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "fw": { "type": "string" }
+      }
+    },
+
+    "sensorData": {
+      "description": "Node A sensor_data v1: 100 Hz, ONE sample per packet, RAW units (accel m/s2, gyro rad/s). Keys: imu_accel_x/y/z (required in practice), imu_gyro_x/y/z and imu_temperature may also be present; consumers must tolerate extra sensor names, so additionalProperties stays open.",
+      "type": "object",
+      "required": ["type", "device_id", "timestamp_ms", "sensors"],
+      "properties": {
+        "type": { "const": "sensor_data" },
+        "device_id": { "type": "string" },
+        "device_kind": { "enum": ["haptic", "bio"] },
+        "timestamp_ms": { "type": "number", "minimum": 0 },
+        "sensors": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "required": ["value", "unit", "status"],
+            "properties": {
+              "value": { "type": "number" },
+              "unit": { "type": "string", "examples": ["m/s2", "rad/s"] },
+              "status": { "type": "string", "examples": ["ok"] }
+            }
+          }
+        }
+      }
+    },
+
+    "sensorChunk": {
+      "description": "Node B (bio) EMG stream, PRD v2 section 9.3: every 100 ms, up to 10 envelope values at 100 Hz. The array may be shorter than 10 (the PRD example shows 4) but never longer.",
+      "type": "object",
+      "required": ["type", "device_id", "device_kind", "timestamp_ms", "sample_rate_hz", "emg_envelope", "unit", "status"],
+      "properties": {
+        "type": { "const": "sensor_chunk" },
+        "device_id": { "type": "string" },
+        "device_kind": { "const": "bio" },
+        "timestamp_ms": { "type": "number", "minimum": 0, "description": "device clock (millis()) of the FIRST sample in the chunk (manager decision); sample i is at timestamp_ms + i * 1000 / sample_rate_hz" },
+        "sample_rate_hz": { "type": "number", "minimum": 1, "maximum": 1000, "description": "envelope rate; 100 for Node B v0.5.0" },
+        "emg_envelope": { "type": "array", "items": { "type": "number" }, "minItems": 1, "maxItems": 10 },
+        "unit": { "type": "string", "examples": ["raw_adc"] },
+        "status": { "type": "string", "examples": ["ok"] }
+      }
+    },
+
+    "emgBurst": {
+      "description": "Node B: envelope above baseline + 3 SD for at least 30 ms.",
+      "type": "object",
+      "required": ["type", "device_id", "timestamp_ms", "peak", "baseline_rms"],
+      "properties": {
+        "type": { "const": "emg_burst" },
+        "device_id": { "type": "string" },
+        "device_kind": { "const": "bio" },
+        "timestamp_ms": { "type": "number", "minimum": 0, "description": "device clock (millis()) at burst ONSET (manager decision)" },
+        "peak": { "type": "number", "description": "peak envelope value, same unit as sensor_chunk (raw_adc)" },
+        "baseline_rms": { "type": "number", "minimum": 0, "description": "baseline RMS in envelope units (raw_adc)" }
+      }
+    },
+
+    "display": {
+      "description": "Game -> Node A: one line of OLED text. At most 12 characters, at most 2 per second.",
+      "type": "object",
+      "required": ["type", "text"],
+      "properties": {
+        "type": { "const": "display" },
+        "text": { "type": "string", "maxLength": 12, "pattern": "^[\\x20-\\x7E]*$", "description": "printable ASCII; empty shows IDLE" }
+      }
+    },
+
+    "subscribe": {
+      "description": "Any device -> Node A or B: register for sensor/status packets. Resend at least every 2 s; a subscriber expires after 5 s; at most 3 live subscribers per node.",
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "subscribe" }
+      }
+    },
+
+    "deviceStatus": {
+      "description": "Node status without the v1 envelope. Firmware v0.5.0 also adds v/id/ts_ms/motors_ok/imu_ok/fw (then it matches internalV1 too).",
+      "type": "object",
+      "required": ["type", "device_id", "timestamp_ms"],
+      "properties": {
+        "type": { "const": "status" },
+        "device_id": { "type": "string" },
+        "device_kind": { "enum": ["haptic", "bio"] },
+        "battery_pct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "connected": { "type": "boolean" },
+        "subscribers": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "motor_count": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "imu_available": { "type": "boolean" },
+        "oled_available": { "type": "boolean" },
+        "unknown_msgs": { "type": "integer", "minimum": 0 },
+        "last_cue_id": { "type": ["string", "null"] },
+        "timestamp_ms": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "deviceAck": {
+      "description": "Node ack in the Electronics-contract dialect (cue_id + status). Firmware v0.5.0 also adds ack_id and ok.",
+      "type": "object",
+      "required": ["type", "cue_id", "status", "timestamp_ms"],
+      "properties": {
+        "type": { "const": "ack" },
+        "cue_id": { "type": "string" },
+        "status": { "enum": ["accepted", "executed", "rejected", "error"] },
+        "timestamp_ms": { "type": "number", "minimum": 0 },
+        "received_ms": { "type": "number", "minimum": 0 },
+        "vibration_start_ms": { "type": "number", "minimum": 0 },
+        "motor": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "error_code": { "type": "string", "examples": ["DUTY_CYCLE_LIMIT", "CUE_GAP", "INVALID_MOTOR"] },
+        "error_message": { "type": "string" }
+      }
+    }
+  }
+}

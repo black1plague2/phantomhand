@@ -1,0 +1,16 @@
+{
+  "type": "device_discovery",
+  "device_id": "SLEEVE_001",
+  "device_name": "OPUS Sleeve",
+  "device_kind": "haptic",
+  "firmware_version": "0.5.0",
+  "protocol_version": "1.0",
+  "ip": "192.168.1.42",
+  "command_port": 8790,
+  "status": "available",
+  "motor_count": 2,
+  "motor_channels": 4,
+  "timestamp_ms": 142050,
+  "opus_haptic": 1,
+  "port": 8790
+}

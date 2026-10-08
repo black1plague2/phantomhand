@@ -1,0 +1,19 @@
+{
+    "name": "Opus.Art.Editor",
+    "rootNamespace": "Opus.Art.Editor",
+    "references": [
+        "Opus.Art.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

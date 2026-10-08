@@ -1,0 +1,1120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="107" result="Passed" total="107" passed="107" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:41Z" duration="4.2175213">
+  <test-suite type="TestSuite" id="1000" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="107" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:41Z" duration="4.217521" total="107" passed="107" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1078" name="Opus.Sdk.Tests.Editor.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Opus.Sdk.Tests.Editor.dll" runstate="Runnable" testcasecount="62" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:39Z" duration="2.103621" total="62" passed="62" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8264" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1079" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="62" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:39Z" duration="2.102594" total="62" passed="62" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1080" name="Sdk" fullname="Opus.Sdk" runstate="Runnable" testcasecount="62" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:39Z" duration="2.102334" total="62" passed="62" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1081" name="Tests" fullname="Opus.Sdk.Tests" runstate="Runnable" testcasecount="62" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:39Z" duration="2.102026" total="62" passed="62" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1004" name="FormFeedbackTests" fullname="Opus.Sdk.Tests.FormFeedbackTests" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.125545" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1006" name="LeanAboveThreshold_FiresOnlyAfter300ms" fullname="Opus.Sdk.Tests.FormFeedbackTests.LeanAboveThreshold_FiresOnlyAfter300ms" methodname="LeanAboveThreshold_FiresOnlyAfter300ms" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1516217413" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.020965" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.LeanAboveThreshold_FiresOnlyAfter300ms
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.LeanAboveThreshold_FiresOnlyAfter300ms, ResultState: Passed, Duration: 0.021s
+]]></output>
+              </test-case>
+              <test-case id="1005" name="LeanBelowThreshold_NeverFires" fullname="Opus.Sdk.Tests.FormFeedbackTests.LeanBelowThreshold_NeverFires" methodname="LeanBelowThreshold_NeverFires" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1278613875" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000588" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.LeanBelowThreshold_NeverFires
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.LeanBelowThreshold_NeverFires, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1009" name="LeanExceedanceInterrupted_ResetsDebounceTimer" fullname="Opus.Sdk.Tests.FormFeedbackTests.LeanExceedanceInterrupted_ResetsDebounceTimer" methodname="LeanExceedanceInterrupted_ResetsDebounceTimer" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1709248599" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000582" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.LeanExceedanceInterrupted_ResetsDebounceTimer
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.LeanExceedanceInterrupted_ResetsDebounceTimer, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1008" name="LeanWarning_ClearsWhenLeanReturnsAtOrBelowThreshold" fullname="Opus.Sdk.Tests.FormFeedbackTests.LeanWarning_ClearsWhenLeanReturnsAtOrBelowThreshold" methodname="LeanWarning_ClearsWhenLeanReturnsAtOrBelowThreshold" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1764624760" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000694" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.LeanWarning_ClearsWhenLeanReturnsAtOrBelowThreshold
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.LeanWarning_ClearsWhenLeanReturnsAtOrBelowThreshold, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1007" name="LeanWarning_DoesNotRefireWhileStillActive" fullname="Opus.Sdk.Tests.FormFeedbackTests.LeanWarning_DoesNotRefireWhileStillActive" methodname="LeanWarning_DoesNotRefireWhileStillActive" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1889775650" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000913" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.LeanWarning_DoesNotRefireWhileStillActive
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.LeanWarning_DoesNotRefireWhileStillActive, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1011" name="LowConfidence_AloneAlsoTriggersTheSameCue" fullname="Opus.Sdk.Tests.FormFeedbackTests.LowConfidence_AloneAlsoTriggersTheSameCue" methodname="LowConfidence_AloneAlsoTriggersTheSameCue" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="433256034" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000542" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.LowConfidence_AloneAlsoTriggersTheSameCue
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.LowConfidence_AloneAlsoTriggersTheSameCue, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1012" name="Reset_ClearsAllDebounceAndActiveState" fullname="Opus.Sdk.Tests.FormFeedbackTests.Reset_ClearsAllDebounceAndActiveState" methodname="Reset_ClearsAllDebounceAndActiveState" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1993719336" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000618" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.Reset_ClearsAllDebounceAndActiveState
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.Reset_ClearsAllDebounceAndActiveState, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1010" name="TrackingLost_FiresAfter500msAndClearsOnRecovery" fullname="Opus.Sdk.Tests.FormFeedbackTests.TrackingLost_FiresAfter500msAndClearsOnRecovery" methodname="TrackingLost_FiresAfter500msAndClearsOnRecovery" classname="Opus.Sdk.Tests.FormFeedbackTests" runstate="Runnable" seed="1592605606" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000671" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.FormFeedbackTests.TrackingLost_FiresAfter500msAndClearsOnRecovery
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.FormFeedbackTests.TrackingLost_FiresAfter500msAndClearsOnRecovery, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1013" name="GameRegistryTests" fullname="Opus.Sdk.Tests.GameRegistryTests" classname="Opus.Sdk.Tests.GameRegistryTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.262042" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1014" name="DiscoversAttributedModulesAutomatically" fullname="Opus.Sdk.Tests.GameRegistryTests.DiscoversAttributedModulesAutomatically" methodname="DiscoversAttributedModulesAutomatically" classname="Opus.Sdk.Tests.GameRegistryTests" runstate="Runnable" seed="455550085" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.133654" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.GameRegistryTests.DiscoversAttributedModulesAutomatically
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.GameRegistryTests.DiscoversAttributedModulesAutomatically, ResultState: Passed, Duration: 0.134s
+]]></output>
+              </test-case>
+              <test-case id="1015" name="UnknownId_Throws" fullname="Opus.Sdk.Tests.GameRegistryTests.UnknownId_Throws" methodname="UnknownId_Throws" classname="Opus.Sdk.Tests.GameRegistryTests" runstate="Runnable" seed="1103487753" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.108414" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.GameRegistryTests.UnknownId_Throws
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.GameRegistryTests.UnknownId_Throws, ResultState: Passed, Duration: 0.108s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1016" name="HapticClientTests" fullname="Opus.Sdk.Tests.HapticClientTests" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.202229" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1025" name="Ack_MarksCueRecordDelivered" fullname="Opus.Sdk.Tests.HapticClientTests.Ack_MarksCueRecordDelivered" methodname="Ack_MarksCueRecordDelivered" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1654425479" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.048320" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Ack_MarksCueRecordDelivered
+[HapticClient] sending cue=trunk_lean motor=0 cueId=8623be5d-0cd6-455a-8d0c-c974f6e94d7b nowMs=0
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Ack_MarksCueRecordDelivered, ResultState: Passed, Duration: 0.048s
+]]></output>
+              </test-case>
+              <test-case id="1017" name="Disabled_NeverSendsACue" fullname="Opus.Sdk.Tests.HapticClientTests.Disabled_NeverSendsACue" methodname="Disabled_NeverSendsACue" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1288112932" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.001043" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Disabled_NeverSendsACue
+[HapticClient] cue dropped for motor 0: Enabled=false.
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Disabled_NeverSendsACue, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1018" name="Enabled_NoDeviceKnown_DoesNotSend" fullname="Opus.Sdk.Tests.HapticClientTests.Enabled_NoDeviceKnown_DoesNotSend" methodname="Enabled_NoDeviceKnown_DoesNotSend" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1257814198" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.001193" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Enabled_NoDeviceKnown_DoesNotSend
+[HapticClient] cue dropped for motor 0: no haptic device known yet (HasDevice=false).
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Enabled_NoDeviceKnown_DoesNotSend, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1022" name="GlobalRateCap_2PerSecond_DropsExcessAcrossZones" fullname="Opus.Sdk.Tests.HapticClientTests.GlobalRateCap_2PerSecond_DropsExcessAcrossZones" methodname="GlobalRateCap_2PerSecond_DropsExcessAcrossZones" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1695267618" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.004296" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.GlobalRateCap_2PerSecond_DropsExcessAcrossZones
+[HapticClient] sending cue=trunk_lean motor=0 cueId=63078745-27d9-42be-a930-75321c9332f3 nowMs=0
+[HapticClient] sending cue=low_confidence motor=1 cueId=17085496-f949-4b5b-bfd3-558975daec6e nowMs=10
+[HapticClient] cue dropped for motor 0: sustained-rate cap (2/s) hit.
+[HapticClient] sending cue=trunk_lean motor=0 cueId=07d4c2d9-68ef-456d-ba39-af249e9508f9 nowMs=1050
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.GlobalRateCap_2PerSecond_DropsExcessAcrossZones, ResultState: Passed, Duration: 0.004s
+]]></output>
+              </test-case>
+              <test-case id="1024" name="LowConfidence_SendsTwoPulsesForDoubleTap" fullname="Opus.Sdk.Tests.HapticClientTests.LowConfidence_SendsTwoPulsesForDoubleTap" methodname="LowConfidence_SendsTwoPulsesForDoubleTap" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1685612423" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002310" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.LowConfidence_SendsTwoPulsesForDoubleTap
+[HapticClient] sending cue=low_confidence motor=1 cueId=7f5eda10-9418-45cd-9272-acdfc5e6d046 nowMs=0
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.LowConfidence_SendsTwoPulsesForDoubleTap, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1020" name="MinGapPerZone_800ms_SuppressesRepeatOnSameMotor" fullname="Opus.Sdk.Tests.HapticClientTests.MinGapPerZone_800ms_SuppressesRepeatOnSameMotor" methodname="MinGapPerZone_800ms_SuppressesRepeatOnSameMotor" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="343580491" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002715" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.MinGapPerZone_800ms_SuppressesRepeatOnSameMotor
+[HapticClient] sending cue=trunk_lean motor=0 cueId=0f0b7a60-a80b-4b26-926d-49337cabb4f6 nowMs=0
+[HapticClient] cue dropped for motor 0: per-zone min gap (800ms) not elapsed (last=0 now=500).
+[HapticClient] sending cue=trunk_lean motor=0 cueId=df7863fa-489a-4f80-81ac-8beb8b16de5e nowMs=900
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.MinGapPerZone_800ms_SuppressesRepeatOnSameMotor, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+              <test-case id="1021" name="MinGapPerZone_IsPerMotor_NotGlobal" fullname="Opus.Sdk.Tests.HapticClientTests.MinGapPerZone_IsPerMotor_NotGlobal" methodname="MinGapPerZone_IsPerMotor_NotGlobal" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="447261015" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002403" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.MinGapPerZone_IsPerMotor_NotGlobal
+[HapticClient] sending cue=trunk_lean motor=0 cueId=1eaf6a9d-f51c-4eaf-b735-8eceedada4c9 nowMs=0
+[HapticClient] sending cue=low_confidence motor=1 cueId=32e7e18d-04f3-43d6-8617-68bad884f1f2 nowMs=100
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.MinGapPerZone_IsPerMotor_NotGlobal, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1028" name="StatusMessage_UpdatesExposedState" fullname="Opus.Sdk.Tests.HapticClientTests.StatusMessage_UpdatesExposedState" methodname="StatusMessage_UpdatesExposedState" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1807101261" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.003344" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.StatusMessage_UpdatesExposedState
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.StatusMessage_UpdatesExposedState, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+              <test-case id="1029" name="Stop_IsAllowedEvenWhenDisabled" fullname="Opus.Sdk.Tests.HapticClientTests.Stop_IsAllowedEvenWhenDisabled" methodname="Stop_IsAllowedEvenWhenDisabled" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1432162591" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.001169" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Stop_IsAllowedEvenWhenDisabled
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Stop_IsAllowedEvenWhenDisabled, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1023" name="Success_PreemptsThePerZoneMinGap" fullname="Opus.Sdk.Tests.HapticClientTests.Success_PreemptsThePerZoneMinGap" methodname="Success_PreemptsThePerZoneMinGap" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="711222823" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002328" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Success_PreemptsThePerZoneMinGap
+[HapticClient] sending cue=trunk_lean motor=0 cueId=24d887ec-7460-4c9d-9260-2495a8b05229 nowMs=0
+[HapticClient] sending cue=success motor=0 cueId=4e7ec409-11bc-4fdc-ba52-23ffca130bcd nowMs=50
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Success_PreemptsThePerZoneMinGap, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1019" name="TrunkLean_SendsDeviceCommandShape" fullname="Opus.Sdk.Tests.HapticClientTests.TrunkLean_SendsDeviceCommandShape" methodname="TrunkLean_SendsDeviceCommandShape" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1572784067" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.001800" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.TrunkLean_SendsDeviceCommandShape
+[HapticClient] sending cue=trunk_lean motor=0 cueId=fd207430-6b3e-4699-9b04-d5011088333c nowMs=0
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.TrunkLean_SendsDeviceCommandShape, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1027" name="Watchdog_DoesNotRepeatStopEveryFrame" fullname="Opus.Sdk.Tests.HapticClientTests.Watchdog_DoesNotRepeatStopEveryFrame" methodname="Watchdog_DoesNotRepeatStopEveryFrame" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="590688710" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002719" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Watchdog_DoesNotRepeatStopEveryFrame
+[HapticClient] sending cue=trunk_lean motor=0 cueId=34b09cc9-bbfe-4cc6-a2ad-fc182f50dce9 nowMs=0
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Watchdog_DoesNotRepeatStopEveryFrame, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+              <test-case id="1026" name="Watchdog_SendsStopAfter2sIdle" fullname="Opus.Sdk.Tests.HapticClientTests.Watchdog_SendsStopAfter2sIdle" methodname="Watchdog_SendsStopAfter2sIdle" classname="Opus.Sdk.Tests.HapticClientTests" runstate="Runnable" seed="1225764278" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002580" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticClientTests.Watchdog_SendsStopAfter2sIdle
+[HapticClient] sending cue=trunk_lean motor=0 cueId=c7d4ec06-86ab-437d-b669-cd41df0c6624 nowMs=0
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticClientTests.Watchdog_SendsStopAfter2sIdle, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1030" name="HapticCueMapperTests" fullname="Opus.Sdk.Tests.HapticCueMapperTests" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:38Z" duration="0.183789" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1039" name="CueIdAndLabel_AreCarriedThrough" fullname="Opus.Sdk.Tests.HapticCueMapperTests.CueIdAndLabel_AreCarriedThrough" methodname="CueIdAndLabel_AreCarriedThrough" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="1596890514" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000422" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.CueIdAndLabel_AreCarriedThrough
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.CueIdAndLabel_AreCarriedThrough, ResultState: Passed, Duration: 0.000s
+]]></output>
+              </test-case>
+              <test-case id="1038" name="Duration_NeverOutsideDeviceRange" fullname="Opus.Sdk.Tests.HapticCueMapperTests.Duration_NeverOutsideDeviceRange" methodname="Duration_NeverOutsideDeviceRange" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="15073444" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.001244" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.Duration_NeverOutsideDeviceRange
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.Duration_NeverOutsideDeviceRange, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1037" name="Intensity_NeverExceedsDeviceRange" fullname="Opus.Sdk.Tests.HapticCueMapperTests.Intensity_NeverExceedsDeviceRange" methodname="Intensity_NeverExceedsDeviceRange" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="1991938448" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.002685" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.Intensity_NeverExceedsDeviceRange
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.Intensity_NeverExceedsDeviceRange, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+              <test-case id="1035" name="LowConfidence_MapsToMotor1Pulse120ms" fullname="Opus.Sdk.Tests.HapticCueMapperTests.LowConfidence_MapsToMotor1Pulse120ms" methodname="LowConfidence_MapsToMotor1Pulse120ms" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="242625789" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000650" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.LowConfidence_MapsToMotor1Pulse120ms
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.LowConfidence_MapsToMotor1Pulse120ms, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1036" name="Success_MapsBothMotorsBuzz200ms" fullname="Opus.Sdk.Tests.HapticCueMapperTests.Success_MapsBothMotorsBuzz200ms" methodname="Success_MapsBothMotorsBuzz200ms" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="89984166" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000791" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.Success_MapsBothMotorsBuzz200ms
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.Success_MapsBothMotorsBuzz200ms, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1032" name="TrunkLean_LargeExcess_ClampsAt0Point8Fraction" fullname="Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_LargeExcess_ClampsAt0Point8Fraction" methodname="TrunkLean_LargeExcess_ClampsAt0Point8Fraction" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="992702837" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000405" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_LargeExcess_ClampsAt0Point8Fraction
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_LargeExcess_ClampsAt0Point8Fraction, ResultState: Passed, Duration: 0.000s
+]]></output>
+              </test-case>
+              <test-case id="1034" name="TrunkLean_MaxIntensityScalesDown" fullname="Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_MaxIntensityScalesDown" methodname="TrunkLean_MaxIntensityScalesDown" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="893233189" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000651" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_MaxIntensityScalesDown
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_MaxIntensityScalesDown, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1033" name="TrunkLean_MidExcess_ScalesLinearly" fullname="Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_MidExcess_ScalesLinearly" methodname="TrunkLean_MidExcess_ScalesLinearly" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="1861871496" result="Passed" start-time="2026-09-18 17:22:37Z" end-time="2026-09-18 17:22:37Z" duration="0.000351" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_MidExcess_ScalesLinearly
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_MidExcess_ScalesLinearly, ResultState: Passed, Duration: 0.000s
+]]></output>
+              </test-case>
+              <test-case id="1031" name="TrunkLean_ZeroExcess_MapsToMinIntensity" fullname="Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_ZeroExcess_MapsToMinIntensity" methodname="TrunkLean_ZeroExcess_MapsToMinIntensity" classname="Opus.Sdk.Tests.HapticCueMapperTests" runstate="Runnable" seed="977079530" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.000585" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_ZeroExcess_MapsToMinIntensity
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.HapticCueMapperTests.TrunkLean_ZeroExcess_MapsToMinIntensity, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1040" name="KinematicsRecorderTests" fullname="Opus.Sdk.Tests.KinematicsRecorderTests" classname="Opus.Sdk.Tests.KinematicsRecorderTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.163483" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1041" name="ChunkRollsOverAtFiveSeconds" fullname="Opus.Sdk.Tests.KinematicsRecorderTests.ChunkRollsOverAtFiveSeconds" methodname="ChunkRollsOverAtFiveSeconds" classname="Opus.Sdk.Tests.KinematicsRecorderTests" runstate="Runnable" seed="1008301877" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.004698" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.KinematicsRecorderTests.ChunkRollsOverAtFiveSeconds
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.KinematicsRecorderTests.ChunkRollsOverAtFiveSeconds, ResultState: Passed, Duration: 0.005s
+]]></output>
+              </test-case>
+              <test-case id="1042" name="WritesChunkFileMatchingSchemaShape" fullname="Opus.Sdk.Tests.KinematicsRecorderTests.WritesChunkFileMatchingSchemaShape" methodname="WritesChunkFileMatchingSchemaShape" classname="Opus.Sdk.Tests.KinematicsRecorderTests" runstate="Runnable" seed="2078602550" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.120437" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.KinematicsRecorderTests.WritesChunkFileMatchingSchemaShape
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.KinematicsRecorderTests.WritesChunkFileMatchingSchemaShape, ResultState: Passed, Duration: 0.120s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1043" name="KinematicsSamplerTests" fullname="Opus.Sdk.Tests.KinematicsSamplerTests" classname="Opus.Sdk.Tests.KinematicsSamplerTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.060884" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1044" name="SamplesEveryJointEachFrame" fullname="Opus.Sdk.Tests.KinematicsSamplerTests.SamplesEveryJointEachFrame" methodname="SamplesEveryJointEachFrame" classname="Opus.Sdk.Tests.KinematicsSamplerTests" runstate="Runnable" seed="1418098702" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.002425" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.KinematicsSamplerTests.SamplesEveryJointEachFrame
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.KinematicsSamplerTests.SamplesEveryJointEachFrame, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1046" name="TrackingLost_And_Regained_RaiseTransitionOnce" fullname="Opus.Sdk.Tests.KinematicsSamplerTests.TrackingLost_And_Regained_RaiseTransitionOnce" methodname="TrackingLost_And_Regained_RaiseTransitionOnce" classname="Opus.Sdk.Tests.KinematicsSamplerTests" runstate="Runnable" seed="1389465443" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.002460" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.KinematicsSamplerTests.TrackingLost_And_Regained_RaiseTransitionOnce
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.KinematicsSamplerTests.TrackingLost_And_Regained_RaiseTransitionOnce, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1045" name="UntrackedJoint_RecordsZeroConfidence" fullname="Opus.Sdk.Tests.KinematicsSamplerTests.UntrackedJoint_RecordsZeroConfidence" methodname="UntrackedJoint_RecordsZeroConfidence" classname="Opus.Sdk.Tests.KinematicsSamplerTests" runstate="Runnable" seed="507231111" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.000539" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.KinematicsSamplerTests.UntrackedJoint_RecordsZeroConfidence
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.KinematicsSamplerTests.UntrackedJoint_RecordsZeroConfidence, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1047" name="LiveMessageTests" fullname="Opus.Sdk.Tests.LiveMessageTests" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.194514" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1055" name="Dedup_DropsRepeatedId" fullname="Opus.Sdk.Tests.LiveMessageTests.Dedup_DropsRepeatedId" methodname="Dedup_DropsRepeatedId" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="1947728863" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.001061" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.Dedup_DropsRepeatedId
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.Dedup_DropsRepeatedId, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1049" name="Factory_SeqIncrementsPerMessage" fullname="Opus.Sdk.Tests.LiveMessageTests.Factory_SeqIncrementsPerMessage" methodname="Factory_SeqIncrementsPerMessage" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="1377312167" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.000926" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.Factory_SeqIncrementsPerMessage
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.Factory_SeqIncrementsPerMessage, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1048" name="Factory_StampsRequiredTopLevelFields" fullname="Opus.Sdk.Tests.LiveMessageTests.Factory_StampsRequiredTopLevelFields" methodname="Factory_StampsRequiredTopLevelFields" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="539018092" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.002206" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.Factory_StampsRequiredTopLevelFields
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.Factory_StampsRequiredTopLevelFields, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1054" name="Outbox_ReplayFrom_FiltersBySeq" fullname="Opus.Sdk.Tests.LiveMessageTests.Outbox_ReplayFrom_FiltersBySeq" methodname="Outbox_ReplayFrom_FiltersBySeq" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="1109095078" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.004652" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.Outbox_ReplayFrom_FiltersBySeq
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.Outbox_ReplayFrom_FiltersBySeq, ResultState: Passed, Duration: 0.005s
+]]></output>
+              </test-case>
+              <test-case id="1053" name="Outbox_TimedOutAfterOneSecond" fullname="Opus.Sdk.Tests.LiveMessageTests.Outbox_TimedOutAfterOneSecond" methodname="Outbox_TimedOutAfterOneSecond" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="234733241" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.001362" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.Outbox_TimedOutAfterOneSecond
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.Outbox_TimedOutAfterOneSecond, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1052" name="Outbox_TracksUntilAcked" fullname="Opus.Sdk.Tests.LiveMessageTests.Outbox_TracksUntilAcked" methodname="Outbox_TracksUntilAcked" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="1196059501" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.001168" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.Outbox_TracksUntilAcked
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.Outbox_TracksUntilAcked, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1051" name="RequiresAck_OmittedWhenFalse_PresentWhenTrue" fullname="Opus.Sdk.Tests.LiveMessageTests.RequiresAck_OmittedWhenFalse_PresentWhenTrue" methodname="RequiresAck_OmittedWhenFalse_PresentWhenTrue" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="1265117908" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.010983" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.RequiresAck_OmittedWhenFalse_PresentWhenTrue
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.RequiresAck_OmittedWhenFalse_PresentWhenTrue, ResultState: Passed, Duration: 0.011s
+]]></output>
+              </test-case>
+              <test-case id="1050" name="RoundTrip_JsonSerialization_PreservesShape" fullname="Opus.Sdk.Tests.LiveMessageTests.RoundTrip_JsonSerialization_PreservesShape" methodname="RoundTrip_JsonSerialization_PreservesShape" classname="Opus.Sdk.Tests.LiveMessageTests" runstate="Runnable" seed="450116646" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.024438" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.LiveMessageTests.RoundTrip_JsonSerialization_PreservesShape
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.LiveMessageTests.RoundTrip_JsonSerialization_PreservesShape, ResultState: Passed, Duration: 0.024s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1056" name="OutboxTests" fullname="Opus.Sdk.Tests.OutboxTests" classname="Opus.Sdk.Tests.OutboxTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.165575" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1058" name="FailedUpload_StaysPendingForRetry" fullname="Opus.Sdk.Tests.OutboxTests.FailedUpload_StaysPendingForRetry" methodname="FailedUpload_StaysPendingForRetry" classname="Opus.Sdk.Tests.OutboxTests" runstate="Runnable" seed="2065502692" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.030303" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.OutboxTests.FailedUpload_StaysPendingForRetry
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.OutboxTests.FailedUpload_StaysPendingForRetry, ResultState: Passed, Duration: 0.030s
+]]></output>
+              </test-case>
+              <test-case id="1057" name="FlushUploadsPendingAndMarksAcked" fullname="Opus.Sdk.Tests.OutboxTests.FlushUploadsPendingAndMarksAcked" methodname="FlushUploadsPendingAndMarksAcked" classname="Opus.Sdk.Tests.OutboxTests" runstate="Runnable" seed="2108716694" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.025923" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.OutboxTests.FlushUploadsPendingAndMarksAcked
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.OutboxTests.FlushUploadsPendingAndMarksAcked, ResultState: Passed, Duration: 0.026s
+]]></output>
+              </test-case>
+              <test-case id="1059" name="Resume_AfterCrash_PicksUpUnackedFilesAndSkipsAcked" fullname="Opus.Sdk.Tests.OutboxTests.Resume_AfterCrash_PicksUpUnackedFilesAndSkipsAcked" methodname="Resume_AfterCrash_PicksUpUnackedFilesAndSkipsAcked" classname="Opus.Sdk.Tests.OutboxTests" runstate="Runnable" seed="740093366" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.051740" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.OutboxTests.Resume_AfterCrash_PicksUpUnackedFilesAndSkipsAcked
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.OutboxTests.Resume_AfterCrash_PicksUpUnackedFilesAndSkipsAcked, ResultState: Passed, Duration: 0.052s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1060" name="ParamBinderTests" fullname="Opus.Sdk.Tests.ParamBinderTests" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.151885" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1062" name="ExplicitValues_OverrideDefaults" fullname="Opus.Sdk.Tests.ParamBinderTests.ExplicitValues_OverrideDefaults" methodname="ExplicitValues_OverrideDefaults" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="1864436830" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.008189" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.ExplicitValues_OverrideDefaults
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.ExplicitValues_OverrideDefaults, ResultState: Passed, Duration: 0.008s
+]]></output>
+              </test-case>
+              <test-case id="1063" name="InvalidEnum_ProducesError" fullname="Opus.Sdk.Tests.ParamBinderTests.InvalidEnum_ProducesError" methodname="InvalidEnum_ProducesError" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="378548421" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.002475" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.InvalidEnum_ProducesError
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.InvalidEnum_ProducesError, ResultState: Passed, Duration: 0.002s
+]]></output>
+              </test-case>
+              <test-case id="1061" name="MissingOptionalParams_FillDefaults" fullname="Opus.Sdk.Tests.ParamBinderTests.MissingOptionalParams_FillDefaults" methodname="MissingOptionalParams_FillDefaults" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="1309131793" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.003858" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.MissingOptionalParams_FillDefaults
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.MissingOptionalParams_FillDefaults, ResultState: Passed, Duration: 0.004s
+]]></output>
+              </test-case>
+              <test-case id="1067" name="MissingRequiredWithNoDefault_ProducesError" fullname="Opus.Sdk.Tests.ParamBinderTests.MissingRequiredWithNoDefault_ProducesError" methodname="MissingRequiredWithNoDefault_ProducesError" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="148318455" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.000796" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.MissingRequiredWithNoDefault_ProducesError
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.MissingRequiredWithNoDefault_ProducesError, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1064" name="OutOfRangeInteger_ProducesError" fullname="Opus.Sdk.Tests.ParamBinderTests.OutOfRangeInteger_ProducesError" methodname="OutOfRangeInteger_ProducesError" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="107600346" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.001058" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.OutOfRangeInteger_ProducesError
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.OutOfRangeInteger_ProducesError, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1066" name="UnknownParam_ProducesError" fullname="Opus.Sdk.Tests.ParamBinderTests.UnknownParam_ProducesError" methodname="UnknownParam_ProducesError" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="794911410" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.000967" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.UnknownParam_ProducesError
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.UnknownParam_ProducesError, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1065" name="WrongArrayLength_ProducesError" fullname="Opus.Sdk.Tests.ParamBinderTests.WrongArrayLength_ProducesError" methodname="WrongArrayLength_ProducesError" classname="Opus.Sdk.Tests.ParamBinderTests" runstate="Runnable" seed="1346120855" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:38Z" duration="0.000982" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.ParamBinderTests.WrongArrayLength_ProducesError
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.ParamBinderTests.WrongArrayLength_ProducesError, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1068" name="SyntheticHandDriverTests" fullname="Opus.Sdk.Tests.SyntheticHandDriverTests" classname="Opus.Sdk.Tests.SyntheticHandDriverTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:39Z" duration="0.494128" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1070" name="BuildsFullSessionDirectory_ForExternalSchemaValidation" fullname="Opus.Sdk.Tests.SyntheticHandDriverTests.BuildsFullSessionDirectory_ForExternalSchemaValidation" methodname="BuildsFullSessionDirectory_ForExternalSchemaValidation" classname="Opus.Sdk.Tests.SyntheticHandDriverTests" runstate="Runnable" seed="1687063043" result="Passed" start-time="2026-09-18 17:22:38Z" end-time="2026-09-18 17:22:39Z" duration="0.310283" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.SyntheticHandDriverTests.BuildsFullSessionDirectory_ForExternalSchemaValidation
+OPUS_U5_SESSION_DIR=C:\Users\GARVBA~1\AppData\Local\Temp\opus_u5_sessions_root\11111111-1111-4111-8111-111111111111
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.SyntheticHandDriverTests.BuildsFullSessionDirectory_ForExternalSchemaValidation, ResultState: Passed, Duration: 0.310s
+]]></output>
+              </test-case>
+              <test-case id="1069" name="ReplayMatchesRecordedInput_NoDroppedOrDuplicatedFrames" fullname="Opus.Sdk.Tests.SyntheticHandDriverTests.ReplayMatchesRecordedInput_NoDroppedOrDuplicatedFrames" methodname="ReplayMatchesRecordedInput_NoDroppedOrDuplicatedFrames" classname="Opus.Sdk.Tests.SyntheticHandDriverTests" runstate="Runnable" seed="259000222" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.163051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.SyntheticHandDriverTests.ReplayMatchesRecordedInput_NoDroppedOrDuplicatedFrames
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.SyntheticHandDriverTests.ReplayMatchesRecordedInput_NoDroppedOrDuplicatedFrames, ResultState: Passed, Duration: 0.163s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1071" name="TrackingRateMeterTests" fullname="Opus.Sdk.Tests.TrackingRateMeterTests" classname="Opus.Sdk.Tests.TrackingRateMeterTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.023281" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1073" name="LowFrequencySource_FlagsBelowThreshold" fullname="Opus.Sdk.Tests.TrackingRateMeterTests.LowFrequencySource_FlagsBelowThreshold" methodname="LowFrequencySource_FlagsBelowThreshold" classname="Opus.Sdk.Tests.TrackingRateMeterTests" runstate="Runnable" seed="1062586781" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.001348" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.TrackingRateMeterTests.LowFrequencySource_FlagsBelowThreshold
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.TrackingRateMeterTests.LowFrequencySource_FlagsBelowThreshold, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1072" name="MeasuresApproximatelyCorrectHz_ForHighFrequencySource" fullname="Opus.Sdk.Tests.TrackingRateMeterTests.MeasuresApproximatelyCorrectHz_ForHighFrequencySource" methodname="MeasuresApproximatelyCorrectHz_ForHighFrequencySource" classname="Opus.Sdk.Tests.TrackingRateMeterTests" runstate="Runnable" seed="444594359" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.001239" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.TrackingRateMeterTests.MeasuresApproximatelyCorrectHz_ForHighFrequencySource
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.TrackingRateMeterTests.MeasuresApproximatelyCorrectHz_ForHighFrequencySource, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1074" name="TrialRecorderTests" fullname="Opus.Sdk.Tests.TrialRecorderTests" classname="Opus.Sdk.Tests.TrialRecorderTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.069631" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1077" name="ResumeFromExistingSeq_ContinuesNumbering" fullname="Opus.Sdk.Tests.TrialRecorderTests.ResumeFromExistingSeq_ContinuesNumbering" methodname="ResumeFromExistingSeq_ContinuesNumbering" classname="Opus.Sdk.Tests.TrialRecorderTests" runstate="Runnable" seed="1161593391" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000562" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.TrialRecorderTests.ResumeFromExistingSeq_ContinuesNumbering
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.TrialRecorderTests.ResumeFromExistingSeq_ContinuesNumbering, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1075" name="SeqIsMonotonicAndOrdered" fullname="Opus.Sdk.Tests.TrialRecorderTests.SeqIsMonotonicAndOrdered" methodname="SeqIsMonotonicAndOrdered" classname="Opus.Sdk.Tests.TrialRecorderTests" runstate="Runnable" seed="1050304644" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.001290" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.TrialRecorderTests.SeqIsMonotonicAndOrdered
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.TrialRecorderTests.SeqIsMonotonicAndOrdered, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1076" name="WritesValidNdjsonLinesToDisk" fullname="Opus.Sdk.Tests.TrialRecorderTests.WritesValidNdjsonLinesToDisk" methodname="WritesValidNdjsonLinesToDisk" classname="Opus.Sdk.Tests.TrialRecorderTests" runstate="Runnable" seed="543969513" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.039053" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Sdk.Tests.TrialRecorderTests.WritesValidNdjsonLinesToDisk
+[TestRunnerTools] Test Finished: Opus.Sdk.Tests.TrialRecorderTests.WritesValidNdjsonLinesToDisk, ResultState: Passed, Duration: 0.039s
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1117" name="OrchardReach.Tests.Editor.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/OrchardReach.Tests.Editor.dll" runstate="Runnable" testcasecount="30" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.283936" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8264" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1118" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="30" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.283322" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1119" name="Games" fullname="Opus.Games" runstate="Runnable" testcasecount="30" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.283143" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1120" name="OrchardReach" fullname="Opus.Games.OrchardReach" runstate="Runnable" testcasecount="30" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.283022" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1121" name="Tests" fullname="Opus.Games.OrchardReach.Tests" runstate="Runnable" testcasecount="30" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.282842" total="30" passed="30" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1082" name="AdaptiveStaircaseTests" fullname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" classname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.051977" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1085" name="ClampsAtMinAndMax" fullname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.ClampsAtMinAndMax" methodname="ClampsAtMinAndMax" classname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" runstate="Runnable" seed="278023436" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000655" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.ClampsAtMinAndMax
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.ClampsAtMinAndMax, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1086" name="FailureAfterOneSuccess_ResetsStreakWithoutDoubleMove" fullname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.FailureAfterOneSuccess_ResetsStreakWithoutDoubleMove" methodname="FailureAfterOneSuccess_ResetsStreakWithoutDoubleMove" classname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" runstate="Runnable" seed="276822666" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000426" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.FailureAfterOneSuccess_ResetsStreakWithoutDoubleMove
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.FailureAfterOneSuccess_ResetsStreakWithoutDoubleMove, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1087" name="ReversalsAreCounted" fullname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.ReversalsAreCounted" methodname="ReversalsAreCounted" classname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" runstate="Runnable" seed="715217762" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000530" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.ReversalsAreCounted
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.ReversalsAreCounted, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1084" name="SingleFailure_DecreasesDifficultyImmediately" fullname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.SingleFailure_DecreasesDifficultyImmediately" methodname="SingleFailure_DecreasesDifficultyImmediately" classname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" runstate="Runnable" seed="2077600618" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000387" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.SingleFailure_DecreasesDifficultyImmediately
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.SingleFailure_DecreasesDifficultyImmediately, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1083" name="TwoConsecutiveSuccesses_IncreasesDifficulty" fullname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.TwoConsecutiveSuccesses_IncreasesDifficulty" methodname="TwoConsecutiveSuccesses_IncreasesDifficulty" classname="Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests" runstate="Runnable" seed="2099025097" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000386" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.TwoConsecutiveSuccesses_IncreasesDifficulty
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.AdaptiveStaircaseTests.TwoConsecutiveSuccesses_IncreasesDifficulty, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1088" name="OrchardReachModuleTests" fullname="Opus.Games.OrchardReach.Tests.OrchardReachModuleTests" classname="Opus.Games.OrchardReach.Tests.OrchardReachModuleTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.028979" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1089" name="FullBlock_RunsAllTrialsAndEmitsWellFormedEvents" fullname="Opus.Games.OrchardReach.Tests.OrchardReachModuleTests.FullBlock_RunsAllTrialsAndEmitsWellFormedEvents" methodname="FullBlock_RunsAllTrialsAndEmitsWellFormedEvents" classname="Opus.Games.OrchardReach.Tests.OrchardReachModuleTests" runstate="Runnable" seed="2129641919" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.009042" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.OrchardReachModuleTests.FullBlock_RunsAllTrialsAndEmitsWellFormedEvents
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.OrchardReachModuleTests.FullBlock_RunsAllTrialsAndEmitsWellFormedEvents, ResultState: Passed, Duration: 0.009s
+]]></output>
+                </test-case>
+                <test-case id="1090" name="Timeout_WhenHandNeverMoves_StillAdvancesTrials" fullname="Opus.Games.OrchardReach.Tests.OrchardReachModuleTests.Timeout_WhenHandNeverMoves_StillAdvancesTrials" methodname="Timeout_WhenHandNeverMoves_StillAdvancesTrials" classname="Opus.Games.OrchardReach.Tests.OrchardReachModuleTests" runstate="Runnable" seed="638344529" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.001795" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.OrchardReachModuleTests.Timeout_WhenHandNeverMoves_StillAdvancesTrials
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.OrchardReachModuleTests.Timeout_WhenHandNeverMoves_StillAdvancesTrials, ResultState: Passed, Duration: 0.002s
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1091" name="TargetPlacementTests" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.069372" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1095" name="NegativeAzimuth_GoesToLeftNegativeX" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.NegativeAzimuth_GoesToLeftNegativeX" methodname="NegativeAzimuth_GoesToLeftNegativeX" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="1278131308" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000441" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.NegativeAzimuth_GoesToLeftNegativeX
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.NegativeAzimuth_GoesToLeftNegativeX, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1098" name="OffsetChestReference_TranslatesResult" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.OffsetChestReference_TranslatesResult" methodname="OffsetChestReference_TranslatesResult" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="681457831" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000825" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.OffsetChestReference_TranslatesResult
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.OffsetChestReference_TranslatesResult, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1097" name="PlacementDistanceNeverExceedsArmLength" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.PlacementDistanceNeverExceedsArmLength" methodname="PlacementDistanceNeverExceedsArmLength" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="382368434" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000625" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.PlacementDistanceNeverExceedsArmLength
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.PlacementDistanceNeverExceedsArmLength, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1094" name="PositiveAzimuth_GoesToRightPositiveX" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.PositiveAzimuth_GoesToRightPositiveX" methodname="PositiveAzimuth_GoesToRightPositiveX" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="1483646688" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000303" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.PositiveAzimuth_GoesToRightPositiveX
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.PositiveAzimuth_GoesToRightPositiveX, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1096" name="PositiveElevation_GoesUp" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.PositiveElevation_GoesUp" methodname="PositiveElevation_GoesUp" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="1108973350" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000313" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.PositiveElevation_GoesUp
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.PositiveElevation_GoesUp, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1093" name="ReachPercentScalesDistanceLinearly" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.ReachPercentScalesDistanceLinearly" methodname="ReachPercentScalesDistanceLinearly" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="570295234" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000526" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.ReachPercentScalesDistanceLinearly
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.ReachPercentScalesDistanceLinearly, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1092" name="StraightAheadZeroElevation_LiesOnForwardAxis" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.StraightAheadZeroElevation_LiesOnForwardAxis" methodname="StraightAheadZeroElevation_LiesOnForwardAxis" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="432234372" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000345" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.StraightAheadZeroElevation_LiesOnForwardAxis
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.StraightAheadZeroElevation_LiesOnForwardAxis, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1099" name="ZeroOrNegativeArmLength_Throws" fullname="Opus.Games.OrchardReach.Tests.TargetPlacementTests.ZeroOrNegativeArmLength_Throws" methodname="ZeroOrNegativeArmLength_Throws" classname="Opus.Games.OrchardReach.Tests.TargetPlacementTests" runstate="Runnable" seed="1123862159" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000596" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetPlacementTests.ZeroOrNegativeArmLength_Throws
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetPlacementTests.ZeroOrNegativeArmLength_Throws, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1100" name="TargetSamplerTests" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.062397" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1101" name="AlternateSide_TogglesEveryTrial" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.AlternateSide_TogglesEveryTrial" methodname="AlternateSide_TogglesEveryTrial" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="116511524" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000483" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.AlternateSide_TogglesEveryTrial
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.AlternateSide_TogglesEveryTrial, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1107" name="Distractors_AreFlaggedAndCountMatches" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.Distractors_AreFlaggedAndCountMatches" methodname="Distractors_AreFlaggedAndCountMatches" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="48541596" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000964" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.Distractors_AreFlaggedAndCountMatches
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.Distractors_AreFlaggedAndCountMatches, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1102" name="FixedSide_AlwaysReturnsThatSide" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.FixedSide_AlwaysReturnsThatSide" methodname="FixedSide_AlwaysReturnsThatSide" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="484152684" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000399" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.FixedSide_AlwaysReturnsThatSide
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.FixedSide_AlwaysReturnsThatSide, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1104" name="NegativeBias_SkewsTowardLowEndOfRange" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.NegativeBias_SkewsTowardLowEndOfRange" methodname="NegativeBias_SkewsTowardLowEndOfRange" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="841180978" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000473" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.NegativeBias_SkewsTowardLowEndOfRange
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.NegativeBias_SkewsTowardLowEndOfRange, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1105" name="PositiveBias_SkewsTowardHighEndOfRange" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.PositiveBias_SkewsTowardHighEndOfRange" methodname="PositiveBias_SkewsTowardHighEndOfRange" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="1763614160" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000339" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.PositiveBias_SkewsTowardHighEndOfRange
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.PositiveBias_SkewsTowardHighEndOfRange, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1106" name="SampledValues_StayWithinDeclaredRanges" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.SampledValues_StayWithinDeclaredRanges" methodname="SampledValues_StayWithinDeclaredRanges" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="1608883142" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000644" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.SampledValues_StayWithinDeclaredRanges
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.SampledValues_StayWithinDeclaredRanges, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1103" name="ZeroBias_UniformSample_RespectsRange" fullname="Opus.Games.OrchardReach.Tests.TargetSamplerTests.ZeroBias_UniformSample_RespectsRange" methodname="ZeroBias_UniformSample_RespectsRange" classname="Opus.Games.OrchardReach.Tests.TargetSamplerTests" runstate="Runnable" seed="1312025552" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000386" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TargetSamplerTests.ZeroBias_UniformSample_RespectsRange
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TargetSamplerTests.ZeroBias_UniformSample_RespectsRange, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1108" name="TrialStateMachineTests" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.068976" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1114" name="DuplicateShowTarget_Throws" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.DuplicateShowTarget_Throws" methodname="DuplicateShowTarget_Throws" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="983895048" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000506" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.DuplicateShowTarget_Throws
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.DuplicateShowTarget_Throws, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1109" name="HappyPath_ShowGraspHoldPlace_EndsInSuccess" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.HappyPath_ShowGraspHoldPlace_EndsInSuccess" methodname="HappyPath_ShowGraspHoldPlace_EndsInSuccess" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="1539657209" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000854" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.HappyPath_ShowGraspHoldPlace_EndsInSuccess
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.HappyPath_ShowGraspHoldPlace_EndsInSuccess, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1115" name="MovementOnset_IgnoredIfNotInTargetShownState" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.MovementOnset_IgnoredIfNotInTargetShownState" methodname="MovementOnset_IgnoredIfNotInTargetShownState" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="651808552" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000305" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.MovementOnset_IgnoredIfNotInTargetShownState
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.MovementOnset_IgnoredIfNotInTargetShownState, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1113" name="ReleaseAfterSufficientHoldOverBasket_Succeeds" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseAfterSufficientHoldOverBasket_Succeeds" methodname="ReleaseAfterSufficientHoldOverBasket_Succeeds" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="1640590655" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000788" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseAfterSufficientHoldOverBasket_Succeeds
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseAfterSufficientHoldOverBasket_Succeeds, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1111" name="ReleaseBeforeHoldComplete_CountsAsDropped" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseBeforeHoldComplete_CountsAsDropped" methodname="ReleaseBeforeHoldComplete_CountsAsDropped" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="2017452207" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000373" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseBeforeHoldComplete_CountsAsDropped
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseBeforeHoldComplete_CountsAsDropped, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1112" name="ReleaseNotOverBasket_EvenAfterHold_CountsAsDropped" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseNotOverBasket_EvenAfterHold_CountsAsDropped" methodname="ReleaseNotOverBasket_EvenAfterHold_CountsAsDropped" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="1710827375" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000394" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseNotOverBasket_EvenAfterHold_CountsAsDropped
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.ReleaseNotOverBasket_EvenAfterHold_CountsAsDropped, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+                <test-case id="1116" name="TickAfterTrialEnded_IsNoOp" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.TickAfterTrialEnded_IsNoOp" methodname="TickAfterTrialEnded_IsNoOp" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="559041212" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000590" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.TickAfterTrialEnded_IsNoOp
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.TickAfterTrialEnded_IsNoOp, ResultState: Passed, Duration: 0.001s
+]]></output>
+                </test-case>
+                <test-case id="1110" name="Timeout_WhenNoGraspBeforeTimeLimit" fullname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests.Timeout_WhenNoGraspBeforeTimeLimit" methodname="Timeout_WhenNoGraspBeforeTimeLimit" classname="Opus.Games.OrchardReach.Tests.TrialStateMachineTests" runstate="Runnable" seed="1433050871" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:39Z" duration="0.000460" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.Timeout_WhenNoGraspBeforeTimeLimit
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.TrialStateMachineTests.Timeout_WhenNoGraspBeforeTimeLimit, ResultState: Passed, Duration: 0.000s
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1138" name="Shell.Tests.Editor.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.Editor.dll" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:41Z" duration="1.566617" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8264" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1139" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:41Z" duration="1.565980" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1140" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:41Z" duration="1.565690" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1141" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:41Z" duration="1.565475" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1122" name="RigValidatorTests" fullname="Opus.Shell.Tests.RigValidatorTests" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-18 17:22:39Z" end-time="2026-09-18 17:22:40Z" duration="0.793286" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1126" name="Rig_HasBothHandGrabInteractors" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasBothHandGrabInteractors" methodname="Rig_HasBothHandGrabInteractors" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="854903081" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.002598" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothHandGrabInteractors
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothHandGrabInteractors, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+              <test-case id="1125" name="Rig_HasBothOVRHandDataSources" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasBothOVRHandDataSources" methodname="Rig_HasBothOVRHandDataSources" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="1529989392" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.000652" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothOVRHandDataSources
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothOVRHandDataSources, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1127" name="Rig_HasBothPokeInteractors" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasBothPokeInteractors" methodname="Rig_HasBothPokeInteractors" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="487648250" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.000816" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothPokeInteractors
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothPokeInteractors, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1128" name="Rig_HasBothRayInteractors" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasBothRayInteractors" methodname="Rig_HasBothRayInteractors" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="819538706" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.000592" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothRayInteractors
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasBothRayInteractors, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1124" name="Rig_HasExactlyOneEnabledCamera" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasExactlyOneEnabledCamera" methodname="Rig_HasExactlyOneEnabledCamera" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="305256313" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.001157" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasExactlyOneEnabledCamera
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasExactlyOneEnabledCamera, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1123" name="Rig_HasExactlyOneOVRManager" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasExactlyOneOVRManager" methodname="Rig_HasExactlyOneOVRManager" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="1956292014" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.001366" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasExactlyOneOVRManager
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasExactlyOneOVRManager, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1129" name="Rig_HasNoDuplicateCameraRig" fullname="Opus.Shell.Tests.RigValidatorTests.Rig_HasNoDuplicateCameraRig" methodname="Rig_HasNoDuplicateCameraRig" classname="Opus.Shell.Tests.RigValidatorTests" runstate="Runnable" seed="1671427333" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:40Z" duration="0.004836" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.RigValidatorTests.Rig_HasNoDuplicateCameraRig
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.RigValidatorTests.Rig_HasNoDuplicateCameraRig, ResultState: Passed, Duration: 0.005s
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1130" name="SeatedLayoutTests" fullname="Opus.Shell.Tests.SeatedLayoutTests" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-09-18 17:22:40Z" end-time="2026-09-18 17:22:41Z" duration="0.771555" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1133" name="Basket_HorizontalDistanceFromChest_AndRestsOnTable" fullname="Opus.Shell.Tests.SeatedLayoutTests.Basket_HorizontalDistanceFromChest_AndRestsOnTable" methodname="Basket_HorizontalDistanceFromChest_AndRestsOnTable" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="1103825497" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.003047" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.Basket_HorizontalDistanceFromChest_AndRestsOnTable
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.Basket_HorizontalDistanceFromChest_AndRestsOnTable, ResultState: Passed, Duration: 0.003s
+]]></output>
+              </test-case>
+              <test-case id="1131" name="Eye_HeightAndDownwardPitch_AreInSeatedRange" fullname="Opus.Shell.Tests.SeatedLayoutTests.Eye_HeightAndDownwardPitch_AreInSeatedRange" methodname="Eye_HeightAndDownwardPitch_AreInSeatedRange" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="1108139976" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.001425" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.Eye_HeightAndDownwardPitch_AreInSeatedRange
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.Eye_HeightAndDownwardPitch_AreInSeatedRange, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1135" name="FruitApple_RigidbodyDoesNotFallAtSpawn_AndUsesCorrectAppleMaterial" fullname="Opus.Shell.Tests.SeatedLayoutTests.FruitApple_RigidbodyDoesNotFallAtSpawn_AndUsesCorrectAppleMaterial" methodname="FruitApple_RigidbodyDoesNotFallAtSpawn_AndUsesCorrectAppleMaterial" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="1072020797" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.021900" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.FruitApple_RigidbodyDoesNotFallAtSpawn_AndUsesCorrectAppleMaterial
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.FruitApple_RigidbodyDoesNotFallAtSpawn_AndUsesCorrectAppleMaterial, ResultState: Passed, Duration: 0.022s
+]]></output>
+              </test-case>
+              <test-case id="1136" name="Ground_IsAtLeast40x40_AndCenteredUnderPlayer" fullname="Opus.Shell.Tests.SeatedLayoutTests.Ground_IsAtLeast40x40_AndCenteredUnderPlayer" methodname="Ground_IsAtLeast40x40_AndCenteredUnderPlayer" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="398753927" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.001250" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.Ground_IsAtLeast40x40_AndCenteredUnderPlayer
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.Ground_IsAtLeast40x40_AndCenteredUnderPlayer, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1137" name="HandVisual_EnabledUnderRig_AtPlausibleWristDistance_OnFirstDemoFrame" fullname="Opus.Shell.Tests.SeatedLayoutTests.HandVisual_EnabledUnderRig_AtPlausibleWristDistance_OnFirstDemoFrame" methodname="HandVisual_EnabledUnderRig_AtPlausibleWristDistance_OnFirstDemoFrame" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="830964899" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.070849" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.HandVisual_EnabledUnderRig_AtPlausibleWristDistance_OnFirstDemoFrame
+Setting linear velocity of a kinematic body is not supported.
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.HandVisual_EnabledUnderRig_AtPlausibleWristDistance_OnFirstDemoFrame, ResultState: Passed, Duration: 0.071s
+]]></output>
+              </test-case>
+              <test-case id="1132" name="Table_TopHeight_AndNearEdgeDistanceFromChest_AreInRange" fullname="Opus.Shell.Tests.SeatedLayoutTests.Table_TopHeight_AndNearEdgeDistanceFromChest_AreInRange" methodname="Table_TopHeight_AndNearEdgeDistanceFromChest_AreInRange" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="803920940" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.001038" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.Table_TopHeight_AndNearEdgeDistanceFromChest_AreInRange
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.Table_TopHeight_AndNearEdgeDistanceFromChest_AreInRange, ResultState: Passed, Duration: 0.001s
+]]></output>
+              </test-case>
+              <test-case id="1134" name="Targets_200Samples_AreAboveTableAndWithinReachEnvelope" fullname="Opus.Shell.Tests.SeatedLayoutTests.Targets_200Samples_AreAboveTableAndWithinReachEnvelope" methodname="Targets_200Samples_AreAboveTableAndWithinReachEnvelope" classname="Opus.Shell.Tests.SeatedLayoutTests" runstate="Runnable" seed="1776523836" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.003804" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.SeatedLayoutTests.Targets_200Samples_AreAboveTableAndWithinReachEnvelope
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.SeatedLayoutTests.Targets_200Samples_AreAboveTableAndWithinReachEnvelope, ResultState: Passed, Duration: 0.004s
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1144" name="Unity.Addressables.Editor.Tests.DocExampleCode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Unity.Addressables.Editor.Tests.DocExampleCode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.251522" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="8264" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1145" name="AddressableAssets" fullname="AddressableAssets" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.226963" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1146" name="DocExampleCode" fullname="AddressableAssets.DocExampleCode" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.137448" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1142" name="TestStub" fullname="AddressableAssets.DocExampleCode.TestStub" classname="AddressableAssets.DocExampleCode.TestStub" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.054240" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1143" name="RequiredTest" fullname="AddressableAssets.DocExampleCode.TestStub.RequiredTest" methodname="RequiredTest" classname="AddressableAssets.DocExampleCode.TestStub" runstate="Runnable" seed="1047381189" result="Passed" start-time="2026-09-18 17:22:41Z" end-time="2026-09-18 17:22:41Z" duration="0.000253" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TestRunnerTools] Test Started: AddressableAssets.DocExampleCode.TestStub.RequiredTest
+[TestRunnerTools] Test Finished: AddressableAssets.DocExampleCode.TestStub.RequiredTest, ResultState: Passed, Duration: 0.000s
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

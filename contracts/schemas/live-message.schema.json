@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/live-message.schema.json",
+  "title": "LiveMessage",
+  "description": "OPUS Live Protocol v1 (see contracts/LIVE_PROTOCOL.md). One JSON text frame per WebSocket message between headset (Quest/Unity) and hub (Flutter app, later the cloud relay).",
+  "type": "object",
+  "required": ["v", "type", "id", "seq", "ts_ms", "from"],
+  "properties": {
+    "v": { "const": 1 },
+    "type": {
+      "enum": [
+        "hello", "hello_ack",
+        "status", "trial_event", "metrics_tick",
+        "session_started", "session_ended", "file_available",
+        "assign_program", "command",
+        "ack", "ping", "pong", "error"
+      ]
+    },
+    "id": { "type": "string", "description": "uuid of this message; acks reference it" },
+    "seq": { "type": "integer", "minimum": 0, "description": "per-sender monotonic counter for this connection-session; used for resume" },
+    "ts_ms": { "type": "number", "description": "sender wall clock, unix ms" },
+    "from": { "enum": ["headset", "hub"] },
+    "session_id": { "type": ["string", "null"] },
+    "requires_ack": { "type": "boolean", "default": false },
+    "payload": { "type": "object" }
+  },
+  "$defs": {
+    "gameState": {
+      "type": "object",
+      "description": "v0.2 Phantom Hand live state (03-SPEC section 4); sent inside status.payload while a PH session runs",
+      "required": ["phase", "condition", "remaining_s", "nodes"],
+      "properties": {
+        "phase": { "type": "string", "minLength": 1 },
+        "condition": { "enum": ["sync", "async", null] },
+        "remaining_s": { "type": ["number", "null"], "minimum": 0 },
+        "nodes": {
+          "type": "object",
+          "required": ["haptic", "bio"],
+          "properties": {
+            "haptic": { "type": "object", "required": ["connected"], "properties": { "connected": { "type": "boolean" } } },
+            "bio": { "type": "object", "required": ["connected"], "properties": { "connected": { "type": "boolean" }, "emg_level": { "type": ["number", "null"] } } }
+          }
+        }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "description": "v0.2 down-sampled live trace for the app (03-SPEC D4): newest samples since the previous status; keep the whole status message under 4 KB",
+      "required": ["emg_env", "accel_mag", "t0_ms", "fs_hz"],
+      "properties": {
+        "emg_env": { "type": "array", "items": { "type": "number" }, "maxItems": 100 },
+        "accel_mag": { "type": "array", "items": { "type": "number" }, "maxItems": 100 },
+        "t0_ms": { "type": "number", "minimum": 0, "description": "session ms of the first sample" },
+        "fs_hz": { "const": 20 }
+      }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "type": { "const": "hello" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["device_id", "role", "versions"], "properties": {
+      "device_id": { "type": "string" }, "role": { "enum": ["headset", "hub"] }, "model": { "type": "string" },
+      "versions": { "type": "object" }, "games": { "type": "array", "items": { "type": "object", "required": ["id", "version"] } },
+      "resume_from_seq": { "type": ["integer", "null"], "description": "last seq the sender received from the peer before disconnect" },
+      "active_session_id": { "type": ["string", "null"] } } } } } },
+    { "if": { "properties": { "type": { "const": "status" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["state"], "properties": {
+      "state": { "enum": ["idle", "paired", "calibrating", "ready", "running", "paused", "rest", "finished", "error"] },
+      "block": { "type": ["integer", "null"] }, "trial": { "type": ["integer", "null"] }, "trials_total": { "type": ["integer", "null"] },
+      "game_id": { "type": ["string", "null"] }, "fps": { "type": "number" }, "tracking_rate_hz": { "type": "number" },
+      "hands": { "type": "object", "properties": { "left": { "enum": ["high", "low", "lost"] }, "right": { "enum": ["high", "low", "lost"] } } },
+      "battery_pct": { "type": ["number", "null"] }, "elapsed_s": { "type": "number" },
+      "game_state": { "$ref": "#/$defs/gameState" }, "trace": { "$ref": "#/$defs/trace" } } } } } },
+    { "if": { "properties": { "type": { "const": "trial_event" } } }, "then": { "required": ["payload"], "properties": { "payload": { "$ref": "event.schema.json" } } } },
+    { "if": { "properties": { "type": { "const": "metrics_tick" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["window_trials", "metrics"], "properties": {
+      "window_trials": { "type": "integer" }, "metrics": { "type": "object", "description": "metric id -> {value, unit, quality}; on-device approximations, not the authoritative analytics" } } } } } },
+    { "if": { "properties": { "type": { "const": "file_available" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["name", "bytes", "sha256"], "properties": {
+      "name": { "type": "string", "pattern": "^(session\\.json|events\\.ndjson|kin_\\d{3}\\.json|sens_\\d{3}\\.json|metrics\\.json)$" }, "bytes": { "type": "integer" }, "sha256": { "type": "string" } } } } } },
+    { "if": { "properties": { "type": { "const": "assign_program" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["program", "patient_ref"], "properties": {
+      "program": { "$ref": "program.schema.json" }, "patient_ref": { "type": "string" }, "manifests": { "type": "array" } } } } } },
+    { "if": { "properties": { "type": { "const": "command" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["command"], "properties": {
+      "command": { "enum": ["start", "pause", "resume", "stop", "recenter", "skip_block", "adjust_params", "show_message", "phase_next", "set_condition_order", "abort_phase", "next_person"] },
+      "params": { "type": "object" }, "text": { "type": "string" } } } },
+      "allOf": [ { "if": { "properties": { "payload": { "properties": { "command": { "const": "set_condition_order" } } } } }, "then": { "properties": { "payload": { "required": ["params"], "properties": { "params": { "required": ["condition_order"], "properties": { "condition_order": { "enum": ["sync_first", "async_first"] } } } } } } } } ] } },
+    { "if": { "properties": { "type": { "const": "ack" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["ack_id", "ok"], "properties": {
+      "ack_id": { "type": "string" }, "ok": { "type": "boolean" }, "error": { "type": ["string", "null"] }, "recv_ts_ms": { "type": "number" } } } } } },
+    { "if": { "properties": { "type": { "enum": ["ping", "pong"] } } }, "then": { "properties": { "payload": { "properties": { "echo_ts_ms": { "type": "number" } } } } } },
+    { "if": { "properties": { "type": { "const": "error" } } }, "then": { "required": ["payload"], "properties": { "payload": { "required": ["code", "message"] } } } }
+  ]
+}

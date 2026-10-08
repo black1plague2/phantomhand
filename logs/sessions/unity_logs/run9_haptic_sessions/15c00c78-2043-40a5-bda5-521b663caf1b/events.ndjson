@@ -1,0 +1,8 @@
+{"t_ms":307.0654,"seq":0,"block":0,"trial":null,"type":"form_warning","data":{"kind":"trunk_lean","active":true,"leanCm":20.0}}
+{"t_ms":334.4585,"seq":1,"block":0,"trial":null,"type":"haptic_cue","data":{"cue":"trunk_lean","intensity":0.8,"delivered":false,"cue_id":"f7ffb7ba-f43f-4118-b4e7-b927a91d62f7"}}
+{"t_ms":406.9073,"seq":2,"block":0,"trial":null,"type":"haptic_cue","data":{"cue":"trunk_lean","intensity":0.8,"delivered":true,"cue_id":"f7ffb7ba-f43f-4118-b4e7-b927a91d62f7"}}
+{"t_ms":590.9659,"seq":3,"block":0,"trial":null,"type":"form_warning","data":{"kind":"trunk_lean","active":false,"leanCm":0.0}}
+{"t_ms":1491.4291,"seq":4,"block":0,"trial":null,"type":"form_warning","data":{"kind":"low_confidence","active":true,"leanCm":0.0}}
+{"t_ms":1905.3599000000002,"seq":5,"block":0,"trial":null,"type":"haptic_cue","data":{"cue":"low_confidence","intensity":0.4,"delivered":false,"cue_id":"729e6588-112d-49b8-a78c-8d101a49d4e5"}}
+{"t_ms":1994.9217,"seq":6,"block":0,"trial":null,"type":"haptic_cue","data":{"cue":"low_confidence","intensity":0.4,"delivered":true,"cue_id":"729e6588-112d-49b8-a78c-8d101a49d4e5"}}
+{"t_ms":1997.8701,"seq":7,"block":0,"trial":null,"type":"form_warning","data":{"kind":"low_confidence","active":false,"leanCm":0.0}}

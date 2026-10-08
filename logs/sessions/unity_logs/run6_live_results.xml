@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.8093002">
+  <test-suite type="TestSuite" id="1019" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.809300" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1011" name="Shell.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.800418" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="28808" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1012" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.799461" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1013" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.798946" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1014" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.798466" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1015" name="PlayMode" fullname="Opus.Shell.Tests.PlayMode" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.797991" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1009" name="LiveLinkIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.796757" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1010" name="LiveClient_CompletesScenarioBasic_AgainstFakeHub" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub" methodname="LiveClient_CompletesScenarioBasic_AgainstFakeHub" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" seed="418814348" result="Failed" start-time="2026-09-17 10:53:57Z" end-time="2026-09-17 10:54:13Z" duration="16.782289" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  contracts/validate.py --session reported the hub-stored session as invalid:
+[FAIL] run6-live-test-1789642438657/session.json: 'contracts_version' is a required property
+[PASS] run6-live-test-1789642438657/events.ndjson: 3 events validated
+[WARN] run6-live-test-1789642438657: no kin_*.json files found
+[WARN] run6-live-test-1789642438657/metrics.json not found
+
+[FAIL] Some validations failed
+
+
+  Expected: 0
+  But was:  1
+]]></message>
+                    <stack-trace><![CDATA[at Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests+<LiveClient_CompletesScenarioBasic_AgainstFakeHub>d__4.MoveNext () [0x00b89] in C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Assets\Shell\Tests\PlayMode\LiveLinkIntegrationTests.cs:210
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@76560ee600cb\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub
+[OPUS] LiveLinkTest: started fake_hub.py, PID=32744
+[OPUS] LiveLinkTest: hub health check -> True after wait
+[OPUS] LiveLinkTest: OnCommand 'assign_program' ackId=dfeba962-4984-4307-8dd0-cd0e689516b1
+[OPUS] LiveLinkTest: OnCommand 'start' ackId=565a1acc-e72b-484f-9139-7d5b0857f9f0
+[OPUS] LiveLinkTest: OnCommand 'pause' ackId=c8b3b32e-b692-4242-bb36-c98b4f598faa
+[OPUS] LiveLinkTest: OnCommand 'resume' ackId=29ea0aa1-ed43-4736-bebc-c28cc05ba4cc
+[OPUS] LiveLinkTest: OnCommand 'stop' ackId=e21975ea-fde4-40b8-9a4f-b0081fd1e92c
+[OPUS] LiveLinkTest: scenario loop ended after 13.2s, sessionStarted=True, sessionStopped=True, rttSamples=0
+[OPUS] LiveLinkTest: file uploads -> session.json=True events.ndjson=True
+[OPUS] LiveLinkTest: hub stored session dir C:\Users\GARV BANSAL\Documents\VR_games\OPUS\sim\out\hub_sessions\run6-live-test-1789642438657 exists-with-files=True
+[OPUS] LiveLinkTest: no ping/pong RTT samples captured (LastRttMs never updated) — see MANUAL_TODO.
+[OPUS] LiveLinkTest: validate.py exit=1
+stdout=[FAIL] run6-live-test-1789642438657/session.json: 'contracts_version' is a required property
+[PASS] run6-live-test-1789642438657/events.ndjson: 3 events validated
+[WARN] run6-live-test-1789642438657: no kin_*.json files found
+[WARN] run6-live-test-1789642438657/metrics.json not found
+
+[FAIL] Some validations failed
+
+stderr=
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub, ResultState: Failed, Duration: 16.782s, Message:   contracts/validate.py --session reported the hub-stored session as invalid:
+[FAIL] run6-live-test-1789642438657/session.json: 'contracts_version' is a required property
+[PASS] run6-live-test-1789642438657/events.ndjson: 3 events validated
+[WARN] run6-live-test-1789642438657: no kin_*.json files found
+[WARN] run6-live-test-1789642438657/metrics.json not found
+
+[FAIL] Some validations failed
+
+
+  Expected: 0
+  But was:  1
+
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,11 @@
+{
+  "id": "123invalid",
+  "version": "1.0.0",
+  "sdkVersion": "^0.1.0",
+  "displayName": { "en": "Invalid ID" },
+  "input": ["hands"],
+  "paramSchema": { "type": "object", "properties": {} },
+  "events": [],
+  "metrics": [],
+  "extraField": "not allowed"
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/session-envelope.schema.json",
+  "title": "SessionEnvelope",
+  "description": "session.json at the root of a session directory: session.json, events.ndjson, kin_000.json ... , sens_000.json ... (v0.2, optional), metrics.json (added by analytics).",
+  "type": "object",
+  "required": ["session_id", "contracts_version", "patient_ref", "program_ref", "started_at", "device", "versions", "calibration", "blocks"],
+  "properties": {
+    "session_id": { "type": "string", "format": "uuid" },
+    "contracts_version": { "enum": ["0.1", "0.2"] },
+    "patient_ref": { "type": "string", "description": "pseudonymous id; no PII on device" },
+    "program_ref": { "type": "string" },
+    "mode": { "enum": ["clinic", "home", "standalone", "simulation"] },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": ["string", "null"], "format": "date-time" },
+    "end_reason": { "enum": ["completed", "stopped_by_clinician", "stopped_by_patient", "crash_recovered", "timeout", null] },
+    "device": {
+      "type": "object",
+      "required": ["model"],
+      "properties": { "model": { "type": "string" }, "device_id": { "type": "string" }, "os": { "type": "string" }, "tracking_rate_hz": { "type": "number" } }
+    },
+    "versions": {
+      "type": "object",
+      "required": ["shell", "sdk"],
+      "properties": { "shell": { "type": "string" }, "sdk": { "type": "string" }, "games": { "type": "object", "additionalProperties": { "type": "string" } } }
+    },
+    "calibration": {
+      "type": "object",
+      "required": ["affected_side", "arm_length_m"],
+      "properties": {
+        "affected_side": { "enum": ["left", "right", "both", "none"] },
+        "dominant_side": { "enum": ["left", "right"] },
+        "arm_length_m": { "type": "object", "properties": { "left": { "type": "number" }, "right": { "type": "number" } } },
+        "posture": { "enum": ["seated", "standing"] },
+        "chest_reference": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+        "comfortable_envelope": { "type": "object", "description": "per side: max reach per azimuth bin" }
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "game_id", "game_version", "params"],
+        "properties": {
+          "index": { "type": "integer" }, "game_id": { "type": "string" }, "game_version": { "type": "string" },
+          "params": { "type": "object" }, "started_t_ms": { "type": "number" }, "ended_t_ms": { "type": "number" },
+          "completed": { "type": "boolean" }
+        }
+      }
+    },
+    "chunks": { "type": "integer", "minimum": 0, "description": "number of kin_###.json files" },
+    "sensor_chunks": { "type": "integer", "minimum": 0, "description": "v0.2: number of sens_###.json files (sensor-file.schema.json), listed next to the kinematics chunks" },
+    "patient_reported": { "type": "object", "properties": { "pain_0_10": { "type": "integer" }, "fatigue_0_10": { "type": "integer" }, "enjoyment_1_5": { "type": "integer" } } }
+  }
+}

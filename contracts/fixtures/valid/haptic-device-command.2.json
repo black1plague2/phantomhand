@@ -1,0 +1,6 @@
+{
+  "motor": 1,
+  "intensity": 120,
+  "duration_ms": 120,
+  "pattern": "pulse"
+}

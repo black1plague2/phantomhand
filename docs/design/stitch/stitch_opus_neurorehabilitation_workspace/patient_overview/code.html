@@ -1,0 +1,328 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head></head><body class="bg-[#161E2F] text-[#F3F6FA] flex flex-col min-h-screen" style="background-color: rgb(8, 11, 17); color: rgb(243, 246, 250);"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "midnight": "#161E2F",
+        "surface": "#161E2F",
+        "card": "#242F49",
+        "card-inner": "#1C253B",
+        "border-rule": "#384358",
+        "accent-peach": "#FFA586",
+        "accent-blue": "#7FB1E0",
+        "crimson": "#B51A2B",
+        "crimson-deep": "#541A2E",
+        "text-primary": "#F3F6FA",
+        "text-secondary": "#9AA7B8",
+        "on-surface": "#F3F6FA",
+        "on-surface-variant": "#9AA7B8",
+        "primary": "#FFA586",
+        "primary-container": "#FFA586",
+        "secondary": "#7FB1E0"
+      },
+      fontFamily: {
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Helvetica Neue"', 'Helvetica', 'sans-serif'],
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.25rem'
+      }
+    }
+  }
+}
+</script><style>
+  @layer base {
+    html, body {
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      background-color: #161E2F;
+      color: #F3F6FA;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, sans-serif;
+      font-feature-settings: "tnum" 1, "cv02" 1;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      overscroll-behavior: none;
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .pt-safe {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    main > :first-child {
+      margin-top: 0 !important;
+    }
+    main > :last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+</style><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "midnight": "#161E2F",
+        "surface": "#161E2F",
+        "card": "#242F49",
+        "card-inner": "#1C253B",
+        "border-rule": "#384358",
+        "accent-peach": "#FFA586",
+        "accent-blue": "#7FB1E0",
+        "crimson": "#B51A2B",
+        "crimson-deep": "#541A2E",
+        "text-primary": "#F3F6FA",
+        "text-secondary": "#9AA7B8",
+        "on-surface": "#F3F6FA",
+        "on-surface-variant": "#9AA7B8",
+        "primary": "#FFA586",
+        "primary-container": "#FFA586",
+        "secondary": "#7FB1E0"
+      },
+      fontFamily: {
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Helvetica Neue"', 'Helvetica', 'sans-serif'],
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.25rem'
+      }
+    }
+  }
+}
+</script><style>
+  @layer base {
+    html, body {
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      background-color: #161E2F;
+      color: #F3F6FA;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, sans-serif;
+      font-feature-settings: "tnum" 1, "cv02" 1;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      overscroll-behavior: none;
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .pt-safe {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    main > :first-child {
+      margin-top: 0 !important;
+    }
+    main > :last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+</style><header class="fixed top-0 w-full z-50 pt-safe bg-[#161E2F]/85 backdrop-blur-xl border-b border-[#384358]/50" style="background-color: rgba(8, 11, 17, 0.92); border-color: rgb(32, 44, 61);"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><div class="flex flex-col min-w-0"><span class="text-[20px] font-semibold text-[#F3F6FA] tracking-tight">Patients</span><div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#7FB1E0] animate-pulse"></span><span class="text-[12px] font-medium text-[#9AA7B8] tracking-wide">Quest 3 · 18ms</span></div></div></div><div class="flex items-center gap-2"><button aria-label="Session alerts" class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#242F49] text-[#9AA7B8] hover:text-[#F3F6FA] border border-[#384358]/60 transition-colors"><span class="material-symbols-outlined text-[19px]">vital_signs</span></button><div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FFA586] to-[#d97c5e] flex items-center justify-center shadow-sm shadow-[#FFA586]/20" style="background: rgb(220, 38, 38); color: rgb(255, 255, 255); box-shadow: rgba(220, 38, 38, 0.3) 0px 0px 12px;"><span class="material-symbols-outlined text-[#161E2F] text-[20px] font-semibold" style="color: rgb(255, 255, 255);">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-[#161E2F] flex-grow" style="background-color: rgb(8, 11, 17);"><div class="flex flex-col w-full">
+<!-- Interactive Navigation iOS Segmented Tabs -->
+<div class="w-full overflow-x-auto scrollbar-none bg-[#161E2F] px-4 py-2 border-b border-[#384358]/40" style="background-color: rgb(8, 11, 17); border-color: rgb(32, 44, 61);">
+<div class="flex items-center gap-1 p-1 bg-[#242F49]/70 rounded-xl border border-[#384358]/50 min-w-max" style="background-color: rgb(15, 22, 34); border-color: rgb(32, 44, 61);">
+<button class="px-3.5 py-1.5 text-[13px] font-semibold text-[#161E2F] bg-[#FFA586] rounded-lg shadow-sm transition-all" style="background-color: rgb(220, 38, 38); color: rgb(255, 255, 255); box-shadow: rgba(220, 38, 38, 0.35) 0px 2px 8px;">
+        Overview
+      </button>
+<button class="px-3.5 py-1.5 text-[13px] font-medium text-[#9AA7B8] hover:text-[#F3F6FA] rounded-lg transition-colors">
+        Programs
+      </button>
+<button class="px-3.5 py-1.5 text-[13px] font-medium text-[#9AA7B8] hover:text-[#F3F6FA] rounded-lg transition-colors">
+        Sessions
+      </button>
+<button class="px-3.5 py-1.5 text-[13px] font-medium text-[#9AA7B8] hover:text-[#F3F6FA] rounded-lg transition-colors">
+        Progress
+      </button>
+<button class="px-3.5 py-1.5 text-[13px] font-medium text-[#9AA7B8] hover:text-[#F3F6FA] rounded-lg transition-colors">
+        Outcome measures
+      </button>
+</div>
+</div>
+<div class="flex flex-col px-4 py-4 gap-4">
+<!-- Patient Clinical Header & Lateralization Badge -->
+<div class="bg-[#242F49] rounded-2xl p-4 border border-[#384358]/60 flex flex-col gap-3 shadow-md shadow-black/20" style="background-color: rgb(15, 22, 34); border: 1px solid rgb(32, 44, 61);">
+<div class="flex items-center justify-between gap-2">
+<div class="flex flex-col">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-[#FFA586]" style="color: rgb(239, 68, 68);">Active Rehabilitation</span>
+<h1 class="text-[26px] font-bold text-[#F3F6FA] tracking-tight leading-tight">Priya Nair</h1>
+</div>
+<span class="px-3 py-1 rounded-full bg-[#541A2E] text-[#FFA586] border border-[#FFA586]/30 text-[12px] font-medium tracking-wide" style="background-color: rgb(42, 18, 21); border: 1px solid rgb(127, 29, 29); color: rgb(252, 165, 165);">
+          Right Upper Limb
+        </span>
+</div>
+<p class="text-[14px] text-[#9AA7B8] leading-relaxed">Post-stroke hemiparesis · Right upper extremity · Week 6 of 6 Orchard Reach protocol</p>
+<!-- Rapid Meta Badges -->
+<div class="flex items-center gap-2 pt-1 flex-wrap">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#1C253B] text-[#9AA7B8] border border-[#384358]/60 text-[12px] font-medium">
+<span class="material-symbols-outlined text-[15px] text-[#7FB1E0]">calendar_today</span>
+<span class="text-[#F3F6FA]">Week 6 of 6</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#1C253B] text-[#9AA7B8] border border-[#384358]/60 text-[12px] font-medium">
+<span class="material-symbols-outlined text-[15px] text-[#7FB1E0]">timer</span>
+<span class="text-[#F3F6FA]">18/18 Sessions</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#541A2E]/70 text-[#FFA586] border border-[#FFA586]/30 text-[12px] font-semibold" style="background-color: rgb(42, 18, 21); border: 1px solid rgb(127, 29, 29); color: rgb(239, 68, 68);">
+<span class="material-symbols-outlined text-[15px] text-[#FFA586]">verified</span>
+<span class="">MDC Exceeded</span>
+</div>
+</div>
+</div>
+<!-- Recovery Section Header -->
+<div class="flex flex-col gap-1 pt-1">
+<div class="flex items-center justify-between">
+<h2 class="text-[20px] font-bold text-[#F3F6FA] tracking-tight">Recovery</h2>
+<span class="text-[12px] font-semibold text-[#7FB1E0] flex items-center gap-1.5 bg-[#7FB1E0]/10 border border-[#7FB1E0]/20 px-2.5 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-[#7FB1E0]"></span> Kinematic Validated
+        </span>
+</div>
+<p class="text-[13px] text-[#9AA7B8] leading-normal">Longitudinal progression across 6-week protocol with shaded MDC variation boundary.</p>
+</div>
+<!-- Metric Chart 1: Smoothness (SPARC) -->
+<div class="bg-[#242F49] rounded-2xl p-4 border border-[#384358]/60 flex flex-col gap-3 shadow-md shadow-black/20" style="background-color: rgb(15, 22, 34); border: 1px solid rgb(32, 44, 61);">
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="text-[11px] font-semibold uppercase tracking-wider text-[#7FB1E0] block">Kinematic Metric</span>
+<h3 class="text-[18px] font-bold text-[#F3F6FA] tracking-tight">Smoothness (SPARC)</h3>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#541A2E]/80 border border-[#FFA586]/30 text-[#FFA586] text-[11px] font-semibold text-right" style="background-color: rgb(42, 18, 21); border: 1px solid rgb(127, 29, 29); color: rgb(248, 113, 113);">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span class="">Improved beyond normal variation</span>
+</div>
+</div>
+<!-- Current vs Baseline Pill -->
+<div class="flex items-baseline gap-3 bg-[#1C253B] px-3.5 py-2 rounded-xl border border-[#384358]/50 tabular-nums"><span class="text-[22px] font-bold text-[#EF4444] tracking-tight">-1.42</span><span class="text-[13px] text-[#9AA7B8]">Baseline: -2.18</span><span class="ml-auto text-[12px] text-[#38BDF8] font-semibold">+34.8% efficiency</span></div>
+<!-- SPARC Interactive SVG Plot -->
+<div class="relative w-full bg-[#161E2F] rounded-xl p-2 pt-3 border border-[#384358]/50 overflow-hidden" style="background-color: rgb(11, 15, 23); border: 1px solid rgb(30, 41, 59);">
+<svg class="w-full h-auto overflow-visible select-none" preserveAspectRatio="none" viewBox="0 0 340 160"><defs><linearGradient id="sparcNormalGradient" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#1E293B" stop-opacity="0.6"></stop><stop offset="100%" stop-color="#0F172A" stop-opacity="0.2"></stop></linearGradient><linearGradient id="sparcLineGlow" x1="0%" x2="100%" y1="0%" y2="0%"><stop offset="0%" stop-color="#EF4444"></stop><stop offset="100%" stop-color="#F87171"></stop></linearGradient></defs><rect fill="url(#sparcNormalGradient)" height="52" width="288" x="42" y="55"></rect><g stroke="#202C3D" stroke-dasharray="3,3" stroke-opacity="0.7" stroke-width="1"><line x1="42" x2="330" y1="18" y2="18"></line><line x1="42" x2="330" y1="44" y2="44"></line><line x1="42" x2="330" y1="72" y2="72"></line><line x1="42" x2="330" y1="102" y2="102"></line><line x1="42" x2="330" y1="126" y2="126"></line></g><g stroke="#202C3D" stroke-dasharray="3,3" stroke-opacity="0.7" stroke-width="1"><line x1="45" x2="45" y1="18" y2="130"></line><line x1="92" x2="92" y1="18" y2="130"></line><line x1="140" x2="140" y1="18" y2="130"></line><line x1="187" x2="187" y1="18" y2="130"></line><line x1="235" x2="235" y1="18" y2="130"></line><line x1="282" x2="282" y1="18" y2="130"></line><line x1="328" x2="328" y1="18" y2="130"></line></g><g class="tabular-nums" fill="#64748B" style="font-size: 10px; font-weight: 500;"><text text-anchor="end" x="36" y="21">-1.40</text><text text-anchor="end" x="36" y="47">-1.57</text><text text-anchor="end" x="36" y="75">-1.80</text><text text-anchor="end" x="36" y="105">-2.02</text><text text-anchor="end" x="36" y="129">-2.18</text></g><polyline fill="none" points="45,126 92,102 140,43 187,38 235,32 282,21 328,21" stroke="url(#sparcLineGlow)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></polyline><g fill="#080B11" stroke="#EF4444" stroke-width="2.5"><circle cx="45" cy="126" r="4"></circle><circle cx="92" cy="102" r="4"></circle><circle cx="140" cy="43" r="4"></circle><circle cx="187" cy="38" r="4"></circle><circle cx="235" cy="32" r="4"></circle><circle cx="282" cy="21" r="4"></circle><circle cx="328" cy="21" fill="#EF4444" r="4"></circle></g><g class="tabular-nums" fill="#64748B" style="font-size: 10px; font-weight: 500;"><text text-anchor="middle" x="45" y="146">0</text><text text-anchor="middle" x="92" y="146">1</text><text text-anchor="middle" x="140" y="146">2</text><text text-anchor="middle" x="187" y="146">3</text><text text-anchor="middle" x="235" y="146">4</text><text text-anchor="middle" x="282" y="146">5</text><text text-anchor="middle" x="328" y="146">6</text></g></svg>
+<div class="text-center text-[11px] font-semibold text-[#9AA7B8] tracking-wider mt-1 uppercase">Week</div>
+</div>
+</div>
+<!-- Metric Chart 2: Reaction Time -->
+<div class="bg-[#242F49] rounded-2xl p-4 border border-[#384358]/60 flex flex-col gap-3 shadow-md shadow-black/20" style="background-color: rgb(15, 22, 34); border: 1px solid rgb(32, 44, 61);">
+<div class="flex items-start justify-between gap-2">
+<div>
+<span class="text-[11px] font-semibold uppercase tracking-wider text-[#7FB1E0] block">Latent Processing</span>
+<h3 class="text-[18px] font-bold text-[#F3F6FA] tracking-tight">Reaction time</h3>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1C253B] border border-[#384358]/80 text-[#9AA7B8] text-[11px] font-medium text-right">
+<span class="material-symbols-outlined text-[14px]">horizontal_rule</span>
+<span class="">Within normal variation</span>
+</div>
+</div>
+<!-- Current vs Baseline Pill -->
+<div class="flex items-baseline gap-3 bg-[#1C253B] px-3.5 py-2 rounded-xl border border-[#384358]/50 tabular-nums"><span class="text-[22px] font-bold text-[#38BDF8] tracking-tight">246.8 ms</span><span class="text-[13px] text-[#9AA7B8]">Baseline: 463.6 ms</span><span class="ml-auto text-[12px] text-[#EF4444] font-semibold">-216.8 ms delta</span></div>
+<!-- Reaction Time Interactive SVG Plot -->
+<div class="relative w-full bg-[#161E2F] rounded-xl p-2 pt-3 border border-[#384358]/50 overflow-hidden" style="background-color: rgb(11, 15, 23); border: 1px solid rgb(30, 41, 59);">
+<svg class="w-full h-auto overflow-visible select-none" preserveAspectRatio="none" viewBox="0 0 340 160">
+<defs>
+<linearGradient id="reactionVariationBand" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#384358" stop-opacity="0.45"></stop>
+<stop offset="100%" stop-color="#384358" stop-opacity="0.15"></stop>
+</linearGradient>
+</defs>
+<!-- Normal Session Variation Band -->
+<rect fill="url(#reactionVariationBand)" height="42" width="288" x="42" y="70"></rect>
+<!-- Horizontal Reference Dashes -->
+<g stroke="#384358" stroke-dasharray="3,3" stroke-opacity="0.6" stroke-width="1">
+<line x1="42" x2="330" y1="20" y2="20"></line>
+<line x1="42" x2="330" y1="42" y2="42"></line>
+<line x1="42" x2="330" y1="95" y2="95"></line>
+<line x1="42" x2="330" y1="124" y2="124"></line>
+</g>
+<!-- Vertical Grid Weeks -->
+<g stroke="#384358" stroke-dasharray="3,3" stroke-opacity="0.6" stroke-width="1">
+<line x1="45" x2="45" y1="18" y2="130"></line>
+<line x1="92" x2="92" y1="18" y2="130"></line>
+<line x1="140" x2="140" y1="18" y2="130"></line>
+<line x1="187" x2="187" y1="18" y2="130"></line>
+<line x1="235" x2="235" y1="18" y2="130"></line>
+<line x1="282" x2="282" y1="18" y2="130"></line>
+<line x1="328" x2="328" y1="18" y2="130"></line>
+</g>
+<!-- Y-Axis Labels -->
+<g class="tabular-nums" fill="#9AA7B8" style="font-size: 10px; font-weight: 500;">
+<text text-anchor="end" x="36" y="23">463.6</text>
+<text text-anchor="end" x="36" y="45">427.5</text>
+<text text-anchor="end" x="36" y="98">285.0</text>
+<text text-anchor="end" x="36" y="127">250.4</text>
+</g>
+<!-- Reaction Time Trend Polyline (Downward Recovery) -->
+<polyline fill="none" points="45,20 92,39 140,65 187,98 235,93 282,118 328,126" stroke="#7FB1E0" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></polyline>
+<!-- Point Markers -->
+<g fill="#161E2F" stroke="#7FB1E0" stroke-width="2.5">
+<circle cx="45" cy="20" r="4"></circle>
+<circle cx="92" cy="39" r="4"></circle>
+<circle cx="140" cy="65" r="4"></circle>
+<circle cx="187" cy="98" r="4"></circle>
+<circle cx="235" cy="93" r="4"></circle>
+<circle cx="282" cy="118" r="4"></circle>
+<circle cx="328" cy="126" fill="#7FB1E0" r="4"></circle>
+</g>
+<!-- X-Axis Labels -->
+<g class="tabular-nums" fill="#9AA7B8" style="font-size: 10px; font-weight: 500;">
+<text text-anchor="middle" x="45" y="146">0</text>
+<text text-anchor="middle" x="92" y="146">1</text>
+<text text-anchor="middle" x="140" y="146">2</text>
+<text text-anchor="middle" x="187" y="146">3</text>
+<text text-anchor="middle" x="235" y="146">4</text>
+<text text-anchor="middle" x="282" y="146">5</text>
+<text text-anchor="middle" x="328" y="146">6</text>
+</g>
+</svg>
+<div class="text-center text-[11px] font-semibold text-[#9AA7B8] tracking-wider mt-1 uppercase">Week</div>
+</div>
+</div>
+<!-- Reach Trajectory Comparison Strip -->
+<div class="bg-[#242F49] rounded-2xl p-4 border border-[#384358]/60 flex flex-col gap-3 shadow-md shadow-black/20" style="background-color: rgb(15, 22, 34); border: 1px solid rgb(32, 44, 61);">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-[11px] font-semibold uppercase tracking-wider text-[#7FB1E0] block">Spatial Kinematics</span>
+<h3 class="text-[18px] font-bold text-[#F3F6FA] tracking-tight">Top-Down Reach Arc Traces</h3>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 text-[12px] font-medium text-[#FFA586]">
+<span class="w-3 h-0.5 rounded-full bg-[#FFA586]"></span> Left
+          </div>
+<div class="flex items-center gap-1.5 text-[12px] font-medium text-[#7FB1E0]">
+<span class="w-3 h-0.5 rounded-full bg-[#7FB1E0]"></span> Right
+          </div>
+</div>
+</div>
+<!-- Micro Visualizer Tiles -->
+<div class="grid grid-cols-3 gap-2 pt-1"><div class="flex flex-col gap-1.5 bg-[#0B0F17] p-2.5 rounded-xl items-center border border-[#7F1D1D]/40"><span class="text-[11px] font-semibold text-[#9AA7B8]">W0 (Baseline)</span><svg class="w-full h-16" viewBox="0 0 80 80"><path d="M 15 70 A 30 30 0 0 1 65 70" fill="none" stroke="#202C3D" stroke-dasharray="2,2" stroke-width="1.5"></path><path d="M 40 70 Q 32 50 38 42 T 25 25" fill="none" stroke="#991B1B" stroke-width="1.8"></path><circle cx="25" cy="25" fill="#991B1B" r="2.5"></circle></svg><span class="text-[11px] font-semibold text-[#FCA5A5] bg-[#2A1215] px-2 py-0.5 rounded-md border border-[#7F1D1D] text-center w-full">Severe Tremor</span></div><div class="flex flex-col gap-1.5 bg-[#0B0F17] p-2.5 rounded-xl items-center border border-[#202C3D]"><span class="text-[11px] font-semibold text-[#9AA7B8]">W3 (Mid)</span><svg class="w-full h-16" viewBox="0 0 80 80"><path d="M 15 70 A 30 30 0 0 1 65 70" fill="none" stroke="#202C3D" stroke-dasharray="2,2" stroke-width="1.5"></path><path d="M 40 70 Q 36 48 30 25" fill="none" stroke="#38BDF8" stroke-width="1.8"></path><circle cx="30" cy="25" fill="#38BDF8" r="2.5"></circle></svg><span class="text-[11px] font-semibold text-[#38BDF8] bg-[#0E2838] px-2 py-0.5 rounded-md border border-[#0284C7]/40 text-center w-full">Smoothing</span></div><div class="flex flex-col gap-1.5 bg-[#0B0F17] p-2.5 rounded-xl items-center ring-1 ring-[#DC2626]/50 border border-[#DC2626]/40"><span class="text-[11px] font-bold text-[#EF4444]">W6 (Current)</span><svg class="w-full h-16" viewBox="0 0 80 80"><path d="M 15 70 A 30 30 0 0 1 65 70" fill="none" stroke="#202C3D" stroke-dasharray="2,2" stroke-width="1.5"></path><path d="M 40 70 L 32 23" fill="none" stroke="#DC2626" stroke-width="2.2"></path><circle cx="32" cy="23" fill="#DC2626" r="3"></circle></svg><span class="text-[11px] font-semibold text-[#FFFFFF] bg-[#DC2626] px-2 py-0.5 rounded-md border border-[#EF4444] text-center w-full shadow-sm">Direct Reach</span></div></div>
+</div>
+<!-- Quick Clinical Actions Bar -->
+<div class="flex items-center gap-3 pt-1 pb-4">
+<button class="flex-1 py-3.5 px-4 rounded-xl bg-[#FFA586] hover:bg-[#ffb59c] text-[#161E2F] font-bold text-[16px] flex items-center justify-center gap-2 shadow-lg shadow-[#FFA586]/20 active:scale-[0.99] transition-all" style="background-color: rgb(220, 38, 38); color: rgb(255, 255, 255); box-shadow: rgba(220, 38, 38, 0.45) 0px 4px 18px; border: 1px solid rgb(239, 68, 68);">
+<span class="material-symbols-outlined text-[22px] fill-1 font-semibold">play_arrow</span>
+<span class="">Resume Orchard Reach</span>
+</button>
+<button aria-label="Export Clinical Report" class="p-3.5 rounded-xl bg-[#242F49] hover:bg-[#2d3a5a] text-[#F3F6FA] border border-[#384358]/80 transition-colors shadow-sm" style="background-color: rgb(20, 28, 42); border: 1px solid rgb(42, 56, 76); color: rgb(243, 246, 250);">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</div>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#161E2F]/90 backdrop-blur-xl border-t border-[#384358]/60" data-active-classes="text-[#FFA586] font-semibold" style="background-color: rgba(8, 11, 17, 0.95); border-color: rgb(32, 44, 61);"><div class="flex justify-around items-center h-16 px-2"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 transition-colors text-[#FFA586] font-semibold" data-path="patients" href="#" style="color: rgb(239, 68, 68);"><span class="material-symbols-outlined text-[22px]">group</span><span class="text-[11px] font-medium mt-0.5">Patients</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 text-[#9AA7B8] hover:text-[#F3F6FA] transition-colors" data-path="live-monitor" href="#"><span class="material-symbols-outlined text-[22px]">videogame_asset</span><span class="text-[11px] font-medium mt-0.5">Monitor</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 text-[#9AA7B8] hover:text-[#F3F6FA] transition-colors" data-path="programs" href="#"><span class="material-symbols-outlined text-[22px]">clinical_notes</span><span class="text-[11px] font-medium mt-0.5">Programs</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 text-[#9AA7B8] hover:text-[#F3F6FA] transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[22px]">insights</span><span class="text-[11px] font-medium mt-0.5">Reports</span></a></div></nav>
+
+</body></html>

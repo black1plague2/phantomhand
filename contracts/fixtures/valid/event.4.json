@@ -1,0 +1,20 @@
+{
+  "t_ms": 1004,
+  "seq": 4,
+  "block": 0,
+  "trial": 0,
+  "type": "calibration",
+  "data": {
+    "wrist_pos": [
+      0.12,
+      0.95,
+      0.31
+    ],
+    "forearm_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "ok": true
+  }
+}

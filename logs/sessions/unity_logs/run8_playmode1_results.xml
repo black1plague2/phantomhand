@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:35Z" duration="51.8581792">
+  <test-suite type="TestSuite" id="1019" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:35Z" duration="51.858179" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1003" name="OrchardReach.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/OrchardReach.Tests.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.213827" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6632" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1004" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.213135" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1005" name="Games" fullname="Opus.Games" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.212771" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1006" name="OrchardReach" fullname="Opus.Games.OrchardReach" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.212576" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1007" name="Tests" fullname="Opus.Games.OrchardReach.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.212389" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestSuite" id="1008" name="PlayMode" fullname="Opus.Games.OrchardReach.Tests.PlayMode" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.212189" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-suite type="TestFixture" id="1001" name="OrchardReachPlayModeAuditTests" fullname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests" classname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.211035" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1002" name="DemoDriver_ProducesAllFourAuditStates" fullname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests.DemoDriver_ProducesAllFourAuditStates" methodname="DemoDriver_ProducesAllFourAuditStates" classname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests" runstate="Runnable" seed="380813437" result="Passed" start-time="2026-09-17 12:57:43Z" end-time="2026-09-17 12:58:16Z" duration="32.192439" asserts="0">
+                    <properties>
+                      <property name="_JOINTYPE" value="UnityCombinatorial" />
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                    <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests.DemoDriver_ProducesAllFourAuditStates
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Unable to process a controller whose SampleRateHz is 0 now.
+Unable to process a controller whose SampleRateHz is 0 now.
+[OPUS] PlayModeAudit: ResetRenderingDebugger failed (TargetInvocationException: Exception has been thrown by the target of an invocation.) — continuing.
+[OPUS] PlayModeAudit: hid 242 rig hand/controller-hint renderers (DemoHandProxy_R excluded)
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run8_playmode\03_grasp.png (602816 bytes)
+[OPUS] PlayModeAudit: captured grasp at t=0.00s
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run8_playmode\01_target_shown.png (609030 bytes)
+[OPUS] PlayModeAudit: captured target_shown at t=2.62s
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run8_playmode\02_mid_reach.png (604718 bytes)
+[OPUS] PlayModeAudit: captured mid_reach at t=2.69s
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] PlayModeAudit: finished after 30.00s — target_shown=True mid_reach=True grasp=True placed=False, trialsCompleted=4, successCount=0
+[OPUS] PlayModeAudit: never observed a completed trial (placed in basket) within the time budget — see MANUAL_TODO.
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests.DemoDriver_ProducesAllFourAuditStates, ResultState: Passed, Duration: 32.192s
+]]></output>
+                  </test-case>
+                </test-suite>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1011" name="Shell.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.637200" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="6632" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1012" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.636254" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1013" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.635828" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1014" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.635460" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1015" name="PlayMode" fullname="Opus.Shell.Tests.PlayMode" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.635111" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1009" name="LiveLinkIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.634655" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1010" name="LiveClient_CompletesScenarioBasic_AgainstFakeHub" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub" methodname="LiveClient_CompletesScenarioBasic_AgainstFakeHub" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" seed="859266818" result="Passed" start-time="2026-09-17 12:58:16Z" end-time="2026-09-17 12:58:35Z" duration="19.629110" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub
+[OPUS] LiveLinkTest: started fake_hub.py, PID=31368
+[OPUS] LiveLinkTest: hub health check -> True after wait
+[OPUS] LiveLinkTest: OnCommand 'assign_program' ackId=25b2d407-406f-4cd1-b937-67373b20bd15
+[OPUS] LiveLinkTest: OnCommand 'start' ackId=aa800135-b0de-479c-981c-81d42553f1bf
+[OPUS] LiveLinkTest: OnCommand 'pause' ackId=7fe5f8e0-6970-44bb-a06b-2783187e9043
+[OPUS] LiveLinkTest: OnCommand 'resume' ackId=0275f579-7507-45fd-ba2a-5d79bbd6cdb5
+[OPUS] LiveLinkTest: OnCommand 'stop' ackId=22639f4b-9c66-46f0-910d-956e968a8181
+[OPUS] LiveLinkTest: scenario loop ended after 13.1s, sessionStarted=True, sessionStopped=True, rttSamples=0
+[OPUS] LiveLinkTest: file uploads -> session.json=True events.ndjson=True
+[OPUS] LiveLinkTest: hub stored session dir C:\Users\GARV BANSAL\Documents\VR_games\OPUS\sim\out\hub_sessions\9784481d-d446-49ab-a381-49a3848589b3 exists-with-files=True
+[OPUS] LiveLinkTest: no ping/pong RTT samples captured (LastRttMs never updated) — see MANUAL_TODO.
+[OPUS] LiveLinkTest: validate.py exit=0
+stdout=[PASS] 9784481d-d446-49ab-a381-49a3848589b3/session.json
+[PASS] 9784481d-d446-49ab-a381-49a3848589b3/events.ndjson: 3 events validated
+[WARN] 9784481d-d446-49ab-a381-49a3848589b3: no kin_*.json files found
+[WARN] 9784481d-d446-49ab-a381-49a3848589b3/metrics.json not found
+
+[PASS] All validations passed
+
+stderr=
+[OPUS] LiveLinkTest: fake_hub.py invalid-message occurrences found in its log = 0 (must be 0)
+[OPUS] LiveLinkTest: fake_hub.py stderr(log) tail:
+ping id=dd2d3e04-9783-4c55-8fa7-6d0087524d38 seq=9
+[2026-09-17 18:28:24] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:25] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:25] INFO: [MSG RX] type=status id=26bf5d18-63fb-4f4d-b977-32db1fde485b seq=11
+[2026-09-17 18:28:25] INFO: [MSG RX] type=ping id=9cff7b68-9b6a-4a47-9226-4d0fc3964997 seq=12
+[2026-09-17 18:28:25] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:25] INFO: [MSG TX] type=command id=7fe5f8e0-6970-44bb-a06b-2783187e9043 seq=3
+[2026-09-17 18:28:25] INFO: [SCENARIO] Pause command sent after 5.0s
+[2026-09-17 18:28:25] INFO: [MSG RX] type=ack id=4d03b36a-adc7-4cc8-9015-1eb33740684b seq=13
+[2026-09-17 18:28:25] INFO: [ACK] 7fe5f8e0-6970-44bb-a06b-2783187e9043 latency=2.5ms
+[2026-09-17 18:28:26] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:26] INFO: [MSG RX] type=ping id=864266c9-7fa6-40b1-885f-a929fc210569 seq=14
+[2026-09-17 18:28:26] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:26] INFO: [MSG RX] type=trial_event id=2966b1e7-e5ed-4930-81a9-812ef61a9fce seq=15
+[2026-09-17 18:28:26] INFO: [MSG RX] type=status id=ee0f852f-6bbc-4cd0-8a98-c0784bafe1ec seq=16
+[2026-09-17 18:28:27] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:27] INFO: [MSG RX] type=ping id=84cc369c-25b8-4b75-ac84-938961c66d4b seq=17
+[2026-09-17 18:28:27] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:27] INFO: [MSG TX] type=command id=0275f579-7507-45fd-ba2a-5d79bbd6cdb5 seq=4
+[2026-09-17 18:28:27] INFO: [SCENARIO] Resume command sent
+[2026-09-17 18:28:27] INFO: [MSG RX] type=ack id=509e5ecd-9f4c-494e-b57e-10fbd0cccb64 seq=18
+[2026-09-17 18:28:27] INFO: [ACK] 0275f579-7507-45fd-ba2a-5d79bbd6cdb5 latency=2.0ms
+[2026-09-17 18:28:27] INFO: [MSG RX] type=trial_event id=2966b1e7-e5ed-4930-81a9-812ef61a9fce seq=15
+[2026-09-17 18:28:28] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:28] INFO: [MSG RX] type=trial_event id=13d37d9b-7056-4b0b-a7e7-6de5cbb6e282 seq=19
+[2026-09-17 18:28:28] INFO: [MSG RX] type=status id=e7194581-f2b1-47d6-a183-e480c10031ba seq=20
+[2026-09-17 18:28:28] INFO: [MSG RX] type=ping id=443630ca-eb58-45da-81d3-9827f067e623 seq=21
+[2026-09-17 18:28:28] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:28] INFO: [MSG RX] type=trial_event id=2966b1e7-e5ed-4930-81a9-812ef61a9fce seq=15
+[2026-09-17 18:28:29] INFO: [MSG RX] type=trial_event id=13d37d9b-7056-4b0b-a7e7-6de5cbb6e282 seq=19
+[2026-09-17 18:28:29] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:29] INFO: [MSG RX] type=ping id=efbc2bd6-76aa-4468-a68c-90222d45033d seq=22
+[2026-09-17 18:28:29] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:29] INFO: [MSG RX] type=trial_event id=2966b1e7-e5ed-4930-81a9-812ef61a9fce seq=15
+[2026-09-17 18:28:30] INFO: [MSG RX] type=trial_event id=13d37d9b-7056-4b0b-a7e7-6de5cbb6e282 seq=19
+[2026-09-17 18:28:30] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:30] INFO: [MSG RX] type=ping id=b1e46d7a-6b99-40a2-bcd4-62209629c2fd seq=23
+[2026-09-17 18:28:30] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:30] INFO: [MSG RX] type=trial_event id=2966b1e7-e5ed-4930-81a9-812ef61a9fce seq=15
+[2026-09-17 18:28:31] INFO: [MSG RX] type=trial_event id=13d37d9b-7056-4b0b-a7e7-6de5cbb6e282 seq=19
+[2026-09-17 18:28:31] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:31] INFO: [MSG RX] type=ping id=748a884c-1040-49bd-9ff3-9468f8ba42ba seq=24
+[2026-09-17 18:28:31] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:31] INFO: [MSG RX] type=trial_event id=2966b1e7-e5ed-4930-81a9-812ef61a9fce seq=15
+[2026-09-17 18:28:32] INFO: [MSG RX] type=trial_event id=13d37d9b-7056-4b0b-a7e7-6de5cbb6e282 seq=19
+[2026-09-17 18:28:32] INFO: [MSG RX] type=trial_event id=b85461fa-9b4d-457e-99ec-fdda2d6d11c4 seq=10
+[2026-09-17 18:28:32] INFO: [MSG RX] type=ping id=48686573-6236-4eb8-a012-1f52c541f40b seq=25
+[2026-09-17 18:28:32] WARNING: [MSG] Unhandled message type: ping
+[2026-09-17 18:28:32] INFO: [MSG TX] type=command id=22639f4b-9c66-46f0-910d-956e968a8181 seq=5
+[2026-09-17 18:28:32] INFO: [SCENARIO] Stop command sent
+[2026-09-17 18:28:32] INFO: [MSG RX] type=ack id=21d82f35-1660-4e06-a583-4f4d33fafe36 seq=26
+[2026-09-17 18:28:32] INFO: [ACK] 22639f4b-9c66-46f0-910d-956e968a8181 latency=2.5ms
+[2026-09-17 18:28:32] INFO: [MSG RX] type=session_ended id=9a60d276-9f9f-4679-aab9-b9ea8edab759 seq=27
+[2026-09-17 18:28:32] WARNING: [MSG] Unhandled message type: session_ended
+[2026-09-17 18:28:32] INFO: [FILE] session.json uploaded (830 bytes) -> 201
+[2026-09-17 18:28:32] INFO: 127.0.0.1 [17/Sep/2026:18:28:32 +0530] "PUT /opus/v1/sessions/9784481d-d446-49ab-a381-49a3848589b3/files/session.json HTTP/1.1" 201 164 "-" "UnityPlayer/6000.4.6f1 (UnityWebRequest/1.0, libcurl/8.10.1-DEV)"
+[2026-09-17 18:28:32] INFO: [MSG RX] type=file_available id=baf100e6-15c4-4136-81bb-08202f844019 seq=28
+[2026-09-17 18:28:32] WARNING: [MSG] Unhandled message type: file_available
+[2026-09-17 18:28:32] INFO: [FILE] events.ndjson uploaded (194 bytes) -> 201
+[2026-09-17 18:28:32] INFO: 127.0.0.1 [17/Sep/2026:18:28:32 +0530] "PUT /opus/v1/sessions/9784481d-d446-49ab-a381-49a3848589b3/files/events.ndjson HTTP/1.1" 201 164 "-" "UnityPlayer/6000.4.6f1 (UnityWebRequest/1.0, libcurl/8.10.1-DEV)"
+[2026-09-17 18:28:32] INFO: [MSG RX] type=file_available id=8caf81f9-ef49-44d2-b5fc-92c8428574f8 seq=29
+[2026-09-17 18:28:32] WARNING: [MSG] Unhandled message type: file_available
+[2026-09-17 18:28:32] INFO: [WS] Client disconnected
+[2026-09-17 18:28:32] INFO: 127.0.0.1 [17/Sep/2026:18:28:19 +0530] "GET /opus/v1/live HTTP/1.1" 101 0 "-" "-"
+
+[OPUS] LiveLinkTest: DONE
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub, ResultState: Passed, Duration: 19.629s
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

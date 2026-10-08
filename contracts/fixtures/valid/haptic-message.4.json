@@ -1,0 +1,42 @@
+{
+  "type": "sensor_data",
+  "device_id": "SLEEVE_001",
+  "timestamp_ms": 143010,
+  "sensors": {
+    "imu_accel_x": {
+      "value": 0.12,
+      "unit": "m/s2",
+      "status": "ok"
+    },
+    "imu_accel_y": {
+      "value": 9.78,
+      "unit": "m/s2",
+      "status": "ok"
+    },
+    "imu_accel_z": {
+      "value": 0.31,
+      "unit": "m/s2",
+      "status": "ok"
+    },
+    "imu_gyro_x": {
+      "value": 0.001,
+      "unit": "rad/s",
+      "status": "ok"
+    },
+    "imu_gyro_y": {
+      "value": -0.002,
+      "unit": "rad/s",
+      "status": "ok"
+    },
+    "imu_gyro_z": {
+      "value": 0.0,
+      "unit": "rad/s",
+      "status": "ok"
+    },
+    "imu_temperature": {
+      "value": 29.5,
+      "unit": "C",
+      "status": "ok"
+    }
+  }
+}

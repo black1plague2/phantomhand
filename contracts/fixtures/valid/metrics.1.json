@@ -1,0 +1,37 @@
+{
+  "session_id": "test-session-valid-metrics",
+  "computed_at": "2026-09-14T15:34:12.464506+00:00",
+  "analytics_version": "0.1.0",
+  "trials": [
+    {
+      "block": 0,
+      "trial": 0,
+      "hand": "right",
+      "outcome": "success",
+      "target": {
+        "id": "target_0",
+        "pos": [0.1, 0.2, 0.3]
+      },
+      "t_start_ms": 100.0,
+      "t_end_ms": 1000.0,
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 200.0,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      }
+    }
+  ],
+  "session": {
+    "metrics": {
+      "success_rate": {
+        "value": 1.0,
+        "unit": "unitless",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "ok"
+      }
+    }
+  }
+}

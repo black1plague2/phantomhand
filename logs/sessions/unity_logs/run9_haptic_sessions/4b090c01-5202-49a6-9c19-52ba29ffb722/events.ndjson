@@ -1,0 +1,10 @@
+{"t_ms":310.09000000000003,"seq":0,"block":0,"trial":null,"type":"form_warning","data":{"kind":"trunk_lean","active":true,"leanCm":20.0}}
+{"t_ms":325.0846,"seq":1,"block":0,"trial":null,"type":"haptic_cue","data":{"cue":"trunk_lean","intensity":0.8,"delivered":false,"cue_id":"52c42c5b-81a9-40ba-8a2d-e3fbbe82af5e"}}
+{"t_ms":990.0209000000001,"seq":2,"block":0,"trial":0,"type":"placed","hand":"right","outcome":"success"}
+{"t_ms":990.2454,"seq":3,"block":0,"trial":0,"type":"trial_end","hand":"right","outcome":"success"}
+{"t_ms":990.7195,"seq":4,"block":0,"trial":null,"type":"haptic_cue","data":{"cue":"success","intensity":0.6,"delivered":false,"cue_id":"6c4ec029-bfea-45a3-9c34-54c5fd67a6de"}}
+{"t_ms":991.0666,"seq":5,"block":0,"trial":1,"type":"trial_start","hand":"right"}
+{"t_ms":991.1235,"seq":6,"block":0,"trial":1,"type":"target_shown","hand":"right","target":{"id":"trial_1","pos":[0.11584307800821124,0.16758997980998469,0.22958763589989248],"azimuthDeg":26.774150264344243,"elevationDeg":33.092331640931,"reachPercent":55.808557835784072,"isDistractor":false}}
+{"t_ms":998.21170000000006,"seq":7,"block":0,"trial":1,"type":"movement_onset","hand":"right"}
+{"t_ms":998.26960000000008,"seq":8,"block":0,"trial":1,"type":"contact","hand":"right"}
+{"t_ms":998.29040000000009,"seq":9,"block":0,"trial":1,"type":"grasp","hand":"right"}

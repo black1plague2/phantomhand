@@ -1,0 +1,79 @@
+{
+ "cues_sent": 16,
+ "cues_acked": 16,
+ "cue_rejected": [],
+ "statuses_sent": 129,
+ "status_haptic_disconnected": 0,
+ "status_bio_disconnected": 0,
+ "reconnects": 1,
+ "upload_attempts": {
+  "session.json": 20,
+  "events.ndjson": 1,
+  "kin_000.json": 1,
+  "sens_000.json": 1,
+  "sens_001.json": 1,
+  "sens_002.json": 1,
+  "sens_003.json": 1,
+  "sens_004.json": 1,
+  "sens_005.json": 1,
+  "sens_006.json": 1,
+  "sens_007.json": 1,
+  "sens_008.json": 1,
+  "sens_009.json": 1,
+  "sens_010.json": 1,
+  "sens_011.json": 1,
+  "sens_012.json": 1,
+  "sens_013.json": 1,
+  "sens_014.json": 1,
+  "sens_015.json": 1,
+  "sens_016.json": 1
+ },
+ "emg_bursts_from_node": 2,
+ "flinch_sent": 2,
+ "oled": [
+  "ASYNC",
+  "SYNC"
+ ],
+ "nodes": {
+  "haptic": true,
+  "bio": true
+ },
+ "gap_cap_ms": 2500.0,
+ "sens_chunks": 959,
+ "sensor_data": 9589,
+ "events_sent": 73,
+ "events_dropped_no_bio": 0,
+ "hub_connected_samples": [
+  129,
+  63
+ ],
+ "sens_files": 17,
+ "sens_samples": {
+  "emg": 5060,
+  "imu": 5070
+ },
+ "upload_ok": {
+  "session.json": true,
+  "events.ndjson": true,
+  "kin_000.json": true,
+  "sens_000.json": true,
+  "sens_001.json": true,
+  "sens_002.json": true,
+  "sens_003.json": true,
+  "sens_004.json": true,
+  "sens_005.json": true,
+  "sens_006.json": true,
+  "sens_007.json": true,
+  "sens_008.json": true,
+  "sens_009.json": true,
+  "sens_010.json": true,
+  "sens_011.json": true,
+  "sens_012.json": true,
+  "sens_013.json": true,
+  "sens_014.json": true,
+  "sens_015.json": true,
+  "sens_016.json": true
+ },
+ "session_id": "76d6d2f3-4b7a-46bb-94d8-e19ddeeb0cca",
+ "cue_rtt_p50_ms": 16.0
+}

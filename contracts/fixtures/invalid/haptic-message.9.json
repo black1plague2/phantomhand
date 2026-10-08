@@ -1,0 +1,12 @@
+{
+  "type": "sensor_data",
+  "device_id": "SLEEVE_001",
+  "timestamp_ms": 1,
+  "sensors": {
+    "imu_accel_x": {
+      "value": "high",
+      "unit": "m/s2",
+      "status": "ok"
+    }
+  }
+}

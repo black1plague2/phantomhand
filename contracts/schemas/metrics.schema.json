@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/metrics.schema.json",
+  "title": "SessionMetrics",
+  "description": "metrics.json written by opus_analytics into a session directory. Every value carries unit, method_version and a quality flag.",
+  "type": "object",
+  "required": ["session_id", "analytics_version", "computed_at", "trials", "session"],
+  "$defs": {
+    "metricValue": {
+      "type": "object",
+      "required": ["value", "unit", "method_version", "quality"],
+      "properties": {
+        "value": { "type": ["number", "null"] },
+        "unit": { "type": "string", "examples": ["ms", "m/s", "cm", "%", "m^2", "unitless"] },
+        "method_version": { "type": "string" },
+        "quality": { "enum": ["ok", "degraded", "invalid"] },
+        "quality_reasons": { "type": "array", "items": { "type": "string" } },
+        "sd": { "type": ["number", "null"] },
+        "n": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "embodimentValue": {
+      "description": "Phantom Hand value: same as metricValue but quality may also be 'missing' (sensor absent or window fully excluded; value then null). Only allowed inside `embodiment`.",
+      "type": "object",
+      "required": ["value", "unit", "method_version", "quality"],
+      "properties": {
+        "value": { "type": ["number", "null"] },
+        "unit": { "type": "string" },
+        "method_version": { "type": "string" },
+        "quality": { "enum": ["ok", "degraded", "invalid", "missing"] },
+        "quality_reasons": { "type": "array", "items": { "type": "string" } },
+        "sd": { "type": ["number", "null"] },
+        "n": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "embodimentMetric": {
+      "description": "A single embodimentValue, or {mean, p95} of embodimentValues (used by stroke_timing_err_ms).",
+      "anyOf": [
+        { "$ref": "#/$defs/embodimentValue" },
+        { "type": "object", "required": ["mean", "p95"], "properties": { "mean": { "$ref": "#/$defs/embodimentValue" }, "p95": { "$ref": "#/$defs/embodimentValue" } } }
+      ]
+    },
+    "embodimentMap": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": { "$ref": "#/$defs/embodimentMetric" }
+    },
+    "metricMap": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": { "$ref": "#/$defs/metricValue" }
+    }
+  },
+  "properties": {
+    "session_id": { "type": "string" },
+    "analytics_version": { "type": "string" },
+    "computed_at": { "type": "string", "format": "date-time" },
+    "trials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["block", "trial", "hand", "outcome", "metrics"],
+        "properties": {
+          "block": { "type": "integer" },
+          "trial": { "type": "integer" },
+          "hand": { "enum": ["left", "right", null] },
+          "outcome": { "type": ["string", "null"] },
+          "target": { "type": "object" },
+          "t_start_ms": { "type": "number" },
+          "t_end_ms": { "type": "number" },
+          "metrics": { "$ref": "#/$defs/metricMap" }
+        }
+      }
+    },
+    "embodiment": {
+      "type": "object",
+      "description": "v0.2, optional, Phantom Hand (03-SPEC section 8 and 12). Metric ids per condition: drift_change_cm (+ = toward the virtual hand), ownership (mean q1,q2), control (q3), flinch_emg_peak_x, flinch_emg_latency_ms, flinch_imu_peak, flinch_wrist_peak_mps, flinch_wrist_latency_ms, stroke_timing_err_ms ({mean,p95}), cue_delivery_rate, emg_windows_excluded, witness_q4 (expected flat; a pointer, not proof). `sync_minus_async` holds the same ids as differences. EMG samples within a motor pulse + 50 ms are excluded. Every value carries unit, method_version and quality (ok|degraded|invalid|missing, with reasons).",
+      "properties": {
+        "condition_order": { "type": "array", "items": { "enum": ["sync", "async"] }, "minItems": 1, "maxItems": 2, "description": "order the conditions were run" },
+        "sync": { "$ref": "#/$defs/embodimentMap" },
+        "async": { "$ref": "#/$defs/embodimentMap" },
+        "sync_minus_async": { "$ref": "#/$defs/embodimentMap" }
+      }
+    },
+    "session": {
+      "type": "object",
+      "description": "aggregates; may be split per side under by_side",
+      "required": ["metrics"],
+      "properties": {
+        "metrics": { "$ref": "#/$defs/metricMap" },
+        "by_side": { "type": "object", "properties": { "left": { "$ref": "#/$defs/metricMap" }, "right": { "$ref": "#/$defs/metricMap" } } },
+        "workspace_heatmap": { "type": "object", "description": "azimuth×elevation bins → success rate / mean MT" }
+      }
+    }
+  }
+}

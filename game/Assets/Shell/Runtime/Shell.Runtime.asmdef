@@ -1,0 +1,26 @@
+{
+    "name": "Shell.Runtime",
+    "rootNamespace": "Opus.Shell",
+    "references": [
+        "Opus.Sdk.Runtime",
+        "OrchardReach.Runtime",
+        "PhantomHand.Runtime",
+        "PhantomHand.Presentation",
+        "Oculus.Interaction",
+        "Oculus.Interaction.OVR",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        { "name": "com.meta.xr.sdk.interaction.ovr", "expression": "", "define": "OPUS_META_HANDS" }
+    ],
+    "noEngineReferences": false
+}

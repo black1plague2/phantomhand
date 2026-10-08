@@ -1,0 +1,21 @@
+{
+    "name": "PhantomHand.Presentation",
+    "rootNamespace": "Opus.Games.PhantomHand.Presentation",
+    "references": [
+        "Opus.Sdk.Runtime",
+        "PhantomHand.Runtime",
+        "Oculus.Interaction",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

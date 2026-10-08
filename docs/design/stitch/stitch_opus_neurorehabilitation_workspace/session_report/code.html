@@ -1,0 +1,511 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "app-bg": "#080B11",
+        "surface-card": "#0F1622",
+        "surface-card-high": "#141C2A",
+        "surface-subtle": "#0B0F17",
+        "surface-border": "#1F293D",
+        "surface-border-subtle": "#162032",
+        "crimson": "#DC2626",
+        "crimson-light": "#EF4444",
+        "crimson-glow": "rgba(239, 68, 68, 0.15)",
+        "ice-blue": "#38BDF8",
+        "ice-blue-glow": "rgba(56, 189, 248, 0.15)",
+        "clinical-green": "#10B981",
+        "text-primary": "#F8FAFC",
+        "text-secondary": "#94A3B8",
+        "text-muted": "#64748B"
+      },
+      fontFamily: {
+        sans: ['Hanken Grotesk', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace']
+      }
+    }
+  }
+};</script><style>
+    @layer base {
+      html, body {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #080B11;
+        color: #F8FAFC;
+      }
+      body {
+        overscroll-behavior: none;
+        min-height: max(884px, 100dvh);
+      }
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style></head><body class="bg-app-bg text-text-primary flex flex-col min-h-screen antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-app-bg/95 backdrop-blur-xl border-b border-surface-border/80"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><div class="flex flex-col min-w-0"><span class="text-lg font-bold text-text-primary tracking-tight truncate">Reports</span><div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-crimson-light animate-pulse"></span><span class="text-xs font-mono text-text-secondary truncate">Quest 3 · 18ms</span></div></div></div><div class="flex items-center gap-2"><button aria-label="Session alerts" class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-card text-text-secondary hover:text-text-primary border border-surface-border transition-colors"><span class="material-symbols-outlined text-[20px]">vital_signs</span></button><div class="w-9 h-9 rounded-full bg-surface-card-high border border-surface-border flex items-center justify-center shadow-inner"><span class="material-symbols-outlined text-crimson-light text-[20px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-20 pb-28 flex-grow"><div class="flex flex-col w-full px-4 space-y-4">
+<!-- Clinical Meta Header -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex flex-col">
+<span class="text-[11px] font-mono uppercase tracking-widest text-crimson-light font-semibold">Protocol · VR-BILAT-UL04</span>
+<h2 class="text-2xl font-bold text-text-primary tracking-tight mt-0.5">Session report</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-clinical-green/10 text-clinical-green border border-clinical-green/30 text-xs font-semibold shadow-sm font-mono">
+<span class="material-symbols-outlined text-[13px] mr-1">check_circle</span>
+        MDC Cleared
+      </span>
+<button aria-label="Export session report" class="w-9 h-9 rounded-xl bg-surface-card text-text-secondary hover:text-text-primary border border-surface-border flex items-center justify-center active:scale-95 transition-all shadow-sm" id="exportBtn">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+</button>
+</div>
+</div>
+<!-- Reach Envelope Top-Down Spatial Map -->
+<div class="w-full bg-surface-card rounded-2xl p-4 relative overflow-hidden border border-surface-border shadow-lg">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-crimson-light text-[19px]">adjust</span>
+<span class="text-sm font-bold text-text-primary">Bilateral reach trajectories</span>
+</div>
+<div class="flex items-center gap-3 text-xs font-semibold font-mono">
+<span class="inline-flex items-center gap-1.5 text-crimson-light">
+<span class="w-2 h-2 rounded-full bg-crimson-light ring-2 ring-crimson-light/20"></span>Affected (L)
+        </span>
+<span class="inline-flex items-center gap-1.5 text-ice-blue">
+<span class="w-2 h-2 rounded-full bg-ice-blue ring-2 ring-ice-blue/20"></span>Sound (R)
+        </span>
+</div>
+</div>
+<!-- Canvas Inset with Top-Down Workspace Visualization -->
+<div class="relative w-full h-44 bg-surface-subtle rounded-xl flex items-center justify-center overflow-hidden border border-surface-border/90">
+<!-- Grid Lines & Envelope -->
+<svg class="w-full h-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 320 160">
+<!-- Coordinate radial grid -->
+<circle cx="160" cy="160" opacity="0.25" r="140" stroke="#232E42" stroke-dasharray="3 3" stroke-width="1"></circle>
+<circle cx="160" cy="160" opacity="0.35" r="100" stroke="#232E42" stroke-dasharray="3 3" stroke-width="1"></circle>
+<circle cx="160" cy="160" opacity="0.45" r="60" stroke="#232E42" stroke-dasharray="3 3" stroke-width="1"></circle>
+<!-- Center reference baseline -->
+<line opacity="0.4" stroke="#232E42" stroke-dasharray="2 2" stroke-width="1" x1="160" x2="160" y1="160" y2="20"></line>
+<line opacity="0.25" stroke="#232E42" stroke-width="1" x1="30" x2="290" y1="160" y2="160"></line>
+<!-- Target Work Envelope Arc -->
+<path d="M 125 45 A 110 110 0 0 1 195 45" fill="none" opacity="0.5" stroke="#EF4444" stroke-dasharray="3 3" stroke-width="1.2"></path>
+<!-- Left Hand Path (Surgical Red #EF4444 & Crimson) -->
+<g class="transition-opacity duration-300" id="left-hand-path">
+<path d="M 148 118 C 147 90, 146 55, 147 38 C 148 28, 149 26, 149 25" stroke="#991B1B" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M 148 118 C 150 96, 153 62, 155 42 C 156 30, 155 24, 154 22" stroke="#EF4444" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<circle cx="149" cy="25" fill="#DC2626" r="3.5"></circle>
+<circle cx="154" cy="22" fill="#EF4444" r="3.5"></circle>
+</g>
+<!-- Right Hand Path (Electric Ice Blue #38BDF8) -->
+<g class="transition-opacity duration-300" id="right-hand-path">
+<path d="M 172 118 C 170 92, 168 62, 164 42 C 162 33, 164 28, 165 26" stroke="#0284C7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M 172 118 C 174 95, 179 66, 183 45 C 185 36, 187 30, 188 28" stroke="#38BDF8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<circle cx="165" cy="26" fill="#0284C7" r="3.5"></circle>
+<circle cx="188" cy="28" fill="#38BDF8" r="3.5"></circle>
+</g>
+<!-- Trunk Home origin marker -->
+<circle cx="160" cy="148" fill="#F8FAFC" r="3.5"></circle>
+<circle cx="160" cy="148" opacity="0.3" r="7" stroke="#F8FAFC" stroke-width="1"></circle>
+</svg>
+<!-- Interactive trace toggle pills -->
+<div class="absolute bottom-2.5 right-2.5 flex items-center gap-1.5 bg-surface-card/95 backdrop-blur-md border border-surface-border rounded-lg p-1 shadow">
+<button class="px-2.5 py-0.5 rounded text-crimson-light bg-crimson-glow font-mono font-semibold text-xs active:opacity-70 transition-all border border-crimson-light/30" id="toggleLeftTrace">Left</button>
+<button class="px-2.5 py-0.5 rounded text-ice-blue bg-ice-blue-glow font-mono font-semibold text-xs active:opacity-70 transition-all border border-ice-blue/30" id="toggleRightTrace">Right</button>
+</div>
+<div class="absolute bottom-2.5 left-3 text-text-muted text-[11px] font-mono tracking-wide">
+        Transverse plane (Z-X)
+      </div>
+</div>
+</div>
+<!-- Kinematic Metric Summary Carousel -->
+<div class="grid grid-cols-2 gap-3">
+<!-- 1. Completion -->
+<div class="bg-surface-card rounded-2xl p-3.5 flex flex-col justify-between border border-surface-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-text-secondary truncate">Completion</span>
+<span class="material-symbols-outlined text-[17px] text-clinical-green">check_circle</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-2xl font-bold text-text-primary tabular-nums tracking-tight">20/20</span>
+<span class="text-xs font-semibold text-clinical-green font-mono">100%</span>
+</div>
+<div class="w-full bg-surface-card-high border border-surface-border-subtle rounded-full h-1.5 mt-2.5 overflow-hidden">
+<div class="bg-clinical-green h-full rounded-full w-full"></div>
+</div>
+</div>
+<!-- 2. Avg Reaction -->
+<div class="bg-surface-card rounded-2xl p-3.5 flex flex-col justify-between border border-surface-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-text-secondary truncate">Avg reaction</span>
+<span class="material-symbols-outlined text-[17px] text-ice-blue">timer</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="text-2xl font-bold text-text-primary tabular-nums tracking-tight">246</span>
+<span class="text-xs font-medium text-text-secondary font-mono">ms</span>
+</div>
+<span class="text-[11px] font-mono text-text-muted truncate mt-1">Norm: &lt; 310 ms</span>
+</div>
+<!-- 3. Smoothness (SPARC) -->
+<div class="bg-surface-card rounded-2xl p-3.5 flex flex-col justify-between border border-surface-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-text-secondary truncate">Smoothness (SPARC)</span>
+<span class="material-symbols-outlined text-[17px] text-crimson-light">waves</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="text-2xl font-bold text-text-primary tabular-nums tracking-tight">-1.41</span>
+<span class="text-xs font-semibold text-clinical-green font-mono">+0.18</span>
+</div>
+<div class="mt-1">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+          MDC Cleared (p&lt;0.05)
+        </span>
+</div>
+</div>
+<!-- 4. Bilateral Symmetry -->
+<div class="bg-surface-card rounded-2xl p-3.5 flex flex-col justify-between border border-surface-border shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-text-secondary truncate">Bilateral symmetry</span>
+<span class="material-symbols-outlined text-[17px] text-ice-blue">balance</span>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="text-2xl font-bold text-text-primary tabular-nums tracking-tight">0.82</span>
+<span class="text-xs font-mono text-text-secondary">index</span>
+</div>
+<div class="flex items-center gap-1 mt-2.5">
+<div class="h-1.5 flex-1 bg-crimson-light rounded-l-full"></div>
+<div class="h-1.5 flex-1 bg-ice-blue rounded-r-full"></div>
+</div>
+</div>
+</div>
+<!-- Trial Table Section Header -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<h3 class="text-base font-bold text-text-primary tracking-tight">Trial table</h3>
+<span class="text-xs font-mono font-semibold px-2 py-0.5 rounded-md bg-surface-card-high text-crimson-light border border-surface-border" id="selectedCountBadge">1 selected</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-xl bg-surface-card hover:bg-surface-card-high text-text-secondary hover:text-text-primary text-xs font-medium border border-surface-border flex items-center gap-1.5 transition-all shadow-sm" id="filterLimbBtn">
+<span class="material-symbols-outlined text-[15px]">tune</span>
+<span class="font-sans">All limbs</span>
+</button>
+</div>
+</div>
+<!-- Horizontal Scroll Kinematic Matrix Table -->
+<div class="bg-surface-card rounded-2xl overflow-hidden border border-surface-border shadow-sm">
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[620px]">
+<thead>
+<tr class="bg-surface-subtle text-text-muted text-[11px] font-mono font-semibold tracking-wider uppercase border-b border-surface-border">
+<th class="py-3 pl-3 pr-2 w-10 text-center">
+<button aria-label="Select all rows" class="w-4 h-4 rounded bg-surface-card-high border border-surface-border flex items-center justify-center text-crimson-light" id="masterCheckbox">
+<span class="material-symbols-outlined text-[14px]">indeterminate_check_box</span>
+</button>
+</th>
+<th class="py-3 px-2 font-semibold">#</th>
+<th class="py-3 px-2 font-semibold">Hand</th>
+<th class="py-3 px-2 font-semibold">Outcome</th>
+<th class="py-3 px-2 font-semibold text-right">Reaction</th>
+<th class="py-3 px-2 font-semibold text-right">Move time</th>
+<th class="py-3 px-2 font-semibold text-right">Peak speed</th>
+<th class="py-3 px-2 font-semibold text-right">Smoothness</th>
+<th class="py-3 pl-2 pr-4 font-semibold">Quality</th>
+</tr>
+</thead>
+<tbody class="text-xs divide-y divide-surface-border/60 text-text-primary font-normal" id="trialTableBody">
+<!-- Row 0: Active / Checked -->
+<tr class="trial-row bg-surface-card-high hover:bg-surface-card-high/80 cursor-pointer transition-colors" data-limb="left" data-trial="0">
+<td class="py-2.5 pl-3 pr-2 text-center">
+<input checked="" class="w-4 h-4 rounded border-surface-border bg-surface-subtle text-crimson focus:ring-crimson accent-crimson cursor-pointer trial-cb" type="checkbox">
+</td>
+<td class="py-2.5 px-2 font-mono font-semibold tabular-nums text-text-primary">0</td>
+<td class="py-2.5 px-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-crimson-light bg-crimson-glow border border-crimson-light/30 font-mono font-semibold text-[11px]">left</span>
+</td>
+<td class="py-2.5 px-2 text-text-secondary text-[11px] font-mono">success</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">191 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">792 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">1.53 m/s</td>
+<td class="py-2.5 px-2 text-right tabular-nums text-text-primary font-mono">-1.4</td>
+<td class="py-2.5 pl-2 pr-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-clinical-green"></span>Reliable
+              </span>
+</td>
+</tr>
+<!-- Row 1 -->
+<tr class="trial-row hover:bg-surface-card-high/60 cursor-pointer transition-colors" data-limb="right" data-trial="1">
+<td class="py-2.5 pl-3 pr-2 text-center">
+<input class="w-4 h-4 rounded border-surface-border bg-surface-subtle text-crimson focus:ring-crimson accent-crimson cursor-pointer trial-cb" type="checkbox">
+</td>
+<td class="py-2.5 px-2 font-mono font-semibold tabular-nums text-text-primary">1</td>
+<td class="py-2.5 px-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-ice-blue bg-ice-blue-glow border border-ice-blue/30 font-mono font-semibold text-[11px]">right</span>
+</td>
+<td class="py-2.5 px-2 text-text-secondary text-[11px] font-mono">success</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">284 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">842 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">1.35 m/s</td>
+<td class="py-2.5 px-2 text-right tabular-nums text-text-primary font-mono">-1.4</td>
+<td class="py-2.5 pl-2 pr-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-clinical-green"></span>Reliable
+              </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="trial-row hover:bg-surface-card-high/60 cursor-pointer transition-colors" data-limb="left" data-trial="2">
+<td class="py-2.5 pl-3 pr-2 text-center">
+<input class="w-4 h-4 rounded border-surface-border bg-surface-subtle text-crimson focus:ring-crimson accent-crimson cursor-pointer trial-cb" type="checkbox">
+</td>
+<td class="py-2.5 px-2 font-mono font-semibold tabular-nums text-text-primary">2</td>
+<td class="py-2.5 px-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-crimson-light bg-crimson-glow border border-crimson-light/30 font-mono font-semibold text-[11px]">left</span>
+</td>
+<td class="py-2.5 px-2 text-text-secondary text-[11px] font-mono">success</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">287 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">848 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">1.45 m/s</td>
+<td class="py-2.5 px-2 text-right tabular-nums text-text-primary font-mono">-1.4</td>
+<td class="py-2.5 pl-2 pr-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-clinical-green"></span>Reliable
+              </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="trial-row hover:bg-surface-card-high/60 cursor-pointer transition-colors" data-limb="right" data-trial="3">
+<td class="py-2.5 pl-3 pr-2 text-center">
+<input class="w-4 h-4 rounded border-surface-border bg-surface-subtle text-crimson focus:ring-crimson accent-crimson cursor-pointer trial-cb" type="checkbox">
+</td>
+<td class="py-2.5 px-2 font-mono font-semibold tabular-nums text-text-primary">3</td>
+<td class="py-2.5 px-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-ice-blue bg-ice-blue-glow border border-ice-blue/30 font-mono font-semibold text-[11px]">right</span>
+</td>
+<td class="py-2.5 px-2 text-text-secondary text-[11px] font-mono">success</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">238 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">717 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">1.33 m/s</td>
+<td class="py-2.5 px-2 text-right tabular-nums text-text-primary font-mono">-1.4</td>
+<td class="py-2.5 pl-2 pr-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-clinical-green"></span>Reliable
+              </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="trial-row hover:bg-surface-card-high/60 cursor-pointer transition-colors" data-limb="left" data-trial="4">
+<td class="py-2.5 pl-3 pr-2 text-center">
+<input class="w-4 h-4 rounded border-surface-border bg-surface-subtle text-crimson focus:ring-crimson accent-crimson cursor-pointer trial-cb" type="checkbox">
+</td>
+<td class="py-2.5 px-2 font-mono font-semibold tabular-nums text-text-primary">4</td>
+<td class="py-2.5 px-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-crimson-light bg-crimson-glow border border-crimson-light/30 font-mono font-semibold text-[11px]">left</span>
+</td>
+<td class="py-2.5 px-2 text-text-secondary text-[11px] font-mono">success</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">272 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">700 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">1.18 m/s</td>
+<td class="py-2.5 px-2 text-right tabular-nums text-text-primary font-mono">-1.4</td>
+<td class="py-2.5 pl-2 pr-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-clinical-green"></span>Reliable
+              </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="trial-row hover:bg-surface-card-high/60 cursor-pointer transition-colors" data-limb="right" data-trial="5">
+<td class="py-2.5 pl-3 pr-2 text-center">
+<input class="w-4 h-4 rounded border-surface-border bg-surface-subtle text-crimson focus:ring-crimson accent-crimson cursor-pointer trial-cb" type="checkbox">
+</td>
+<td class="py-2.5 px-2 font-mono font-semibold tabular-nums text-text-primary">5</td>
+<td class="py-2.5 px-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-ice-blue bg-ice-blue-glow border border-ice-blue/30 font-mono font-semibold text-[11px]">right</span>
+</td>
+<td class="py-2.5 px-2 text-text-secondary text-[11px] font-mono">success</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">252 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">693 ms</td>
+<td class="py-2.5 px-2 text-right tabular-nums font-mono text-text-primary">1.19 m/s</td>
+<td class="py-2.5 px-2 text-right tabular-nums text-text-primary font-mono">-1.4</td>
+<td class="py-2.5 pl-2 pr-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-clinical-green/10 text-clinical-green border border-clinical-green/20">
+<span class="w-1.5 h-1.5 rounded-full bg-clinical-green"></span>Reliable
+              </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer with scroll indicator -->
+<div class="px-4 py-2.5 bg-surface-subtle border-t border-surface-border flex items-center justify-between text-text-muted text-xs font-mono">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-crimson-light">swipe</span>
+        Scroll telemetry
+      </span>
+<span class="tabular-nums">6 of 20 trials</span>
+</div>
+</div>
+<!-- Haptic Feedback & Clinical Calibration Section -->
+<div class="bg-surface-card rounded-2xl p-4 space-y-3.5 border border-surface-border shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-crimson-light text-[21px]">vibration</span>
+<h4 class="text-sm font-bold text-text-primary tracking-tight">Haptic feedback &amp; resistance</h4>
+</div>
+<span class="text-xs font-mono font-semibold px-2 py-0.5 rounded-md bg-surface-card-high border border-surface-border text-text-secondary">Level 3 · 2.4 N</span>
+</div>
+<!-- Haptic Profile Bar Chart Indicator -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs font-medium">
+<span class="text-text-secondary">Impact pulse response</span>
+<span class="text-text-primary font-mono tabular-nums font-semibold">14 ms latency</span>
+</div>
+<div class="w-full bg-surface-subtle border border-surface-border rounded-full h-2 overflow-hidden flex">
+<div class="bg-crimson-light h-full transition-all" style="width: 48%;"></div>
+<div class="bg-ice-blue h-full transition-all" style="width: 52%;"></div>
+</div>
+<div class="flex justify-between text-[11px] font-mono font-semibold">
+<span class="flex items-center gap-1.5 text-crimson-light">
+<span class="w-1.5 h-1.5 rounded-full bg-crimson-light"></span> Left controller (active)
+        </span>
+<span class="flex items-center gap-1.5 text-ice-blue">
+<span class="w-1.5 h-1.5 rounded-full bg-ice-blue"></span> Right controller (active)
+        </span>
+</div>
+</div>
+<!-- Clinician Session Note Field -->
+<div class="pt-1">
+<label class="block text-xs font-medium text-text-secondary mb-1.5" for="sessionNote">Therapist observation notes</label>
+<div class="relative">
+<input class="w-full h-11 px-3.5 bg-surface-subtle text-text-primary text-xs rounded-xl border border-surface-border placeholder:text-text-muted outline-none focus:border-crimson-light focus:ring-1 focus:ring-crimson-light transition-all" id="sessionNote" placeholder="e.g., Patient demonstrated reduced compensatory trunk lean on trial #4..." type="text">
+<button class="absolute right-2.5 top-2 px-2.5 py-1 rounded-lg bg-surface-card-high hover:bg-surface-border text-text-primary text-xs font-semibold border border-surface-border transition-all" id="saveNoteBtn">
+          Save
+        </button>
+</div>
+</div>
+</div>
+<!-- Primary Action Deck -->
+<div class="pt-1 flex items-center gap-3">
+<button class="flex-1 h-12 rounded-xl bg-surface-card-high hover:bg-surface-border border border-surface-border text-text-primary text-xs font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm">
+<span class="material-symbols-outlined text-[19px] text-text-secondary">replay</span>
+      Replay trajectory
+    </button>
+<button class="flex-1 h-12 rounded-xl bg-crimson hover:bg-crimson-light text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-lg shadow-crimson/25">
+<span class="material-symbols-outlined text-[19px]">add_task</span>
+      Commit to chart
+    </button>
+</div>
+</div>
+<script>
+  // Interactive micro-interactions: Limb Trajectory toggles and Table Row selection
+  (function() {
+    const leftPath = document.getElementById('left-hand-path');
+    const rightPath = document.getElementById('right-hand-path');
+    const toggleLeft = document.getElementById('toggleLeftTrace');
+    const toggleRight = document.getElementById('toggleRightTrace');
+
+    let leftVisible = true;
+    let rightVisible = true;
+
+    if (toggleLeft && leftPath) {
+      toggleLeft.addEventListener('click', () => {
+        leftVisible = !leftVisible;
+        leftPath.style.opacity = leftVisible ? '1' : '0.15';
+        toggleLeft.classList.toggle('opacity-40', !leftVisible);
+      });
+    }
+
+    if (toggleRight && rightPath) {
+      toggleRight.addEventListener('click', () => {
+        rightVisible = !rightVisible;
+        rightPath.style.opacity = rightVisible ? '1' : '0.15';
+        toggleRight.classList.toggle('opacity-40', !rightVisible);
+      });
+    }
+
+    // Row selection and counter update
+    const checkboxes = document.querySelectorAll('.trial-cb');
+    const selectedBadge = document.getElementById('selectedCountBadge');
+    const rows = document.querySelectorAll('.trial-row');
+
+    function updateCount() {
+      const count = document.querySelectorAll('.trial-cb:checked').length;
+      if (selectedBadge) {
+        selectedBadge.textContent = `${count} selected`;
+      }
+    }
+
+    checkboxes.forEach((cb) => {
+      cb.addEventListener('change', (e) => {
+        const row = e.target.closest('tr');
+        if (e.target.checked) {
+          row.classList.add('bg-surface-card-high');
+        } else {
+          row.classList.remove('bg-surface-card-high');
+        }
+        updateCount();
+      });
+    });
+
+    rows.forEach((row) => {
+      row.addEventListener('click', (e) => {
+        if (e.target.tagName.toLowerCase() !== 'input') {
+          const cb = row.querySelector('.trial-cb');
+          if (cb) {
+            cb.checked = !cb.checked;
+            cb.dispatchEvent(new Event('change'));
+          }
+        }
+      });
+    });
+
+    // Limb filter cycle
+    const filterBtn = document.getElementById('filterLimbBtn');
+    const filterStates = ['All limbs', 'Left only', 'Right only'];
+    let currentFilterIdx = 0;
+
+    if (filterBtn) {
+      filterBtn.addEventListener('click', () => {
+        currentFilterIdx = (currentFilterIdx + 1) % filterStates.length;
+        const state = filterStates[currentFilterIdx];
+        filterBtn.querySelector('span:last-child').textContent = state;
+
+        rows.forEach((r) => {
+          const limb = r.getAttribute('data-limb');
+          if (state === 'All limbs') {
+            r.style.display = '';
+          } else if (state === 'Left only') {
+            r.style.display = limb === 'left' ? '' : 'none';
+          } else if (state === 'Right only') {
+            r.style.display = limb === 'right' ? '' : 'none';
+          }
+        });
+      });
+    }
+
+    // Note Save Toast indicator
+    const saveBtn = document.getElementById('saveNoteBtn');
+    const noteInput = document.getElementById('sessionNote');
+    if (saveBtn && noteInput) {
+      saveBtn.addEventListener('click', () => {
+        if (noteInput.value.trim().length > 0) {
+          saveBtn.textContent = 'Saved!';
+          setTimeout(() => {
+            saveBtn.textContent = 'Save';
+          }, 1500);
+        }
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-app-bg/95 backdrop-blur-xl border-t border-surface-border"><div class="flex justify-around items-center h-16 px-2"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 text-text-muted hover:text-text-primary transition-colors" data-path="patients" href="#"><span class="material-symbols-outlined text-[22px]">group</span><span class="text-[11px] font-medium mt-0.5">Patients</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 text-text-muted hover:text-text-primary transition-colors" data-path="live-monitor" href="#"><span class="material-symbols-outlined text-[22px]">videogame_asset</span><span class="text-[11px] font-medium mt-0.5">Monitor</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 text-text-muted hover:text-text-primary transition-colors" data-path="programs" href="#"><span class="material-symbols-outlined text-[22px]">clinical_notes</span><span class="text-[11px] font-medium mt-0.5">Programs</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[48px] px-2 py-1 transition-colors text-crimson-light font-bold" data-path="reports" href="#"><span class="material-symbols-outlined text-[22px]">insights</span><span class="text-[11px] font-semibold mt-0.5">Reports</span></a></div></nav></body></html>

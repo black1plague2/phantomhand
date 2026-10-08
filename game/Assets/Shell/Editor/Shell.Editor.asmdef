@@ -1,0 +1,31 @@
+{
+    "name": "Shell.Editor",
+    "rootNamespace": "Opus.Shell.Editor",
+    "references": [
+        "Opus.Sdk.Runtime",
+        "OrchardReach.Runtime",
+        "PhantomHand.Runtime",
+        "PhantomHand.Presentation",
+        "UnityEngine.UI",
+        "Shell.Runtime",
+        "Opus.Art.Runtime",
+        "Oculus.Interaction",
+        "Oculus.Interaction.OVR",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Universal.Editor",
+        "Unity.RenderPipelines.Core.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

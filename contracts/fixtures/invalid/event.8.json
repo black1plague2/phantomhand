@@ -1,0 +1,15 @@
+{
+  "t_ms": 1000,
+  "seq": 1,
+  "block": 0,
+  "trial": 0,
+  "type": "threat_response",
+  "data": {
+    "wrist_peak_mps": 0.42,
+    "wrist_latency_ms": 182,
+    "imu_peak": 3.1,
+    "emg_peak_x": 6.4,
+    "emg_latency_ms": 96,
+    "quality": "bogus"
+  }
+}

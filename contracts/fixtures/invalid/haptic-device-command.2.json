@@ -1,0 +1,7 @@
+{
+  "motor": 0,
+  "intensity": 300,
+  "duration_ms": 200,
+  "pattern": "pulse",
+  "cue": "stroke"
+}

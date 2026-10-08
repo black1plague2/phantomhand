@@ -1,0 +1,1056 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.6f1 (0b051c2e5d54) revision 722204'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-GARV BANSAL" at "2026-09-17T10:27:34.9257529Z"
+OS: 'Windows 11  (10.0.26200) CoreSingleLanguage' Language: 'en' Physical Memory: 16010 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-09-17T10:27:34Z
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 5116, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              eebbf17dc23e44c29ea2513d16e3aab6
+  Correlation Id:          d14de35f03e99a97646a83cbbf2457fb
+  External correlation Id: 4241899160041134541
+  Machine Id:              kImHo2x28Ujte4rhYvWcdMgf4I8=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-GARV BANSAL" (connect: 0.00s, validation: 0.01s, handshake: 0.10s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-GARV BANSAL-notifications" at "2026-09-17T10:27:35.029434Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 13469799320789-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.17s
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Unity.exe
+-batchmode
+-projectPath
+C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+-logFile
+C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\unity_logs\run6_urp2.log
+-executeMethod
+Opus.Shell.Editor.OpusRenderPipelineSetupTool.BatchSetupUrp
+-quit
+Successfully changed project path to: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [25388]  Target information:
+
+Player connection [25388]  * "[IP] 169.254.83.107 [Port] 55504 [Flags] 2 [Guid] 1927651733 [EditorId] 1927651733 [Version] 1048832 [Id] WindowsEditor(7,LAPTOP-EF95960B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [25388]  * "[IP] 172.17.99.2 [Port] 55504 [Flags] 2 [Guid] 1927651733 [EditorId] 1927651733 [Version] 1048832 [Id] WindowsEditor(7,LAPTOP-EF95960B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [25388] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [25388] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-15328" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+[Licensing::Client] Successfully resolved entitlement details
+Refreshing native plugins compatible for Editor in 4.31 ms, found 0 plugins.
+Initialize engine version: 6000.4.6f1 (0b051c2e5d54)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28a1)
+    Vendor:   NVIDIA
+    VRAM:     5921 MB
+    Driver:   32.0.15.5597
+Shader 'Oculus/OVRMRCameraFrameLit': fallback shader 'Alpha-Diffuse' not found
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56328
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.003457 seconds.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.477 seconds
+Domain Reload Profiling: 991ms
+	BeginReloadAssembly (154ms)
+		CreateAndSetChildDomain (10ms)
+	RebuildCommonClasses (43ms)
+	RebuildNativeTypeToScriptingClass (14ms)
+	initialDomainReloadingComplete (75ms)
+	LoadAllAssembliesAndSetupDomain (226ms)
+		LoadAssemblies (141ms)
+		AnalyzeDomain (216ms)
+			TypeCache.Refresh (214ms)
+				TypeCache.ScanAssembly (199ms)
+	FinalizeReload (479ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (63ms)
+			BeforeProcessingInitializeOnLoad (94ms)
+			ProcessInitializeOnLoadAttributes (124ms)
+			ProcessInitializeOnLoadMethodAttributes (122ms)
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 65 packages:
+  Packages from [https://npm.developer.oculus.com]:
+    com.meta.xr.sdk.core@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.core@4ea2676097b9)
+    com.meta.xr.sdk.interaction.ovr@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.interaction.ovr@08728e3e2bb2)
+    com.meta.xr.sdk.interaction@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.interaction@875abb30439c)
+  Packages from [https://packages.unity.com]:
+    com.unity.xr.openxr@1.16.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf)
+    com.unity.xr.management@4.5.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.management@20be87dea580)
+    com.unity.inputsystem@1.11.2 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.inputsystem@3c4a97c3950f)
+    com.unity.addressables@2.3.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.addressables@5d870284b3d9)
+    com.unity.profiling.core@1.0.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.xr.hands@1.7.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.hands@3e241be20642)
+    com.unity.xr.core-utils@2.6.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.core-utils@a8b900321199)
+    com.unity.xr.legacyinputhelpers@3.0.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.legacyinputhelpers@3f62d634f63b)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.mathematics@1.3.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.searcher@4.9.4 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.searcher@d45a78918735)
+    com.unity.burst@1.8.29 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.burst@6bb9aca3ef38)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.test-framework.performance@aa81a99c4a75)
+  Built-in packages:
+    com.unity.multiplayer.center@1.0.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.multiplayer.center@f01f4ba8d00a)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.universal@0d0659f1368d)
+    com.unity.test-framework@1.6.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.modules.accessibility@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.0.5 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.core@630143bbfe2b)
+    com.unity.shadergraph@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.shadergraph@04a6ef07359e)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.textmeshpro@5.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.textmeshpro@53f43edfd2e0)
+    com.unity.ugui@2.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.ugui@473409526770)
+    com.unity.collections@6.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.collections@65f499a3cc26)
+  Embedded packages:
+    com.opus.sdk@file:C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Packages\com.opus.sdk (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Packages\com.opus.sdk)
+[Subsystems] Looking for new subsystems at path C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf
+[Subsystems] Novel subsystem found at Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Assets
+[Subsystems] Discovering subsystems at path C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf
+[Subsystems] No descriptors matched for  examples in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json.
+[Subsystems] 1 'inputs' descriptors matched in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] 1 'displays' descriptors matched in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] No descriptors matched for  meshings in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json.
+[Package Manager] Done registering packages in 0.08 seconds
+[ScriptCompilation] Requested script compilation because: Assembly Definition File(s) changed
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Assembly for Assembly Definition File 'Packages/com.opus.sdk/Editor/Opus.Sdk.Editor.asmdef' will not be compiled, because it has no scripts associated with it.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:LogFormat (UnityEngine.LogType,string,object[])
+UnityEngine.Debug:LogWarningFormat (string,object[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:WarnIfThereAreAssembliesWithoutAnyScripts (UnityEditor.Scripting.ScriptCompilation.ScriptAssemblySettings,UnityEditor.Scripting.ScriptCompilation.ScriptAssembly[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:CompileScriptsWithSettings (UnityEditor.Scripting.ScriptCompilation.ScriptAssemblySettings)
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:CompileScripts (UnityEditor.Scripting.ScriptCompilation.EditorScriptCompilationOptions,UnityEditor.BuildTarget,int,string[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface/<>c__DisplayClass21_0:<CompileScripts>b__0 ()
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface:EmitExceptionAsError<UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus> (System.Func`1<UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus>,UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus)
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface:CompileScripts (UnityEditor.Scripting.ScriptCompilation.EditorScriptCompilationOptions,UnityEditor.BuildTarget,int,string[])
+
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 35.7722ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1300b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+DisplayProgressbar: Compiling Scripts
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.6.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@6bb9aca3ef38\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 89.8141ms
+ExitCode: 4 Duration: 0s635ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/1300b0aE-inputdata.json
+[1266/1709  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra requires additional run (0.59 seconds), 2 items updated, 1265 evaluated
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\netcorerun\netcorerun.exe "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/1300b0aE.dag.json" "Library/Bee/1300b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+ExitCode: 0 Duration: 2s173ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1300b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\1300b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Current configuration matches the requested one, skipping
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 5.4112ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll, with 154 defines and 283 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - 200 - application/grpc 13.4426ms
+ExitCode: 0 Duration: 2s140ms
+Finished compiling graph: 1714 nodes, 41146 flattened edges (30812 ToBuild, 302 ToUse), maximum node priority 2928
+[ 847/1710  0s] WriteText Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll.mvfrm.rsp
+[ 905/1710  0s] WriteText Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.rsp
+[ 906/1710  0s] WriteResponseFile Library/Bee/artifacts/rsp/8593065484113047227.rsp
+[1265/1710  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1704/1710  0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.RenderPipelines.Universal.Editor.ref.dll_ECAA9E877BE61FD7.mvfrm
+[1705/1710  0s] MovedFromExtractor-Combine Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll.mvfrm
+[1706/1710  0s] Csc Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll (+2 others)
+Assets\Shell\Editor\OpusScreenshotTool.cs(110,64): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Shell\Editor\OpusScreenshotTool.cs(110,29): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(248,53): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(249,74): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+[1707/1710  0s] ILPostProcess Library/Bee/artifacts/1300b0aE.dag/post-processed/Shell.Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1300b0aE.dag/Shell.Editor.dll, with 154 defines and 283 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1708/1710  0s] CopyFiles Library/ScriptAssemblies/Shell.Editor.pdb
+[1709/1710  0s] CopyFiles Library/ScriptAssemblies/Shell.Editor.dll
+*** Tundra build success (2.11 seconds), 10 items updated, 1710 evaluated
+Assets\Shell\Editor\OpusScreenshotTool.cs(110,64): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Shell\Editor\OpusScreenshotTool.cs(110,29): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(248,53): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+Assets\Shell\Editor\OrchardSceneDressingTool.cs(249,74): warning CS0618: 'OneGrabFreeTransformer' is obsolete: 'Use GrabFreeTransformer instead'
+AssetDatabase: script compilation time: 5.486724s
+Begin MonoManager ReloadAssembly
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-Editor.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp.dll at Library/ScriptAssemblies/Assembly-CSharp.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.Editor.Reflection.Tests.dll at Library/ScriptAssemblies/Meta.XR.Editor.Reflection.Tests.dll not valid. Loading of assembly skipped.
+Assembly meta.xr.hand.readiness.tests.editmode.dll at Library/ScriptAssemblies/meta.xr.hand.readiness.tests.editmode.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.Input.Editor.Tests.dll at Library/ScriptAssemblies/Meta.XR.Input.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.MultiplayerBlocks.Fusion.dll at Library/ScriptAssemblies/Meta.XR.MultiplayerBlocks.Fusion.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.MultiplayerBlocks.NGO.dll at Library/ScriptAssemblies/Meta.XR.MultiplayerBlocks.NGO.dll not valid. Loading of assembly skipped.
+Assembly Opus.Sdk.Editor.dll at Library/ScriptAssemblies/Opus.Sdk.Editor.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Addressables.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Addressables.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Addressables.Tests.dll at Library/ScriptAssemblies/Unity.Addressables.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ResourceManager.Tests.dll at Library/ScriptAssemblies/Unity.ResourceManager.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.CodeSamples.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.CodeSamples.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Hands.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.Hands.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Hands.Tests.dll at Library/ScriptAssemblies/Unity.XR.Hands.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.EditorTests.dll at Library/ScriptAssemblies/Unity.XR.Management.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.TestPackage.dll at Library/ScriptAssemblies/Unity.XR.Management.TestPackage.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.TestPackage.Editor.dll at Library/ScriptAssemblies/Unity.XR.Management.TestPackage.Editor.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.Tests.dll at Library/ScriptAssemblies/Unity.XR.Management.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.Tests.Standalone.dll at Library/ScriptAssemblies/Unity.XR.Management.Tests.Standalone.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Ubuntu.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Ubuntu.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.TestSupport.dll at Library/ScriptAssemblies/Unity.XR.TestSupport.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.XR.LegacyInputHelpers.Tests.dll at Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.SpatialTracking.Tests.dll at Library/ScriptAssemblies/UnityEngine.SpatialTracking.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.XR.OpenXR.CodeSamples.Editor.Tests.dll at Library/ScriptAssemblies/UnityEngine.XR.OpenXR.CodeSamples.Editor.Tests.dll not valid. Loading of assembly skipped.
+Symbol file LoadedFromMemory is not a mono symbol file
+Script 'CharacterController' has the same name as built-in Unity component.
+AddComponent and GetComponent will not work with this script.
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindowDetailsExtension.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizer.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindow.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindowCollectionsPageExtension.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizerNetworking.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizerStyles.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Start importing Assets/Shell/Editor/Shell.Editor.asmdef using Guid(1999edba2ad98de498b48191e62b0334) (AssemblyDefinitionImporter) -> (Import Result ID: 'd42e5c0f4cb58502a0cb3c38a77e6ce7') in 0.0236525 seconds [static dependencies only]. Details - ImportResultOutputID=6d1491e9a06dca496852367bc11fcfa0 DependenciesID=86a975656580945c4147a3e161ebd11b StaticDependenciesID=95b893960ee654a0f0cf80a1c34a8979 
+Refreshing native plugins compatible for Editor in 15.20 ms, found 12 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 17.38 ms, found 12 plugins.
+I0917 15:57:48.973265 25388 OVRTelemetry.cpp:57] Telemetry_Init: calling startSession with engineName=Unity, pluginVersion=1.205.0
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+I0917 15:57:51.237600 25388 OVRTelemetry.cpp:61] Telemetry_Init: startSession completed successfully
+I0917 15:57:51.481179 25388 OVRTelemetry.cpp:57] Telemetry_Init: calling startSession with engineName=Unity, pluginVersion=1.204.0
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+I0917 15:57:53.735030 25388 OVRTelemetry.cpp:61] Telemetry_Init: startSession completed successfully
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  9.134 seconds
+Domain Reload Profiling: 10500ms
+	BeginReloadAssembly (414ms)
+		DisableScriptedObjects (56ms)
+		CreateAndSetChildDomain (152ms)
+	RebuildCommonClasses (50ms)
+	RebuildNativeTypeToScriptingClass (17ms)
+	initialDomainReloadingComplete (171ms)
+	LoadAllAssembliesAndSetupDomain (713ms)
+		LoadAssemblies (522ms)
+		AnalyzeDomain (324ms)
+			TypeCache.Refresh (210ms)
+				TypeCache.ScanAssembly (188ms)
+			BuildScriptInfoCaches (81ms)
+			ResolveRequiredComponents (29ms)
+	FinalizeReload (9135ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (40ms)
+			BeforeProcessingInitializeOnLoad (242ms)
+			ProcessInitializeOnLoadAttributes (8507ms)
+			ProcessInitializeOnLoadMethodAttributes (104ms)
+			AfterProcessingInitializeOnLoad (7ms)
+		AwakeInstancesAfterBackupRestoration (22ms)
+Refreshing native plugins compatible for Editor in 11.15 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=52f5311b892a2324fb77f5b846cf2507): Total: 18.208 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=4 ms, native=9919 ms
+		Asset DB Callback time: managed=1212 ms, native=102 ms
+		Scripting: domain reloads=1, domain reload time=1379 ms, compile time=5490 ms, other=99 ms
+		Project Asset Count: scripts=2181, non-scripts=3850
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 83.454ms
+	ApplyChangesToAssetFolders: 1.576ms
+	Scan: 207.640ms
+	OnSourceAssetsModified: 1.079ms
+	CategorizeScriptCompilationAssets: 58.692ms
+	ProcessAssetsWithTransientArtifactChanges: 101.051ms
+	CategorizeAssets: 107.896ms
+	CompileScripts: 5489.737ms
+	ImportOutOfDateAssets: 9216.215ms (9181.080ms without children)
+		ImportManagerImport: 29.317ms (5.256ms without children)
+		UnloadImportedAssets: 2.351ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 1.829ms
+		OnDemandSchedulerStart: 1.618ms
+	PostProcessAllAssets: 1221.853ms
+		XRBuildSystem.XRAssetImported 5.478ms
+		AssemblyValidation.PostprocessAllAssets 3.102ms
+		VCAutoAddAssetPostprocess 1.365ms
+		MonoPostProcessAllAssets: 1211.240ms
+			AssetPostprocessor.OnPostprocessAllAssets 140.794ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 78.993ms
+			AssetCallbacks.OnPostprocessAllAssets 23.739ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 18.896ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 6.540ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 2.555ms
+			SyncVS.PostprocessSyncProject 2.084ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.765ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 1.685ms
+			AssetChangedListener.OnPostprocessAllAssets 1.499ms
+			MaterialPostprocessor.OnPostprocessAllAssets 1.123ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.098ms
+			AddressablesAssetPostProcessor.OnPostprocessAllAssets 1.092ms
+			AssetPostProcessor.OnPostprocessAllAssets 0.677ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.520ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.511ms
+			AssetEvents.OnPostprocessAllAssets 0.394ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.392ms
+			AssetPathToTypes.OnPostprocessAllAssets 0.294ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.291ms
+			PostProcessor.OnPostprocessAllAssets 0.291ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.282ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.277ms
+			SceneRenameHandler.OnPostprocessAllAssets 0.229ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.208ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.167ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.128ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.123ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.122ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.099ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.092ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.082ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.077ms
+	PostAssetChangesProfiler: 12.863ms
+	UnloadStreamsBegin: 7.087ms
+	PersistCurrentRevisions: 0.399ms
+	GenerateScriptTypeHashes: 14.079ms
+	GenerateScriptTypeSerializationHashes: 20.349ms
+	Untracked: 1692.272ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Shader 'Oculus/OVRMRCameraFrameLit': fallback shader 'Alpha-Diffuse' not found
+Scanning for USB devices : 2.599ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-OPUS
+[HRT] RulesProvider: loaded 4 remote rule(s) (schema v1).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Meta.HandReadinessTool.Editor.HandReadinessRulesProvider:EmitSuccess (int,int) (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs:175)
+Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/<FetchAndSwap>d__11:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs:125)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>)
+Meta.XR.Editor.UserInterface.RemoteJsonContent`1/<Create>d__1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/UserInterface/RemoteJsonContent.cs:56)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<Fetch>d__3:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:374)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteContentDownloader`1/<Fetch>d__31`1<Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader, string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:309)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<string>:TrySetResult (string)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:SetResult (string)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<ReadFromCache>d__5`1<string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:401)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs Line: 175)
+
+[HRT] PromptProvider: loaded remote prompt (systemPrompt=4925c, references=2, schema v1).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Meta.HandReadinessTool.Editor.HandReadinessPromptProvider:EmitSuccess (int,int,int) (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs:159)
+Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/<FetchAndSwap>d__11:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs:122)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>)
+Meta.XR.Editor.UserInterface.RemoteJsonContent`1/<Create>d__1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/UserInterface/RemoteJsonContent.cs:56)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<Fetch>d__3:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:374)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteContentDownloader`1/<Fetch>d__31`1<Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader, string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:309)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<string>:TrySetResult (string)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:SetResult (string)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<ReadFromCache>d__5`1<string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:401)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs Line: 159)
+
+Unloading 259 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 6880 unused Assets / (7.0 MB). Loaded Objects now: 8979.
+Memory consumption went from 289.9 MB to 282.9 MB.
+Total: 18.217300 ms (FindLiveObjects: 0.684400 ms CreateObjectMapping: 0.630900 ms MarkObjects: 11.347400 ms  DeleteObjects: 5.548500 ms)
+
+[OPUS] OpusRenderPipelineSetupTool: starting
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:28)
+
+(Filename: Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs Line: 28)
+
+Start importing Assets/Settings using Guid(040528dacdcbb6e49ada1e2066b70e37) (DefaultImporter) -> (Import Result ID: 'd1a6dee2a471cfa76ac9b9ba907c817b') in 0.0105788 seconds [static dependencies only]. Details - ImportResultOutputID=59e79bc09bca0e53fe47e176a7d33ee3 DependenciesID=51cec974aa1b83027c1e92dc4e97fb02 StaticDependenciesID=50cbf073165baae651d2090c5c2cfb93 
+Start importing Assets/Settings/OpusQuestURP_Renderer.asset using Guid(ac2f386cc686ccc4bb3398efb6f8094c) (NativeFormatImporter) -> (Import Result ID: '54422fec17de06bc0412c51796d39d84') in 0.0028117 seconds [static dependencies only]. Details - ImportResultOutputID=66feb61285ec0e85982d22066289da21 DependenciesID=5b5b99b31bf188bad175da5f1c40ffd1 StaticDependenciesID=d707eab93c89ee71bf3abf47fae8d960 
+Refreshing native plugins compatible for Editor in 11.48 ms, found 12 plugins.
+Asset Pipeline Refresh (id=2c42aa1744bb3a24eb9eaf5e79d329ba): Total: 0.148 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Settings/OpusQuestURP.asset using Guid(56be7a98db18a844b98b52a5b9c6bc58) (NativeFormatImporter) -> (Import Result ID: 'be148016ed51259dbc4af811a93cbbcf') in 0.0023179 seconds [static dependencies only]. Details - ImportResultOutputID=fb758807d476d334436bdbaa3708e9c3 DependenciesID=d2f3b72de2f9f9523e8355bf29f9ec7d StaticDependenciesID=cf6f5375fdbf1fffd1809ed80a0d7f3d 
+Refreshing native plugins compatible for Editor in 12.00 ms, found 12 plugins.
+Asset Pipeline Refresh (id=129034df407bd46469c2d04b59f5334d): Total: 0.065 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[OPUS] OpusRenderPipelineSetupTool: created Assets/Settings/OpusQuestURP.asset + renderer data sub-asset
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:51)
+
+(Filename: Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs Line: 51)
+
+[OPUS] OpusRenderPipelineSetupTool: assigned as GraphicsSettings.defaultRenderPipeline and QualitySettings.renderPipeline (level=5)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:65)
+
+(Filename: Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs Line: 65)
+
+Start importing ProjectSettings/QualitySettings.asset using Guid(00000000000000009000000000000000) (LibraryAssetImporter) -> (Import Result ID: '821aab0fab4e70af5b131f7852e5dbe9') in 0.0039154 seconds [static dependencies only]. Details - ImportResultOutputID=466ae0066f63be03acd64a7e01d76d9f DependenciesID=f41612eace2d62b6aff1c812c5db5ebc StaticDependenciesID=75cc94221e386fc7a41f08f3a60b471f 
+Start importing ProjectSettings/GraphicsSettings.asset using Guid(00000000000000006100000000000000) (LibraryAssetImporter) -> (Import Result ID: 'd6d6a07e606405514e486fb47311d596') in 0.0021388 seconds [static dependencies only]. Details - ImportResultOutputID=5bd38efc7568c0c855c21a11ad435b27 DependenciesID=7df82c2e319d72afecc2b9d3afada65a StaticDependenciesID=2f01f686380237050541911d9d60db2f 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Guitar/Materials/GuitarMat.fbx using Guid(103a9a65e5a204743be93c5e4212cf81) (FBXImporter) -> (Import Result ID: '66297ae7a870f9ae82b0d10a27a16420') in 0.28752 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=140e0a169eca5561e46b4d3354b260d1 DependenciesID=54ce1eab94a0f8483be4a5515854552f StaticDependenciesID=c76877bc9ba8d1951754a94c57fa0efd 
+Start importing Packages/com.unity.render-pipelines.core/Runtime/Debug/ProbeSamplingDebugMesh.fbx using Guid(20be25aac4e22ee49a7db76fb3df6de2) (FBXImporter) -> (Import Result ID: '9767e6a84ce380562fea4ee697580ec5') in 0.0317629 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=588010845204dbc459eb9fab36160785 DependenciesID=8d294287c95451a421d16ce609bbf6ac StaticDependenciesID=6c8b4784ddd7612321d684b6f9138af6 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Meshes/OpenXRRightHand.fbx using Guid(700142580560ace4cbddcacbae9ae39b) (FBXImporter) -> (Import Result ID: 'fe43d8db341c662ee646e8c97750510d') in 0.0479626 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=22a41da5b6b993d10ee7f47e3597d00d DependenciesID=ad56fc6e41e174c7301e27801be17d33 StaticDependenciesID=8d71e48ee78ff1562c65bda8aed265a3 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/scale_affordance.fbx using Guid(a09465b609758fe4b8ac049ea245d647) (FBXImporter)Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+ -> (Import Result ID: 'f77afe076a31fc9e8897c1c8b9299dff') in 0.0475303 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6a8ca5964548dbb9fb574efa82033174 DependenciesID=402ebde616d7669da2ccfd502f317078 StaticDependenciesID=8530afb10b5d7f5a0878105e3dc59412 
+Start importing Assets/MetaAssets/Prefabs/12913/12913_S.fbx using Guid(e07f494c8d2028a41b41ef3393c49c25) (FBXImporter) -> (Import Result ID: '5aff8fa3fcb3a7f6664ac9c7af6a4f45') in 0.0279632 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=091769ed8bb45c1451962c871afeb304 DependenciesID=6e7316248c538d1d539dc588b3579668 StaticDependenciesID=7cc385cd262555827484ab8e578ccf5e 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Screen/Materials/FrameMaterial.fbx using Guid(0149d0c06fc814c9abda2f5a244f6d81) (FBXImporter) -> (Import Result ID: '29cebacb94524263fb39966f4a86cf66') in 0.0509024 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=423fafeb0ebcadc134ed870e99ab7f77 DependenciesID=2191f8684ead9b26d008a930846ca5f5 StaticDependenciesID=ff2e46f420e95487ca54e1b5e3050937 
+Start importing Assets/MetaAssets/Prefabs/286115/286115_L.fbx using Guid(014b04666314ffd429a5bd47369a0e52) (FBXImporter) -> (Import Result ID: '693e00adffa53ef7127e102601421361') in 0.0724472 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8332c1bc4e74d4b8a22b716d7d2faac6 DependenciesID=86387e0535079a35e6291ae8def2aa85 StaticDependenciesID=684991a86134ac86614dde44e2aafa94 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/ChessPiece/Materials/ChessPieceMaterial.fbx using Guid(817c954a31a114577b56080dd5ca87c3) (FBXImporter) -> (Import Result ID: '42ef3966aaaa5452948d8a07778f97b0') in 0.0527006 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=201c659eebf4a440928241474d27a124 DependenciesID=dc998b098ca32be81b816ab7583035a9 StaticDependenciesID=2f0b90e11e844c04bcc99a18006dd57a 
+Start importing Assets/MetaAssets/Prefabs/12913/12913_M.fbx using Guid(a1aec66d3d51d1e4a9ec18ddd4bb72ad) (FBXImporter) -> (Import Result ID: 'db905cfc4225e801abdee2e2bb8da79c') in 0.0362574 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1d722e904a696059147b6cba07f71546 DependenciesID=9b1c773ed41e90e015a660185e48eb2a StaticDependenciesID=98df8590427476325b279f9224c103f7 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Materials/Planet.fbx using Guid(b18ecf061c91da1439b820dd542f206d) (FBXImporter) -> (Import Result ID: '6d4c4693f798a22440423f120ab138d1') in 0.0493292 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a1af5b36df836a20ff3141f5ffdfc9ca DependenciesID=664187be7b0899d933e412c8f2bed018 StaticDependenciesID=321df8c7d4160b0e9e7385cadfd6a27e 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/BowlCollider.fbx using Guid(d1549023b485ff048a7dfe601fff9df2) (FBXImporter) -> (Import Result ID: 'bc2401dd0b93ddbfb4976b6b4f6d53c4') in 0.0286759 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2804df8c8fbecdc8e65eb72f22bf06a6 DependenciesID=ebbafa0692d604a120964c32fe61b1c6 StaticDependenciesID=5ee12c3bdb131eeb8cc71b3dc7e4da9f 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/CoffeeCup/CoffeeCupHulls.fbx using Guid(d1388ed1b34adcf4091263a34d4237d4) (FBXImporter) -> (Import Result ID: '29e1037cd641a8ab90edd0a0b2f43df5') in 0.0357528 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9edaecd1fe9de847f50843c9f6e988da DependenciesID=401ffdde0e4d678856a26d5e43521499 StaticDependenciesID=da791749e8af5e47384230430dbc10c8 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/ToyBox/ToyBoxesMat.fbx using Guid(f1bc7ebd567dd466189a6f6ae409c85c) (FBXImporter) -> (Import Result ID: 'da474744edf6e47c3d42ffb62fd4a8b8') in 0.0470965 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4c2198234289f9d628ca34aa0625951e DependenciesID=81bce84373aeb16dc57b3ccbf6b94547 StaticDependenciesID=e3ec128650c5f9028cba99a602948adb 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/OculusTouchForRift/Materials/pasted_touchPBS_MAT.fbx using Guid(528296ec8cb7e9e4b836b8aa1197aa98) (FBXImporter) -> (Import Result ID: '4e699a98b9defb8da886e39acecf1b76') in 0.0380195 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4fa05a7044d712e7d39e89f3c419b368 DependenciesID=4bfb25185f62df4e237784fee4fac3cc StaticDependenciesID=cda7502fd81aa1a6de6677b5b07483a4 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/WaterParticles/BubblePopParticle.fbx using Guid(72c78ce3c437b6146a8939d3c0881f50) (FBXImporter) -> (Import Result ID: '60700140f88dc957b10cbce1560cd266') in 0.0303222 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=aaf1c1acd081cf3079d8ed1285602a18 DependenciesID=2ef853b9b0d6094945f37fc2f79e88ab StaticDependenciesID=c3e01db567378f66c5e6c1e1ec09a731 
+Start importing Assets/MetaAssets/Prefabs/632623/632623_M.fbx using Guid(9264fc0bf5c64f542a6a52fa524c29d4) (FBXImporter) -> (Import Result ID: 'fae3012519148b50809cb24e909ed618') in 0.0348742 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3a5ab5a792788b4a410546b93bec4233 DependenciesID=d88f7f232a63cdf777a59f6a18a1281c StaticDependenciesID=0f7a192b3d8d12cfedba621bfa26bfe0 
+Start importing Assets/MetaAssets/Prefabs/43333/43333_M.fbx using Guid(a23ff9fe1c392344299059d76bd02646) (FBXImporter) -> (Import Result ID: 'c04cfce1f83cd656087910fb1078360c') in 0.0408886 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5d3068227f6f40ae101c5af392271a25 DependenciesID=f7ee50cbe008f66bedd4a09490d34141 StaticDependenciesID=bc39fe2ce2c71a5134aede09023dd610 
+Start importing Assets/MetaAssets/Prefabs/43333/43333_S.fbx using Guid(b2693d99c04471e4b9d172dae48ad445) (FBXImporter) -> (Import Result ID: '476beac4da464abee6d2a138601160be') in 0.0325315 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a25475a8a31092346a06345f90a0a07d DependenciesID=336400fb054a6ab7d9d436edb7467b17 StaticDependenciesID=1f8eb76a79c0fd5b3be868b415761e2f 
+Start importing Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/Mesh/SamplesFixture.fbx using Guid(b28fa67a0ff82c5478f27368dc627683) (FBXImporter) -> (Import Result ID: '7a29bdb35866473fda421a812523d079') in 0.0305318 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4f4a9dfa4003f955a6eca2520571fbea DependenciesID=d37eab4791df2c12ceca0ca4a523d2c7 StaticDependenciesID=d0e01e34c270da5b1327349db8815d64 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Materials/Moon.fbx using Guid(c248512dc5f8d7546ae41e52308e4b20) (FBXImporter) -> (Import Result ID: '4df53dbe37254dc5df4bb14f4fbc1e98') in 0.0365007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=949722d589d40f6c2aaa1660af2510fd DependenciesID=61683ba6e9d8e2100ca03f01004caf9a StaticDependenciesID=1475afb2c76e9d7cd2e8a778bec5c999 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/Cone.obj using Guid(c28fa8d61f81fb742b1180a6d4516625) (FBXImporter) -> (Import Result ID: 'cf7885940e1c591c1c9f66fff9fb32b2') in 0.0264054 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f64bb2c5ce5bbc21840e36190a71fd93 DependenciesID=2d6344249f1936ce21ebef980f61cce7 StaticDependenciesID=803eddcc040e44536d31019ebf5d7667 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/MapWithPins/Materials/MapMat.fbx using Guid(d2b4ebc04cf7f2e4793d4daa58bcdcd7) (FBXImporter) -> (Import Result ID: '9b41cec6da7fee041b705cfba0c46fbe') in 0.0475143 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f58f3e7d5025d6cecc064a10a6bed173 DependenciesID=b7dcaeaf6cf28622f879f606d2fd5e70 StaticDependenciesID=b46ab8453236bf1e18d81bd4a32e86dd 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Meshes/OVRHand_L.fbx using Guid(13f92dc3773e94e4bb99958bbd939c29) (FBXImporter) -> (Import Result ID: '5c60dabbe1ddb831ed6e4a01350248b2') in 0.0590615 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f0039100a08d971451b855f9fe96825b DependenciesID=077ed1d383d87e93466d5462554a500e StaticDependenciesID=fae22266492ecbc03f8143779f6a8d48 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Meshes/OpenXRLeftHand.fbx using Guid(63d10a535aa014c4f9e3f04185131351) (FBXImporter) -> (Import Result ID: '9e72c888e8fa6da8ce340147c7f9fc31') in 0.0466892 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cd3bb9bdda41c8b54ff981b599ee31b1 DependenciesID=db5ce33d8abea19b2c5ab07d3f6f1faa StaticDependenciesID=33619d2ad309f49339ba45053f067f02 
+Start importing Assets/MetaAssets/Prefabs/632623/632623_S.fbx using Guid(732ee38b7c4478b4d940d3501a305be7) (FBXImporter) -> (Import Result ID: '1a14f583e7f5cc1dc05141ad4f53c8d5') in 0.025668 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d52637ffb93f179202d8a24fe3fbd477 DependenciesID=a5e88a383c47c058331ad431258bd280 StaticDependenciesID=7cc4b694c132d833c9ae10d0d94733df 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/skinned_rounded_rectangle.fbx using Guid(d373038051eb6dd4e914d28686e13545) (FBXImporter) -> (Import Result ID: 'b8d715d6cab4038247a58d3b378ddae0') in 0.0337435 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d0559dc05c116214edf325767278720e DependenciesID=cd3c0679e3df7f82004cce74825bc124 StaticDependenciesID=315cbecd3ed79c00284dfc5455905028 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/MRDesk/Models/MRDesk.fbx using Guid(d316ee3a9f545fd45b8e8cb39b07d075) (FBXImporter)Launched and connected uv unwrapper C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Tools/UnwrapCL.exe after 0.05 seconds
+ -> (Import Result ID: '9f48ecee820bc06f9634488c16b87369') in 0.1586618 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=27f6cc79aaabcc1510ac15461e66e3ce DependenciesID=6a0c34fe23c1dacf4320f221fd28056a StaticDependenciesID=8830271bdff923c92dd98838bc2e543c 
+Start importing Assets/MetaAssets/Prefabs/1777303/1777303_M.fbx using Guid(e302781453a8f864ba715490b400ede0) (FBXImporter) -> (Import Result ID: '044207eb369e955689feb41f00db5516') in 0.0404598 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dead314001b4eca57b43745af19ee6f5 DependenciesID=bcd5c36995de0d415617052948b676ee StaticDependenciesID=ebeaae96576e568341df466dacfec357 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Mug/Models/mugMesh.fbx using Guid(f3290354b4d27534ba4f7f3bfb4692d8) (FBXImporter) -> (Import Result ID: 'c2ed06c0d07d779ab74ef361ec6c1be8') in 0.2039661 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f120c4b463a97564459cdce2d765889f DependenciesID=c4dad50fe8943ff4961129a352a3a1c4 StaticDependenciesID=b036f26fe552f6c75fb483eb1d190786 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Locomotion/Models/BackgroundSkydome.fbx using Guid(34b453e4d1fa5034abe065de8ae813ef) (FBXImporter) -> (Import Result ID: '91ed7e0ff8afc2ff703e4e690d8bf935') in 0.0370146 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=22d315c93095f3b1b809241e9c6af898 DependenciesID=424fa7ab434739524f09fc1d98b9a308 StaticDependenciesID=e9b131afeee8f7ef4f33447e15ef4ac2 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Box/Models/Box.fbx using Guid(34f423504d6e44f4785eaa3006c79119) (FBXImporter)Launched and connected uv unwrapper C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Tools/UnwrapCL.exe after 0.02 seconds
+Launched and connected uv unwrapper C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Tools/UnwrapCL.exe after 0.02 seconds
+Launched and connected uv unwrapper C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Tools/UnwrapCL.exe after 0.02 seconds
+ -> (Import Result ID: 'b14a29c0dc7b7069153b99f6e64ce980') in 0.2126694 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f2a5a7aa42e2d9223a828407e23fcddd DependenciesID=a12b878e42d30444828e120fdda3cc08 StaticDependenciesID=db17c945d7181cbd3db1ca900e13d2da 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/HandTracking/OculusHand_L.fbx using Guid(442d5b4503ed83c4897ef44659446587) (FBXImporter) -> (Import Result ID: '3e22efe2b27fc4c077529bc0dbd8892a') in 0.0562817 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dfd0185d4a2f531ffd7765009e4f8945 DependenciesID=8251bdb6f21027474b95e0a12acc2772 StaticDependenciesID=06f5ba13c289a0b8d00f75b30f2f5957 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Mug/Materials/mugMaterial.fbx using Guid(94316792d4481f1438588c12b8e732b4) (FBXImporter) -> (Import Result ID: '718cba2a5233ad426fa08eb55f44c7fc') in 0.0499202 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=69399d5b84296b3e742ef50df39b0e4e DependenciesID=ef96d47dc63c44352abe875c0a620c2f StaticDependenciesID=188e03c10f9cc6fafe646f65641dc9af 
+Start importing Assets/MetaAssets/Prefabs/1777303/1777303_S.fbx using Guid(b46b9b6d6519fca4fbbd46efe594c19d) (FBXImporter) -> (Import Result ID: '8eaac5b165ec2679e6f3239f476e1d95') in 0.0354436 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4c1b2471388b96bba8bda660074f4122 DependenciesID=1d484269755fea19e8afc1fbd4410f0d StaticDependenciesID=82e10a8d2d4d58185d217c728ea721f1 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Materials/DefaultMaterial.fbx using Guid(d4a9567b63f402344be887b1a296bcc6) (FBXImporter) -> (Import Result ID: '22148b16d8c0b51739d96262b02ddbcf') in 0.0374934 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cab425372d0dc6702ed28ffde7f322cf DependenciesID=9d34b8b5d0dca0c3813b37338e60f2bb StaticDependenciesID=f0a07a83f5129c51304126f014409680 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Key/Materials/keyMaterial.fbx using Guid(d49d2495f35a4b448b56898e30cac155) (FBXImporter) -> (Import Result ID: '311f2f317d61d847f748634392de20bd') in 0.0480603 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1169c638a54d317a42103413803967cb DependenciesID=059d0a01d04a012ee6dd37ab5e5162c2 StaticDependenciesID=83783b271a69ca759c1aac6721270a82 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/PingPong/PingPngPaddle.fbx using Guid(257216eb6e3b561429989b0879b94a36) (FBXImporter) -> (Import Result ID: '974a6f7ac7a559839c0a7b77b1282627') in 0.0354697 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e14ad56e73947f56490138a57e2443e1 DependenciesID=30011f76dd5bf27b6ee3d758b3cdd8b3 StaticDependenciesID=dd5b7c5abcfc0648fb8fd0a87ca9dfc0 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/Ray.obj using Guid(35c8616edc7d6984994bda4256b5be36) (FBXImporter) -> (Import Result ID: 'ebd47d1071352eb1e8990db354422d2a') in 0.0280219 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ec8e2210c9fd7e155458117baaeda69c DependenciesID=fd296b00875e0511bafabc0217fa2457 StaticDependenciesID=cac4804f29c9561772a6306117c0bf0a 
+Start importing Assets/MetaAssets/Prefabs/12913/12913_L.fbx using Guid(c5d4afbad5340314bb706418344b0143) (FBXImporter) -> (Import Result ID: '4f9d98859a69b7d3dcb03018d73a3b3d') in 0.0674768 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bdebdab44ec84c5894cc4bb848c46b9a DependenciesID=de9425379f363e440908a45abad6bd88 StaticDependenciesID=fe8c111157ef981e92667a39f8037011 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/ChessPiece/Models/simpleGrabKnight.fbx using Guid(c55aaa44df61b8942a6d1c8d53612600) (FBXImporter) -> (Import Result ID: '422e34ecaeb12c5ebf2162509b7fbf43') in 0.0392391 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=79a8113fe38518307d00c82cb418cd9c DependenciesID=8d13b32e07c828233d3a058cdc57c7ca StaticDependenciesID=ef02f960509149d47593a217687a2e36 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/TennisBall/TennisBallMat.fbx using Guid(d5e02c6494e9145b5880a3f4255f2d57) (FBXImporter) -> (Import Result ID: 'b3ab9df7db4b1cd444832400b990496d') in 0.0424939 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=feff6ed024b3ac309cddfa8d9ab8f618 DependenciesID=b8c2c1c8806f19b5027623560bf86289 StaticDependenciesID=460b28e18405be20905831cec2eabdca 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/MapWithPins/Models/MapFrame.fbx using Guid(f5cc4b76257fd6140bd413838304f1f4) (FBXImporter) -> (Import Result ID: '8b341860bc0c72287efb63aa9afd8cca') in 0.0297685 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6da2374390de26b7a035653d8e04634c DependenciesID=78eda00306e2516b24f511ecfeb8b949 StaticDependenciesID=c368c3401ef5229eb3f95605f27738e6 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/IconBox/Models/iconBoxMesh.fbx using Guid(f5ceaf081c5af184cb5b44b9e95931f8) (FBXImporter) -> (Import Result ID: '66a364121c8895876808460dbc9243c3') in 0.0857906 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c50e7cc29eb4655b5c8811f94f0ea45d DependenciesID=ea690b8104f4b6d9cfb9f3c8d32564b9 StaticDependenciesID=dbd1bcfa61255d21900d758170d7b7df 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/SmallRoom/Models/smallRoom.fbx using Guid(066a48c42e0fbb046b6c8d1591b8bcb6) (FBXImporter) -> (Import Result ID: '95acd3f5e9791f9c1ee49f6c71054acc') in 0.3595583 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=15c9e6df0428263eefcda4106f449a5d DependenciesID=d3922f5dd36d6b3ab79490057c556465 StaticDependenciesID=30cb44d2d50a9af7023d5850fa272872 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Mug/Models/mugMeshConvexHulls.fbx using Guid(16157b39a59f3c348a4a148eaa1770a1) (FBXImporter) -> (Import Result ID: '599b5bfb001eaa1bcded8d274a3df6e1') in 0.0379054 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7d42af7d390658b7221b8c31a0c10c06 DependenciesID=fa3448a7e5de28f97525cf74093da22b StaticDependenciesID=a04bc1fe9a74c3bcf8c038fb9bfc91ad 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/BigStone/Materials/BigStoneMat.fbx using Guid(267e2151ff1c046c282a725a08fb90bc) (FBXImporter) -> (Import Result ID: '4e63f7d2b61b639ae24c6aa29e63cae1') in 0.052631 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d70b61af8fd30d0e6b39b78b0cfd51e4 DependenciesID=6ecf2039d91ef2b2f74dc4490c7e168a StaticDependenciesID=78e8fc22e283c8e3902bcd1a84081edb 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Locomotion/Models/Meta_LocomotionMirror.fbx using Guid(46f94e9fc26082448b12e8c575aa9e3a) (FBXImporter) -> (Import Result ID: 'bfdcd01fc79cf353ad9601631c1e90d6') in 0.0411875 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=929c3b16d514842d1a68488b6097880e DependenciesID=dbf5f9a3b979e15323a6f7d4db7bc0ac StaticDependenciesID=f1b801ff337549909340ce152ce4c936 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/ChessPiece/Models/simpleGrabKnightConvexHulls.fbx using Guid(6626c40df85db304a9ab41baa2178c45) (FBXImporter) -> (Import Result ID: '4161e47dd01ea7c0c70f897c0a6611b5') in 0.0283563 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7b7fb7d1d1617e23469018912046e1ac DependenciesID=2c275710dccd98426168c7bdb39ac98f StaticDependenciesID=dd3db58723fbcc5cb7477267cb3d4c01 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/OculusTouchForRift/Materials/OculusTouchForRift_Material.fbx using Guid(76f6075ec84afca46b2a5e5b3bfdf8ce) (FBXImporter) -> (Import Result ID: '07c887b19e8ebe40fe59dbaa260947b2') in 0.0524174 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d19a4017e8941029905bd1107f562dca DependenciesID=4ee5e0a6585a2aa4a6b4e8e369353b09 StaticDependenciesID=04b678910e212e57289d33c1f77f261c 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Key/Models/keyMesh.fbx using Guid(07615c1ae01a77148ba9104f90cf3cf1) (FBXImporter) -> (Import Result ID: '51e84281721f1286d25e1f1c4f8b662f') in 0.0348054 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c35ef660bffa317868446aa220c38c6f DependenciesID=6d4099b419ef3ccc7c6938584cd08fda StaticDependenciesID=6ea0f5506de12f4083d7272e74bdc516 
+Start importing Assets/MetaAssets/Prefabs/808342/808342_M.fbx using Guid(07b90789c8416554e8fa17f203b08f84) (FBXImporter) -> (Import Result ID: 'ea31b48c05f34df671969c1c932fe60e') in 0.0386396 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f41573cc4fbe1f368be840f0bec24d8f DependenciesID=16e4154e37dcfce79eefda5650c730d9 StaticDependenciesID=d9f871303ec69201b6078efd3d8d9143 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Torch/Materials/torchMaterial.fbx using Guid(1724755ad7596184e8472ca611cbd15a) (FBXImporter) -> (Import Result ID: 'ce715ac3bf352a65e559deaba9e0bb9f') in 0.058025 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e0e8183fa23ef104c05910c2c0b1b81a DependenciesID=8beee43b03b445ebfc8ba07d609401d7 StaticDependenciesID=5a0f0ca20ed46e4ae3ccbc339e56e202 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Torch/Models/torchMesh.fbx using Guid(2724b6f72a640c144b28d110d934d650) (FBXImporter) -> (Import Result ID: '682508970c590eb8abc8d83e3de8f1e1') in 0.0401442 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=52a5fb6bc83d9ea5faa1b391a4336e47 DependenciesID=6ff46d942e06c27265147db0dd2ec1d9 StaticDependenciesID=ce0a3ea820b21f57e626b20718cc1a68 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Room/Models/SmallRoom.fbx using Guid(479d627c07ecbfe49a4be981663e6aed) (FBXImporter) -> (Import Result ID: '4a78a0e7e85c3a6b07db1ef646f928b9') in 0.1734817 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b1069ebdbe619179890fee682d1526a5 DependenciesID=9c245e68b2599832bb677cc22bc45275 StaticDependenciesID=bc5f04056b519ff058ac3159ea812b4e 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/HandTracking/OpenXRRightHand.fbx using Guid(777cc524bc5593745ab52736d58d7682) (FBXImporter) -> (Import Result ID: 'aa1a1dd73e3344635eb90e21f529c944') in 0.049749 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=51f329e707cec25a1069e8cbbfb1f6a9 DependenciesID=384498488cdc802c792d507431aaed92 StaticDependenciesID=96ed642ff7a638dee0c52aebb6c42598 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/CoffeeCup/CoffeeCupMat.fbx using Guid(c703a789a976640a0bb1213664b73ebe) (FBXImporter) -> (Import Result ID: '3cd484e7b812bf0fba8e075859da200e') in 0.0550297 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bb1c8f3dc54840a53d7b96043857a0f4 DependenciesID=b77959c9e9f3c6248b05b2989b489043 StaticDependenciesID=3e0a93c4a9e365a867e5ea86377775df 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/debug_full_body.fbx using Guid(c7efe93ace20306458c529399e686c35) (FBXImporter)A polygon of Mesh 'body_mesh' in Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/debug_full_body.fbx is self-intersecting and has been discarded.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:67)
+
+[Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs line 67]
+
+A polygon of Mesh 'body_mesh' in Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/debug_full_body.fbx is self-intersecting and has been discarded.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:67)
+
+[Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs line 67]
+
+A polygon of Mesh 'body_mesh' in Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/debug_full_body.fbx is self-intersecting and has been discarded.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:67)
+
+[Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs line 67]
+
+A polygon of Mesh 'body_mesh' in Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/debug_full_body.fbx is self-intersecting and has been discarded.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:67)
+
+[Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs line 67]
+
+ -> (Import Result ID: 'e8296bb5f9b702d6031a409c3a5054ae') in 0.096008 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2359d76ee0184ff19d19ffbc854785e5 DependenciesID=4c9339fb5b94c424fb534e7dcae02c23 StaticDependenciesID=8f3b854569c9ac1e5c0ff6b693717871 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/SprayBottle/Materials/SprayBottleMat.fbx using Guid(d77a71b8169034a539796ebeb082b4e8) (FBXImporter) -> (Import Result ID: 'a6d3f998a3000f3f9a38361debf30b64') in 0.0658481 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c2c813110d6c57f72ddfa02d16f83ced DependenciesID=179586c4b21db7c949b3362fbafd12ca StaticDependenciesID=cee1c1f831c41b541e6ae3e5aeafcc14 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Doll/Models/Doll.fbx using Guid(48df1ae397f9bdd4ea4d2edc2d118061) (FBXImporter) -> (Import Result ID: 'd08258896de8f82e0bcb23e1082ea2c9') in 1.3039056 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e61f0d1ef18307e8d36495d4492ccbfb DependenciesID=f8004e06bbc27299b8ed06cbc58c1184 StaticDependenciesID=4365d3e7a2717f5c2af32c45ca770c4e 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/StonePolyhedra/Models/StonePolyhedra.fbx using Guid(6800e9c67be6f054384523c73d34583f) (FBXImporter) -> (Import Result ID: 'cec2e371c1f259eaeaed6697ee1accc9') in 0.0304347 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c3229556cec35d5f62f218c9de5ddd0b DependenciesID=cb992975446a6ad5abf51085c078a36c StaticDependenciesID=38a18b738f9832d9fcc202b0921c566c 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/HandTracking/OculusHand_R.fbx using Guid(88e2e1bfe11ec6c438b0ade27eaeded1) (FBXImporter) -> (Import Result ID: '19056ba83cff36b99f223b34f605f061') in 0.0556588 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=566d6a154cae47623561ee2f0cda7a24 DependenciesID=764e58c39b1a6c33fe36d6996d413a3f StaticDependenciesID=1037158b4ab7f27e1321bd0fbe7c8ef6 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Materials/CubeMaterialGreen.fbx using Guid(b8eb22bbef4e12041945f044aeab9469) (FBXImporter) -> (Import Result ID: 'b1f44bc509bb214af5ed09d12305de9e') in 0.046937 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=65b99dd5631c7835249e764954c0c66e DependenciesID=a5019a66d89154ccb98f7af153cef644 StaticDependenciesID=26c4dd92b38e23de150f706b6f805e26 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/ToyBox/ToyBoxes.fbx using Guid(d8142cf98aa0bf44c9b088fd9081a761) (FBXImporter) -> (Import Result ID: '47f060c3aedafc14cda5d302c7058d98') in 0.0291304 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3439ee7ad2f0c656250408fa7cff22dc DependenciesID=90d53086985b08ae3c2fc296d5044503 StaticDependenciesID=0cf32f2bf9c0896ecaeb6e0a184e4fb1 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/OculusTouchForQuestAndRiftS/Materials/OculusTouchForQuestAndRiftS_Material.fbx using Guid(e878dcbefebb86f478a53130d09dd0ac) (FBXImporter) -> (Import Result ID: 'a324f889915ec8083d9d9517b55211a2') in 0.0435634 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8ccd98aa400d9ed3e121aaa526d4d6c9 DependenciesID=f236594d17c9250fd122dbaa9f3c40f7 StaticDependenciesID=2642b6f7a17906dff7ea0ac18168366c 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/PlasticCup/Materials/PlasticCupMaterial.fbx using Guid(e86eea274c090ab48ba0a9af9f6f4bdc) (FBXImporter) -> (Import Result ID: 'b55dd656718f2910f12a1cbd6ca91c94') in 0.0913819 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3e2ddab8d3dc6ebb42f176826b743a20 DependenciesID=095c35d065bd7c9f0bd423dba62deaf0 StaticDependenciesID=18adadf359b03d8c2c5369ba411730fb 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Box/Materials/BoxMat.fbx using Guid(091196c6d7fd95e4681685ff1f4f9419) (FBXImporter) -> (Import Result ID: 'aa650dda125f8de6110bb35959cd9e80') in 0.0795695 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8179b877c6af0b636e00835c8e7978ba DependenciesID=e46fe6d346152262268487a2a04168f0 StaticDependenciesID=df68b2a64379e47086d1a46463211270 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Doll/Materials/DollMat.fbx using Guid(19820425148e24c4cbf2794200966cca) (FBXImporter) -> (Import Result ID: '2318b6e978c6d90fb983d47cd0f7fd0d') in 0.0539779 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ceb82f626268a6f851e085fef8116010 DependenciesID=a7093ee54d491a9fb7859289d678dfdc StaticDependenciesID=a028e375fbacc67e3ab447b94312cd83 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/BigRedButton/Materials/PodiumMat.fbx using Guid(2956750bad65b8b4eb7b65861fd116de) (FBXImporter) -> (Import Result ID: 'eade98bf309e60b07f4a6651e8c1668f') in 0.090121 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c431beaf995c52677011efdb40d1a693 DependenciesID=536702d97ebfb08b384d9fb455f94c7d StaticDependenciesID=679b86ee0a043f1f768e5bdd33353c3d 
+Start importing Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/Mesh/UnityMaterialBall.fbx using Guid(39857cfad1651644682ff5b772e6e697) (FBXImporter) -> (Import Result ID: '87f705b1d4f7c643d9e032428100be73') in 0.0903452 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=672d487807bbd702210ee81c82a96ff9 DependenciesID=4298c4b49e13601dcfa16eef9aa7c3b7 StaticDependenciesID=ada46508651969df908336efb5ad731f 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/skinned_articulated_arc.fbx using Guid(39983ac309c64a346b605e69511af288) (FBXImporter)Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 6.451614%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 6.451614%;
+Keyframe reduction: Ratio: 6.451614%;
+ -> (Import Result ID: '50a29289d005aabc6e5d4de69f57e28c') in 0.1033803 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7cb52690b6121e1b958a9cc4b919c929 DependenciesID=33b189db0e0552c19406c4d9c779e659 StaticDependenciesID=9aa054346e5aacc49c9fc768c0ec483d 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/PingPong/Materials/PingPngMaterial.fbx using Guid(49544f7c35ed0ea438c0a8d5336dca23) (FBXImporter) -> (Import Result ID: '2c5ae2f4871d4893ebbd58d4f5771772') in 0.0750596 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4068d29ce171505f76439c31fbca77db DependenciesID=335fb80520cb1b944b03905aaba0d053 StaticDependenciesID=0ad468a077fd66f07c94ad54f08c0f8a 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Screen/Materials/ScreenMaterial.fbx using Guid(7901d8219f6a24ef0a60ce89da693f9c) (FBXImporter) -> (Import Result ID: '99a7b817e6063edb514ccefc52a65e5a') in 0.044009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6e73447f3f7da776883330fc137809c2 DependenciesID=dd0b36eef199ed43f71a323327961de8 StaticDependenciesID=c05d5fc62e52925289adc6f238876585 
+Start importing Assets/MetaAssets/Prefabs/286115/286115_S.fbx using Guid(798abef4d128d3e4fa6f33cd28eb078d) (FBXImporter) -> (Import Result ID: '3c178ded7becac80c47ab3de92cff771') in 0.0298461 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2ff932a085a53a2e9c502ad4d92dac53 DependenciesID=3febfe8666ac0d224e81cdf379ba5758 StaticDependenciesID=7fc748b66aef880bd1599db0b7e8abe9 
+Start importing Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/Mesh/BackgroundMesh.fbx using Guid(b9ae429aca254fa41966db24b9e53232) (FBXImporter) -> (Import Result ID: 'e5e5116f4a88dd1285e131695f786569') in 0.0347844 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5225b00931df63321bf91b2bea9a117b DependenciesID=eba3f6616955178efa97152768079fca StaticDependenciesID=496aac4714fe1bca8f8ec8de39e06811 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/MapWithPins/Models/MapPointer.fbx using Guid(d965108dd6326c74ab84da39a3c86b34) (FBXImporter) -> (Import Result ID: '686e3c9c82ed038016776b00d5246308') in 0.0374826 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3b9ef905087d3f4e770229ca46da1d96 DependenciesID=3e018394d496032ac638bfb56f070a4f StaticDependenciesID=56c0f409b286f5b17f37ec2ef07733ce 
+Start importing Assets/MetaAssets/Prefabs/43333/43333_L.fbx using Guid(3acd90679507c7d4d8f2b46177fd7c31) (FBXImporter) -> (Import Result ID: 'fef073b5193935ffbed489be13903f3a') in 0.083728 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=29466b2eb079ce98f603a32fbd4b459b DependenciesID=803619345e9a782dd9a2caaaa0f1aaf6 StaticDependenciesID=049aa2f3129000a52900339dda8b2083 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/MapWithPins/Materials/MapFrameMat.fbx using Guid(ca40bcaab931f664bb8884b77b720e18) (FBXImporter) -> (Import Result ID: '960951a1052b6c546d698cd2202cf692') in 0.0599516 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b253221c6fbb0c82707b135fabcfe95c DependenciesID=c087383269bdfa6e934674a9112189af StaticDependenciesID=f8f642155add0c2fd23f493204edd098 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Meshes/OVRHand_R.fbx using Guid(0b567a7c6d47e774ca65c81546f02af5) (FBXImporter) -> (Import Result ID: '871b8e0a8f3f897060528f2c3443c84e') in 0.0642679 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b86f81b9c51b416cc5a201f77849fe67 DependenciesID=c9b8234946fd94ac469998028a8798a7 StaticDependenciesID=5c8f9861b7e8210e0d3fc6dc282574fd 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Materials/DebugBody.fbx using Guid(5b25e751187aed74499ddb0afb0dc5a3) (FBXImporter) -> (Import Result ID: '1089ce552b5a82ee48ce39d5e7f7af40') in 0.0420699 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bba9c9e2c5a423896af3bae47bde5980 DependenciesID=1492d648d57decccd075cf4be6d09cd3 StaticDependenciesID=8cd367595ac594e10d10ecbd5b611df8 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/HandTracking/OpenXRLeftHand.fbx using Guid(9b25be0e8101c3e4ca9937b30e2ab441) (FBXImporter) -> (Import Result ID: '22e054bd412bc8a197d99b33218c362a') in 0.0498203 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=401d372d71e3a0b702f88404777029de DependenciesID=1acb7682be2d4823d4a1ec5f64df184c StaticDependenciesID=5f8d0e8df16be8d342c746c0a4870422 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/MetaQuestTouchPlus/Materials/MetaQuestTouchPlusRight_Material.fbx using Guid(bbb35201095f6bf499fe2cd30ef3b6c7) (FBXImporter) -> (Import Result ID: '1f66cb1bdb4ac71956aa51c97bc7ae00') in 0.1304036 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=97e10eb6e7f8edc6fcc67525299c6840 DependenciesID=193db1f4855bf35b437dbacb254fa90c StaticDependenciesID=1a3aefa09eb39258485563f4bfb4938e 
+Start importing Assets/MetaAssets/Prefabs/808342/808342_S.fbx using Guid(2c2f4bb1ea1ce52479886df6c3850e45) (FBXImporter) -> (Import Result ID: 'c7516f225be2e00b3725e209429b1cbd') in 0.0308125 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c20415616a599a1e0d3d3488f5f53721 DependenciesID=4ba0b2b3415b93716e53df8770635c03 StaticDependenciesID=dc33452ad8e360efedaff0d66321c61b 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Materials/CubeMaterialBlue.fbx using Guid(6cc34ec80006e8a429764b52c1b5e7c8) (FBXImporter) -> (Import Result ID: '0dc0d21fbae6881dcb9d9760b07bf316') in 0.0398675 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1144d0fc495b49f3afc83559a916419a DependenciesID=d4639544ce1e0db0e3bc64545871730e StaticDependenciesID=287c8a7f4b12d8fcf1bff4fd90c8e951 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Locomotion/Materials/MetaLocoTutorialUIMat.fbx using Guid(7cee51529ca3046bd8a94b96d93191ea) (FBXImporter) -> (Import Result ID: 'ab4dcfbf1537cc429790986ce60f42c5') in 0.0290882 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e87c9c1ae4e29915103c37bd2ff4db9f DependenciesID=644a29381d25122b47b9792033ce299d StaticDependenciesID=3f707b7220909d9ba568f0b57a24af40 
+Start importing Assets/MetaAssets/Prefabs/808342/808342_L.fbx using Guid(ac0fcef7cdd54404ab740cb0f09d90a7) (FBXImporter) -> (Import Result ID: '4f3f784af48187b6c34b0cfa63ee2c18') in 0.0644522 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a8473f5bc24616f466704201def91768 DependenciesID=953b793f45f9f07e0394e130542ce6ef StaticDependenciesID=91b9aca6b9f008989c28c0a69583cc8b 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Locomotion/Models/Meta_LocomotionWater.fbx using Guid(bc66c719ba9d54f3db3d05d3f1863cb8) (FBXImporter) -> (Import Result ID: 'a2045e42d643cc55e988a2fbe7a931ff') in 0.0470653 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=73444f5a6753b47d254fa5e01d79535c DependenciesID=123f170a41e1fe4165f2261116707200 StaticDependenciesID=df4dfe551da00245b48f13b4422611c0 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Slingshot/Materials/SlingshotMaterial.fbx using Guid(bcabde3367c999648a9a72e6a803e07c) (FBXImporter) -> (Import Result ID: 'f87676ff54daf8300be729d90b568f2e') in 0.0971298 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3596057a1fc04c6bb402746649e73072 DependenciesID=f790eceb1dd0d3cb635bb77b90c0137b StaticDependenciesID=22b005a89f6bbdebffb02e9fb904c0bb 
+Start importing Assets/MetaAssets/Prefabs/632623/632623_L.fbx using Guid(cc3a35dac929257448992a1569cb2995) (FBXImporter) -> (Import Result ID: '210aee17870e26d1db8406013e174fe8') in 0.0638249 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=11865c6b7e10086cf4c8abd086db4118 DependenciesID=4568c649fb3b5833bd1fa8478b7d5e87 StaticDependenciesID=b0f06689ebd55ac7f7645e02b5b96959 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Meshes/OculusHandPinchArrowBlended.fbx using Guid(dca3d72ce32048e409eaaf754210cfe8) (FBXImporter) -> (Import Result ID: '6015a563a5f0f51268e01ef901d1b8f2') in 0.0363564 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a46ed71da9fad4ff174edc4f0f7b9072 DependenciesID=bc79e7c46cd5d04ab9d7969fca43f7b8 StaticDependenciesID=ca49bd72777af2241594d3f2e9126886 
+Start importing Assets/MetaAssets/Prefabs/1777303/1777303_L.fbx using Guid(ecd1c4d78976a434da0088901728d084) (FBXImporter) -> (Import Result ID: 'f1150ed73af02e29e36927d40eed9878') in 0.0679584 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=49cd772f22a9f38ed58a930ecde74ae2 DependenciesID=a329a8de49bdd4234ffa2926bd0918c0 StaticDependenciesID=c25c1f66fc90dd62eaa44492079320be 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Meshes/Locomotion/LocomotionPointer.fbx using Guid(fc0fd19b38dfb6a4ba0336bf7b518c8e) (FBXImporter)ImportFBX Warnings:
+Can't import normals, because mesh 'Select_Pose' doesn't have any.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:67)
+
+[Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs line 67]
+
+Mesh 'Select_Pose' has no normals. Recalculating normals.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:67)
+
+[Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs line 67]
+
+ -> (Import Result ID: 'f7d001e22c4de3f34f37d39ed6458288') in 0.0313001 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c070b974fd93cd48e5703b0ebc152ccf DependenciesID=443484f586d37e5d2f0b829a9a2eb4ed StaticDependenciesID=f397e2d971e46bbd313c8f2c70aee472 
+Start importing Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/Mesh/SamplesFloorSpotlight.fbx using Guid(1dbf28c1bb322474d981b2dc555e28b0) (FBXImporter) -> (Import Result ID: 'ff43775dd4bf7af580a5ea9ff80bee9d') in 0.0342032 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e7c53cca19d35be23ea75d47aa428a08 DependenciesID=5ddec53321277ed65a5de9fffebd86b9 StaticDependenciesID=57ea026a4191e20a2ae83f33e712a841 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/Cube/Models/CubeMesh.fbx using Guid(2d1094ca45d7fbb4bb2fc2ba8b406ba0) (FBXImporter) -> (Import Result ID: '07933d38327eefa27caf33fc838df89d') in 0.0307721 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=62631dd1c1f39af2fab68c05f30a17dd DependenciesID=d482b7e2036bb4740920672e0ea58d7d StaticDependenciesID=07937ed2184b0804f80bf1588e23cdb0 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Screen/Models/ScreenMesh.fbx using Guid(5dd40ba251cb98747a696b72bc347fe9) (FBXImporter) -> (Import Result ID: 'cde22cb51f40421e4da2fae17e4b6ef4') in 0.0361654 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ea1b5f61622dbbb172741656ae8cd676 DependenciesID=05f7afed1c3a636b0ff467d9ba2b090a StaticDependenciesID=176dedc19793e752dfb2e715f1cedb51 
+Start importing Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlockData/SampleSpatialAnchorController/Meshs/AnchorModel.fbx using Guid(7d83cba011175b348a00dd821fe8cddd) (FBXImporter) -> (Import Result ID: '010fbf9af54dd170e214411285dc3118') in 0.038752 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b610f13f8aa1ede498a1818a0acad4cd DependenciesID=299e411695c7803cfe76160174dc5470 StaticDependenciesID=85cb095f9f9aa8a62e2d744ce79dd48c 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/OculusTouchForQuest2/Materials/OculusTouchForQuest2_MAT.fbx using Guid(ad2069ba7fe0238489d3531897cea8cf) (FBXImporter) -> (Import Result ID: '731a6d32829d5564465aae6cffec4b71') in 0.0420561 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7f2bf369409203c61400efdcb939a34e DependenciesID=970243cd505902bef35e9aa9e9234093 StaticDependenciesID=479aaa35f3c91abb067c68aa35c28e00 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/MapWithPins/Models/Map.fbx using Guid(cd73f6b8f40287b4098cc37be5584120) (FBXImporter) -> (Import Result ID: '5d77499b258aa685514162a195781a8f') in 0.028859 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d9b8ed92ea07c26fe87a06c786a9331d DependenciesID=2440f67e22f58f88183ea4a45a359194 StaticDependenciesID=c2a49bc5a5dd70e9e714e6637f6636b7 
+Start importing Assets/MetaAssets/Prefabs/286115/286115_M.fbx using Guid(0eb9e7faf3e1edd45b5989b216e410e4) (FBXImporter) -> (Import Result ID: 'cac138bea1507575f0069d4ccdcffcc5') in 0.0355582 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f592de7c21829ceb58ed963b37d5964b DependenciesID=787b97edbdd75f40d4540ee080964b52 StaticDependenciesID=5a703375fae9f21bce73adb3a5662f04 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/MetaQuestTouchPlus/Materials/MetaQuestTouchPlusLeft_Material.fbx using Guid(2ea89d6e4d9c45940908e3f337989a9a) (FBXImporter) -> (Import Result ID: 'f9f1769c6e0a1b92b963b3bcf2b53275') in 0.0973637 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=83510b757f383467d1f503eca6875b32 DependenciesID=f6113f0b276582ec56e8f8504212b318 StaticDependenciesID=5b78c7e649ad58a20f70aa5f45b35396 
+Start importing Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/Mesh/SamplesSpotlightModel.fbx using Guid(4e8732d4875cc0647b52b55a218072b6) (FBXImporter) -> (Import Result ID: '70251000549abc15c4cc0cc6dd70c17a') in 0.0454536 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=67a12bfb4782492535db52204952f63d DependenciesID=103d9caac4ef08be79d27d6693a4f019 StaticDependenciesID=6f161a0a6294e4142668d48339c80044 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/MRDesk/Models/MRDeskShadow.fbx using Guid(7e589f294e82af44da827505993fac92) (FBXImporter) -> (Import Result ID: 'b791fc9d8056daeef411a0ba348c9052') in 0.0302425 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=28049eea297f4683b88303174f268375 DependenciesID=6250d93d968c2189d427a189517d21dd StaticDependenciesID=bd5283f4047c0efe75ed99f1b0b4188b 
+Start importing Packages/com.unity.render-pipelines.core/Editor/Resources/DebugProbe.fbx using Guid(9e1c97fc44f9a8744b61b58f72c56de4) (FBXImporter) -> (Import Result ID: 'b696069e0ba246d4f30eefbced1531d4') in 0.0286085 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6b44632c323533dabd8e7f1c3af9e227 DependenciesID=6d5ce6cc1671c9e3827da239c2e5c8e9 StaticDependenciesID=9cfeb1662f08d40b7ad75e43a2ee9eba 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/MetaQuestTouchPro/Materials/MetaQuestProLeft_Material.fbx using Guid(2fadc56f841e8224ea1ff539811fc765) (FBXImporter) -> (Import Result ID: '132edff9824fa9826128a15826e2fdc4') in 0.0834717 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=217b5c2e8cf9640cc67224e4a55d0717 DependenciesID=9d7bc29645e8a7c96c7ca1e2bce365ff StaticDependenciesID=fd3e85accaa191e9bba934d6072d0c73 
+Start importing Packages/com.meta.xr.sdk.core/Meshes/MetaQuestTouchPro/Materials/MetaQuestProRight_Material.fbx using Guid(6fce4d906dba56f4bb507682dbb5b81d) (FBXImporter) -> (Import Result ID: '8942a8aa55d48a48d2b06c5c3a8df881') in 0.0926221 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b8179dfbf244278036361d02355a8949 DependenciesID=d108739893f2966b271de5aa9b796142 StaticDependenciesID=1b3de1f7237605b70de0fee28ed8f9a7 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/StonePolyhedra/Materials/StonePolyhedraMat.fbx using Guid(7f06ecb0f6337004cb93e129be2895f1) (FBXImporter) -> (Import Result ID: '6679a2abfe8c7156c85b95031425295d') in 0.0532523 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7f229229bd93980bc6f2a303478db9cc DependenciesID=1064c0cc004850292922863ef7344259 StaticDependenciesID=dc36a62fab409864ea9f758a68d60918 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Props/MapWithPins/Materials/MapPointerMat.fbx using Guid(afcf09e55a190704e99cfd047692166c) (FBXImporter) -> (Import Result ID: '2b61254a3fc835741ce1b51720b37a9f') in 0.0495138 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c4b7a279e3201ab35cc7d7ff67299a00 DependenciesID=465ccc2d6f1653cf38f68456d0cb757a StaticDependenciesID=570cc97b277acc4164f72222a6076b53 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Meshes/capsule_affordance.fbx using Guid(dffb75200a9c0da4ea0ddfa9d7060cb3) (FBXImporter)Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 100.000000%;
+Keyframe reduction: Ratio: 6.666667%;
+Keyframe reduction: Ratio: 6.666667%;
+ -> (Import Result ID: '56c101bb8bf92ea9d1a7c252bfe75aaa') in 0.0525807 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=54b6744cae4aa5a2ff4432f3a2edfd28 DependenciesID=ef8dd2c0be9005416fc884777f00afe7 StaticDependenciesID=5591d06d6e260ddac3cfd189520659ec 
+Start importing Assets/Settings/OpusQuestURP.asset using Guid(56be7a98db18a844b98b52a5b9c6bc58) (NativeFormatImporter) -> (Import Result ID: '8227cbf219a5e7ce24ebc0ca5f047dd7') in 0.0016809 seconds [static dependencies only]. Details - ImportResultOutputID=fb758807d476d334436bdbaa3708e9c3 DependenciesID=9f2522f05a7948c688d2d9040b3f4a1d StaticDependenciesID=d87d72c8a045891956f86aa8875f6c0c 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Prefabs/HandGrab/OpenXRGhost-HandLeft.prefab using Guid(8083b51aac07f7f4dad4a7f6878b97e3) (PrefabImporter) -> (Import Result ID: '9cbc78af4f2b400f2fe800e9dd99782a') in 0.0152668 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f89a89882e988969252893020f98ee33 DependenciesID=ef857168ce9b75def371dd1559a35d79 StaticDependenciesID=c4b0ce4be659247607b39a40f1c8ac67 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Prefabs/TouchHandGrab/HandSphereMap.prefab using Guid(28e373584cba2a54eb7c856434f3689b) (PrefabImporter) -> (Import Result ID: 'c7e11dc31fd6b3d4a8aaef61621f4c3b') in 0.0200957 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d6faf1334df7e590e0cb60c18dfa2ccd DependenciesID=74d126f6db8788a8dbd0c0d820dd6722 StaticDependenciesID=88ca46952e29b8d476f123397d8c0672 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/SmallRoom/SmallRoomEnvironment.prefab using Guid(dc29a1b9eef1f684dac4d51fc9295eea) (PrefabImporter) -> (Import Result ID: '1be9b6bb8fbc64ffd63af228d6064f60') in 0.0439906 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c79db1a4afd9357489bb7f1b38e46882 DependenciesID=ae687a9c778754e35545187ecb8489c8 StaticDependenciesID=98bf64dbd50d2717743007119a8563c4 
+Start importing Packages/com.meta.xr.sdk.interaction.ovr/Runtime/Sample/Prefabs/Body/OVRBodyFromPose.prefab using Guid(0e00cd252fc6ef144ba80184f765ddd8) (PrefabImporter) -> (Import Result ID: '3377baeb26798d9d2263d4cc6fc8137a') in 0.018483 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=267b2a03a4c9ecc35d9a4c07e449da2a DependenciesID=ac6b6bf75984a9d5e4d2e7d78e0393d6 StaticDependenciesID=4080458e661239ce3f746c1d5b66da3b 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Prefabs/HandGrab/OpenXRGhost-HandRight.prefab using Guid(a577701db3e23d8489feb76cd34e2336) (PrefabImporter) -> (Import Result ID: 'b7da5f402d0cdf604af5c45e12621d5f') in 0.0132994 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e73be8228cb39c5bd91e0376ae08fc4b DependenciesID=788c083f9bdd3226e69456614adc7dec StaticDependenciesID=5927cbed8eea468a37b695457c9680c3 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/UnityXR/Prefabs/UnityXRControllerHands.prefab using Guid(a79c2558379f7ae469182d31633269b2) (PrefabImporter) -> (Import Result ID: '41d1cb1f7a4b737a540408144eed6d00') in 0.0446985 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=fd62f7a0c8089606010789fe12df0865 DependenciesID=bc8c5622c62da9126ac38d62be6de2d8 StaticDependenciesID=2b592b5177c6ba1fbc751e91be44e9fc 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Prefabs/PanelWithManipulators.prefab using Guid(f894e8dbff0f30b4d8407fd65526d64c) (PrefabImporter) -> (Import Result ID: 'd1c32a2e2f5722ecae692ff9d353253b') in 0.035321 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c0dc031c7d1cf11c94a3386f287e9ae1 DependenciesID=834c253ed928313534c29b7b6d3bbeee StaticDependenciesID=e29b6217defa86c572e74fa465c0eac8 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Room/RoomEnvironment.prefab using Guid(2dc2203033bd0d543af363b1e40a1317) (PrefabImporter) -> (Import Result ID: 'e1ec6e5ea9c685433c3232653fba315e') in 0.0186453 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a0f4130cd20cbbf30554cb51771c8a94 DependenciesID=fd489971eb5ed44b6a345d320a85d145 StaticDependenciesID=bf5e54ce80b0d710dbf815747c1f7cfa 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/UnityXR/Prefabs/Legacy/UnityXRInteractionComprehensive_legacy.prefab using Guid(c919f4fd9f519194d9a9f4cf7fca59e3) (PrefabImporter) -> (Import Result ID: '970751b2615aa1f73cc27837829b34e1') in 0.376946 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c5b55c2085f83e4cd28a76b26bea9aeb DependenciesID=75526e0d84f9dd912f2f21793951478a StaticDependenciesID=4078a9e1ee9541d4415b67ac6c08b40d 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/UnityXR/Prefabs/UnityXRComprehensiveInteractionRig.prefab using Guid(5c149baf016750b42ac7e9cdbc905b96) (PrefabImporter) -> (Import Result ID: '8aa43457881711f6c7c9d2a911129d3e') in 0.0945957 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=efe3b61372f05834da0d406f446b3608 DependenciesID=f675d61c53a5671bbb13661d5c804fc4 StaticDependenciesID=39b2a5ae3baf582ee3185472819f0f90 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/Sample/Objects/Environment/Locomotion/Prefabs/LocomotionEnvironment.prefab using Guid(9ea3c3bd7f7fe1043a0bb52ecda39ce6) (PrefabImporter) -> (Import Result ID: 'd048c3eb32c9da278f10c88b8349e20c') in 0.191127 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9d8da19ce982bbd49625987150d16d60 DependenciesID=4a7d122df6ba484e16dea7b87191dcae StaticDependenciesID=6232fd697d71f304df8689d36736cb94 
+Start importing Packages/com.meta.xr.sdk.interaction/Runtime/UnityXR/Prefabs/Legacy/UnityXRCameraRigInteraction.prefab using Guid(ce61dc20b15eeff4e9712e79d49d16ad) (PrefabImporter) -> (Import Result ID: '783c64cad358611f8966028b52adbc93') in 0.1580191 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=534e40c91a100e8919b98d4fe8a6219b DependenciesID=d3511d2439304df1dc0800c9bde8aea6 StaticDependenciesID=5bb403172d16f3d37f75b0c0efb7f9f3 
+Refreshing native plugins compatible for Editor in 14.07 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=398ef5f7467e0d44fa2bba4d2449518c): Total: 9.254 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=133 (actual=120, local cache=13, cache server=0)
+		Asset DB Process Time: managed=101 ms, native=9008 ms
+		Asset DB Callback time: managed=12 ms, native=131 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=3, moved=0, deleted=0
+		Scan Filter Count: 0
+	ApplyChangesToAssetFolders: 0.325ms
+	Scan: 15.249ms
+	OnSourceAssetsModified: 0.119ms
+	ProcessAssetsWithTransientArtifactChanges: 0.310ms
+	CategorizeAssets: 51.381ms
+	ImportOutOfDateAssets: 9032.715ms (0.402ms without children)
+		ImportManagerImport: 9029.939ms (229.418ms without children)
+			UpdateCategorizedAssets: 1.428ms
+		ReloadNativeAssets: 0.103ms
+		UnloadImportedAssets: 0.625ms
+		ReloadImportedAssets: 35.873ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.951ms
+		OnDemandSchedulerStart: 0.682ms
+	PostProcessAllAssets: 129.845ms
+		PostProcessCallbackCreateDeferredMaterials 80.436ms
+		XRBuildSystem.XRAssetImported 3.340ms
+		ShaderAssetModifiedCallback 0.299ms
+		SpeedTreeImporter.PostprocessAllAssets 0.211ms
+		RaytracingShaderImportPostprocess 0.176ms
+		ComputeShaderImportPostprocess 0.161ms
+		LocalizationDatabase.AssetDatabasePostprocessCallback 0.110ms
+		BlockShaderImporter.PostprocessAllAssets 0.081ms
+		AssemblyValidation.PostprocessAllAssets 0.075ms
+		MonoPostProcessAllAssets: 11.730ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 3.993ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 2.026ms
+			PostProcessor.OnPostprocessAllAssets 0.806ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.748ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.673ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.672ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.635ms
+			AssetChangedListener.OnPostprocessAllAssets 0.370ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.331ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.297ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.080ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.074ms
+			SyncVS.PostprocessSyncProject 0.056ms
+	PostAssetChangesProfiler: 15.468ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.913ms
+	PersistCurrentRevisions: 0.900ms
+	Untracked: 7.715ms
+
+Asset Pipeline Refresh (id=1dbf8e0b2a5f1a9428cac36cfad74190): Total: 0.014 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[OPUS] OpusRenderPipelineSetupTool: verify GraphicsSettings.currentRenderPipeline != null -> True
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:71)
+
+(Filename: Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs Line: 71)
+
+[OPUS] OpusRenderPipelineSetupTool: DONE
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Shell.Editor.OpusRenderPipelineSetupTool:BatchSetupUrp () (at Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs:72)
+
+(Filename: Assets/Shell/Editor/OpusRenderPipelineSetupTool.cs Line: 72)
+
+[Licensing::Client] Successfully resolved entitlement details
+Batchmode quit successfully invoked - shutting down!
+Killing ADB server in 2.1048179 seconds.
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-GARV BANSAL-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-GARV BANSAL channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+abort_threads: Failed aborting id: 0000000000004828, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000001190, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000008264, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000004828, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000001190, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000008264, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3900
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0Error reading command from socketError reading command from socketError reading command from socketError reading command from socket

@@ -1,0 +1,13 @@
+{
+  "t_ms": 1012,
+  "seq": 12,
+  "block": 0,
+  "trial": 0,
+  "type": "self_touch",
+  "data": {
+    "band": "a",
+    "motor": 0,
+    "cue_send_ms": 84010,
+    "finger_speed_mps": 0.21
+  }
+}

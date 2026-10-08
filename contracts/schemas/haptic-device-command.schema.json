@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/haptic-device-command.schema.json",
+  "title": "HapticDeviceCommand",
+  "description": "Wire format the sleeve firmware receives (Electronics team's spec, v1.1; extended in v1.2 with cue \"stroke\" and play_at_ms). One JSON object per UDP datagram (or per BLE write). The software maps clinical cues to this; see contracts/HAPTIC_PROTOCOL.md.",
+  "type": "object",
+  "required": ["motor", "intensity", "duration_ms", "pattern"],
+  "additionalProperties": true,
+  "properties": {
+    "motor": { "type": "integer", "enum": [0, 1, 2, 3], "description": "0 = upper arm, 1 = forearm (Phantom Hand Node A: 0 = motor A near the wrist, 1 = motor B 10 cm toward the elbow), 2/3 = additional channels (physical placement TBD; see docs/ELECTRONICS_HANDOFF.md). Extended from [0,1] on 2026-09-19 by user decision." },
+    "intensity": { "type": "integer", "minimum": 0, "maximum": 255, "description": "Wire range stays 0-255 (v1.1 clients). The v0.5.0 firmware caps every value at 150 (3 V coin motors on the 5 V rail); the Phantom Hand game sends round(150 x haptic_max_intensity), so never above 150." },
+    "duration_ms": { "type": "integer", "minimum": 50, "maximum": 400 },
+    "pattern": { "enum": ["pulse", "buzz", "ramp"] },
+    "cue_id": { "type": "string", "description": "optional; echo it in the ack so the app can measure latency" },
+    "cue": { "enum": ["trunk_lean", "low_confidence", "success", "stroke"], "description": "optional clinical label, for the firmware's own logging only. \"stroke\" = one Phantom Hand brush stroke pulse (v1.2)." },
+    "play_at_ms": { "type": "integer", "minimum": 0, "description": "optional, v1.2, informational: the game clock time (ms) the stroke is meant to land. The firmware ignores it (the game times its own sends); it is logged for timing analysis." }
+  }
+}

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:48:11Z" duration="76.2437655">
+  <test-suite type="TestSuite" id="1025" name="OPUS" fullname="OPUS" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:48:11Z" duration="76.243766" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1003" name="OrchardReach.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/OrchardReach.Tests.PlayMode.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.517171" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="36792" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1004" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.516077" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1005" name="Games" fullname="Opus.Games" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.515793" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1006" name="OrchardReach" fullname="Opus.Games.OrchardReach" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.515568" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1007" name="Tests" fullname="Opus.Games.OrchardReach.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.515275" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestSuite" id="1008" name="PlayMode" fullname="Opus.Games.OrchardReach.Tests.PlayMode" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.514948" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-suite type="TestFixture" id="1001" name="OrchardReachPlayModeAuditTests" fullname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests" classname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.513279" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1002" name="DemoDriver_ProducesAllFiveAuditStatesWithRealContactGeometry" fullname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests.DemoDriver_ProducesAllFiveAuditStatesWithRealContactGeometry" methodname="DemoDriver_ProducesAllFiveAuditStatesWithRealContactGeometry" classname="Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests" runstate="Runnable" seed="473005933" result="Passed" start-time="2026-09-18 18:46:55Z" end-time="2026-09-18 18:47:00Z" duration="5.488321" asserts="0">
+                    <properties>
+                      <property name="_JOINTYPE" value="UnityCombinatorial" />
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                    <output><![CDATA[[TestRunnerTools] Test Started: Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests.DemoDriver_ProducesAllFiveAuditStatesWithRealContactGeometry
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+Unable to process a controller whose SampleRateHz is 0 now.
+Unable to process a controller whose SampleRateHz is 0 now.
+[OPUS] PlayModeAudit: ResetRenderingDebugger failed (TargetInvocationException: Exception has been thrown by the target of an invocation.) — continuing.
+[OPUS] PlayModeAudit: hid 250 rig hand/controller-hint renderers (DemoHandProxy_R excluded)
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run9_playmode\03_grasp.png (836478 bytes)
+[OPUS] PlayModeAudit: captured grasp at t=0.00s, hand-apple distance=0.0000m
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run9_playmode\04_carry.png (836478 bytes)
+[OPUS] PlayModeAudit: captured carry at t=0.00s (apple parented to hand: True)
+[HapticClient] cue dropped for motor 0: Enabled=false.
+[OPUS] PlayModeAudit: release pos=(-0.08, 0.88, 0.45), basket bounds center=(-0.08, 0.71, 0.45) max.y=0.8000001, horizDist=0.0000m
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run9_playmode\05_placed_in_basket.png (1073523 bytes)
+[OPUS] PlayModeAudit: captured placed_in_basket at t=0.32s (real 'placed' event, trialsCompleted=1, successCount=1), applePos=(-0.08, 0.65, 0.45), basketBounds min=(-0.21, 0.62, 0.32) max=(0.05, 0.80, 0.58), inside=True
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 1: Enabled=false.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run9_playmode\01_target_shown.png (845852 bytes)
+[OPUS] PlayModeAudit: captured target_shown at t=2.59s
+[OPUS] PlayModeAudit: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run9_playmode\02_mid_reach.png (843885 bytes)
+[OPUS] PlayModeAudit: captured mid_reach at t=2.70s
+[OPUS] PlayModeAudit: finished after 2.80s — target_shown=True mid_reach=True grasp=True carry=True placed=True, trialsCompleted=4, successCount=3
+[TestRunnerTools] Test Finished: Opus.Games.OrchardReach.Tests.PlayMode.OrchardReachPlayModeAuditTests.DemoDriver_ProducesAllFiveAuditStatesWithRealContactGeometry, ResultState: Passed, Duration: 5.488s
+]]></output>
+                  </test-case>
+                </test-suite>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1017" name="Shell.Tests.PlayMode.dll" fullname="C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Library/ScriptAssemblies/Shell.Tests.PlayMode.dll" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:48:11Z" duration="70.717489" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="36792" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1018" name="Opus" fullname="Opus" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:48:11Z" duration="70.716226" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1019" name="Shell" fullname="Opus.Shell" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:48:11Z" duration="70.715550" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1020" name="Tests" fullname="Opus.Shell.Tests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:48:11Z" duration="70.715135" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1021" name="PlayMode" fullname="Opus.Shell.Tests.PlayMode" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:48:11Z" duration="70.714678" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1009" name="HapticIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests" classname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:47:49Z" duration="48.417981" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1011" name="DemoSession_HapticsDisabled_SendsNoCues" fullname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_HapticsDisabled_SendsNoCues" methodname="DemoSession_HapticsDisabled_SendsNoCues" classname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests" runstate="Runnable" seed="2039580715" result="Passed" start-time="2026-09-18 18:47:00Z" end-time="2026-09-18 18:47:04Z" duration="3.727625" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_HapticsDisabled_SendsNoCues
+[OVRManager] OnDestroy
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 0: Enabled=false.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 1: Enabled=false.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] HapticIntegrationTest: hapticsEnabled=false -> cueCount=0 after 3.0s (expect 0)
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_HapticsDisabled_SendsNoCues, ResultState: Passed, Duration: 3.728s
+]]></output>
+                </test-case>
+                <test-case id="1012" name="DemoSession_SleeveNeverAnswers_SessionStillCompletes" fullname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_SleeveNeverAnswers_SessionStillCompletes" methodname="DemoSession_SleeveNeverAnswers_SessionStillCompletes" classname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests" runstate="Runnable" seed="1909353636" result="Passed" start-time="2026-09-18 18:47:04Z" end-time="2026-09-18 18:47:14Z" duration="10.235493" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_SleeveNeverAnswers_SessionStillCompletes
+[OVRManager] OnDestroy
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 0: no haptic device known yet (HasDevice=false).
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 1: no haptic device known yet (HasDevice=false).
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] HapticIntegrationTest: sleeve absent -> trialsCompleted=6 after 9.5s
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_SleeveNeverAnswers_SessionStillCompletes, ResultState: Passed, Duration: 10.235s
+]]></output>
+                </test-case>
+                <test-case id="1010" name="DemoSession_WithSleeve_ProducesOrderedCuesAndValidSession" fullname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_WithSleeve_ProducesOrderedCuesAndValidSession" methodname="DemoSession_WithSleeve_ProducesOrderedCuesAndValidSession" classname="Opus.Shell.Tests.PlayMode.HapticIntegrationTests" runstate="Runnable" seed="1389827362" result="Passed" start-time="2026-09-18 18:47:14Z" end-time="2026-09-18 18:47:49Z" duration="34.378099" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_WithSleeve_ProducesOrderedCuesAndValidSession
+[OVRManager] OnDestroy
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 0: no haptic device known yet (HasDevice=false).
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 1: no haptic device known yet (HasDevice=false).
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] sending cue=trunk_lean motor=0 cueId=f7ffb7ba-f43f-4118-b4e7-b927a91d62f7 nowMs=17819
+[HapticClient] sending cue=low_confidence motor=1 cueId=729e6588-112d-49b8-a78c-8d101a49d4e5 nowMs=19006
+[OPUS] HapticIntegrationTest: elapsed=1.5s trialsCompleted=6 cueOrder=[trunk_lean,low_confidence] trunk_lean=1 low_confidence=1 success=0
+[OPUS] HapticIntegrationTest: send->ack latency samples=2 avg=36.41ms max=72.01ms
+[OPUS] HapticIntegrationTest: validate.py exit=0
+[PASS] 15c00c78-2043-40a5-bda5-521b663caf1b/session.json
+[PASS] 15c00c78-2043-40a5-bda5-521b663caf1b/events.ndjson: 8 events validated
+[WARN] 15c00c78-2043-40a5-bda5-521b663caf1b: no kin_*.json files found
+[WARN] 15c00c78-2043-40a5-bda5-521b663caf1b/metrics.json not found
+
+[PASS] All validations passed
+
+
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.HapticIntegrationTests.DemoSession_WithSleeve_ProducesOrderedCuesAndValidSession, ResultState: Passed, Duration: 34.378s
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1013" name="LeanScreenshotTest" fullname="Opus.Shell.Tests.PlayMode.LeanScreenshotTest" classname="Opus.Shell.Tests.PlayMode.LeanScreenshotTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:47:49Z" end-time="2026-09-18 18:47:50Z" duration="1.124000" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1014" name="CaptureDuringTrunkLean" fullname="Opus.Shell.Tests.PlayMode.LeanScreenshotTest.CaptureDuringTrunkLean" methodname="CaptureDuringTrunkLean" classname="Opus.Shell.Tests.PlayMode.LeanScreenshotTest" runstate="Runnable" seed="551455368" result="Passed" start-time="2026-09-18 18:47:49Z" end-time="2026-09-18 18:47:50Z" duration="1.114665" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.LeanScreenshotTest.CaptureDuringTrunkLean
+[OVRManager] OnDestroy
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking left due to unassigned field.
+Found IOVRSkeletonDataProvider reference in [BuildingBlock] Hand Tracking right due to unassigned field.
+Setting linear velocity of a kinematic body is not supported.
+At GameObject <color=#3366ff><b>PlayerController</b></color>, component <b>FirstPersonLocomotor</b>. The ground could not be found below the locomotor for 10 meters. Velocity will be disabled.A) Add a ground collider under the character controller and/or adjust the CharacterController.LayerMask.
+B) Set _velocityDisabled to disable movement and prevent falling without showing this warning.
+C) Set _maxStartGroundDistance to 0 to disable this behaviour.
+
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 0: Enabled=false.
+[OPUS] VignetteDiag: quadWorld=(0.00, 1.09, 0.05) eyeWorld=(0.00, 1.15, -0.05) distance=0.120 dotForward=1.000 lossyScale=(0.58, 0.26, 1.00) rendererEnabled=True isVisible=False shader=Universal Render Pipeline/Unlit color=RGBA(1.000, 0.620, 0.150, 0.302) baseColor=RGBA(1.000, 0.620, 0.150, 0.302) renderQueue=3100 layer=0
+[OPUS] LeanScreenshotTest: wrote C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\screens\unity\run11\during_trunk_lean.png (1035212 bytes)
+[OPUS] LeanScreenshotTest: captured during_trunk_lean at leanCm=20.0 (active=True)
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.LeanScreenshotTest.CaptureDuringTrunkLean, ResultState: Passed, Duration: 1.115s
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1015" name="LiveLinkIntegrationTests" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 18:47:50Z" end-time="2026-09-18 18:48:11Z" duration="21.171872" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1016" name="LiveClient_CompletesScenarioBasic_AgainstFakeHub" fullname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub" methodname="LiveClient_CompletesScenarioBasic_AgainstFakeHub" classname="Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests" runstate="Runnable" seed="1070560" result="Passed" start-time="2026-09-18 18:47:50Z" end-time="2026-09-18 18:48:11Z" duration="21.160960" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[TestRunnerTools] Test Started: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub
+[OPUS] LiveLinkTest: started fake_hub.py, PID=36980
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[HapticClient] cue dropped for motor 1: Enabled=false.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] LiveLinkTest: hub health check -> True after wait
+[OPUS] LiveLinkTest: OnCommand 'assign_program' ackId=966414c6-4605-47b6-8286-e6c6310f9193
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] LiveLinkTest: OnCommand 'start' ackId=75b639eb-a400-49a6-adcd-78e91d3a957a
+Setting linear velocity of a kinematic body is not supported.
+Setting linear velocity of a kinematic body is not supported.
+[OPUS] LiveLinkTest: OnCommand 'pause' ackId=292ad51e-4893-4f12-b6c8-54887ca02d7a
+[OPUS] LiveLinkTest: OnCommand 'resume' ackId=3093316e-0a35-40b5-9b7d-1e8f6bf6c552
+[OPUS] LiveLinkTest: OnCommand 'stop' ackId=e5894cf9-d5ad-49e3-871d-af4cf83ea840
+[OPUS] LiveLinkTest: scenario loop ended after 13.1s, sessionStarted=True, sessionStopped=True, rttSamples=1
+[OPUS] LiveLinkTest: file uploads -> session.json=True events.ndjson=True
+[OPUS] LiveLinkTest: hub stored session dir C:\Users\GARV BANSAL\Documents\VR_games\OPUS\sim\out\hub_sessions\159694d3-708f-41c2-a2ba-2fc352e73134 exists-with-files=True
+[OPUS] LiveLinkTest: RTT samples=1 p50=31.0ms p95=31.0ms max=31.0ms
+[OPUS] LiveLinkTest: validate.py exit=0
+stdout=[PASS] 159694d3-708f-41c2-a2ba-2fc352e73134/session.json
+[PASS] 159694d3-708f-41c2-a2ba-2fc352e73134/events.ndjson: 3 events validated
+[WARN] 159694d3-708f-41c2-a2ba-2fc352e73134: no kin_*.json files found
+[WARN] 159694d3-708f-41c2-a2ba-2fc352e73134/metrics.json not found
+
+[PASS] All validations passed
+
+stderr=
+[OPUS] LiveLinkTest: fake_hub.py invalid-message occurrences found in its log = 0 (must be 0)
+[OPUS] LiveLinkTest: fake_hub.py stderr(log) tail:
+6-09-19 00:18:03] INFO: [MSG RX] type=trial_event id=9a578f65-ae3c-4b6b-a6ed-aa9126b6e5d4 seq=15
+[2026-09-19 00:18:03] INFO: [MSG RX] type=trial_event id=0c75a430-068e-4367-9c23-919e9ec40770 seq=27
+[2026-09-19 00:18:03] INFO: [MSG RX] type=status id=ac1d1b76-4a4d-40f2-bfd3-4055074fa303 seq=28
+[2026-09-19 00:18:03] INFO: [MSG RX] type=ping id=00c09605-e66d-4459-a866-5caee67c2275 seq=29
+[2026-09-19 00:18:03] INFO: [MSG TX] type=pong id=f392973b-9b4a-49a8-a645-0aa67879eb9d seq=22
+[2026-09-19 00:18:03] INFO: [PING] Received ping, sent pong with echo_ts_ms=9050.555229187012
+[2026-09-19 00:18:04] INFO: [MSG TX] type=ping id=b9fd0090-5496-46a6-9200-15a5befc5c7c seq=23
+[2026-09-19 00:18:04] INFO: [PING] Sent ping with echo_ts_ms=1789757284018.6711
+[2026-09-19 00:18:04] INFO: [MSG RX] type=pong id=2c1e6b44-f7e1-49ea-8377-12b3a12cb2e9 seq=30
+[2026-09-19 00:18:04] INFO: [PONG] echo_ts_ms=1789757284018.6711 rtt=1.0ms
+[2026-09-19 00:18:04] INFO: [MSG RX] type=trial_event id=0b32373c-662d-447f-b207-f37f268980da seq=22
+[2026-09-19 00:18:04] INFO: [MSG RX] type=trial_event id=0c75a430-068e-4367-9c23-919e9ec40770 seq=27
+[2026-09-19 00:18:04] INFO: [MSG RX] type=trial_event id=9a578f65-ae3c-4b6b-a6ed-aa9126b6e5d4 seq=15
+[2026-09-19 00:18:04] INFO: [MSG RX] type=ping id=8bf6884d-e9b7-4499-af6e-663fb07c837c seq=31
+[2026-09-19 00:18:04] INFO: [MSG TX] type=pong id=177eccf9-d62d-422d-9e55-ab33a650b972 seq=24
+[2026-09-19 00:18:04] INFO: [PING] Received ping, sent pong with echo_ts_ms=10050.64582824707
+[2026-09-19 00:18:05] INFO: [MSG TX] type=ping id=9a8ff4a9-5a3c-411a-a569-0c67efc2e057 seq=25
+[2026-09-19 00:18:05] INFO: [PING] Sent ping with echo_ts_ms=1789757285016.774
+[2026-09-19 00:18:05] INFO: [MSG RX] type=pong id=73c622ca-0eb0-4fea-b1a8-1e7bd990a57e seq=32
+[2026-09-19 00:18:05] INFO: [PONG] echo_ts_ms=1789757285016.774 rtt=1.7ms
+[2026-09-19 00:18:05] INFO: [MSG RX] type=trial_event id=0b32373c-662d-447f-b207-f37f268980da seq=22
+[2026-09-19 00:18:05] INFO: [MSG RX] type=trial_event id=0c75a430-068e-4367-9c23-919e9ec40770 seq=27
+[2026-09-19 00:18:05] INFO: [MSG RX] type=trial_event id=9a578f65-ae3c-4b6b-a6ed-aa9126b6e5d4 seq=15
+[2026-09-19 00:18:05] INFO: [MSG RX] type=ping id=182dc839-3afe-4d16-8efe-332d342b7d27 seq=33
+[2026-09-19 00:18:05] INFO: [MSG TX] type=pong id=497b5710-e0d9-4d47-82d1-33ed0b29bdf8 seq=26
+[2026-09-19 00:18:05] INFO: [PING] Received ping, sent pong with echo_ts_ms=11050.745010375977
+[2026-09-19 00:18:06] INFO: [MSG TX] type=ping id=ef7ee3b4-b98a-4779-a0e9-9e7631a08efc seq=27
+[2026-09-19 00:18:06] INFO: [PING] Sent ping with echo_ts_ms=1789757286034.6
+[2026-09-19 00:18:06] INFO: [MSG RX] type=pong id=9c69bf60-4470-492c-bde8-083d9edb454f seq=34
+[2026-09-19 00:18:06] INFO: [PONG] echo_ts_ms=1789757286034.6 rtt=0.5ms
+[2026-09-19 00:18:06] INFO: [MSG RX] type=trial_event id=0b32373c-662d-447f-b207-f37f268980da seq=22
+[2026-09-19 00:18:06] INFO: [MSG RX] type=trial_event id=0c75a430-068e-4367-9c23-919e9ec40770 seq=27
+[2026-09-19 00:18:06] INFO: [MSG RX] type=trial_event id=9a578f65-ae3c-4b6b-a6ed-aa9126b6e5d4 seq=15
+[2026-09-19 00:18:06] INFO: [MSG RX] type=ping id=6c027fe1-0392-44e7-b6d6-7c0454013baa seq=35
+[2026-09-19 00:18:06] INFO: [MSG TX] type=pong id=f0732349-eff7-4f3f-b9c9-0b834312f240 seq=28
+[2026-09-19 00:18:06] INFO: [PING] Received ping, sent pong with echo_ts_ms=12051.119804382324
+[2026-09-19 00:18:07] INFO: [MSG TX] type=ping id=74924dab-0692-4243-854a-e89a1d118284 seq=29
+[2026-09-19 00:18:07] INFO: [PING] Sent ping with echo_ts_ms=1789757287043.426
+[2026-09-19 00:18:07] INFO: [MSG RX] type=pong id=c5540cfa-3d70-4f31-a1b5-c6cece689666 seq=36
+[2026-09-19 00:18:07] INFO: [PONG] echo_ts_ms=1789757287043.426 rtt=1.5ms
+[2026-09-19 00:18:07] INFO: [MSG RX] type=trial_event id=0b32373c-662d-447f-b207-f37f268980da seq=22
+[2026-09-19 00:18:07] INFO: [MSG RX] type=trial_event id=0c75a430-068e-4367-9c23-919e9ec40770 seq=27
+[2026-09-19 00:18:07] INFO: [MSG RX] type=trial_event id=9a578f65-ae3c-4b6b-a6ed-aa9126b6e5d4 seq=15
+[2026-09-19 00:18:07] INFO: [MSG RX] type=ping id=f4c31121-6388-43b4-95fa-9509f2d94afe seq=37
+[2026-09-19 00:18:07] INFO: [MSG TX] type=pong id=c13a1492-a4ef-416b-abcd-62c0ce09ff42 seq=30
+[2026-09-19 00:18:07] INFO: [PING] Received ping, sent pong with echo_ts_ms=13051.287651062012
+[2026-09-19 00:18:07] INFO: [MSG TX] type=command id=e5894cf9-d5ad-49e3-871d-af4cf83ea840 seq=31
+[2026-09-19 00:18:07] INFO: [SCENARIO] Stop command sent
+[2026-09-19 00:18:07] INFO: [MSG RX] type=ack id=f3f9626c-0791-47ed-845c-5df43bb67d57 seq=38
+[2026-09-19 00:18:07] INFO: [ACK] e5894cf9-d5ad-49e3-871d-af4cf83ea840 latency=2.0ms
+[2026-09-19 00:18:07] INFO: [MSG RX] type=session_ended id=0eac60d5-1462-4e16-b81a-8c6e9b54d5cf seq=39
+[2026-09-19 00:18:07] WARNING: [MSG] Unhandled message type: session_ended
+[2026-09-19 00:18:07] INFO: [FILE] session.json uploaded (830 bytes) -> 201
+[2026-09-19 00:18:07] INFO: 127.0.0.1 [19/Sep/2026:00:18:07 +0530] "PUT /opus/v1/sessions/159694d3-708f-41c2-a2ba-2fc352e73134/files/session.json HTTP/1.1" 201 164 "-" "UnityPlayer/6000.4.6f1 (UnityWebRequest/1.0, libcurl/8.10.1-DEV)"
+[2026-09-19 00:18:07] INFO: [MSG RX] type=file_available id=cd72c4f6-93b9-47a0-a5b7-8311f1fd9151 seq=40
+[2026-09-19 00:18:07] WARNING: [MSG] Unhandled message type: file_available
+[2026-09-19 00:18:07] INFO: [FILE] events.ndjson uploaded (194 bytes) -> 201
+[2026-09-19 00:18:07] INFO: 127.0.0.1 [19/Sep/2026:00:18:07 +0530] "PUT /opus/v1/sessions/159694d3-708f-41c2-a2ba-2fc352e73134/files/events.ndjson HTTP/1.1" 201 164 "-" "UnityPlayer/6000.4.6f1 (UnityWebRequest/1.0, libcurl/8.10.1-DEV)"
+[2026-09-19 00:18:07] INFO: [MSG RX] type=file_available id=48848025-526d-4c15-8640-aa44aa1d124b seq=41
+[2026-09-19 00:18:07] WARNING: [MSG] Unhandled message type: file_available
+[2026-09-19 00:18:07] INFO: [WS] Client disconnected
+[2026-09-19 00:18:07] INFO: 127.0.0.1 [19/Sep/2026:00:17:54 +0530] "GET /opus/v1/live HTTP/1.1" 101 0 "-" "-"
+
+[OPUS] LiveLinkTest: DONE
+[TestRunnerTools] Test Finished: Opus.Shell.Tests.PlayMode.LiveLinkIntegrationTests.LiveClient_CompletesScenarioBasic_AgainstFakeHub, ResultState: Passed, Duration: 21.161s
+Saving results to: C:/Users/GARV BANSAL/AppData/LocalLow/DefaultCompany/OPUS\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

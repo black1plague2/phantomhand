@@ -1,0 +1,13 @@
+{
+  "t_ms": 1017,
+  "seq": 17,
+  "block": 0,
+  "trial": 0,
+  "type": "haptic_cue",
+  "data": {
+    "cue": "stroke",
+    "motor": 0,
+    "delivered": true,
+    "ack_latency_ms": 14
+  }
+}

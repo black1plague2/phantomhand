@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/event.schema.json",
+  "title": "TrialEvent",
+  "description": "One line of events.ndjson. t_ms is monotonic ms since session start, on the same clock as kinematics frames. v0.2 adds the Phantom Hand events (phase_start, calibration, stroke, drift_probe, threat_impact, threat_response, questionnaire_item, emg_burst, witness_summary, self_touch, dissolve_start, passthrough_on, breath_env, autonomous_close). For those, `trial` is the condition index (0 = first condition run, 1 = second) and the fields documented in docs/agent-briefs/ph/03-SPEC.md section 7 and 12 live in `data`, which the if/then rules below make REQUIRED with the stated keys. This schema is self-contained (no cross-file $ref): opus_analytics validates it without a registry.",
+  "type": "object",
+  "required": ["t_ms", "type", "block", "seq"],
+  "properties": {
+    "t_ms": { "type": "number", "minimum": 0 },
+    "seq": { "type": "integer", "minimum": 0 },
+    "block": { "type": "integer", "minimum": 0, "description": "index into program blocks" },
+    "trial": { "type": ["integer", "null"], "minimum": 0 },
+    "type": {
+      "enum": [
+        "session_start", "session_end", "block_start", "block_end",
+        "calibration_start", "calibration_end",
+        "trial_start", "target_shown", "movement_onset", "contact", "grasp", "release", "placed", "trial_end",
+        "pause", "resume", "command_received", "difficulty_changed",
+        "tracking_lost", "tracking_regained", "form_warning", "guide_shown",
+        "haptic_cue",
+        "phase_start", "calibration", "stroke", "drift_probe", "threat_impact", "threat_response",
+        "questionnaire_item", "emg_burst", "witness_summary",
+        "self_touch", "dissolve_start", "passthrough_on", "breath_env", "autonomous_close"
+      ]
+    },
+    "hand": { "enum": ["left", "right", null] },
+    "target": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "pos": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3, "description": "meters, calibration space" },
+        "azimuthDeg": { "type": "number" }, "elevationDeg": { "type": "number" }, "reachPercent": { "type": "number" },
+        "isDistractor": { "type": "boolean" }
+      }
+    },
+    "outcome": { "enum": ["success", "miss", "timeout", "wrong_target", "dropped", null] },
+    "data": { "type": "object", "description": "game-specific extras; never required by analytics for the original (v0.1) event types. Required, with the keys below, for the Phantom Hand types." }
+  },
+  "$defs": {
+    "vec3": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+    "vec3OrNull": { "type": ["array", "null"], "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+    "numOrNull": { "type": ["number", "null"] },
+    "condition": { "enum": ["sync", "async"] }
+  },
+  "allOf": [
+    { "if": { "properties": { "type": { "const": "haptic_cue" } }, "required": ["type"] }, "then": {
+      "properties": { "data": { "properties": {
+        "cue": { "enum": ["trunk_lean", "low_confidence", "success", "stroke"], "description": "v0.2: \"stroke\" = one Phantom Hand brush pulse (data also carries motor, delivered, ack_latency_ms)" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "phase_start" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["phase", "condition"], "properties": {
+        "phase": { "type": "string", "minLength": 1, "examples": ["calibrate", "probe_pre", "induction", "agency", "threat", "probe_post", "questionnaire", "dissolve", "reveal", "witness", "done"] },
+        "condition": { "enum": ["sync", "async", null], "description": "null before the first condition and in the finale phases" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "calibration" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["wrist_pos", "forearm_axis", "ok"], "properties": {
+        "wrist_pos": { "$ref": "#/$defs/vec3OrNull", "description": "meters, calibration space; null when ok is false" },
+        "forearm_axis": { "$ref": "#/$defs/vec3OrNull", "description": "unit vector wrist -> elbow; null when ok is false" },
+        "ok": { "type": "boolean" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "stroke" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object",
+        "required": ["index", "brush_pass_a_ms", "brush_pass_b_ms", "cue_a_send_ms", "cue_b_send_ms", "swapped", "timing_err_ms"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 0, "description": "stroke counter within the condition" },
+          "brush_pass_a_ms": { "$ref": "#/$defs/numOrNull", "description": "session ms the brush crossed motor A's position" },
+          "brush_pass_b_ms": { "$ref": "#/$defs/numOrNull", "description": "session ms the brush crossed motor B's position" },
+          "cue_a_send_ms": { "$ref": "#/$defs/numOrNull", "description": "session ms the command for the motor addressed first was sent; null if gated or haptics off" },
+          "cue_b_send_ms": { "$ref": "#/$defs/numOrNull", "description": "same for the second motor" },
+          "swapped": { "type": "boolean", "description": "true when this stroke fired B before A (ASYNC random order)" },
+          "timing_err_ms": { "$ref": "#/$defs/numOrNull", "description": "cue send time minus intended time (brush pass + lead/delay), signed; null when no cue was sent" }
+        } } } } },
+
+    { "if": { "properties": { "type": { "const": "drift_probe" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["when", "perceived_x", "actual_x", "drift_cm", "confirmed"], "properties": {
+        "when": { "enum": ["pre", "post"] },
+        "perceived_x": { "$ref": "#/$defs/numOrNull", "description": "meters, calibration space x of the left index tip when the participant confirmed" },
+        "actual_x": { "$ref": "#/$defs/numOrNull", "description": "meters, calibration space x of the real right index tip" },
+        "drift_cm": { "$ref": "#/$defs/numOrNull", "description": "displacement of perceived vs actual position in cm, POSITIVE = toward the virtual hand (the virtual arm sits at negative x, so drift_cm = (actual_x - perceived_x) * 100 for the right arm); null when not confirmed" },
+        "confirmed": { "type": "boolean", "description": "finger still < 1 cm for 1.5 s" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "threat_impact" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["impact_ms", "impact_pos", "ok"], "properties": {
+        "impact_ms": { "type": "number", "minimum": 0, "description": "session ms of stone contact; the 1.5 s response window starts here" },
+        "impact_pos": { "$ref": "#/$defs/vec3" },
+        "ok": { "type": "boolean", "description": "false if the stone missed the virtual hand" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "threat_response" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object",
+        "required": ["wrist_peak_mps", "wrist_latency_ms", "imu_peak", "emg_peak_x", "emg_latency_ms", "quality"],
+        "properties": {
+          "wrist_peak_mps": { "$ref": "#/$defs/numOrNull" },
+          "wrist_latency_ms": { "$ref": "#/$defs/numOrNull" },
+          "imu_peak": { "$ref": "#/$defs/numOrNull", "description": "m/s2, peak |accel| change in the window" },
+          "emg_peak_x": { "$ref": "#/$defs/numOrNull", "description": "peak envelope as a multiple of baseline RMS" },
+          "emg_latency_ms": { "$ref": "#/$defs/numOrNull" },
+          "quality": { "enum": ["ok", "degraded", "missing"], "description": "on-device preliminary; authoritative values come from analytics" }
+        } } } } },
+
+    { "if": { "properties": { "type": { "const": "questionnaire_item" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["item", "value"], "properties": {
+        "item": { "enum": ["q1", "q2", "q3", "q4", "q5"], "description": "q1 q2 ownership, q3 control, q4 witness pointer (A1), q5 agency (A5)" },
+        "value": { "type": "integer", "minimum": 1, "maximum": 7 }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "emg_burst" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["peak", "baseline_rms", "device_ms"], "properties": {
+        "peak": { "type": "number" },
+        "baseline_rms": { "type": "number", "minimum": 0 },
+        "device_ms": { "type": "number", "minimum": 0, "description": "Node B millis() when the burst was reported" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "witness_summary" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object",
+        "properties": {
+          "sync": { "type": "object", "description": "this participant's numbers for the SYNC condition (same keys as metrics.json embodiment)" },
+          "async": { "type": "object", "description": "this participant's numbers for the ASYNC condition" },
+          "condition_order": { "type": "array", "items": { "$ref": "#/$defs/condition" }, "minItems": 1, "maxItems": 2 }
+        },
+        "anyOf": [ { "required": ["sync"] }, { "required": ["async"] } ] } } } },
+
+    { "if": { "properties": { "type": { "const": "self_touch" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["band", "motor", "cue_send_ms", "finger_speed_mps"], "properties": {
+        "band": { "enum": ["a", "b"] },
+        "motor": { "type": "integer", "enum": [0, 1] },
+        "cue_send_ms": { "$ref": "#/$defs/numOrNull" },
+        "finger_speed_mps": { "type": "number", "minimum": 0 }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "dissolve_start" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["condition"], "properties": {
+        "condition": { "enum": ["sync", "async", null], "description": "the condition that just ended, whose arm dissolves" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "passthrough_on" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["fallback"], "properties": {
+        "fallback": { "type": "boolean", "description": "true = ghost outline of the tracked real hand instead of passthrough" }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "breath_env" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["t0_ms", "fs_hz", "values", "source"], "properties": {
+        "t0_ms": { "type": "number", "minimum": 0 },
+        "fs_hz": { "const": 20 },
+        "values": { "type": "array", "items": { "type": "number" }, "minItems": 20, "maxItems": 20, "description": "one second at 20 Hz" },
+        "source": { "enum": ["mic", "guide", "replay"] }
+      } } } } },
+
+    { "if": { "properties": { "type": { "const": "autonomous_close" } }, "required": ["type"] }, "then": {
+      "required": ["data"],
+      "properties": { "data": { "type": "object", "required": ["emg_level"], "properties": {
+        "emg_level": { "type": "number", "minimum": 0, "description": "normalised EMG (0 = rest, 1 = MVC) at the moment the hand closed by itself" }
+      } } } } }
+  ]
+}

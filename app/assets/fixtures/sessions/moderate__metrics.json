@@ -1,0 +1,656 @@
+{
+  "session_id": "f86a0bb3-cd2d-45b5-b2f2-cea4d0fc6fae",
+  "computed_at": "2026-09-17T17:10:52.956714+00:00",
+  "analytics_version": "0.1.0",
+  "sample_rate_hz": 72.0,
+  "validation": {
+    "session.json": [],
+    "events.ndjson": [],
+    "kin_chunks": []
+  },
+  "trials": [
+    {
+      "block": 0,
+      "trial": 0,
+      "hand": "left",
+      "outcome": "miss",
+      "target": {
+        "id": "fruit_0",
+        "pos": [
+          -0.216609347277339,
+          0.2609409345466758,
+          0.40013720910828443
+        ],
+        "azimuthDeg": -5.5009404223152885,
+        "elevationDeg": 34.3439167964553,
+        "reachPercent": 77.08846169945872
+      },
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 302.937,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "movement_time_ms": {
+          "value": 1266.424,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "tracking_loss_pct": {
+          "value": 0.0,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "peak_speed_mps": {
+          "value": 1.0101382699619212,
+          "unit": "m/s",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "time_to_peak_speed_pct": {
+          "value": 27.77777777777778,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "sparc": {
+          "value": -2.1718595235779916,
+          "unit": "unitless",
+          "method_version": "sparc_balasubramanian2015_fc10_amp0.05_v1",
+          "quality": "ok"
+        },
+        "ldlj": {
+          "value": -9.811229002176944,
+          "unit": "unitless",
+          "method_version": "ldlj_hogan_sternad2009_speed_v1",
+          "quality": "ok"
+        },
+        "n_submovements": {
+          "value": 3,
+          "unit": "count",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "path_length_ratio": {
+          "value": 1.0318285660642605,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "endpoint_error_cm": {
+          "value": 10.83532487062975,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_displacement_cm": {
+          "value": 1.417254320861291,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_lean_cm": {
+          "value": 1.5128803892592801,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      },
+      "t_start_ms": 55.556,
+      "t_end_ms": 2124.917
+    },
+    {
+      "block": 0,
+      "trial": 1,
+      "hand": "right",
+      "outcome": "miss",
+      "target": {
+        "id": "fruit_1",
+        "pos": [
+          0.1385593789717242,
+          0.07468880733875365,
+          0.48500013710366363
+        ],
+        "azimuthDeg": -5.092722105540197,
+        "elevationDeg": 9.089548871391075,
+        "reachPercent": 78.79665646447904
+      },
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 372.547,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "movement_time_ms": {
+          "value": 1318.6630000000005,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "tracking_loss_pct": {
+          "value": 0.0,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "peak_speed_mps": {
+          "value": 0.7251804462028792,
+          "unit": "m/s",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "time_to_peak_speed_pct": {
+          "value": 32.25806451612903,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "sparc": {
+          "value": -2.163855659812225,
+          "unit": "unitless",
+          "method_version": "sparc_balasubramanian2015_fc10_amp0.05_v1",
+          "quality": "ok"
+        },
+        "ldlj": {
+          "value": -10.023899983788095,
+          "unit": "unitless",
+          "method_version": "ldlj_hogan_sternad2009_speed_v1",
+          "quality": "ok"
+        },
+        "n_submovements": {
+          "value": 3,
+          "unit": "count",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "path_length_ratio": {
+          "value": 1.0188478825441634,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "endpoint_error_cm": {
+          "value": 9.492390057461083,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_displacement_cm": {
+          "value": 1.5500273675003289,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_lean_cm": {
+          "value": 2.0306303032072806,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      },
+      "t_start_ms": 3194.444,
+      "t_end_ms": 5385.654
+    },
+    {
+      "block": 0,
+      "trial": 2,
+      "hand": "left",
+      "outcome": "success",
+      "target": {
+        "id": "fruit_2",
+        "pos": [
+          -0.43990605642200786,
+          0.04278870054480695,
+          0.31838071662569606
+        ],
+        "azimuthDeg": -41.05766107914941,
+        "elevationDeg": 6.171579682701913,
+        "reachPercent": 66.3352351304462
+      },
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 568.6590000000006,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "movement_time_ms": {
+          "value": 1134.5339999999997,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "tracking_loss_pct": {
+          "value": 0.0,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "peak_speed_mps": {
+          "value": 0.7949498645937764,
+          "unit": "m/s",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "time_to_peak_speed_pct": {
+          "value": 26.25,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "sparc": {
+          "value": -2.1687108865925375,
+          "unit": "unitless",
+          "method_version": "sparc_balasubramanian2015_fc10_amp0.05_v1",
+          "quality": "ok"
+        },
+        "ldlj": {
+          "value": -9.446422506254688,
+          "unit": "unitless",
+          "method_version": "ldlj_hogan_sternad2009_speed_v1",
+          "quality": "ok"
+        },
+        "n_submovements": {
+          "value": 3,
+          "unit": "count",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "path_length_ratio": {
+          "value": 1.0325598200136448,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "endpoint_error_cm": {
+          "value": 8.887482197826603,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_displacement_cm": {
+          "value": 1.008200302519296,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_lean_cm": {
+          "value": 1.2724583992515965,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      },
+      "t_start_ms": 6458.333,
+      "t_end_ms": 8661.526
+    },
+    {
+      "block": 0,
+      "trial": 3,
+      "hand": "right",
+      "outcome": "miss",
+      "target": {
+        "id": "fruit_3",
+        "pos": [
+          0.14370210098970915,
+          0.2419787276376182,
+          0.38648440752077506
+        ],
+        "azimuthDeg": -5.656327301490236,
+        "elevationDeg": 33.3071278423135,
+        "reachPercent": 73.44348981388787
+      },
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 482.8289999999997,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "movement_time_ms": {
+          "value": 1336.4840000000004,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "tracking_loss_pct": {
+          "value": 0.0,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "peak_speed_mps": {
+          "value": 0.8350867280185206,
+          "unit": "m/s",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "time_to_peak_speed_pct": {
+          "value": 29.166666666666668,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "sparc": {
+          "value": -2.1441076399198034,
+          "unit": "unitless",
+          "method_version": "sparc_balasubramanian2015_fc10_amp0.05_v1",
+          "quality": "ok"
+        },
+        "ldlj": {
+          "value": -9.760435758215335,
+          "unit": "unitless",
+          "method_version": "ldlj_hogan_sternad2009_speed_v1",
+          "quality": "ok"
+        },
+        "n_submovements": {
+          "value": 4,
+          "unit": "count",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "path_length_ratio": {
+          "value": 1.0291591569154104,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "endpoint_error_cm": {
+          "value": 11.288839997170962,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_displacement_cm": {
+          "value": 1.3623744272409108,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_lean_cm": {
+          "value": 0.882199151357808,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      },
+      "t_start_ms": 9736.111,
+      "t_end_ms": 12055.424
+    },
+    {
+      "block": 0,
+      "trial": 4,
+      "hand": "left",
+      "outcome": "miss",
+      "target": {
+        "id": "fruit_4",
+        "pos": [
+          -0.07501300698775851,
+          0.21990352891269344,
+          0.416335167216796
+        ],
+        "azimuthDeg": 14.83657709328289,
+        "elevationDeg": 28.206615145053405,
+        "reachPercent": 77.54235321257485
+      },
+      "metrics": {
+        "reaction_time_ms": {
+          "value": 432.09799999999996,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "movement_time_ms": {
+          "value": 1362.1949999999997,
+          "unit": "ms",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "tracking_loss_pct": {
+          "value": 0.0,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "peak_speed_mps": {
+          "value": 0.8757048501202682,
+          "unit": "m/s",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "time_to_peak_speed_pct": {
+          "value": 26.804123711340207,
+          "unit": "%",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "sparc": {
+          "value": -2.2329262432213977,
+          "unit": "unitless",
+          "method_version": "sparc_balasubramanian2015_fc10_amp0.05_v1",
+          "quality": "ok"
+        },
+        "ldlj": {
+          "value": -9.588782803994594,
+          "unit": "unitless",
+          "method_version": "ldlj_hogan_sternad2009_speed_v1",
+          "quality": "ok"
+        },
+        "n_submovements": {
+          "value": 3,
+          "unit": "count",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "path_length_ratio": {
+          "value": 1.0143669343379478,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "endpoint_error_cm": {
+          "value": 11.740540537444799,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_displacement_cm": {
+          "value": 1.794288594401692,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        },
+        "trunk_lean_cm": {
+          "value": 0.954050624123532,
+          "unit": "cm",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "ok"
+        }
+      },
+      "t_start_ms": 13125.0,
+      "t_end_ms": 15419.293
+    },
+    {
+      "block": 0,
+      "trial": 5,
+      "hand": null,
+      "outcome": "timeout",
+      "target": {
+        "id": "fruit_5",
+        "pos": [
+          0.2177895705339522,
+          0.08766606720092342,
+          0.42515684030165346
+        ],
+        "azimuthDeg": 5.328644467087216,
+        "elevationDeg": 12.158003922504488,
+        "reachPercent": 69.37527902302986
+      },
+      "metrics": {
+        "reaction_time_ms": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "movement_time_ms": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "peak_speed_mps": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "time_to_peak_speed_pct": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "sparc": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "ldlj": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "n_submovements": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "path_length_ratio": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "endpoint_error_cm": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "trunk_displacement_cm": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "trunk_lean_cm": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        },
+        "tracking_loss_pct": {
+          "value": null,
+          "unit": "unitless",
+          "method_version": "trial_metrics_v0.1.0",
+          "quality": "invalid",
+          "quality_reasons": [
+            "trial_timed_out_before_movement_onset"
+          ]
+        }
+      },
+      "t_start_ms": 16486.111,
+      "t_end_ms": 31586.111
+    }
+  ],
+  "session": {
+    "metrics": {
+      "rate_hz": {
+        "value": 72.0,
+        "unit": "Hz",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "ok"
+      },
+      "success_rate": {
+        "value": 0.16666666666666666,
+        "unit": "unitless",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "ok"
+      },
+      "neglect_index": {
+        "value": -0.25,
+        "unit": "unitless",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "degraded",
+        "mdc95": 0.171
+      },
+      "trunk_lean_cm": {
+        "value": 1.3304437734398995,
+        "unit": "cm",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "ok",
+        "mdc95": 0.202,
+        "n": 5
+      },
+      "fatigue_slope": {
+        "value": 20.93629999999981,
+        "unit": "ms/trial",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "ok"
+      },
+      "reach_envelope_area_m2": {
+        "value": null,
+        "unit": "m^2",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "invalid"
+      },
+      "tracking_loss_pct": {
+        "value": 0.0,
+        "unit": "%",
+        "method_version": "session_metrics_v0.1.0",
+        "quality": "ok"
+      }
+    }
+  }
+}

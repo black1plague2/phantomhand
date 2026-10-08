@@ -1,0 +1,393 @@
+{
+  "session_id": "142e9493-8bf8-4124-b8a8-9b2d9dfcb9fc",
+  "computed_at": "2026-10-07T21:11:40.264696+00:00",
+  "analytics_version": "0.1.0",
+  "sample_rate_hz": 72.0,
+  "validation": {
+    "session.json": [],
+    "events.ndjson": [],
+    "kin_chunks": [],
+    "sens_chunks": []
+  },
+  "trials": [],
+  "session": {
+    "metrics": {}
+  },
+  "embodiment": {
+    "condition_order": [
+      "async",
+      "sync"
+    ],
+    "async": {
+      "drift_change_cm": {
+        "value": 0.0,
+        "unit": "cm",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "quality_reasons": [
+          "shared_pre_probe"
+        ],
+        "n": 2
+      },
+      "ownership": {
+        "value": 2.5,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 2
+      },
+      "control": {
+        "value": 3.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "witness_q4": {
+        "value": 6.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "flinch_emg_peak_x": {
+        "value": 6.03991168267872,
+        "unit": "x_baseline_rms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 174
+      },
+      "flinch_emg_latency_ms": {
+        "value": 114.26718416409858,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 174
+      },
+      "flinch_imu_peak": {
+        "value": 14.155670410858892,
+        "unit": "m/s2",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 175
+      },
+      "flinch_imu_latency_ms": {
+        "value": 147.1191412829794,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 175
+      },
+      "flinch_wrist_peak_mps": {
+        "value": null,
+        "unit": "m/s",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "flinch_wrist_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "emg_windows_excluded": {
+        "value": 1.0,
+        "unit": "count",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 15
+      },
+      "stroke_timing_err_ms": {
+        "mean": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        },
+        "p95": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        }
+      },
+      "async_delay_ms": {
+        "mean": {
+          "value": 562.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        },
+        "p95": {
+          "value": 562.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        }
+      },
+      "cue_delivery_rate": {
+        "value": 1.0,
+        "unit": "unitless",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 8
+      }
+    },
+    "sync": {
+      "drift_change_cm": {
+        "value": 2.0,
+        "unit": "cm",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "shared_pre_probe",
+          "touch_incomplete"
+        ],
+        "n": 2
+      },
+      "ownership": {
+        "value": 5.5,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "n": 2,
+        "quality_reasons": [
+          "touch_incomplete"
+        ]
+      },
+      "control": {
+        "value": 3.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "n": 1,
+        "quality_reasons": [
+          "touch_incomplete"
+        ]
+      },
+      "witness_q4": {
+        "value": 6.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "flinch_emg_peak_x": {
+        "value": 6.0143629916512085,
+        "unit": "x_baseline_rms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "n": 200,
+        "quality_reasons": [
+          "touch_incomplete"
+        ]
+      },
+      "flinch_emg_latency_ms": {
+        "value": 114.37482317711692,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "n": 200,
+        "quality_reasons": [
+          "touch_incomplete"
+        ]
+      },
+      "flinch_imu_peak": {
+        "value": null,
+        "unit": "m/s2",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "flinch_imu_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "flinch_wrist_peak_mps": {
+        "value": null,
+        "unit": "m/s",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "flinch_wrist_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "emg_windows_excluded": {
+        "value": 0.0,
+        "unit": "count",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 15
+      },
+      "stroke_timing_err_ms": {
+        "mean": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "degraded",
+          "n": 6,
+          "quality_reasons": [
+            "cues_undelivered",
+            "few_delivered_strokes_3_lt_6"
+          ]
+        },
+        "p95": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "degraded",
+          "n": 6,
+          "quality_reasons": [
+            "cues_undelivered",
+            "few_delivered_strokes_3_lt_6"
+          ]
+        }
+      },
+      "async_delay_ms": {
+        "mean": {
+          "value": -38.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 6
+        },
+        "p95": {
+          "value": -38.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 6
+        }
+      },
+      "cue_delivery_rate": {
+        "value": 0.375,
+        "unit": "unitless",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "cues_undelivered"
+        ],
+        "n": 8
+      }
+    },
+    "sync_minus_async": {
+      "drift_change_cm": {
+        "value": 2.0,
+        "unit": "cm",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "sync:shared_pre_probe",
+          "sync:touch_incomplete",
+          "async:shared_pre_probe"
+        ]
+      },
+      "ownership": {
+        "value": 3.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "sync:touch_incomplete"
+        ]
+      },
+      "control": {
+        "value": 0.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "sync:touch_incomplete"
+        ]
+      },
+      "flinch_emg_peak_x": {
+        "value": -0.02554869102751134,
+        "unit": "x_baseline_rms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "sync:touch_incomplete"
+        ]
+      },
+      "flinch_emg_latency_ms": {
+        "value": 0.10763901301834267,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "degraded",
+        "quality_reasons": [
+          "sync:touch_incomplete"
+        ]
+      },
+      "flinch_imu_peak": {
+        "value": null,
+        "unit": "m/s2",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "sync_value_missing"
+        ]
+      },
+      "flinch_imu_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "sync_value_missing"
+        ]
+      },
+      "flinch_wrist_peak_mps": {
+        "value": null,
+        "unit": "m/s",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "sync_value_missing",
+          "async_value_missing"
+        ]
+      },
+      "flinch_wrist_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "sync_value_missing",
+          "async_value_missing"
+        ]
+      },
+      "witness_q4": {
+        "value": 0.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "t_ms": 1006,
+  "seq": 6,
+  "block": 0,
+  "trial": 0,
+  "type": "drift_probe",
+  "data": {
+    "when": "post",
+    "perceived_x": -0.024,
+    "actual_x": 0.0,
+    "drift_cm": 2.4,
+    "confirmed": true
+  }
+}

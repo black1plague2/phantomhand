@@ -1,0 +1,346 @@
+{
+  "session_id": "76d6d2f3-4b7a-46bb-94d8-e19ddeeb0cca",
+  "computed_at": "2026-10-07T21:11:33.425244+00:00",
+  "analytics_version": "0.1.0",
+  "sample_rate_hz": 72.0,
+  "validation": {
+    "session.json": [],
+    "events.ndjson": [],
+    "kin_chunks": [],
+    "sens_chunks": []
+  },
+  "trials": [],
+  "session": {
+    "metrics": {}
+  },
+  "embodiment": {
+    "condition_order": [
+      "async",
+      "sync"
+    ],
+    "async": {
+      "drift_change_cm": {
+        "value": 0.0,
+        "unit": "cm",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "quality_reasons": [
+          "shared_pre_probe"
+        ],
+        "n": 2
+      },
+      "ownership": {
+        "value": 2.5,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 2
+      },
+      "control": {
+        "value": 3.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "witness_q4": {
+        "value": 6.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "flinch_emg_peak_x": {
+        "value": 6.03991168267872,
+        "unit": "x_baseline_rms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 174
+      },
+      "flinch_emg_latency_ms": {
+        "value": 114.26718416409858,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 174
+      },
+      "flinch_imu_peak": {
+        "value": 14.050915369888171,
+        "unit": "m/s2",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 175
+      },
+      "flinch_imu_latency_ms": {
+        "value": 147.21343311844976,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 175
+      },
+      "flinch_wrist_peak_mps": {
+        "value": null,
+        "unit": "m/s",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "flinch_wrist_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "emg_windows_excluded": {
+        "value": 1.0,
+        "unit": "count",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 20
+      },
+      "stroke_timing_err_ms": {
+        "mean": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        },
+        "p95": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        }
+      },
+      "async_delay_ms": {
+        "mean": {
+          "value": 562.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        },
+        "p95": {
+          "value": 562.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 4
+        }
+      },
+      "cue_delivery_rate": {
+        "value": 1.0,
+        "unit": "unitless",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 8
+      }
+    },
+    "sync": {
+      "drift_change_cm": {
+        "value": 2.0,
+        "unit": "cm",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "quality_reasons": [
+          "shared_pre_probe"
+        ],
+        "n": 2
+      },
+      "ownership": {
+        "value": 5.5,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 2
+      },
+      "control": {
+        "value": 3.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "witness_q4": {
+        "value": 6.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 1
+      },
+      "flinch_emg_peak_x": {
+        "value": 6.018684073313077,
+        "unit": "x_baseline_rms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 200
+      },
+      "flinch_emg_latency_ms": {
+        "value": 114.39917441159196,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 200
+      },
+      "flinch_imu_peak": {
+        "value": 14.130699493607345,
+        "unit": "m/s2",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 200
+      },
+      "flinch_imu_latency_ms": {
+        "value": 147.24393641266215,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 200
+      },
+      "flinch_wrist_peak_mps": {
+        "value": null,
+        "unit": "m/s",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "flinch_wrist_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "no_samples_in_window"
+        ]
+      },
+      "emg_windows_excluded": {
+        "value": 0.0,
+        "unit": "count",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 20
+      },
+      "stroke_timing_err_ms": {
+        "mean": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 6
+        },
+        "p95": {
+          "value": 2.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 6
+        }
+      },
+      "async_delay_ms": {
+        "mean": {
+          "value": -38.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 6
+        },
+        "p95": {
+          "value": -38.0,
+          "unit": "ms",
+          "method_version": "embodiment_v0.1.0",
+          "quality": "ok",
+          "n": 6
+        }
+      },
+      "cue_delivery_rate": {
+        "value": 1.0,
+        "unit": "unitless",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "n": 8
+      }
+    },
+    "sync_minus_async": {
+      "drift_change_cm": {
+        "value": 2.0,
+        "unit": "cm",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok",
+        "quality_reasons": [
+          "sync:shared_pre_probe",
+          "async:shared_pre_probe"
+        ]
+      },
+      "ownership": {
+        "value": 3.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      },
+      "control": {
+        "value": 0.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      },
+      "flinch_emg_peak_x": {
+        "value": -0.02122760936564294,
+        "unit": "x_baseline_rms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      },
+      "flinch_emg_latency_ms": {
+        "value": 0.13199024749337696,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      },
+      "flinch_imu_peak": {
+        "value": 0.07978412371917365,
+        "unit": "m/s2",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      },
+      "flinch_imu_latency_ms": {
+        "value": 0.030503294212394394,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      },
+      "flinch_wrist_peak_mps": {
+        "value": null,
+        "unit": "m/s",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "sync_value_missing",
+          "async_value_missing"
+        ]
+      },
+      "flinch_wrist_latency_ms": {
+        "value": null,
+        "unit": "ms",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing",
+        "quality_reasons": [
+          "sync_value_missing",
+          "async_value_missing"
+        ]
+      },
+      "witness_q4": {
+        "value": 0.0,
+        "unit": "likert_1_7",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "ok"
+      }
+    }
+  }
+}

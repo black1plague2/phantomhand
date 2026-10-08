@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "type": "command",
+  "id": "550e8400-e29b-41d4-a716-446655440001",
+  "seq": 5,
+  "ts_ms": 1694703601000,
+  "from": "hub",
+  "session_id": "session-abc123",
+  "requires_ack": true,
+  "payload": {
+    "command": "start"
+  }
+}

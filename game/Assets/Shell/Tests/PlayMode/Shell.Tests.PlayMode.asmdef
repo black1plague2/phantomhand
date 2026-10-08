@@ -1,0 +1,27 @@
+{
+    "name": "Shell.Tests.PlayMode",
+    "rootNamespace": "Opus.Shell.Tests.PlayMode",
+    "references": [
+        "Opus.Sdk.Runtime",
+        "Shell.Runtime",
+        "OrchardReach.Runtime",
+        "PhantomHand.Runtime",
+        "PhantomHand.Presentation",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

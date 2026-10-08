@@ -1,0 +1,12 @@
+{
+  "t_ms": 1010,
+  "seq": 10,
+  "block": 0,
+  "trial": 0,
+  "type": "emg_burst",
+  "data": {
+    "peak": 1480.5,
+    "baseline_rms": 52.3,
+    "device_ms": 144620
+  }
+}

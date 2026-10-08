@@ -1,0 +1,7 @@
+{
+  "type": "emg_burst",
+  "device_id": "CHETNA_BIO_001",
+  "timestamp_ms": 144620,
+  "peak": 1480.5,
+  "baseline_rms": 52.3
+}

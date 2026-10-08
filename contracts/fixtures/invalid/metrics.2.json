@@ -1,0 +1,18 @@
+{
+  "session_id": "x",
+  "analytics_version": "0.2.0",
+  "computed_at": "2026-10-07T10:09:00Z",
+  "trials": [],
+  "session": {
+    "metrics": {}
+  },
+  "embodiment": {
+    "sync": {
+      "ownership": {
+        "value": 5.5,
+        "unit": "likert_1_7",
+        "method_version": "v"
+      }
+    }
+  }
+}

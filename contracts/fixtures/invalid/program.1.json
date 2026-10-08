@@ -1,0 +1,6 @@
+{
+  "program_id": "prog_003",
+  "patient_ref": "pat_003",
+  "created_by": "clinician_003",
+  "schedule": { "start_date": "2026-09-14" }
+}

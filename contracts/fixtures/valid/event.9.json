@@ -1,0 +1,11 @@
+{
+  "t_ms": 1009,
+  "seq": 9,
+  "block": 0,
+  "trial": 0,
+  "type": "questionnaire_item",
+  "data": {
+    "item": "q4",
+    "value": 6
+  }
+}

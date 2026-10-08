@@ -1,0 +1,16 @@
+{
+  "session_id": "x",
+  "analytics_version": "0.2.0",
+  "computed_at": "2026-10-07T10:09:00Z",
+  "trials": [],
+  "session": {
+    "metrics": {
+      "success_rate": {
+        "value": null,
+        "unit": "unitless",
+        "method_version": "embodiment_v0.1.0",
+        "quality": "missing"
+      }
+    }
+  }
+}

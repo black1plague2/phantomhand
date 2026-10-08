@@ -1,0 +1,8 @@
+# Run 8: declares the `golden` tag used by test/goldens/screen_goldens_test.dart
+# and test/reach_trace/reach_trace_golden_test.dart (both pixel-golden suites,
+# ~4-5 minutes combined) so `flutter test --exclude-tags golden` runs the fast
+# suite without a "tag wasn't specified in dart_test.yaml" warning, and so the
+# exclusion is documented in one place instead of only in code comments.
+tags:
+  golden:
+    description: Pixel-golden image comparison tests (slow; run separately with `flutter test --tags golden`).

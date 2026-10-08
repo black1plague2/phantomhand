@@ -1,0 +1,16 @@
+{
+  "t_ms": 1005,
+  "seq": 5,
+  "block": 0,
+  "trial": 0,
+  "type": "stroke",
+  "data": {
+    "index": 3,
+    "brush_pass_a_ms": 12400,
+    "brush_pass_b_ms": 12500,
+    "cue_a_send_ms": 12960,
+    "cue_b_send_ms": 13063,
+    "swapped": false,
+    "timing_err_ms": 3
+  }
+}

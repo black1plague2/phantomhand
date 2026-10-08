@@ -1,0 +1,15 @@
+[project]
+name = "synthetic-patients"
+version = "0.1.0"
+description = "OPUS synthetic patient / session generator for Orchard Reach"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=1.26",
+]
+
+[tool.setuptools.packages.find]
+include = ["synthetic_patients*"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

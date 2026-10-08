@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "type": "command",
+  "id": "550e8400-e29b-41d4-a716-4466554400aa",
+  "seq": 4,
+  "ts_ms": 1791367200000,
+  "from": "hub",
+  "payload": {
+    "command": "set_condition_order",
+    "params": {
+      "condition_order": "async_first"
+    }
+  },
+  "requires_ack": true
+}

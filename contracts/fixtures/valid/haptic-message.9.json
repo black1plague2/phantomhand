@@ -1,0 +1,21 @@
+{
+  "type": "status",
+  "device_id": "SLEEVE_001",
+  "device_kind": "haptic",
+  "battery_pct": null,
+  "connected": true,
+  "motor_count": 2,
+  "motor_channels": 4,
+  "imu_available": true,
+  "oled_available": true,
+  "subscribers": 2,
+  "unknown_msgs": 0,
+  "last_cue_id": "stroke_017",
+  "timestamp_ms": 145000,
+  "v": 1,
+  "id": "SLEEVE_001-145000-7",
+  "ts_ms": 145000,
+  "motors_ok": true,
+  "imu_ok": true,
+  "fw": "0.5.0"
+}

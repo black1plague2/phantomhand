@@ -1,0 +1,32 @@
+{
+  "session_id": "7a1b9c52-3d0e-4f2a-9b66-5d1c0a3e8f10",
+  "contracts_version": "0.2",
+  "patient_ref": "ph-demo-001",
+  "program_ref": "ph-demo",
+  "mode": "simulation",
+  "started_at": "2026-10-07T10:00:00Z",
+  "device": {
+    "model": "Meta Quest 3"
+  },
+  "versions": {
+    "shell": "0.1.0",
+    "sdk": "0.1.0"
+  },
+  "calibration": {
+    "affected_side": "none",
+    "arm_length_m": {
+      "left": 0.6,
+      "right": 0.6
+    }
+  },
+  "blocks": [
+    {
+      "index": 0,
+      "game_id": "phantom_hand",
+      "game_version": "0.1.0",
+      "params": {}
+    }
+  ],
+  "chunks": 1,
+  "sensor_chunks": -1
+}

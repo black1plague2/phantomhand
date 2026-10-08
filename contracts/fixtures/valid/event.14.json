@@ -1,0 +1,10 @@
+{
+  "t_ms": 1014,
+  "seq": 14,
+  "block": 0,
+  "trial": 0,
+  "type": "passthrough_on",
+  "data": {
+    "fallback": false
+  }
+}

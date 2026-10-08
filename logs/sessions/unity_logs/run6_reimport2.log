@@ -1,0 +1,984 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.6f1 (0b051c2e5d54) revision 722204'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-GARV BANSAL" at "2026-09-17T10:35:48.8851753Z"
+OS: 'Windows 11  (10.0.26200) CoreSingleLanguage' Language: 'en' Physical Memory: 16010 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-09-17T10:35:48Z
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 5116, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              1ef229628608435fb449f623aedc8d7e
+  Correlation Id:          d14de35f03e99a97646a83cbbf2457fb
+  External correlation Id: 5940873962680764698
+  Machine Id:              kImHo2x28Ujte4rhYvWcdMgf4I8=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-GARV BANSAL" (connect: 0.00s, validation: 0.00s, handshake: 0.09s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-GARV BANSAL-notifications" at "2026-09-17T10:35:48.9809389Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 13469799320789-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.14s
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Unity.exe
+-batchmode
+-projectPath
+C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+-logFile
+C:\Users\GARV BANSAL\Documents\VR_games\OPUS\logs\sessions\unity_logs\run6_reimport2.log
+-executeMethod
+Opus.Art.Editor.ImportMetaAssetsTool.Run
+-quit
+Successfully changed project path to: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [27488]  Target information:
+
+Player connection [27488]  * "[IP] 169.254.83.107 [Port] 55504 [Flags] 2 [Guid] 1171250637 [EditorId] 1171250637 [Version] 1048832 [Id] WindowsEditor(7,LAPTOP-EF95960B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [27488]  * "[IP] 172.17.99.2 [Port] 55504 [Flags] 2 [Guid] 1171250637 [EditorId] 1171250637 [Version] 1048832 [Id] WindowsEditor(7,LAPTOP-EF95960B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [27488] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [27488] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-15736" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+[Licensing::Client] Successfully resolved entitlement details
+Refreshing native plugins compatible for Editor in 3.94 ms, found 0 plugins.
+Initialize engine version: 6000.4.6f1 (0b051c2e5d54)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28a1)
+    Vendor:   NVIDIA
+    VRAM:     5921 MB
+    Driver:   32.0.15.5597
+Shader 'Oculus/OVRMRCameraFrameLit': fallback shader 'Alpha-Diffuse' not found
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56736
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.003418 seconds.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.464 seconds
+Domain Reload Profiling: 970ms
+	BeginReloadAssembly (142ms)
+	RebuildCommonClasses (41ms)
+	RebuildNativeTypeToScriptingClass (13ms)
+	initialDomainReloadingComplete (77ms)
+	LoadAllAssembliesAndSetupDomain (230ms)
+		LoadAssemblies (137ms)
+		AnalyzeDomain (220ms)
+			TypeCache.Refresh (217ms)
+				TypeCache.ScanAssembly (203ms)
+	FinalizeReload (466ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (62ms)
+			BeforeProcessingInitializeOnLoad (90ms)
+			ProcessInitializeOnLoadAttributes (122ms)
+			ProcessInitializeOnLoadMethodAttributes (119ms)
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 65 packages:
+  Packages from [https://npm.developer.oculus.com]:
+    com.meta.xr.sdk.core@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.core@4ea2676097b9)
+    com.meta.xr.sdk.interaction.ovr@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.interaction.ovr@08728e3e2bb2)
+    com.meta.xr.sdk.interaction@205.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.meta.xr.sdk.interaction@875abb30439c)
+  Packages from [https://packages.unity.com]:
+    com.unity.xr.openxr@1.16.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf)
+    com.unity.xr.management@4.5.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.management@20be87dea580)
+    com.unity.inputsystem@1.11.2 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.inputsystem@3c4a97c3950f)
+    com.unity.addressables@2.3.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.addressables@5d870284b3d9)
+    com.unity.profiling.core@1.0.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.scriptablebuildpipeline@2.6.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.scriptablebuildpipeline@36e3b5898ee2)
+    com.unity.xr.hands@1.7.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.hands@3e241be20642)
+    com.unity.xr.core-utils@2.6.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.core-utils@a8b900321199)
+    com.unity.xr.legacyinputhelpers@3.0.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.legacyinputhelpers@3f62d634f63b)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.mathematics@1.3.3 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.searcher@4.9.4 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.searcher@d45a78918735)
+    com.unity.burst@1.8.29 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.burst@6bb9aca3ef38)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.test-framework.performance@aa81a99c4a75)
+  Built-in packages:
+    com.unity.multiplayer.center@1.0.1 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.multiplayer.center@f01f4ba8d00a)
+    com.unity.render-pipelines.universal@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.universal@0d0659f1368d)
+    com.unity.test-framework@1.6.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.modules.accessibility@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.0.5 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.core@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.core@630143bbfe2b)
+    com.unity.shadergraph@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.shadergraph@04a6ef07359e)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.textmeshpro@5.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.textmeshpro@53f43edfd2e0)
+    com.unity.ugui@2.0.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.ugui@473409526770)
+    com.unity.collections@6.4.0 (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.collections@65f499a3cc26)
+  Embedded packages:
+    com.opus.sdk@file:C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Packages\com.opus.sdk (location: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Packages\com.opus.sdk)
+[Subsystems] Looking for new subsystems at path C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf
+[Subsystems] Novel subsystem found at Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game/Assets
+[Subsystems] Discovering subsystems at path C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game\Library\PackageCache\com.unity.xr.openxr@ef0033a586bf
+[Subsystems] No descriptors matched for  examples in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json.
+[Subsystems] 1 'inputs' descriptors matched in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] 1 'displays' descriptors matched in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json
+[Subsystems] No descriptors matched for  meshings in Library/PackageCache/com.unity.xr.openxr@ef0033a586bf/Runtime/UnitySubsystemsManifest.json.
+[Package Manager] Done registering packages in 0.07 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Assembly for Assembly Definition File 'Packages/com.opus.sdk/Editor/Opus.Sdk.Editor.asmdef' will not be compiled, because it has no scripts associated with it.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:LogFormat (UnityEngine.LogType,string,object[])
+UnityEngine.Debug:LogWarningFormat (string,object[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:WarnIfThereAreAssembliesWithoutAnyScripts (UnityEditor.Scripting.ScriptCompilation.ScriptAssemblySettings,UnityEditor.Scripting.ScriptCompilation.ScriptAssembly[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:CompileScriptsWithSettings (UnityEditor.Scripting.ScriptCompilation.ScriptAssemblySettings)
+UnityEditor.Scripting.ScriptCompilation.EditorCompilation:CompileScripts (UnityEditor.Scripting.ScriptCompilation.EditorScriptCompilationOptions,UnityEditor.BuildTarget,int,string[])
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface/<>c__DisplayClass21_0:<CompileScripts>b__0 ()
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface:EmitExceptionAsError<UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus> (System.Func`1<UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus>,UnityEditor.Scripting.ScriptCompilation.EditorCompilation/CompileStatus)
+UnityEditor.Scripting.ScriptCompilation.EditorCompilationInterface:CompileScripts (UnityEditor.Scripting.ScriptCompilation.EditorScriptCompilationOptions,UnityEditor.BuildTarget,int,string[])
+
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\GARV BANSAL\Documents\VR_games\OPUS\game
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 31.4061ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1300b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Users/GARV BANSAL/Documents/VR_games/OPUS/game
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+DisplayProgressbar: Compiling Scripts
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.6.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@6bb9aca3ef38\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 84.7400ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      Processing assembly Library/Bee/artifacts/1300b0aE.dag/Opus.Art.Editor.dll, with 154 defines and 282 references
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running Unity.Jobs.CodeGen.JobsILPostProcessor
+info: Unity.ILPP.Runner.PostProcessingPipeline[0]
+      running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/PostProcessAssembly'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/PostProcessAssembly - 200 - application/grpc 15.4107ms
+ExitCode: 0 Duration: 2s531ms
+[1267/1710  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1706/1710  2s] Csc Library/Bee/artifacts/1300b0aE.dag/Opus.Art.Editor.dll (+2 others)
+[1707/1710  0s] ILPostProcess Library/Bee/artifacts/1300b0aE.dag/post-processed/Opus.Art.Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1300b0aE.dag/Opus.Art.Editor.dll, with 154 defines and 282 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1708/1710  0s] CopyFiles Library/ScriptAssemblies/Opus.Art.Editor.pdb
+[1709/1710  0s] CopyFiles Library/ScriptAssemblies/Opus.Art.Editor.dll
+*** Tundra build success (2.49 seconds), 5 items updated, 1710 evaluated
+AssetDatabase: script compilation time: 3.050348s
+Begin MonoManager ReloadAssembly
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-Editor.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp.dll at Library/ScriptAssemblies/Assembly-CSharp.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.Editor.Reflection.Tests.dll at Library/ScriptAssemblies/Meta.XR.Editor.Reflection.Tests.dll not valid. Loading of assembly skipped.
+Assembly meta.xr.hand.readiness.tests.editmode.dll at Library/ScriptAssemblies/meta.xr.hand.readiness.tests.editmode.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.Input.Editor.Tests.dll at Library/ScriptAssemblies/Meta.XR.Input.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.MultiplayerBlocks.Fusion.dll at Library/ScriptAssemblies/Meta.XR.MultiplayerBlocks.Fusion.dll not valid. Loading of assembly skipped.
+Assembly Meta.XR.MultiplayerBlocks.NGO.dll at Library/ScriptAssemblies/Meta.XR.MultiplayerBlocks.NGO.dll not valid. Loading of assembly skipped.
+Assembly Opus.Sdk.Editor.dll at Library/ScriptAssemblies/Opus.Sdk.Editor.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.Addressables.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Addressables.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Addressables.Tests.dll at Library/ScriptAssemblies/Unity.Addressables.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ResourceManager.Tests.dll at Library/ScriptAssemblies/Unity.ResourceManager.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipeline.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.ScriptableBuildPipelineTests.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.CodeSamples.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.CodeSamples.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.CoreUtils.Tests.dll at Library/ScriptAssemblies/Unity.XR.CoreUtils.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Hands.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.Hands.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Hands.Tests.dll at Library/ScriptAssemblies/Unity.XR.Hands.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.EditorTests.dll at Library/ScriptAssemblies/Unity.XR.Management.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.TestPackage.dll at Library/ScriptAssemblies/Unity.XR.Management.TestPackage.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.TestPackage.Editor.dll at Library/ScriptAssemblies/Unity.XR.Management.TestPackage.Editor.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.Tests.dll at Library/ScriptAssemblies/Unity.XR.Management.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.Management.Tests.Standalone.dll at Library/ScriptAssemblies/Unity.XR.Management.Tests.Standalone.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Editor.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.OpenXR.Ubuntu.Tests.dll at Library/ScriptAssemblies/Unity.XR.OpenXR.Ubuntu.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.XR.TestSupport.dll at Library/ScriptAssemblies/Unity.XR.TestSupport.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.XR.LegacyInputHelpers.Tests.dll at Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.SpatialTracking.Tests.dll at Library/ScriptAssemblies/UnityEngine.SpatialTracking.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.XR.OpenXR.CodeSamples.Editor.Tests.dll at Library/ScriptAssemblies/UnityEngine.XR.OpenXR.CodeSamples.Editor.Tests.dll not valid. Loading of assembly skipped.
+Symbol file LoadedFromMemory is not a mono symbol file
+Script 'CharacterController' has the same name as built-in Unity component.
+AddComponent and GetComponent will not work with this script.
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindowDetailsExtension.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizer.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindow.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/BuildingBlocks/BlocksWindowCollectionsPageExtension.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizerNetworking.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.meta.xr.sdk.core/Editor/RuntimeOptimizer/RuntimeOptimizerStyles.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Refreshing native plugins compatible for Editor in 14.58 ms, found 12 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 14.34 ms, found 12 plugins.
+I0917 16:06:00.119715 27488 OVRTelemetry.cpp:57] Telemetry_Init: calling startSession with engineName=Unity, pluginVersion=1.205.0
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+I0917 16:06:02.425864 27488 OVRTelemetry.cpp:61] Telemetry_Init: startSession completed successfully
+I0917 16:06:02.653129 27488 OVRTelemetry.cpp:57] Telemetry_Init: calling startSession with engineName=Unity, pluginVersion=1.204.0
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+I0917 16:06:04.885261 27488 OVRTelemetry.cpp:61] Telemetry_Init: startSession completed successfully
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  9.047 seconds
+Domain Reload Profiling: 10279ms
+	BeginReloadAssembly (383ms)
+		DisableScriptedObjects (48ms)
+		CreateAndSetChildDomain (160ms)
+	RebuildCommonClasses (40ms)
+	RebuildNativeTypeToScriptingClass (13ms)
+	initialDomainReloadingComplete (156ms)
+	LoadAllAssembliesAndSetupDomain (639ms)
+		LoadAssemblies (450ms)
+		AnalyzeDomain (297ms)
+			TypeCache.Refresh (195ms)
+				TypeCache.ScanAssembly (175ms)
+			BuildScriptInfoCaches (81ms)
+			ResolveRequiredComponents (18ms)
+	FinalizeReload (9048ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (34ms)
+			BeforeProcessingInitializeOnLoad (227ms)
+			ProcessInitializeOnLoadAttributes (8330ms)
+			ProcessInitializeOnLoadMethodAttributes (112ms)
+			AfterProcessingInitializeOnLoad (9ms)
+		AwakeInstancesAfterBackupRestoration (28ms)
+Refreshing native plugins compatible for Editor in 14.59 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=f8143e2c9212ee143b1497845c0d0ece): Total: 15.935 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=9770 ms
+		Asset DB Callback time: managed=1671 ms, native=102 ms
+		Scripting: domain reloads=1, domain reload time=1242 ms, compile time=3053 ms, other=94 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 80.062ms
+	ApplyChangesToAssetFolders: 1.518ms
+	Scan: 190.335ms
+	OnSourceAssetsModified: 0.945ms
+	CategorizeScriptCompilationAssets: 60.674ms
+	ProcessAssetsWithTransientArtifactChanges: 103.984ms
+	CategorizeAssets: 114.698ms
+	CompileScripts: 3052.951ms
+	ImportOutOfDateAssets: 9093.800ms (9088.681ms without children)
+		UnloadImportedAssets: 2.895ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 1.224ms
+		OnDemandSchedulerStart: 0.946ms
+	PostProcessAllAssets: 1679.508ms
+		XRBuildSystem.XRAssetImported 6.785ms
+		VCAutoAddAssetPostprocess 1.538ms
+		PostProcessCallbackCreateDeferredMaterials 0.065ms
+		MonoPostProcessAllAssets: 1670.455ms
+			AssetPostprocessor.OnPostprocessAllAssets 194.927ms
+			AssetCallbacks.OnPostprocessAllAssets 28.271ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 26.190ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 13.419ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 9.323ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 3.161ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 3.158ms
+			SyncVS.PostprocessSyncProject 2.749ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 2.382ms
+			AddressablesAssetPostProcessor.OnPostprocessAllAssets 2.017ms
+			AssetChangedListener.OnPostprocessAllAssets 1.761ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.691ms
+			AssetPostProcessor.OnPostprocessAllAssets 1.130ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.993ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.824ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.722ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.544ms
+			AssetEvents.OnPostprocessAllAssets 0.450ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.432ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.429ms
+			PostProcessor.OnPostprocessAllAssets 0.417ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.405ms
+			SceneRenameHandler.OnPostprocessAllAssets 0.381ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.370ms
+			AssetPathToTypes.OnPostprocessAllAssets 0.348ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.293ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.266ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.239ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.197ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.185ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.106ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.095ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.076ms
+	PostAssetChangesProfiler: 16.260ms
+	UnloadStreamsBegin: 6.021ms
+	PersistCurrentRevisions: 0.330ms
+	GenerateScriptTypeHashes: 14.209ms
+	GenerateScriptTypeSerializationHashes: 20.678ms
+	Untracked: 1527.227ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Shader 'Oculus/OVRMRCameraFrameLit': fallback shader 'Alpha-Diffuse' not found
+Scanning for USB devices : 1.837ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-OPUS
+[HRT] RulesProvider: loaded 4 remote rule(s) (schema v1).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Meta.HandReadinessTool.Editor.HandReadinessRulesProvider:EmitSuccess (int,int) (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs:175)
+Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/<FetchAndSwap>d__11:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs:125)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>)
+Meta.XR.Editor.UserInterface.RemoteJsonContent`1/<Create>d__1<Meta.HandReadinessTool.Editor.HandReadinessRulesProvider/RulesPayload>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/UserInterface/RemoteJsonContent.cs:56)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<Fetch>d__3:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:374)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteContentDownloader`1/<Fetch>d__31`1<Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader, string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:309)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<string>:TrySetResult (string)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:SetResult (string)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<ReadFromCache>d__5`1<string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:401)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessRulesProvider.cs Line: 175)
+
+[HRT] PromptProvider: loaded remote prompt (systemPrompt=4925c, references=2, schema v1).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Meta.HandReadinessTool.Editor.HandReadinessPromptProvider:EmitSuccess (int,int,int) (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs:159)
+Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/<FetchAndSwap>d__11:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs:122)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>)
+Meta.XR.Editor.UserInterface.RemoteJsonContent`1/<Create>d__1<Meta.HandReadinessTool.Editor.HandReadinessPromptProvider/PromptPayload>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/UserInterface/RemoteJsonContent.cs:56)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<Fetch>d__3:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:374)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:TrySetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<Meta.XR.Editor.RemoteContent.DownloadResult`1<string>>:SetResult (Meta.XR.Editor.RemoteContent.DownloadResult`1<string>)
+Meta.XR.Editor.RemoteContent.RemoteContentDownloader`1/<Fetch>d__31`1<Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader, string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:309)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<string>:TrySetResult (string)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<string>:SetResult (string)
+Meta.XR.Editor.RemoteContent.RemoteJsonContentDownloader/<ReadFromCache>d__5`1<string>:MoveNext () (at ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/Utils/RemoteContent/RemoteContentDownloader.cs:401)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: ./Library/PackageCache/com.meta.xr.sdk.core@4ea2676097b9/Editor/HandReadinessTool/HandReadinessPromptProvider.cs Line: 159)
+
+Unloading 148 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 6880 unused Assets / (8.0 MB). Loaded Objects now: 8980.
+Memory consumption went from 276.6 MB to 268.6 MB.
+Total: 17.938200 ms (FindLiveObjects: 0.848200 ms CreateObjectMapping: 0.579300 ms MarkObjects: 12.017900 ms  DeleteObjects: 4.486200 ms)
+
+Asset Pipeline Refresh (id=1ef40d60d55a7e045869496d119129e2): Total: 0.071 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/12913/12913_L.png using Guid(9097d2cb6363e0e48bf794506a91dd25) (TextureImporter) -> (Import Result ID: '93305bd73aee8e048bad6f8cf668e5fc') in 0.1891626 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=29ff87cad10c7b16529a5817eb822517 DependenciesID=48d40d5dfe152bae41c9542124cf58ce StaticDependenciesID=575faea6bdaa4c902cb64127433b5993 
+Refreshing native plugins compatible for Editor in 16.04 ms, found 12 plugins.
+Asset Pipeline Refresh (id=405182d5e303acf4aa4364261ebd99d4): Total: 0.285 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/12913/12913_M.png using Guid(317c301d610a6404ea8609784f3bd9e0) (TextureImporter) -> (Import Result ID: 'a1f4a56dc57c9bd69ff24beff6ad2a34') in 0.1590118 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=93b1b0bbd1959f9bc4eb22ed3a11c747 DependenciesID=704e4040d53b8db46eed2d80a06912ce StaticDependenciesID=aa968e5410ea997bdd6671ac55dfee86 
+Refreshing native plugins compatible for Editor in 12.66 ms, found 12 plugins.
+Asset Pipeline Refresh (id=e31cad6bef797c64cb891771b4e0365f): Total: 0.204 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/12913/12913_S.png using Guid(d4d100c3fac43d340a28d685056674cb) (TextureImporter) -> (Import Result ID: 'ecd697da3f980c131a6710eb7f76ff63') in 0.166338 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5cdeeb4b3628a78ae972ac3b992b30c3 DependenciesID=21388c3e090c9b72f3645d2c9ca6f3a5 StaticDependenciesID=fea5a81ca6374c6dfbcd03ef146b7ab8 
+Refreshing native plugins compatible for Editor in 13.04 ms, found 12 plugins.
+Asset Pipeline Refresh (id=1b693d88997ebc64d86d9345d15cc866): Total: 0.209 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=264d016e59969b74fa3dba5075daa9dc): Total: 0.004 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c2cacee7e68f2d042b664736ee1ad36e): Total: 0.011 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/632623/632623_L.png using Guid(3533ce55cf10e034f8e1dbb484b79134) (TextureImporter) -> (Import Result ID: '7122e3166ad87ebcb42787fde423aeb6') in 0.184254 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=707044b514f61c5b2d10700bc7b60876 DependenciesID=9824ddc5e185a667f259aa4f3bcf33e5 StaticDependenciesID=3a3879aecf08d96cff3aaf05da0f38ec 
+Refreshing native plugins compatible for Editor in 14.40 ms, found 12 plugins.
+Asset Pipeline Refresh (id=d19fda18ded560c4b9c0ce28de83ce3b): Total: 0.227 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/632623/632623_M.png using Guid(3e3d75f0ab8c79144ba552983cfccb67) (TextureImporter) -> (Import Result ID: '090efbf271c076c5a93d7eed6b3e4c35') in 0.1823515 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=10b35078548b8160a23c927e3ee2198d DependenciesID=b2600b08c8e09b6cbdba393c05167234 StaticDependenciesID=a0fa11241da8f6a6549952a168ab7249 
+Refreshing native plugins compatible for Editor in 13.67 ms, found 12 plugins.
+Asset Pipeline Refresh (id=9a2bdb884ad77a242a481f7ef77b09c9): Total: 0.226 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/632623/632623_S.png using Guid(86b1732b15f6904438f2629670f66878) (TextureImporter) -> (Import Result ID: 'b9ddbe5debf719387722711124dced3a') in 0.1779748 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ea48d0739a1a02c36cb6133f28d6396f DependenciesID=2ef6c38a35b6880d3537ea6c08378eba StaticDependenciesID=d196c0f59ef7721646b335015079b1e0 
+Refreshing native plugins compatible for Editor in 14.94 ms, found 12 plugins.
+Asset Pipeline Refresh (id=9a46cf18d6ed4e54090d76cf03954fba): Total: 0.222 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=40792bb658a749b4b83da2110ea29f7a): Total: 0.014 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=15b6904fcef8b8d41837ed13633954e2): Total: 0.012 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/43333/43333_L.png using Guid(116bf13cb9c0627458dbb4e4904bca9a) (TextureImporter) -> (Import Result ID: 'a91a936ad128551c75611dfe9c506743') in 0.4208559 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=18b2b67eafc0bd8d71c4013a96ccde7a DependenciesID=b451a2e7e89a63a13473099f411c026c StaticDependenciesID=d33f5769a956ba944c0773d7617ad10a 
+Refreshing native plugins compatible for Editor in 12.50 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=5019788c0da3e3f4db5d3dfcd49d2927): Total: 0.473 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=454 ms
+		Asset DB Callback time: managed=0 ms, native=17 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 5
+	ApplyChangesToAssetFolders: 0.136ms
+	Scan: 10.305ms
+	ProcessAssetsWithTransientArtifactChanges: 0.127ms
+	CategorizeAssets: 1.866ms
+	ImportOutOfDateAssets: 438.382ms (0.524ms without children)
+		ImportManagerImport: 435.684ms (0.631ms without children)
+			UpdateCategorizedAssets: 0.051ms
+		ReloadNativeAssets: 0.181ms
+		UnloadImportedAssets: 0.483ms
+		ReloadImportedAssets: 13.644ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.944ms
+		OnDemandSchedulerStart: 0.554ms
+	PostProcessAllAssets: 5.129ms
+		XRBuildSystem.XRAssetImported 4.272ms
+		MonoPostProcessAllAssets: 0.693ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.163ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.085ms
+			SyncVS.PostprocessSyncProject 0.055ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.051ms
+	PostAssetChangesProfiler: 12.656ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.352ms
+	UnloadStreamsBegin: 0.069ms
+	PersistCurrentRevisions: 0.277ms
+	Untracked: 3.737ms
+
+Start importing Assets/MetaAssets/Textures/43333/43333_M.png using Guid(6a76b17532041e64e88bd24daae51732) (TextureImporter) -> (Import Result ID: 'd2741b933640c6b0e25ff7757065d7ea') in 0.4123687 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a15bd3b64bd48ca3a097a7413363a0dd DependenciesID=bce0c37f6519dc5908720b549d46d95d StaticDependenciesID=34aa8ffbd7c5ca9cb1abbc740e11e819 
+Refreshing native plugins compatible for Editor in 12.91 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=5930656c12f9edf4882b2bf26cf1eb2e): Total: 0.460 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=440 ms
+		Asset DB Callback time: managed=0 ms, native=17 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 5
+	ApplyChangesToAssetFolders: 0.150ms
+	Scan: 8.930ms
+	ProcessAssetsWithTransientArtifactChanges: 0.102ms
+	CategorizeAssets: 1.827ms
+	ImportOutOfDateAssets: 425.788ms (0.568ms without children)
+		ImportManagerImport: 423.496ms (0.561ms without children)
+			UpdateCategorizedAssets: 0.051ms
+		ReloadNativeAssets: 0.147ms
+		UnloadImportedAssets: 0.300ms
+		ReloadImportedAssets: 9.978ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.745ms
+		OnDemandSchedulerStart: 0.523ms
+	PostProcessAllAssets: 5.523ms
+		XRBuildSystem.XRAssetImported 4.686ms
+		MonoPostProcessAllAssets: 0.676ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.164ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.083ms
+			SyncVS.PostprocessSyncProject 0.055ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.051ms
+	PostAssetChangesProfiler: 13.062ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.426ms
+	UnloadStreamsBegin: 0.078ms
+	PersistCurrentRevisions: 0.318ms
+	Untracked: 3.729ms
+
+Start importing Assets/MetaAssets/Textures/43333/43333_S.png using Guid(2ea45c02c7dee874da24dfc130841033) (TextureImporter) -> (Import Result ID: 'f109e3f15244a644c293b36b9c2c3d2b') in 0.3679356 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=778a2bb596aed2677a696ef2702edf54 DependenciesID=3ddbfa066864f3f00fe8a42c510c8ed3 StaticDependenciesID=c49de83fa39216b783a540fd468cec1a 
+Refreshing native plugins compatible for Editor in 13.38 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=77fd5746cda42154a9538b99afc47ddd): Total: 0.416 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=396 ms
+		Asset DB Callback time: managed=0 ms, native=18 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 5
+	ApplyChangesToAssetFolders: 0.155ms
+	Scan: 11.030ms
+	ProcessAssetsWithTransientArtifactChanges: 0.136ms
+	CategorizeAssets: 2.166ms
+	ImportOutOfDateAssets: 378.784ms (0.540ms without children)
+		ImportManagerImport: 376.450ms (0.573ms without children)
+		ReloadNativeAssets: 0.160ms
+		UnloadImportedAssets: 0.315ms
+		ReloadImportedAssets: 7.028ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.776ms
+		OnDemandSchedulerStart: 0.532ms
+	PostProcessAllAssets: 5.835ms
+		XRBuildSystem.XRAssetImported 4.985ms
+		MonoPostProcessAllAssets: 0.691ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.180ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.084ms
+			SyncVS.PostprocessSyncProject 0.056ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.051ms
+	PostAssetChangesProfiler: 13.547ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.323ms
+	UnloadStreamsBegin: 0.060ms
+	PersistCurrentRevisions: 0.312ms
+	Untracked: 3.724ms
+
+Asset Pipeline Refresh (id=65741d399932b9f4eb0e0816c58baf3e): Total: 0.013 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=e205a5a9cd1d8a34baf701cdaba2702c): Total: 0.010 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/808342/808342_L.png using Guid(c133197796dc51e418edcb216aa28466) (TextureImporter) -> (Import Result ID: '070aba068c956ee12e00cafd0d39012c') in 0.2126721 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=505e8df37a220a45114a05124cc88fb2 DependenciesID=2b2a5667c78d7b2f0fcdeaefd2257eb5 StaticDependenciesID=0eb8d4f04507b96e83a4ce94b3c1cac4 
+Refreshing native plugins compatible for Editor in 14.03 ms, found 12 plugins.
+Asset Pipeline Refresh (id=3116a23a9cfabcd4da22439385f3bf8d): Total: 0.262 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/808342/808342_M.png using Guid(32e6307d80864cb4da0d95a514672e1d) (TextureImporter) -> (Import Result ID: '64e09409802ff84c27fb75e5054289c5') in 0.1922444 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bfdaa2fd4a6181c77a332a7d0cb718a5 DependenciesID=a0ce42b72ef1cd877aacf78300110ce0 StaticDependenciesID=92e5ad5fd009035a166261dde6c680fd 
+Refreshing native plugins compatible for Editor in 13.93 ms, found 12 plugins.
+Asset Pipeline Refresh (id=2fb9a2ba9d9b87f4183b3f88d76abf79): Total: 0.238 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/808342/808342_S.png using Guid(6115ea7b5f3eca24b83c13d77e05f739) (TextureImporter) -> (Import Result ID: '9f7dbb1cbc579301af1e4b2cead99550') in 0.1970248 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1736d76ef752cb4d7a50bcb33e2a5b15 DependenciesID=49ce6c3e20e4819e44772a73d44cbb3f StaticDependenciesID=367a8561492ed0ee9fa1dd7223928382 
+Refreshing native plugins compatible for Editor in 13.45 ms, found 12 plugins.
+Asset Pipeline Refresh (id=23dcedf8395e9a24788d72f11cd70dbf): Total: 0.241 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=00e896ae023d6d846aec5cb4e00832dd): Total: 0.013 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=5a268dbe0f0b4634a99aca585bee2492): Total: 0.011 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/1777303/1777303_L.png using Guid(cd4fc44d4b187e646973e37a153a279d) (TextureImporter) -> (Import Result ID: '7b755f785098b75c11e268c8d6326cef') in 0.5311634 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=330a26130cccf100b85660b03c0cdbc9 DependenciesID=04a566be60001a930efedae8b6ae5fb5 StaticDependenciesID=0fb1609138affd0d1a4653667cc90c37 
+Refreshing native plugins compatible for Editor in 12.93 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=0697fb9df7708734a8295b2545a551f3): Total: 0.575 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=555 ms
+		Asset DB Callback time: managed=0 ms, native=17 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 5
+	ApplyChangesToAssetFolders: 0.106ms
+	Scan: 8.065ms
+	ProcessAssetsWithTransientArtifactChanges: 0.109ms
+	CategorizeAssets: 1.548ms
+	ImportOutOfDateAssets: 541.410ms (0.514ms without children)
+		ImportManagerImport: 538.914ms (0.504ms without children)
+		ReloadNativeAssets: 0.181ms
+		UnloadImportedAssets: 0.277ms
+		ReloadImportedAssets: 6.704ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.813ms
+		OnDemandSchedulerStart: 0.703ms
+	PostProcessAllAssets: 5.769ms
+		XRBuildSystem.XRAssetImported 4.604ms
+		MonoPostProcessAllAssets: 0.988ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.145ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.129ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.059ms
+			SyncVS.PostprocessSyncProject 0.058ms
+	PostAssetChangesProfiler: 13.108ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.352ms
+	UnloadStreamsBegin: 0.052ms
+	PersistCurrentRevisions: 0.345ms
+	Untracked: 4.468ms
+
+Start importing Assets/MetaAssets/Textures/1777303/1777303_M.png using Guid(0c504643d19566a46b2ff3c1c19c2b4e) (TextureImporter) -> (Import Result ID: '09437fcdde58ddbc7c5468eeff1dd06e') in 0.5341003 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1e16261c66e42423f84591d392fc4648 DependenciesID=e7cba62798c0c356540dc9911218acf5 StaticDependenciesID=c04f16766a28f328098a1539e928eea1 
+Refreshing native plugins compatible for Editor in 12.58 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=2aabb66efb25fcb4787cf9d2a58af176): Total: 0.580 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=560 ms
+		Asset DB Callback time: managed=0 ms, native=17 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 5
+	ApplyChangesToAssetFolders: 0.175ms
+	Scan: 9.338ms
+	ProcessAssetsWithTransientArtifactChanges: 0.114ms
+	CategorizeAssets: 2.511ms
+	ImportOutOfDateAssets: 544.648ms (0.642ms without children)
+		ImportManagerImport: 542.012ms (1.002ms without children)
+			UpdateCategorizedAssets: 0.061ms
+		ReloadNativeAssets: 0.180ms
+		UnloadImportedAssets: 0.291ms
+		ReloadImportedAssets: 6.440ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.938ms
+		OnDemandSchedulerStart: 0.575ms
+	PostProcessAllAssets: 5.429ms
+		XRBuildSystem.XRAssetImported 4.572ms
+		MonoPostProcessAllAssets: 0.689ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.143ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.088ms
+			SyncVS.PostprocessSyncProject 0.062ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.053ms
+	PostAssetChangesProfiler: 12.739ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.641ms
+	UnloadStreamsBegin: 0.077ms
+	PersistCurrentRevisions: 0.309ms
+	Untracked: 3.777ms
+
+Start importing Assets/MetaAssets/Textures/1777303/1777303_S.png using Guid(4099365a7bf64204bb2df5759209202d) (TextureImporter) -> (Import Result ID: 'e432d8cbb02fcb149cf99fe53a258763') in 0.4755241 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9abbd3b0a705a48be99da184164839c9 DependenciesID=f53e0d4187bb240dab18f0d79c76d0a9 StaticDependenciesID=0b33efb95f2c0566eb69882cab2caf05 
+Refreshing native plugins compatible for Editor in 12.62 ms, found 12 plugins.
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=f6a2848a168504d4892f4ff7332f137c): Total: 0.521 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=501 ms
+		Asset DB Callback time: managed=0 ms, native=17 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=2182, non-scripts=3852
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 5
+	ApplyChangesToAssetFolders: 0.172ms
+	Scan: 9.079ms
+	ProcessAssetsWithTransientArtifactChanges: 0.117ms
+	CategorizeAssets: 2.353ms
+	ImportOutOfDateAssets: 485.958ms (0.683ms without children)
+		ImportManagerImport: 483.419ms (0.530ms without children)
+		ReloadNativeAssets: 0.187ms
+		UnloadImportedAssets: 0.335ms
+		ReloadImportedAssets: 6.719ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.807ms
+		OnDemandSchedulerStart: 0.517ms
+	PostProcessAllAssets: 5.756ms
+		XRBuildSystem.XRAssetImported 4.977ms
+		MonoPostProcessAllAssets: 0.631ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 0.139ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.081ms
+			SyncVS.PostprocessSyncProject 0.053ms
+	PostAssetChangesProfiler: 12.786ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.442ms
+	UnloadStreamsBegin: 0.098ms
+	PersistCurrentRevisions: 0.279ms
+	Untracked: 3.693ms
+
+Asset Pipeline Refresh (id=871faa24b84ca0e48b7bee1a4c2d0ddb): Total: 0.013 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Start importing Assets/Art/Prefabs/orchard_tree/orchard_tree.prefab using Guid(6d4d372319e1e1c4faf4357292ef9540) (PrefabImporter) -> (Import Result ID: '42ec318e5e6af5b4f0a36cc8ac72e3c7') in 0.0047335 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9904eb803dba560f64c048b742862c48 DependenciesID=e37cbd33861756d7fdc6d7d67baa129a StaticDependenciesID=284b7cfc30d6e6dca641e82245857ccb 
+Refreshing native plugins compatible for Editor in 13.80 ms, found 12 plugins.
+Asset Pipeline Refresh (id=d2a1ee408efdcc94ca26ee7f63845fc7): Total: 0.078 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/286115/286115_L.png using Guid(f54f7a3e814fc414f87a427d3b07c187) (TextureImporter) -> (Import Result ID: '1545ae40d1ed7477aba0421980c75ea1') in 0.1373944 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ff68da68d1dcd7849317bde6cb588488 DependenciesID=fc1d9d4f81a200bb0f67cbfc13caa536 StaticDependenciesID=3cd608f4a17f743fa3c465a1f70f1b23 
+Refreshing native plugins compatible for Editor in 13.12 ms, found 12 plugins.
+Asset Pipeline Refresh (id=9eb09788222b0ae47aa35e49ff0fec30): Total: 0.182 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/286115/286115_M.png using Guid(939bebe3d379b7f42b20b9017b6e6605) (TextureImporter) -> (Import Result ID: '6103d8627535e06408020f8d3b1ae1f8') in 0.1387789 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1392240d47b0efbfd81bd71d3ebc8a9f DependenciesID=74aa02db2ccd5f3c27eb583c908678f6 StaticDependenciesID=ed38366371178c6fc18613f7c3ffd1b1 
+Refreshing native plugins compatible for Editor in 14.33 ms, found 12 plugins.
+Asset Pipeline Refresh (id=026944efdf547a746ba658f507608c5c): Total: 0.187 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/MetaAssets/Textures/286115/286115_S.png using Guid(75c96fe609bc02845af1eed5534c6602) (TextureImporter) -> (Import Result ID: '14c8859357cd38bb119c164745df5372') in 0.1388361 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a146378cf4d844970d4f9446a8e83ce8 DependenciesID=4582f37de63d6fb79039c84faac7df73 StaticDependenciesID=6fd974f3576554b52ee01829f939ec49 
+Refreshing native plugins compatible for Editor in 12.02 ms, found 12 plugins.
+Asset Pipeline Refresh (id=c7001faa166972d45806ec0aac92d815): Total: 0.181 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=00ddda529a2aba046a6e2e52dc1beea2): Total: 0.013 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=b5181469efdac294f8d3e5fb14edf7b3): Total: 0.011 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Start importing Assets/Art/Materials/URP/43333/43333_L_URP.mat using Guid(611810a0574dd9c4baac3ade7c6091b1) (NativeFormatImporter) -> (Import Result ID: '8a3f452e8fa4c2d5de9ce8d60b0fa305') in 0.0027177 seconds [static dependencies only]. Details - ImportResultOutputID=ef232d3f17e93907800508dea8fb688e DependenciesID=7152fd29b127296d18add7b9341d0c42 StaticDependenciesID=e5451972d8692abff1a63b6ca47428ba 
+Start importing Assets/Art/Materials/URP/808342/808342_S_URP.mat using Guid(435f2d83327ebf74495a1bfc7487fb07) (NativeFormatImporter) -> (Import Result ID: '215d80e05f2a4ad3311c7058d13ff414') in 0.002411 seconds [static dependencies only]. Details - ImportResultOutputID=2e9765a11bc39912f633479956f3e68a DependenciesID=695424be34c6bf6f849f70059bdaa2a6 StaticDependenciesID=7b558b1ce4dac4524696d5ce56a4a8de 
+Start importing Assets/Art/Materials/URP/286115/286115_L_URP.mat using Guid(44fee52c0362a394990a79de3582ce79) (NativeFormatImporter) -> (Import Result ID: '808d45e3799ef8938ffbe5b72033654a') in 0.0024341 seconds [static dependencies only]. Details - ImportResultOutputID=1a6462bd17783e50c7935391476e83ea DependenciesID=556f62318297ed7b693afbdcd63c2585 StaticDependenciesID=6187847ff930fe4298b45caa833c2cd5 
+Start importing Assets/Art/Materials/URP/632623/632623_M_URP.mat using Guid(64f20dbe7ce481a4f95fe178b48b8f0a) (NativeFormatImporter) -> (Import Result ID: '7896b21e8796e94f92c6d4eb0dbf21f8') in 0.0020327 seconds [static dependencies only]. Details - ImportResultOutputID=041ae6bee6ef78aa588a286cdb708067 DependenciesID=3ad5eb4971c633e56f49b5e6c1b1cd18 StaticDependenciesID=dd146e5e7fa5685fb3c0f571d9684f2d 
+Start importing Assets/Art/Materials/URP/12913/12913_S_URP.mat using Guid(844501eb2dde3594ea757b7bbf0ab7f4) (NativeFormatImporter) -> (Import Result ID: '03628eb6b20603ac5b8621097d0448c3') in 0.0019934 seconds [static dependencies only]. Details - ImportResultOutputID=22c376306919f030077bf937bfdc4356 DependenciesID=b05f5b723f3153466a46d61e16a983f1 StaticDependenciesID=d3c7f9ab85e97b6b95c1a482b0b10bad 
+Start importing Assets/Art/Materials/URP/808342/808342_L_URP.mat using Guid(150956b590550d542b8dc9cb685c192c) (NativeFormatImporter) -> (Import Result ID: 'e7518028326d33de3f811e30f9ba99de') in 0.0018007 seconds [static dependencies only]. Details - ImportResultOutputID=b7823cb079876d9116a4c46d18b8672e DependenciesID=dcb904a63f04535af81500d594da27d0 StaticDependenciesID=aa9b5f1a5fef7bbad39920f379da7e48 
+Start importing Assets/Art/Materials/URP/808342/808342_M_URP.mat using Guid(a53adadcd898e6547a83a4d49111717b) (NativeFormatImporter) -> (Import Result ID: 'e39347dc117d3942c044e60e46f8948b') in 0.0018668 seconds [static dependencies only]. Details - ImportResultOutputID=6655e74b74d4b1f043b51c871a71a4df DependenciesID=1ec229058987d4f9467ad0eb28461d34 StaticDependenciesID=c2f2d222467cdfec46abc82b8fa65a83 
+Start importing Assets/Art/Materials/URP/286115/286115_M_URP.mat using Guid(175253de092c5f14babcf81a9263b7b6) (NativeFormatImporter) -> (Import Result ID: '16391abaa1cae97cb4de35b021e5b904') in 0.0023257 seconds [static dependencies only]. Details - ImportResultOutputID=6cd8a0478aea515b101524109f208f17 DependenciesID=91589f05306c1e7d244121a410755809 StaticDependenciesID=3d1712b8fbe577d651f7ade01236601f 
+Start importing Assets/Art/Materials/URP/1777303/1777303_L_URP.mat using Guid(57eb8c90772861441a5a56e43b0650cf) (NativeFormatImporter) -> (Import Result ID: '313ebd83232a6cd91754989a71719068') in 0.0018726 seconds [static dependencies only]. Details - ImportResultOutputID=4eaa3898a9ade8a3c15ed01b53548232 DependenciesID=738233ac23c0d239e68a96f89e1d8663 StaticDependenciesID=d3f11be95de703a20d5cd493f29a147e 
+Start importing Assets/Art/Materials/URP/12913/12913_M_URP.mat using Guid(772a91858b502a646914c7fa378a13c8) (NativeFormatImporter) -> (Import Result ID: '56dbc793f9d0337344cb40df76bf2542') in 0.0027032 seconds [static dependencies only]. Details - ImportResultOutputID=4337d6de424cc422a165f9bf90dfef3b DependenciesID=b5818af20c87a4c806da2865ba9b4b84 StaticDependenciesID=a83685ab5839e5d1fe2781c79d1ab3d2 
+Start importing Assets/Art/Materials/URP/632623/632623_L_URP.mat using Guid(e954eb65760ebdd41808f4a0219c7e53) (NativeFormatImporter) -> (Import Result ID: 'b12d2e377296b35582931aace44986c2') in 0.00206 seconds [static dependencies only]. Details - ImportResultOutputID=a9cf45c048a89c208670446ac6fe9a21 DependenciesID=a50a2649c335dc635f28ef226aff94c1 StaticDependenciesID=9f4a01033dd5b80e5346fdb7389616d3 
+Start importing Assets/Art/Materials/URP/1777303/1777303_M_URP.mat using Guid(9b42d47d6ce6050419169b386bbe81fa) (NativeFormatImporter) -> (Import Result ID: '82896632443962716a9947903768ca0a') in 0.0027997 seconds [static dependencies only]. Details - ImportResultOutputID=eddc44d81d3be3fc14b4b308525395b7 DependenciesID=cc39a286ae48dc6899c2493d8f9ca4a8 StaticDependenciesID=526c79b7cb97ad2fbe3337f60f6f14d4 
+Start importing Assets/Art/Materials/URP/12913/12913_L_URP.mat using Guid(1cc8109cd19c39c46b0ee016e769644a) (NativeFormatImporter) -> (Import Result ID: '36425e27d4152e91a4c595a4191bc934') in 0.0020388 seconds [static dependencies only]. Details - ImportResultOutputID=50140adca53d03b2fd561b3cddd1f32f DependenciesID=0ca24ec65bd7dc7c9f40d3a0b7862551 StaticDependenciesID=d79d912f9f716a03327fd447e37dcabe 
+Start importing Assets/Art/Materials/URP/43333/43333_M_URP.mat using Guid(1d3cae363f160254ba993f3ff0a217c5) (NativeFormatImporter) -> (Import Result ID: '23f499e1c1549235066149f34fce5baf') in 0.0025144 seconds [static dependencies only]. Details - ImportResultOutputID=19dfce3e8d1438c7aa7360b66b310a88 DependenciesID=eeb7c38273bc67d92c778e4154091350 StaticDependenciesID=a32851e2da9a7a21c1d996194b8472e1 
+Start importing Assets/Art/Materials/URP/632623/632623_S_URP.mat using Guid(ad65ad4c2dca7ea4eb14875c154f9d93) (NativeFormatImporter) -> (Import Result ID: '4a865cd0b5a101c2fb59da8c9cde1ea3') in 0.0022011 seconds [static dependencies only]. Details - ImportResultOutputID=d26063738763ea8be68ca81860e0a01d DependenciesID=b840d22fe3c0e4e7e1cd57e8cb0939b7 StaticDependenciesID=deed900c9011cc5f7b6493585a081e83 
+Start importing Assets/Art/Materials/URP/286115/286115_S_URP.mat using Guid(1e8eef1c812f9c340aab494bd9084f61) (NativeFormatImporter) -> (Import Result ID: '938a099dac09cfc4066dcbf9043ea273') in 0.0019639 seconds [static dependencies only]. Details - ImportResultOutputID=d626641761256496867b7a8ce1faae98 DependenciesID=c266be10c612737a4b8caa3d365e9461 StaticDependenciesID=f6807157da9ac280853616534989c7ea 
+Start importing Assets/Art/Materials/URP/43333/43333_S_URP.mat using Guid(bf5c66306e8904b4d804dadfc88b6146) (NativeFormatImporter) -> (Import Result ID: 'd1fd10a15d4ccfd7d1dc46727185f228') in 0.0020296 seconds [static dependencies only]. Details - ImportResultOutputID=e7565618d949ee33c5d6d053a2ed481a DependenciesID=32fa044984c6e2003e8bfeba896a2e12 StaticDependenciesID=78038f3dfe57af926d5e797c7788eb7d 
+Start importing Assets/Art/Materials/URP/1777303/1777303_S_URP.mat using Guid(cfa8f6f1da05dd242ae9d91c51eb6232) (NativeFormatImporter) -> (Import Result ID: 'b0ea682d721d41d51be511304e03f38c') in 0.0018035 seconds [static dependencies only]. Details - ImportResultOutputID=49bab994d1ae05b61ea1383d3bb6344e DependenciesID=579b1137ce3d804a029b9ceeef861b3d StaticDependenciesID=92d2caf0f6d506ae1a2507c16f8a074c 
+Refreshing native plugins compatible for Editor in 12.75 ms, found 12 plugins.
+Asset Pipeline Refresh (id=63777323df138fa4faff9a3012831b4b): Total: 0.098 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=c11084a1ed643144b8dd2e2dc781553c): Total: 0.016 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[ImportMetaAssetsTool] Done:
+[fruit_apple] texture 12913_L.png -> Android ASTC_6x6 @ 512px
+[fruit_apple] texture 12913_M.png -> Android ASTC_6x6 @ 512px
+[fruit_apple] texture 12913_S.png -> Android ASTC_6x6 @ 512px
+[fruit_apple] wrapper prefab updated at Assets/Art/Prefabs/fruit_apple/fruit_apple.prefab
+[fruit_apple_green] texture 632623_L.png -> Android ASTC_6x6 @ 512px
+[fruit_apple_green] texture 632623_M.png -> Android ASTC_6x6 @ 512px
+[fruit_apple_green] texture 632623_S.png -> Android ASTC_6x6 @ 512px
+[fruit_apple_green] wrapper prefab updated at Assets/Art/Prefabs/fruit_apple_green/fruit_apple_green.prefab
+[basket] texture 43333_L.png -> Android ASTC_6x6 @ 1024px
+[basket] texture 43333_M.png -> Android ASTC_6x6 @ 1024px
+[basket] texture 43333_S.png -> Android ASTC_6x6 @ 1024px
+[basket] wrapper prefab updated at Assets/Art/Prefabs/basket/basket.prefab
+[orchard_table] texture 808342_L.png -> Android ASTC_6x6 @ 1024px
+[orchard_table] texture 808342_M.png -> Android ASTC_6x6 @ 1024px
+[orchard_table] texture 808342_S.png -> Android ASTC_6x6 @ 1024px
+[orchard_table] wrapper prefab updated at Assets/Art/Prefabs/orchard_table/orchard_table.prefab
+[orchard_tree] texture 1777303_L.png -> Android ASTC_6x6 @ 1024px
+[orchard_tree] texture 1777303_M.png -> Android ASTC_6x6 @ 1024px
+[orchard_tree] texture 1777303_S.png -> Android ASTC_6x6 @ 1024px
+[orchard_tree] wrapper prefab updated at Assets/Art/Prefabs/orchard_tree/orchard_tree.prefab
+[ghost_hand_static] texture 286115_L.png -> Android ASTC_6x6 @ 1024px
+[ghost_hand_static] texture 286115_M.png -> Android ASTC_6x6 @ 1024px
+[ghost_hand_static] texture 286115_S.png -> Android ASTC_6x6 @ 1024px
+[ghost_hand_static] wrapper prefab updated at Assets/Art/Prefabs/ghost_hand_static/ghost_hand_static.prefab
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Opus.Art.Editor.ImportMetaAssetsTool:Run () (at Assets/Art/Editor/ImportMetaAssetsTool.cs:111)
+
+(Filename: Assets/Art/Editor/ImportMetaAssetsTool.cs Line: 111)
+
+[Licensing::Client] Successfully resolved entitlement details
+Batchmode quit successfully invoked - shutting down!
+Killing ADB server in 2.0972853 seconds.
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-GARV BANSAL-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-GARV BANSAL channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+abort_threads: Failed aborting id: 00000000000082B8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000005AD4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000082B8, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000005AD4, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3904
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0

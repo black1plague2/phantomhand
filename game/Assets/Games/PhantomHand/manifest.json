@@ -1,0 +1,420 @@
+{
+  "id": "phantom_hand",
+  "version": "0.1.0",
+  "sdkVersion": "^0.1.0",
+  "displayName": {
+    "en": "Phantom Hand",
+    "hi": "फैंटम हैंड"
+  },
+  "description": {
+    "en": "A virtual arm is stroked in step with the sleeve until it feels like your own, then a stone drops on it. Compares synchronous and delayed touch."
+  },
+  "input": [
+    "hands"
+  ],
+  "posture": "seated",
+  "bodyRegions": [
+    "forearm",
+    "hand",
+    "cognition"
+  ],
+  "paramSchema": {
+    "type": "object",
+    "properties": {
+      "offset_cm": {
+        "type": "number",
+        "minimum": 5,
+        "maximum": 30,
+        "default": 15,
+        "x-ui": {
+          "title": { "en": "Arm offset", "hi": "बाँह की दूरी" },
+          "widget": "slider",
+          "group": "Illusion",
+          "order": 1,
+          "unit": "cm",
+          "help": "Sideways distance of the virtual arm from the real one"
+        }
+      },
+      "stroke_rate_hz": {
+        "type": "number",
+        "minimum": 0.5,
+        "maximum": 1.5,
+        "default": 1.0,
+        "x-ui": {
+          "title": { "en": "Brushing speed", "hi": "ब्रश करने की गति" },
+          "widget": "slider",
+          "group": "Illusion",
+          "order": 2,
+          "unit": "Hz",
+          "help": "Brush strokes per second"
+        }
+      },
+      "induction_s": {
+        "type": "integer",
+        "minimum": 30,
+        "maximum": 180,
+        "default": 90,
+        "x-ui": {
+          "title": { "en": "Brushing time", "hi": "ब्रश करने का समय" },
+          "widget": "slider",
+          "group": "Illusion",
+          "order": 3,
+          "unit": "s",
+          "help": "Length of each induction (demo_mode shortens it to 45 s)"
+        }
+      },
+      "condition_order": {
+        "enum": [
+          "sync_first",
+          "async_first"
+        ],
+        "default": "async_first",
+        "x-ui": {
+          "title": { "en": "Which comes first", "hi": "कौन सा पहले आए" },
+          "widget": "segmented",
+          "group": "Illusion",
+          "order": 4,
+          "help": "Which condition runs first. async_first keeps the strongest illusion for the finale"
+        }
+      },
+      "stimulated_side": {
+        "enum": [
+          "right"
+        ],
+        "default": "right",
+        "x-ui": {
+          "title": { "en": "Which arm", "hi": "कौन सी बाँह" },
+          "widget": "segmented",
+          "group": "Illusion",
+          "order": 5,
+          "help": "Right arm only for now"
+        }
+      },
+      "threat_enabled": {
+        "type": "boolean",
+        "default": true,
+        "x-ui": {
+          "title": { "en": "Drop a stone at the end of each round", "hi": "हर दौर के अंत में पत्थर गिराएँ" },
+          "widget": "switch",
+          "group": "Illusion",
+          "order": 6,
+          "help": "Drop a stone on the virtual hand after each induction"
+        }
+      },
+      "async_delay_ms": {
+        "type": "integer",
+        "minimum": 300,
+        "maximum": 1000,
+        "default": 600,
+        "x-ui": {
+          "title": { "en": "Touch delay (out of sync)", "hi": "स्पर्श में देरी (तालमेल के बिना)" },
+          "widget": "slider",
+          "group": "Timing",
+          "order": 1,
+          "unit": "ms",
+          "help": "Delay of the touch after the brush in the ASYNC condition (+/- 100 ms)"
+        }
+      },
+      "stroke_jitter_ms": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 300,
+        "default": 150,
+        "x-ui": {
+          "title": { "en": "Timing wobble", "hi": "समय में हल्का उतार-चढ़ाव" },
+          "widget": "slider",
+          "group": "Timing",
+          "order": 2,
+          "unit": "ms",
+          "help": "Random spread added to stroke timing"
+        }
+      },
+      "tactile_lead_ms": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 150,
+        "default": 40,
+        "x-ui": {
+          "title": { "en": "Touch lead time", "hi": "स्पर्श पहले भेजने का समय" },
+          "widget": "slider",
+          "group": "Timing",
+          "order": 3,
+          "unit": "ms",
+          "help": "Send the touch early by the link delay plus motor spin-up so it lands with the brush"
+        }
+      },
+      "motor_soa_ms": {
+        "type": "integer",
+        "minimum": 60,
+        "maximum": 300,
+        "default": 100,
+        "x-ui": {
+          "title": { "en": "Gap between motors", "hi": "दो मोटरों के बीच का अंतर" },
+          "widget": "slider",
+          "group": "Timing",
+          "order": 4,
+          "unit": "ms",
+          "help": "Gap between motor A and motor B onset. Brush speed follows: 10 cm / this value"
+        }
+      },
+      "haptics_enabled": {
+        "type": "boolean",
+        "default": true,
+        "x-ui": {
+          "title": { "en": "Sleeve vibration", "hi": "स्लीव का कंपन" },
+          "widget": "switch",
+          "group": "Haptics",
+          "order": 1,
+          "help": "Vibration on the sleeve, if a sleeve is connected"
+        }
+      },
+      "haptic_max_intensity": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 1.0,
+        "x-ui": {
+          "title": { "en": "Vibration strength", "hi": "कंपन की तीव्रता" },
+          "widget": "slider",
+          "group": "Haptics",
+          "order": 2,
+          "help": "Scales the stroke strength; sent intensity = round(150 x this)"
+        }
+      },
+      "motor_a_from_wrist_cm": {
+        "type": "number",
+        "minimum": 2,
+        "maximum": 10,
+        "default": 5,
+        "x-ui": {
+          "title": { "en": "First motor from wrist", "hi": "पहली मोटर की कलाई से दूरी" },
+          "widget": "slider",
+          "group": "Placement",
+          "order": 1,
+          "unit": "cm",
+          "help": "Motor A distance from the wrist crease"
+        }
+      },
+      "motor_spacing_cm": {
+        "type": "number",
+        "minimum": 5,
+        "maximum": 15,
+        "default": 10,
+        "x-ui": {
+          "title": { "en": "Space between motors", "hi": "मोटरों के बीच की दूरी" },
+          "widget": "slider",
+          "group": "Placement",
+          "order": 2,
+          "unit": "cm",
+          "help": "Distance from motor A to motor B toward the elbow"
+        }
+      },
+      "forearm_length_cm": {
+        "type": "number",
+        "minimum": 20,
+        "maximum": 30,
+        "default": 25,
+        "x-ui": {
+          "title": { "en": "Forearm length", "hi": "कलाई से कोहनी की लंबाई" },
+          "widget": "slider",
+          "group": "Placement",
+          "order": 3,
+          "unit": "cm",
+          "help": "Wrist to elbow"
+        }
+      },
+      "follow_during_induction": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Virtual arm follows your wrist", "hi": "आभासी बाँह आपकी कलाई के साथ चले" },
+          "widget": "switch",
+          "group": "Placement",
+          "order": 4,
+          "help": "Let the virtual arm follow the real wrist during induction (off: it is frozen)"
+        }
+      },
+      "agency_enabled": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Muscle control step", "hi": "मांसपेशी नियंत्रण चरण" },
+          "widget": "switch",
+          "group": "Agency",
+          "order": 1,
+          "help": "Stretch: a muscle burst closes the virtual hand while the real hand stays still"
+        }
+      },
+      "emg_threshold": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.3,
+        "x-ui": {
+          "title": { "en": "Muscle squeeze needed", "hi": "ज़रूरी मांसपेशी दबाव" },
+          "widget": "slider",
+          "group": "Agency",
+          "order": 2,
+          "help": "Normalised EMG level that closes the virtual hand (0 = rest, 1 = maximum squeeze)"
+        }
+      },
+      "autonomous_close_enabled": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Hand closes by itself", "hi": "हाथ अपने आप बंद हो" },
+          "widget": "switch",
+          "group": "Agency",
+          "order": 3,
+          "help": "Stretch: after the muscle phase the hand closes by itself while EMG is flat (adds question q5)"
+        }
+      },
+      "voiceover_enabled": {
+        "type": "boolean",
+        "default": true,
+        "x-ui": {
+          "title": { "en": "Spoken instructions", "hi": "बोलकर निर्देश" },
+          "widget": "switch",
+          "group": "Finale and voice",
+          "order": 1,
+          "help": "Short spoken lines at each phase start"
+        }
+      },
+      "voiceover_lang": {
+        "enum": [
+          "en",
+          "hi"
+        ],
+        "default": "en",
+        "x-ui": {
+          "title": { "en": "Voice language", "hi": "आवाज़ की भाषा" },
+          "widget": "segmented",
+          "group": "Finale and voice",
+          "order": 2
+        }
+      },
+      "dissolve_enabled": {
+        "type": "boolean",
+        "default": true,
+        "x-ui": {
+          "title": { "en": "Fade the arm at the end", "hi": "अंत में बाँह को धुँधला करें" },
+          "widget": "switch",
+          "group": "Finale and voice",
+          "order": 3,
+          "help": "After the last condition the arm fades out while the strokes continue on empty space"
+        }
+      },
+      "passthrough_reveal": {
+        "type": "boolean",
+        "default": true,
+        "x-ui": {
+          "title": { "en": "Show the real arm at the end", "hi": "अंत में असली बाँह दिखाएँ" },
+          "widget": "switch",
+          "group": "Finale and voice",
+          "order": 4,
+          "help": "Show the real arm through passthrough after the dissolve (falls back to a ghost outline)"
+        }
+      },
+      "self_touch_s": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 30,
+        "default": 15,
+        "x-ui": {
+          "title": { "en": "Self-touch time", "hi": "खुद छूने का समय" },
+          "widget": "slider",
+          "group": "Finale and voice",
+          "order": 5,
+          "unit": "s",
+          "help": "Last seconds of each induction where the participant strokes the arm with the left index finger. 0 = off"
+        }
+      },
+      "breath_enabled": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Arm glow follows breathing", "hi": "साँस के साथ बाँह की चमक" },
+          "widget": "switch",
+          "group": "Finale and voice",
+          "order": 6,
+          "help": "Stretch: arm glow follows the participant's breath"
+        }
+      },
+      "breath_replay_lag_s": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 30,
+        "default": 20,
+        "x-ui": {
+          "title": { "en": "Breath replay delay", "hi": "साँस दोहराने में देरी" },
+          "widget": "slider",
+          "group": "Finale and voice",
+          "order": 7,
+          "unit": "s",
+          "help": "ASYNC replays the participant's own breath from this long ago"
+        }
+      },
+      "demo_mode": {
+        "type": "boolean",
+        "default": false,
+        "x-ui": {
+          "title": { "en": "Short demo run", "hi": "छोटा डेमो" },
+          "widget": "switch",
+          "group": "Demo",
+          "order": 1,
+          "help": "Shorter run for demos: induction 45 s and one questionnaire at the end"
+        }
+      }
+    }
+  },
+  "presets": [
+    {
+      "id": "demo",
+      "label": {
+        "en": "Demo"
+      },
+      "params": {
+        "demo_mode": true
+      }
+    }
+  ],
+  "events": [
+    "session_start",
+    "session_end",
+    "block_start",
+    "block_end",
+    "pause",
+    "resume",
+    "tracking_lost",
+    "tracking_regained",
+    "haptic_cue",
+    "phase_start",
+    "calibration",
+    "stroke",
+    "drift_probe",
+    "threat_impact",
+    "threat_response",
+    "questionnaire_item",
+    "emg_burst",
+    "witness_summary",
+    "self_touch",
+    "dissolve_start",
+    "passthrough_on",
+    "breath_env",
+    "autonomous_close"
+  ],
+  "metrics": [
+    "drift_change_cm",
+    "ownership",
+    "control",
+    "flinch_emg_peak_x",
+    "flinch_emg_latency_ms",
+    "flinch_imu_peak",
+    "flinch_wrist_peak_mps",
+    "flinch_wrist_latency_ms",
+    "stroke_timing_err_ms",
+    "cue_delivery_rate",
+    "emg_windows_excluded",
+    "witness_q4"
+  ]
+}

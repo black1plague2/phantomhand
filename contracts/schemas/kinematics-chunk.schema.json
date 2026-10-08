@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/kinematics-chunk.schema.json",
+  "title": "KinematicsChunk",
+  "description": "Columnar pose frames, ~5 s per chunk, file kin_<seq>.json(.gz). Positions in meters, calibration space (origin = seated chest reference, +y up, +z forward, right-handed per Unity→converted). Rotations are quaternions xyzw.",
+  "type": "object",
+  "required": ["session_id", "seq", "rate_hz", "joints", "t_ms", "frames"],
+  "properties": {
+    "session_id": { "type": "string" },
+    "seq": { "type": "integer", "minimum": 0 },
+    "rate_hz": { "type": "number" },
+    "source": { "enum": ["xr_hands", "controllers", "synthetic", "replay"] },
+    "joints": {
+      "type": "array",
+      "items": { "enum": ["head", "l_wrist", "r_wrist", "l_index_tip", "r_index_tip", "l_thumb_tip", "r_thumb_tip", "l_palm", "r_palm"] },
+      "uniqueItems": true
+    },
+    "t_ms": { "type": "array", "items": { "type": "number" } },
+    "frames": {
+      "type": "object",
+      "description": "joint → {pos: [[x,y,z]...], rot: [[x,y,z,w]...], conf: [0..1 ...]}; each array length == t_ms length. conf 0 = not tracked.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["pos", "conf"],
+        "properties": {
+          "pos": { "type": "array", "items": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 } },
+          "rot": { "type": "array", "items": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 } },
+          "conf": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } }
+        }
+      }
+    },
+    "ground_truth": { "type": "object", "description": "only for source=synthetic: generator params and true metric values" }
+  }
+}

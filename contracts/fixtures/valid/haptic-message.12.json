@@ -1,0 +1,10 @@
+{
+  "type": "ack",
+  "cue_id": "stroke_018",
+  "status": "rejected",
+  "timestamp_ms": 143400,
+  "received_ms": 143399,
+  "motor": 0,
+  "error_code": "DUTY_CYCLE_LIMIT",
+  "error_message": "motor duty cycle limit reached, cooling down"
+}

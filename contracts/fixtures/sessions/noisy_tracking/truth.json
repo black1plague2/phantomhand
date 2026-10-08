@@ -1,0 +1,143 @@
+{
+  "profile": "noisy_tracking",
+  "seed": 42,
+  "generator_version": "0.1.0",
+  "knobs": {
+    "rt_ms_mean": 260,
+    "rt_ms_sd": 30,
+    "mt_scale": 1.05,
+    "reach_scale": 0.98,
+    "n_submovements": 1,
+    "submovement_frac": 0.0,
+    "tremor_hz_range": [
+      0.0,
+      0.0
+    ],
+    "tremor_amp_m": 0.0,
+    "trunk_compensation": 0.05,
+    "jitter_std_m": 0.014,
+    "dropout_rate": 0.18,
+    "fatigue_rate": 0.0,
+    "neglect_bias": 0.0,
+    "miss_rate": 0.05,
+    "tracking_rate_hz": 72.0
+  },
+  "sample_rate_hz": 72.0,
+  "tracking_rate_hz": 72.0,
+  "trials": [
+    {
+      "index": 0,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 201.4689443403849,
+      "movement_time_ms": 831.0906116229215,
+      "peak_speed_mps": 1.4441854843800377,
+      "time_to_peak_speed_pct": 50.13492642553333,
+      "n_submovements": 1,
+      "endpoint_error_cm": 1.359555989441325,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.1417692339891745,
+      "target_azimuth_deg": -5.5009404223152885,
+      "target_elevation_deg": 34.3439167964553,
+      "target_reach_percent": 77.08846169945872
+    },
+    {
+      "index": 1,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 293.81723620904097,
+      "movement_time_ms": 883.864629181452,
+      "peak_speed_mps": 1.2681350305957615,
+      "time_to_peak_speed_pct": 50.28422110929419,
+      "n_submovements": 1,
+      "endpoint_error_cm": 3.0057725700475157,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": -11.628177819067687,
+      "target_elevation_deg": 37.07059955394407,
+      "target_reach_percent": 65.76350782634485
+    },
+    {
+      "index": 2,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 296.6762401602209,
+      "movement_time_ms": 890.7838996051534,
+      "peak_speed_mps": 1.3490344588698933,
+      "time_to_peak_speed_pct": 49.89363241089649,
+      "n_submovements": 1,
+      "endpoint_error_cm": 2.0394698398995623,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.17934182039480737,
+      "target_azimuth_deg": 11.849795920985834,
+      "target_elevation_deg": 30.323509603414955,
+      "target_reach_percent": 78.96709101974037
+    },
+    {
+      "index": 3,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 247.80754950846153,
+      "movement_time_ms": 752.6967951079594,
+      "peak_speed_mps": 1.2607342017110115,
+      "time_to_peak_speed_pct": 49.82085780585975,
+      "n_submovements": 1,
+      "endpoint_error_cm": 2.2747302818035933,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": -31.113945713920696,
+      "target_elevation_deg": 27.321958129698185,
+      "target_reach_percent": 51.53313180255301
+    },
+    {
+      "index": 4,
+      "side": "left",
+      "outcome": "success",
+      "reaction_time_ms": 282.29762513610325,
+      "movement_time_ms": 735.152694760938,
+      "peak_speed_mps": 1.1089350022943236,
+      "time_to_peak_speed_pct": 49.120558719918684,
+      "n_submovements": 1,
+      "endpoint_error_cm": 1.6506358272406196,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": -2.186556639665966,
+      "target_elevation_deg": 9.076373962035365,
+      "target_reach_percent": 54.54725268674151
+    },
+    {
+      "index": 5,
+      "side": "right",
+      "outcome": "success",
+      "reaction_time_ms": 262.02737208466675,
+      "movement_time_ms": 727.6636405504333,
+      "peak_speed_mps": 1.131733326018129,
+      "time_to_peak_speed_pct": 49.626103461477406,
+      "n_submovements": 1,
+      "endpoint_error_cm": 2.3206258037268856,
+      "path_length_ratio": 1.0,
+      "trunk_displacement_cm": 0.0,
+      "target_azimuth_deg": 16.424595357747798,
+      "target_elevation_deg": 5.590099344372392,
+      "target_reach_percent": 60.09148363755854
+    }
+  ],
+  "dropout_spans": [
+    {
+      "joint": "r_wrist",
+      "start_frame": 298,
+      "end_frame": 330
+    },
+    {
+      "joint": "r_index_tip",
+      "start_frame": 104,
+      "end_frame": 154
+    },
+    {
+      "joint": "r_index_tip",
+      "start_frame": 1111,
+      "end_frame": 1142
+    }
+  ],
+  "session_id": "22e2aeac-fcfc-4b58-89c6-69eb4d1b0209"
+}

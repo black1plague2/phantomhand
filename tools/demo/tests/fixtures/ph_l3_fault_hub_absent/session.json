@@ -1,0 +1,64 @@
+{
+  "session_id": "76d6d2f3-4b7a-46bb-94d8-e19ddeeb0cca",
+  "contracts_version": "0.2",
+  "patient_ref": "ph-demo-001",
+  "program_ref": "ph-demo",
+  "mode": "simulation",
+  "started_at": "2026-10-07T10:00:00Z",
+  "device": {
+    "model": "Meta Quest 3",
+    "device_id": "quest-ph-01",
+    "os": "Horizon OS",
+    "tracking_rate_hz": 72.0
+  },
+  "versions": {
+    "shell": "0.1.0",
+    "sdk": "0.1.0",
+    "games": {
+      "phantom_hand": "0.1.0"
+    }
+  },
+  "calibration": {
+    "affected_side": "none",
+    "arm_length_m": {
+      "left": 0.6,
+      "right": 0.6
+    }
+  },
+  "blocks": [
+    {
+      "index": 0,
+      "game_id": "phantom_hand",
+      "game_version": "0.1.0",
+      "started_t_ms": 0,
+      "ended_t_ms": 147000,
+      "completed": true,
+      "params": {
+        "offset_cm": 15,
+        "stroke_rate_hz": 1.0,
+        "induction_s": 45,
+        "async_delay_ms": 600,
+        "condition_order": "async_first",
+        "threat_enabled": true,
+        "motor_soa_ms": 100,
+        "tactile_lead_ms": 40,
+        "haptics_enabled": true,
+        "haptic_max_intensity": 1.0,
+        "stimulated_side": "right",
+        "agency_enabled": true,
+        "autonomous_close_enabled": true,
+        "voiceover_enabled": true,
+        "voiceover_lang": "en",
+        "dissolve_enabled": true,
+        "passthrough_reveal": true,
+        "self_touch_s": 15,
+        "breath_enabled": true,
+        "demo_mode": true
+      }
+    }
+  ],
+  "chunks": 1,
+  "sensor_chunks": 1,
+  "ended_at": "2026-10-07T10:04:30Z",
+  "end_reason": "completed"
+}

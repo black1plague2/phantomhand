@@ -1,0 +1,9 @@
+{
+  "cue_id": "stroke_017",
+  "motor": 0,
+  "intensity": 150,
+  "duration_ms": 200,
+  "pattern": "pulse",
+  "cue": "stroke",
+  "play_at_ms": 143250
+}

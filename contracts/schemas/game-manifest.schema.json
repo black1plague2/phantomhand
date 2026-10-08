@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opus-rehab/contracts/v0.2/game-manifest.schema.json",
+  "title": "GameManifest",
+  "description": "Declared by every game. The app renders prescription forms from paramSchema; the backend validates params against it.",
+  "type": "object",
+  "required": ["id", "version", "sdkVersion", "displayName", "input", "paramSchema", "events", "metrics"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,31}$" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "sdkVersion": { "type": "string", "description": "semver range of com.opus.sdk this game supports" },
+    "displayName": { "type": "object", "description": "locale → string", "additionalProperties": { "type": "string" } },
+    "description": { "type": "object", "additionalProperties": { "type": "string" } },
+    "input": { "type": "array", "items": { "enum": ["hands", "controllers"] }, "minItems": 1 },
+    "posture": { "enum": ["seated", "standing", "either"], "default": "seated" },
+    "bodyRegions": { "type": "array", "items": { "enum": ["shoulder", "elbow", "forearm", "wrist", "hand", "fingers", "trunk", "cognition", "visuospatial"] } },
+    "paramSchema": {
+      "type": "object",
+      "description": "A JSON Schema (object) for this game's params. UI hints go in x-ui: {widget, group, order, unit, help}.",
+      "required": ["type", "properties"]
+    },
+    "presets": { "type": "array", "items": { "type": "object", "required": ["id", "label", "params"], "properties": { "id": {"type": "string"}, "label": {"type": "object"}, "params": {"type": "object"} } } },
+    "events": { "type": "array", "items": { "type": "string" }, "description": "event types this game emits (subset of event.schema.json types)" },
+    "metrics": { "type": "array", "items": { "type": "string" }, "description": "metric ids this game supports (see metrics.schema.json)" }
+  }
+}

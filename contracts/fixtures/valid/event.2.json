@@ -1,0 +1,18 @@
+{
+  "t_ms": 5500,
+  "type": "trial_end",
+  "block": 1,
+  "seq": 42,
+  "trial": 5,
+  "hand": "right",
+  "target": {
+    "id": "target_1",
+    "pos": [0.5, 0.8, 1.2],
+    "azimuthDeg": 30,
+    "elevationDeg": 15,
+    "reachPercent": 75,
+    "isDistractor": false
+  },
+  "outcome": "success",
+  "data": { "custom_field": "custom_value" }
+}

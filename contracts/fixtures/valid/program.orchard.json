@@ -1,0 +1,32 @@
+{
+  "program_id": "prog_orchard_gentle",
+  "patient_ref": "pat_gentle_001",
+  "created_by": "clinician_default",
+  "title": "Gentle Start - Orchard Reach",
+  "notes_for_patient": "This is a beginner-friendly program. Start with the gentle preset and progress as tolerated.",
+  "blocks": [
+    {
+      "game_id": "orchard_reach",
+      "game_version_range": "^0.1.0",
+      "params": {
+        "side": "right",
+        "trialCount": 10,
+        "reachPercent": [40, 65],
+        "azimuthRangeDeg": [-20, 20],
+        "elevationRangeDeg": [0, 20],
+        "timeLimitMs": 30000
+      },
+      "duration_sec": 600,
+      "rest_after_sec": 120
+    }
+  ],
+  "schedule": {
+    "start_date": "2026-09-14",
+    "end_date": "2026-10-14",
+    "sessions_per_week": 2,
+    "max_session_minutes": 20,
+    "location": "home"
+  },
+  "requires_supervision": false,
+  "status": "draft"
+}
