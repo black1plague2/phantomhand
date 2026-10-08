@@ -35,6 +35,10 @@ scene; virtual arm, brush, stone (EditMode 290/290, PlayMode 20/20 at U3); Flutt
 3D-model wiring. Their logs list the exact builder hook lines still to wire.
 
 ## Do next, in order
+
+> This list is the state at the split (8 Oct, 08:00). Items 3 to 5 have been done since (rigged hand and props in the game,
+> SDK changes for the real firmware, the L3 table green in simulation, Quest APKs built but never run on a headset).
+> The current state and the current next steps are in `docs/PH_STATUS.md`; what only a human can do is in `docs/MANUAL_TODO.md`.
 1. **Reconnect the Unity MCP**, then one Unity driver runs ALL EditMode + PlayMode tests (PhantomHand + Shell)
    and fixes failures; capture U4 screenshots (`CaptureU4Shots`).
 2. **Remove Orchard Reach from this repo** (user: "except Orchard Reach"). It is still here only because the shared

@@ -522,8 +522,8 @@ If the ports are still held after step 3, a reboot clears orphaned sockets uncon
 - [ ] (human, owner of the team phone) **Decide whether to uninstall the old operator app on the team phone.** The repo's debug APK is rejected as an update of the old `com.opus.opus_app` (it carries another PC's debug key, `INSTALL_FAILED_UPDATE_INCOMPATIBLE`), so a side-by-side build `com.opus.opus_app.pc` is installed beside it. Uninstalling the old app wipes its data; the other fix is to reuse the old PC's debug key. Until one of them is done, a build made from the repo reaches the phone only as a side-by-side copy. The `.pc` build predates the card rework in `aec2aed`. Details: `logs/sessions/2026-10-08-PH-A-SETUP-run1.md` (checkpoint 5). Source: PH-A-SETUP-run1.
 - [ ] (owner, one line) **`CLAUDE.md` still says Flutter is at `C:\flutter\bin`** (line 40, the Flutter section). On the current dev PC it is `H:\flutter\bin`, not on PATH, called by full path. `docs/agent-briefs/ph/02-RULES.md` already says so (a667def). Source: `docs/PH_ON_DEVICE_RUNBOOK.md` 2.4.
 - [ ] (electronics team, answers) **One supply per board, and where the sensor data goes.** Confirm in writing: (1) each board has its own supply and their grounds are not joined (so no shared bank for the two nodes); (2) a node sends its sensor data to the last sender only, back on UDP 8790, so the Quest must be the last to send and no laptop tool may talk to the nodes during a session. Their handoff §A says both and the contracts now assume it (`contracts/HAPTIC_PROTOCOL.md` v1.3, `03-SPEC.md` D3 and the power line). Source: `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §A, §B rows 4 and 13.
-- [ ] (human, Unity, optional) **Import the four Unity Asset Store packs named in `CREDITS.md`, only if they are wanted.** Pack Gesta Furniture #1, Stones, Dark Wave Paint Table 01, Mobile Books: in Unity's Package Manager (My Assets) download and import each. Keep them out of git: `CREDITS.md` says to use a git-ignored folder on the build PC, because the Asset Store licence lets the team ship a package in a built game but not publish its files. None is imported yet. Source: `CREDITS.md`.
-- [ ] (human, team) **Confirm that the seven `PH_*.glb` props are the team's own models.** `game/Assets/Art/PhantomHand/Models/`: `PH_Brush`, `PH_PendantLamp`, `PH_Plant`, `PH_Window`, `PH_SingingBowl`, `PH_TeaCup`, `PH_FramedPicture`. The files carry no author or licence; their generator tag is `THREE.GLTFExporter r184` and their materials use the `PH_` prefix, so `CREDITS.md` takes them to be the team's own procedural models. Confirm before a public release build; if any is a download, add its credit to `CREDITS.md`. They are not wired into the scene yet. Source: `CREDITS.md`, commit 9a011a3.
+- [ ] (human, Unity, optional) **Import the four Unity Asset Store packs named in `CREDITS.md`, only if they are wanted.** Pack Gesta Furniture #1, Stones, Dark Wave Paint Table 01, Mobile Books: in Unity's Package Manager (My Assets) download and import each. Keep them out of git: `CREDITS.md` says to use a git-ignored folder on the build PC, because the Asset Store licence lets the team ship a package in a built game but not publish its files. None is imported yet: still true at 14:45 on 8 Oct (they are not downloaded on this PC). After importing them, tell the session so they can be wired in and git-ignored. Source: `CREDITS.md`; wave 6 notes in `logs/sessions/2026-10-08-PH-O-RESUME-run1.md`.
+- [ ] (human, team) **Confirm that the seven `PH_*.glb` props are the team's own models.** `game/Assets/Art/PhantomHand/Models/`: `PH_Brush`, `PH_PendantLamp`, `PH_Plant`, `PH_Window`, `PH_SingingBowl`, `PH_TeaCup`, `PH_FramedPicture`. The files carry no author or licence; their generator tag is `THREE.GLTFExporter r184` and their materials use the `PH_` prefix, so `CREDITS.md` takes them to be the team's own procedural models. Confirm before a public release build; if any is a download, add its credit to `CREDITS.md`. They are wired into the scene since ce05e51 (8 Oct, 14:35). Source: `CREDITS.md`, commits 9a011a3 and ce05e51.
 
 ## Phantom Hand — firmware
 
@@ -548,7 +548,7 @@ Source of each item: `docs/PH_STATUS.md` (written 2026-10-08) and the CONTEXT.md
 - [ ] (human) **Hindi review of the new strings.** A native speaker reads (a) the Hindi `x-ui.title` values on the 27
   Phantom Hand parameters in `game/Assets/Games/PhantomHand/manifest.json` and its two byte-identical copies
   (`app/assets/fixtures/manifests/phantom_hand.manifest.json`, `contracts/fixtures/phantom_hand.manifest.json`), and
-  (b) the Phantom Hand strings in `app/lib/l10n/app_hi.arb`. Report wrong words to Opus; the builder changes them.
+  (b) the Phantom Hand strings in `app/lib/l10n/app_hi.arb`, and (c) the Hindi strings in `app/lib/features/sessions/embodiment_report.dart` (the newest: "Not asked in this round", 2629398). Report wrong words to Opus; the builder changes them.
   Source: `logs/sessions/2026-10-08-PH-A-A1c-run1.md` (titles machine-written); `logs/sessions/2026-10-08-PH-A-A1-run2.md`
   (Hindi strings machine-quality).
 - [ ] (human, electronics team) **Send your files and fill the measurement table.** Send the firmware files you
@@ -585,3 +585,25 @@ Source of each item: `docs/PH_STATUS.md` (written 2026-10-08) and the CONTEXT.md
 - [ ] (human) **Delete `rigged-hand (1).zip` from the repo root, but only after confirming the copy.** Confirm that
   `game/Assets/Art/PhantomHand/Models/RiggedHand/` holds `handRig_02.fbx` and the four `hand_*` textures (open the folder in
   Unity or Explorer), then delete `rigged-hand (1).zip` by hand. Source: manager report 2026-10-08 (the zip is in the repo root).
+- [ ] (owner of this PC, decision) **This PC throttles its CPU to about a third of its speed while the Unity editor is in play mode.**
+  Dell Precision 5560 (i9-11950H, RTX A2000), on AC, "High power plan", maximum processor state 100 %. Windows' counter
+  `% Processor Performance`, sampled once a second during a full run, showed about 35 % of nominal speed for long stretches: in the
+  measured run 150 of 191 s were below 50 % speed, and 73 % of those seconds had a frame over 50 ms. Throttled runs of `PH_FullRun`
+  delivered 68-91 % of the stroke cues; a run without the throttle delivered 98-100 % (112/114, 114/114). Why the CPU throttles (heat or
+  a power limit) is not determined. Decide about cooling or the Dell thermal mode. No setting was changed. Until then a throttled
+  editor run ends Inconclusive, by design. Source: commit 3fefd61; wave 6 notes in `logs/sessions/2026-10-08-PH-O-RESUME-run1.md`.
+- [ ] (human with a Quest 3) **Install the development APK on a Quest and run it.** Two APKs exist in
+  `releases/game/0.1.0` (both git-ignored, package `com.DefaultCompany.OPUS`). The release APK `chetna-phantom-hand.apk`
+  (85 951 560 bytes, 82.0 MB) was built on 8 Oct, 14:45 to 15:04, from commit 2629398, so it has the room props. It was checked by
+  content only. It is the APK to install for the demo. The development APK `chetna-phantom-hand-dev.apk` (131 430 360 bytes, 125.3 MB)
+  was rebuilt 15:09 to 15:22. It was not checked by content. While it was building, a second session saved uncommitted edits to
+  `PhMaterials.cs`, `VirtualArmRig.cs` and `ThreatDrop.cs` (15:11:05), so it may or may not contain them. It is not known to match a
+  commit and is to be rebuilt once those edits are committed. The first development APK (13:43, 95.7 MB, old room) was set aside as
+  `chetna-phantom-hand-dev.apk.prev`. No APK was installed, and nothing has run on a headset (no Quest is attached to this
+  PC). Follow `docs/PH_ON_DEVICE_RUNBOOK.md` 4.7 to 4.10: (1) connect the Quest to this PC by USB and accept the prompt inside the headset
+  until `adb devices` lists it as `device` (the repo has no Quest developer-mode steps); (2) `adb install -r` the APK; (3) start the hub
+  (runbook 4.2) and the nodes or the twin, then start the app; (4) if it finds neither hub nor nodes, write `phantom_endpoints.json`
+  (runbook 4.10); (5) send back what happened: what the headset showed, and the `adb logcat -d -s Unity` lines that contain "PhantomHand".
+  Do not share a development APK: it carries the editor bridge's address and token. Whether the release APK carries them was not
+  checked. Source: `docs/PH_ON_DEVICE_RUNBOOK.md` 4.7; `docs/PH_STATUS.md`
+  APK row.

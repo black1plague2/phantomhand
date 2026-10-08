@@ -8,6 +8,9 @@
 /[Mm]emoryCaptures/
 # Android build scratch (Gradle/IL2CPP), written by the first Quest APK build on 8 Oct 2026
 /.utmp/
+# the Meta SDK's editor build config, created by itself when a build needs it
+/[Aa]ssets/Resources/OVRBuildConfig.asset
+/[Aa]ssets/Resources/OVRBuildConfig.asset.meta
 
 *.csproj
 *.unityproj
