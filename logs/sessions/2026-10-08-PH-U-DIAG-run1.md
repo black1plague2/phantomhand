@@ -262,14 +262,34 @@ logic, each caught. Merged as 21c42d5; Flutter suite 505/505 in the main checkou
 tonight failed once when the whole folder ran in parallel (it read a counter one event-loop turn too early) and was corrected.
 Not yet on the phone: whether it cures the silence after a doze is not known. [V the tests; N the phone]
 
-## 11. Open at 23:50
-- **Install the newest Quest APK** (the build that follows the upload and shutdown fixes of section 9; until then the one of
-  23:40 with the pause and reconnect fixes). The headset has the 23:12 build: on it a run does not pause when the headset comes
-  off, and after a sleep the phone shows the headset as offline until the app is restarted.
-- **Install the phone app** built from 21c42d5 (hub closes a written-off socket; self-healing beacon), sign in, open Monitor;
-  then listen on UDP 8788 from the PC after a doze. If the beacon holds, remove the hand-set hub address from the headset.
-- A full run without "next phase": calibration done, so that the drift numbers mean something; and the witness screen reached.
-- The Quest APK on the GitHub release `ph-handoff-2026-10-08` is still the one of 21:22 (flapping link, no log channel).
+## 11. Builds and installs after midnight (9 Oct, 00:00 to 00:07)
+
+- PlayMode `"PhantomHand|PH_"` on the final code: `DONE PlayMode passed=30 failed=0 skipped=0 total=30 queued=30 duration=580.3s`
+  (the 26 of before and 4 new: the headset-alone run, the Ready card, the launch scene, the headset coming off). EditMode
+  766/766. Flutter 505/505. [V]
+- Fourth release APK of the game, from 10f969b: built 23:55 to 23:58, 91 852 398 bytes, sha256
+  `0b4c6c2cd6c7dcb3e9a2c47c01539f6a6df545a1aa490aecc07d2f8e4ad4c29a`, `result=Succeeded`, bridge token 0 hits in 875 entries.
+  **Not installed**: at midnight the headset was asleep and adb listed it as `unauthorized`. It still runs the 23:12 build. [V]
+- Phone app from 21c42d5: `chetna-operator-app-pc.apk` (sha256 `7f02e69f...e1109`, built 23:59) and `chetna-operator-app.apk`
+  (`6ac73883...57686`, built 00:03); the two of 21:5x are in `releases/app/1.0.0/old/`. The `.pc` one was installed on the
+  owner's phone at 00:00:56 while it was dozing (`Success`), opened, "Clinician" and "Monitor" tapped with adb.
+  Then, from this PC: `health` ok, `last_status` 200, and **5 beacons in 5 s from 192.168.242.162 on UDP 8788**, the first time
+  the phone's beacon was heard here. [V]
+- Doze test of the new beacon, not conclusive. Screen off at 00:01:57: the beacons stopped within 10 s and the hub's HTTP with
+  them (a phone with its screen off serves nothing; known). Woken at 00:06:19: no beacon in 25 s and no HTTP, but the app in
+  front was then `com.tailscale.ipn`, not the operator app (whose process was alive in the background). Either the owner had
+  picked the phone up or something on the phone brought that app forward. A hub in the background is frozen by Android, so
+  this run says nothing about the beacon's socket. The app already keeps the screen on while it is in front
+  (`MainActivity.kt`, `FLAG_KEEP_SCREEN_ON`), so the rule stays: **the operator app in front, on Monitor.** [N for the fix]
+
+## 12. Open at 00:10 on 9 Oct
+- **Install the 23:58 Quest APK** when the headset is awake and on USB. Until then: a run does not pause when the headset
+  comes off, the phone shows the headset as offline after a sleep until the app is restarted (the new phone app closes such a
+  socket, which should make the old headset build reconnect by itself: not yet seen), and uploads wait for the next run.
+- **A full run without "next phase"**: calibration held until it confirms, so that the drift numbers mean something, and the
+  witness screen reached. The collector is still running into `sim/out/quest_logs/run2/`.
+- The beacon after a doze with the operator app in front: not yet seen. The hand-set hub address stays on the headset until it is.
+- The GitHub release `ph-handoff-2026-10-08` still holds the three APKs of 21:5x; the three of midnight are local.
 - EMG on a person: one event with a factor of 1.39 and an onset is not yet a working sensor (hardware side, PH-E2E-HW log).
 - The old operator app on the phone is switched off, not uninstalled (the owner's to remove).
 - `tools/demo/unity_phone_hub_run.py` was written at 22:05 and never run; `quest_collect.py --hub` does its job. Not committed.
