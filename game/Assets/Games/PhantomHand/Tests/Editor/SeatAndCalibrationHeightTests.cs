@@ -216,9 +216,12 @@ namespace Opus.Games.PhantomHand.Tests
             {
                 session.Clock.Advance(13.9); module.Tick(session.Clock.NowMs); ui.Tick();
                 if (i == 100) Assert.IsNull(ui.Calibration.Wrist, "nothing counts in the first 2 s: the hands that pinched to start are still in the air");
+                if (i == 100) Assert.AreEqual(1.12f, ui.Instruction.transform.position.y, 1e-3f, "the instruction stands 12 cm higher while the arm is placed: the hand is not behind it");
                 doneAt = session.Clock.NowMs;
             }
             Assert.AreNotEqual(PhPhase.Calibrate, module.CurrentPhase, "the calibration completed where the arm rested");
+            session.Clock.Advance(13.9); module.Tick(session.Clock.NowMs); ui.Tick();   // the presenter sees the new phase on its next frame
+            Assert.AreEqual(1.00f, ui.Instruction.transform.position.y, 1e-3f, "and is back at its own height afterwards");
             Assert.Less(doneAt, 6000, "2 s to settle, 2 s still, 1 s for the room to move");
             Vector3 moved = anchors.cameraRig.position;
             Assert.AreEqual(-0.11f, moved.x, 1e-3f); Assert.AreEqual(-0.069f, moved.y, 1e-3f); Assert.AreEqual(-0.18f, moved.z, 1e-3f);

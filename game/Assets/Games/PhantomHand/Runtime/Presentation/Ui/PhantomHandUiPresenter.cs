@@ -25,6 +25,9 @@ namespace Opus.Games.PhantomHand.Presentation
         public const double CalibrationStillM = 0.03;
         /// <summary>Nothing counts in the first moments of the phase: the hands that pinched to start the run are still in the air.</summary>
         public const double CalibrationSettleMs = 2000;
+        /// <summary>While the arm is being placed the instruction stands this much higher. On the headset (9 Oct) an arm that rested
+        /// further away than the outline had its hand behind the panel: the wearer could not see the fingers that copy their own.</summary>
+        public const float CalibrationPanelLiftM = 0.12f;
 
         public PhantomAnchors anchors;
         [Tooltip("Optional: receives SetCalibration(wrist, forearmAxis) when the calibration is confirmed.")]
@@ -146,7 +149,7 @@ namespace Opus.Games.PhantomHand.Presentation
         private void OnPhase(PhPhase prev, PhPhase now, double nowMs)
         {
             // leave
-            if (prev == PhPhase.Calibrate) { Instruction.Hide(); SetOutline(false, OutlineTeal); }
+            if (prev == PhPhase.Calibrate) { Instruction.Hide(); SetOutline(false, OutlineTeal); LiftInstruction(false); }
             if (prev == PhPhase.ProbePre || prev == PhPhase.ProbePost) EndProbeLook();
             if (prev == PhPhase.Questionnaire) { Questionnaire.Hide(); EndTouch(); }
             if (prev == PhPhase.Witness) Witness.Hide();
@@ -159,6 +162,7 @@ namespace Opus.Games.PhantomHand.Presentation
                     Calibration = new CalibrationTracker(ToArr(CalibrationTarget()), CalibrationRadiusM, CalibrationTracker.HoldMs, CalibrationHeightToleranceM, CalibrationStillM);
                     _calibFromMs = nowMs + CalibrationSettleMs;
                     _shiftBy = _shifted = Vector3.zero;
+                    LiftInstruction(true);
                     SetOutline(true, OutlineTeal);
                     break;
                 case PhPhase.ProbePre:
@@ -230,6 +234,14 @@ namespace Opus.Games.PhantomHand.Presentation
 
         private Vector3 _shiftBy, _shifted;
         private double _calibFromMs;
+        private bool _instructionLifted;
+
+        private void LiftInstruction(bool up)
+        {
+            if (Instruction == null || up == _instructionLifted) return;
+            _instructionLifted = up;
+            Instruction.transform.position += Vector3.up * (up ? CalibrationPanelLiftM : -CalibrationPanelLiftM);
+        }
 
         /// <summary>The camera rig's share u (0..1, eased) of the move that brings the resting wrist onto the outline's wrist point.</summary>
         private void Glide(float u)
