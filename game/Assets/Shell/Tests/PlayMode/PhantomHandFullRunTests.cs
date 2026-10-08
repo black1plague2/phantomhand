@@ -169,23 +169,40 @@ namespace Opus.Shell.Tests.PlayMode
             // ---- run to the end, sampling RTT; a phase-time watchdog fails a stuck run with its phase -----------------------
             var rtt = new List<double>(); double lastRtt = -1; var phasesSeen = new List<string>();
             float lastPhaseChange = Time.realtimeSinceStartup; string lastPhase = null;
+            int hitches = 0; float hitchMs = 0f, worstHitchMs = 0f; int gc0 = GC.CollectionCount(0), gc2 = GC.CollectionCount(2);   // main-thread hitches drop cues as "late": count them
             t0 = Time.realtimeSinceStartup;
             while (runner.CurrentPhase == OpusSessionRunner.Phase.Running || runner.CurrentPhase == OpusSessionRunner.Phase.Paused)
             {
                 if (runner.Client != null && runner.Client.LastRttMs > 0 && Math.Abs(runner.Client.LastRttMs - lastRtt) > 1e-6) { lastRtt = runner.Client.LastRttMs; rtt.Add(lastRtt); }
                 string ph = controller.Module != null ? Opus.Games.PhantomHand.PhNames.Of(controller.Module.CurrentPhase) : "?";
+                if (Time.unscaledDeltaTime > 0.12f)
+                {
+                    float ms = Time.unscaledDeltaTime * 1000f; hitches++; hitchMs += ms; worstHitchMs = Mathf.Max(worstHitchMs, ms);
+                    int g0 = GC.CollectionCount(0), g2 = GC.CollectionCount(2);
+                    Debug.Log("[PH_FullRun][hitch] " + ms.ToString("F0") + " ms in phase " + ph + "; GC gen0 +" + (g0 - gc0) + " gen2 +" + (g2 - gc2));
+                    gc0 = g0; gc2 = g2;
+                }
                 if (ph != lastPhase) { lastPhase = ph; phasesSeen.Add(ph); lastPhaseChange = Time.realtimeSinceStartup; }
                 Assert.Less(Time.realtimeSinceStartup - lastPhaseChange, 100f, "stuck in phase '" + ph + "' for 100 s; phases so far " + string.Join(",", phasesSeen));
                 Assert.Less(Time.realtimeSinceStartup - t0, 420f, "run exceeded 7 minutes; phases so far " + string.Join(",", phasesSeen));
                 yield return null;
             }
             Assert.AreEqual(OpusSessionRunner.Phase.Finished, runner.CurrentPhase);
-            Debug.Log("[PH_FullRun] run finished in " + (Time.realtimeSinceStartup - t0).ToString("F0") + " s; phases " + string.Join(",", phasesSeen));
+            Debug.Log("[PH_FullRun] run finished in " + (Time.realtimeSinceStartup - t0).ToString("F0") + " s; phases " + string.Join(",", phasesSeen) +
+                      "; frames over 120 ms: " + hitches + " (total " + hitchMs.ToString("F0") + " ms, worst " + worstHitchMs.ToString("F0") + " ms)");
+            if (rtt.Count > 0) { var r = rtt.OrderBy(x => x).ToList(); Debug.Log("[PH_FullRun] RTT so far: n=" + r.Count + " p50=" + r[r.Count / 2].ToString("F1") + " p95=" + r[(int)(r.Count * 0.95)].ToString("F1") + " ms"); }
+            if (!external)
+                Debug.Log("[PH_FullRun] hub received so far: " + HubReceived(_hubErr) + "; events in the session file: " +
+                          File.ReadAllLines(Path.Combine(sessionDir, "events.ndjson")).Count(l => l.Trim().Length > 0));
 
             // ---- uploads: wait until the runner marks the session uploaded (explicit condition) -------------------------------
             t0 = Time.realtimeSinceStartup;
             string uploadedMarker = Path.Combine(sessionDir, ".uploaded");
-            while (Time.realtimeSinceStartup - t0 < 60f && !File.Exists(uploadedMarker)) yield return null;
+            int upFrames = 0; float upMaxDt = 0f;
+            while (Time.realtimeSinceStartup - t0 < 60f && !File.Exists(uploadedMarker)) { upFrames++; upMaxDt = Mathf.Max(upMaxDt, Time.unscaledDeltaTime); yield return null; }
+            Debug.Log("[PH_FullRun] upload wait " + (Time.realtimeSinceStartup - t0).ToString("F1") + " s, frames=" + upFrames + ", max frame " + (upMaxDt * 1000f).ToString("F0") +
+                      " ms, files uploaded so far " + runner.UploadedFiles + ", message '" + runner.LastUploadMessage + "'" +
+                      (external ? "" : "; hub received: " + HubReceived(_hubErr)));
             Assert.IsTrue(File.Exists(uploadedMarker), "session never finished uploading: " + runner.LastUploadMessage);
 
             // ---- local session content -----------------------------------------------------------------------------------
@@ -241,6 +258,17 @@ namespace Opus.Shell.Tests.PlayMode
                 int invalid = CountOccurrences(err, "[MSG] Validation failed") + CountOccurrences(err, "Failed to parse JSON");
                 Assert.AreEqual(0, invalid, "invalid messages seen by the hub:\n" + err);
             }
+        }
+
+        /// <summary>Messages the fake hub logged as received, by type (from its stderr): a diagnostic for duplicate floods.</summary>
+        private static string HubReceived(StringBuilder hubErr)
+        {
+            string herr; lock (hubErr) herr = hubErr.ToString();
+            var rx = new SortedDictionary<string, int>();
+            foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(herr, @"\[MSG RX\] type=(\w+)"))
+            { int c; rx.TryGetValue(m.Groups[1].Value, out c); rx[m.Groups[1].Value] = c + 1; }
+            return string.Join(", ", rx.Select(kv => kv.Key + "=" + kv.Value)) +
+                   "; invalid=" + (CountOccurrences(herr, "[MSG] Validation failed") + CountOccurrences(herr, "Failed to parse JSON"));
         }
 
         private static int CountOccurrences(string s, string needle)

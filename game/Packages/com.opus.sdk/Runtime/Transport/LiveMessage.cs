@@ -81,10 +81,12 @@ namespace Opus.Sdk
             _sentAtMs.Remove(messageId);
         }
 
-        /// <summary>Messages still unacked after <paramref name="timeoutMs"/> (default 1000ms per protocol) —
-        /// caller should resend these.</summary>
+        /// <summary>`requires_ack` messages still unacked after <paramref name="timeoutMs"/> (default 1000ms per protocol) —
+        /// caller should resend these. Messages that do not require an ack (trial_events) are kept for
+        /// <see cref="ReplayFrom"/> on a reconnect only: they are never returned here, however old, so a timer never re-sends them.
+        /// <paramref name="nowMs"/> must be in the same time base as the <c>nowMs</c> given to <see cref="Track"/> and <see cref="MarkResent"/>.</summary>
         public IReadOnlyList<LiveMessage> TimedOut(double nowMs, double timeoutMs = 1000.0)
-            => _unacked.Where(m => _sentAtMs.TryGetValue(m.Id, out var t) && nowMs - t >= timeoutMs).ToList();
+            => _unacked.Where(m => m.RequiresAck == true && _sentAtMs.TryGetValue(m.Id, out var t) && nowMs - t >= timeoutMs).ToList();
 
         public void MarkResent(string messageId, double nowMs) => _sentAtMs[messageId] = nowMs;
 

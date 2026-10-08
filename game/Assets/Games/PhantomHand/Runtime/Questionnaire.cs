@@ -23,6 +23,10 @@ namespace Opus.Games.PhantomHand
     public sealed class Questionnaire
     {
         public const int Min = -3, Max = 3;
+
+        /// <summary>The scale the participant sees and the on-device witness uses is -3..+3; events.ndjson (event.schema.json) and the
+        /// analytics carry the same answer as 1..7 (1 = strongly disagree, 7 = strongly agree).</summary>
+        public static int ContractValue(int shown) { return shown - Min + 1; }
         public const string AnchorLowEn = "Strongly disagree", AnchorHighEn = "Strongly agree";
         public const string AnchorLowHi = "पूरी तरह असहमत", AnchorHighHi = "पूरी तरह सहमत";
 

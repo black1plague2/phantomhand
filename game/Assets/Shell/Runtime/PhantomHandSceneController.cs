@@ -387,6 +387,9 @@ namespace Opus.Shell
             _nodeB = new SleeveSensorClient(_transportB, _clock); _nodeB.Start();
             // Node B emg_burst -> events.ndjson (PRD 9.4, 03-SPEC 7); raised from SleeveSensorClient.Pump on the main thread
             _nodeB.OnEmgBurst += b => module.SubmitEmgBurst(b.Peak, b.BaselineRms, b.DeviceMs);
+            // Sensor samples go to the CURRENT recorder only. (SensorRecorder.Attach subscribes for good: after the session ended the recorder
+            // kept writing a sens_###.json every 5 s into the closed session folder, after the uploader had listed the files.)
+            ForwardSamplesToRecorder(_nodeA); ForwardSamplesToRecorder(_nodeB);
             _haptic.StartKeepalive(_clock.NowMs);
 
             _cues = new HapticCueEventAdapter { Trial = () => _module != null ? _module.CurrentConditionIndex : null };
@@ -401,6 +404,12 @@ namespace Opus.Shell
         }
 
         private JObject _blockParams;
+
+        private void ForwardSamplesToRecorder(SleeveSensorClient client)
+        {
+            client.OnImuSample += x => { if (_sensRecorder != null) _sensRecorder.AddImu(x); };
+            client.OnEmgChunk += x => { if (_sensRecorder != null) _sensRecorder.AddEmgChunk(x); };
+        }
 
         private void BindPresenters()
         {
@@ -469,8 +478,6 @@ namespace Opus.Shell
             _kinLastMs = -1;
             _rateMeter = new TrackingRateMeter(HandSide.Right);
             _sensRecorder = new SensorRecorder(sessionId, _clock, sessionDir, "udp");
-            if (_nodeA != null) _sensRecorder.Attach(_nodeA);
-            if (_nodeB != null) _sensRecorder.Attach(_nodeB);
             if (_cues != null) _sensRecorder.MotorExclusion = _cues.InMotorWindow;
         }
 

@@ -228,7 +228,7 @@ namespace Opus.Games.PhantomHand
                 imu_peak = r.ImuPeak,
                 emg_peak_x = r.EmgPeakX,
                 emg_latency_ms = r.EmgLatencyMs,
-                quality = r.Quality,
+                quality = r.OverallQuality(),   // one value, like the schema and the fixtures; per-stream flags stay on r.Quality
             });
             return true;
         }
@@ -240,13 +240,14 @@ namespace Opus.Games.PhantomHand
             return true;
         }
 
-        /// <summary>Answer the current questionnaire item (-3..+3). Emits questionnaire_item; completes the phase after the last item.</summary>
+        /// <summary>Answer the current questionnaire item (-3..+3 on screen). Emits questionnaire_item with the contract's 1..7 value
+        /// (event.schema.json, likert_1_7 in analytics; see <see cref="Questionnaire.ContractValue"/>); completes the phase after the last item.</summary>
         public bool SubmitQuestionnaireAnswer(int value)
         {
             if (!_running || CurrentPhase != PhPhase.Questionnaire || CurrentQuestionnaire == null) return false;
             string id = CurrentQuestionnaire.Answer(value);
             if (id == null) return false;
-            Emit("questionnaire_item", _trialForEvents, new { item = id, value = value });
+            Emit("questionnaire_item", _trialForEvents, new { item = id, value = Questionnaire.ContractValue(value) });
             if (CurrentQuestionnaire.IsComplete) Machine.Complete(Now, true);
             return true;
         }

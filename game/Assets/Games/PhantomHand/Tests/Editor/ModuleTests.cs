@@ -241,7 +241,8 @@ namespace Opus.Games.PhantomHand.Tests
                 expect.Add("phase_start|" + c + "|probe_post|" + conds[c]);
                 expect.Add("drift_probe|" + c + "|post|confirmed");
                 expect.Add("phase_start|" + c + "|questionnaire|" + conds[c]);
-                foreach (var a in answers[c]) expect.Add("questionnaire_item|" + c + "|" + a.Split('=')[0] + "=" + a.Split('=')[1]);
+                // the event carries the contract's 1..7 value (the -3..+3 answer + 4), not the on-screen one
+                foreach (var a in answers[c]) expect.Add("questionnaire_item|" + c + "|" + a.Split('=')[0] + "=" + Questionnaire.ContractValue(int.Parse(a.Split('=')[1])));
             }
             expect.AddRange(new[] { "phase_start|-|witness|-", "witness_summary|-", "block_end|-" });
             CollectionAssert.AreEqual(expect, h.Ev.Select(h.Fmt).ToList());
@@ -415,7 +416,7 @@ namespace Opus.Games.PhantomHand.Tests
         }
 
         [Test]
-        public void Events_SerializeToJson_WithSnakeCaseFields_AndQualityObject()
+        public void Events_SerializeToJson_WithSnakeCaseFields_AndOneQualityValue()
         {
             var h = new Harness();
             h.M.Begin(); h.Calibrate(); h.Probe(-0.16);
@@ -425,8 +426,44 @@ namespace Opus.Games.PhantomHand.Tests
             var j = JObject.Parse(line);
             Assert.AreEqual("threat_response", j["type"].Value<string>());
             Assert.AreEqual(0, j["trial"].Value<int>());
-            Assert.AreEqual("missing", j["data"]["quality"]["imu"].Value<string>());
+            // event.schema.json: quality is ONE of ok | degraded | missing (the per-stream map stays on the module result)
+            Assert.AreEqual(JTokenType.String, j["data"]["quality"].Type);
+            Assert.AreEqual("degraded", j["data"]["quality"].Value<string>(), "emg ok, imu missing, wrist never analysed");
             Assert.AreEqual(3.2, j["data"]["emg_peak_x"].Value<double>(), 1e-9);
+            Assert.AreEqual("missing", h.M.Results[0].Threat.Quality["imu"], "per-stream flags are kept on the result");
+        }
+
+        [Test]
+        public void ThreatResponse_OverallQuality_IsOkOnlyWhenEveryStreamIsOk_AndMissingOnlyWhenNoneHasData()
+        {
+            System.Func<string, string, string, ThreatResponse> make = (w, i, e) =>
+            {
+                var r = new ThreatResponse();
+                if (w != null) r.Quality["wrist"] = w;
+                if (i != null) r.Quality["imu"] = i;
+                if (e != null) r.Quality["emg"] = e;
+                return r;
+            };
+            Assert.AreEqual("ok", make("ok", "ok", "ok").OverallQuality());
+            Assert.AreEqual("degraded", make("ok", "ok", "degraded").OverallQuality());
+            Assert.AreEqual("degraded", make("ok", "missing", "missing").OverallQuality(), "hand tracking alone is a valid fallback: degraded, not missing");
+            Assert.AreEqual("degraded", make("ok", null, null).OverallQuality(), "a stream that was never analysed counts as missing");
+            Assert.AreEqual("missing", make("missing", "missing", "missing").OverallQuality());
+            Assert.AreEqual("missing", make(null, null, null).OverallQuality());
+        }
+
+        [Test]
+        public void QuestionnaireEvents_CarryTheContractScale_1To7_WhileTheScreenScaleStaysMinus3To3()
+        {
+            Assert.AreEqual(1, Questionnaire.ContractValue(Questionnaire.Min));
+            Assert.AreEqual(4, Questionnaire.ContractValue(0));
+            Assert.AreEqual(7, Questionnaire.ContractValue(Questionnaire.Max));
+            var h = new Harness();
+            h.M.Begin(); h.Calibrate();
+            h.Condition(-0.16, -0.19, 1.2, null, new[] { -3, 0, 3 });
+            var items = h.Ev.Where(e => e.Type == "questionnaire_item").Select(e => JObject.FromObject(e.Data)).Take(3).ToList();
+            CollectionAssert.AreEqual(new[] { 1, 4, 7 }, items.Select(d => d["value"].Value<int>()).ToList());
+            Assert.AreEqual(-1.5, h.M.Results[0].Ownership.Value, 1e-9, "the on-device results (witness) stay on the on-screen -3..+3 scale: mean(q1, q2) = mean(-3, 0)");
         }
 
         [Test]

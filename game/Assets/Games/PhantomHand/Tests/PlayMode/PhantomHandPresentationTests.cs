@@ -411,9 +411,12 @@ namespace Opus.Games.PhantomHand.Tests.PlayMode
                 Assert.IsTrue(imp[0]["ok"].Value<bool>());
                 var resp = f.Events("threat_response");
                 Assert.AreEqual(1, resp.Count, "threat_response must arrive before the 5 s threat phase ends");
-                Assert.AreEqual("missing", (string)resp[0]["quality"]["emg"]);
-                Assert.AreEqual("missing", (string)resp[0]["quality"]["imu"]);
-                Assert.AreNotEqual("missing", (string)resp[0]["quality"]["wrist"], "hand tracking alone is a valid fallback");
+                // the event carries ONE quality (event.schema.json); the per-stream flags stay on the module's result
+                Assert.AreEqual("degraded", (string)resp[0]["quality"], "wrist ok, imu and emg missing: degraded, not missing (hand tracking alone is a valid fallback)");
+                var streams = f.M.Results[0].Threat.Quality;
+                Assert.AreEqual("missing", streams["emg"]);
+                Assert.AreEqual("missing", streams["imu"]);
+                Assert.AreNotEqual("missing", streams["wrist"], "hand tracking alone is a valid fallback");
                 Assert.IsTrue(resp[0]["emg_peak_x"].Type == JTokenType.Null);
                 Assert.IsTrue(resp[0]["emg_latency_ms"].Type == JTokenType.Null);
                 Assert.IsTrue(imp[0]["impact_ms"].Value<double>() > f.M.InductionStartMs);

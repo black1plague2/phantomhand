@@ -100,6 +100,61 @@ namespace Opus.Sdk.Tests
         }
 
         [Test]
+        public void Outbox_TrialEvent_IsNeverTimedOut_HoweverOld()
+        {
+            // Regression (PH U45FIX, S1): LiveClient.Pump re-sent every tracked trial_event once per second for the whole session,
+            // 84x duplicates at the hub. Trial_events are tracked for ReplayFrom only; no timer may return them.
+            var outbox = new LiveMessageOutbox();
+            var factory = new LiveMessageFactory("headset");
+            var evt = factory.Build("trial_event", new JObject { ["type"] = "stroke" });
+            Assert.IsNull(evt.RequiresAck);
+            outbox.Track(evt, nowMs: 0);
+
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 1000).Count);
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 60000).Count);
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 1e9).Count, "however old");
+            outbox.MarkResent(evt.Id, nowMs: 5000);
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 1e9).Count, "also after a caller marked it resent");
+        }
+
+        [Test]
+        public void Outbox_RequiresAck_IsDueAfterOneSecond_AndAgainOnlyOneSecondAfterMarkResent()
+        {
+            var outbox = new LiveMessageOutbox();
+            var factory = new LiveMessageFactory("headset");
+            var cmd = factory.Build("command", requiresAck: true);
+            outbox.Track(cmd, nowMs: 0);
+
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 999).Count);
+            Assert.AreEqual(1, outbox.TimedOut(nowMs: 1000).Count);
+            outbox.MarkResent(cmd.Id, nowMs: 1000);
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 1999).Count, "not again before 1000 ms after the resend");
+            Assert.AreEqual(1, outbox.TimedOut(nowMs: 2000).Count);
+            outbox.Ack(cmd.Id);
+            Assert.AreEqual(0, outbox.TimedOut(nowMs: 99999).Count, "an acked message is never due");
+        }
+
+        [Test]
+        public void Outbox_UnackedTrialEvent_IsStillReplayedOnReconnect()
+        {
+            var outbox = new LiveMessageOutbox();
+            var factory = new LiveMessageFactory("headset");
+            var cmd = factory.Build("command", requiresAck: true);
+            var evt = factory.Build("trial_event");
+            outbox.Track(cmd, nowMs: 0);
+            outbox.Track(evt, nowMs: 0);
+
+            Assert.AreEqual(1, outbox.TimedOut(nowMs: 5000).Count, "only the requires_ack message is ever due");
+            var all = outbox.ReplayFrom(resumeFromSeq: null);
+            Assert.AreEqual(2, all.Count, "a reconnect replays the trial_event as well as the unacked command");
+            Assert.AreEqual(cmd.Id, all[0].Id);
+            Assert.AreEqual(evt.Id, all[1].Id);
+            var rest = outbox.ReplayFrom(resumeFromSeq: cmd.Seq);
+            Assert.AreEqual(1, rest.Count);
+            Assert.AreEqual(evt.Id, rest[0].Id);
+        }
+
+        [Test]
         public void Outbox_ReplayFrom_FiltersBySeq()
         {
             var outbox = new LiveMessageOutbox();

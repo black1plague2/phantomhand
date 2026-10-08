@@ -139,9 +139,11 @@ namespace Opus.Sdk
                 _ = SendAsync(_factory.Build("ping", new JObject { ["echo_ts_ms"] = nowMs }));
             }
 
-            foreach (var timedOut in _outbox.TimedOut(nowMs))
+            // Same time base as Track (SendAsync uses _clock.NowMs), not the caller's nowMs: with two bases every entry looked 1 s old at once.
+            double outboxNow = _clock.NowMs;
+            foreach (var timedOut in _outbox.TimedOut(outboxNow))
             {
-                _outbox.MarkResent(timedOut.Id, nowMs);
+                _outbox.MarkResent(timedOut.Id, outboxNow);
                 _ = SendRawAsync(timedOut);
             }
         }

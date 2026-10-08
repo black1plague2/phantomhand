@@ -27,6 +27,23 @@ namespace Opus.Games.PhantomHand
         /// <summary>Per stream: "ok" | "degraded" | "missing" (keys: wrist, imu, emg).</summary>
         public Dictionary<string, string> Quality = new Dictionary<string, string>();
         public List<string> Notes = new List<string>();
+
+        /// <summary>
+        /// The single quality the threat_response EVENT carries (event.schema.json: "ok" | "degraded" | "missing"; the per-stream
+        /// flags above stay on the result and in the live metrics): "ok" when wrist, imu and emg are all ok, "missing" when none of
+        /// them has data (a stream that was never analysed counts as missing), otherwise "degraded".
+        /// </summary>
+        public string OverallQuality()
+        {
+            int ok = 0, missing = 0;
+            foreach (var stream in new[] { "wrist", "imu", "emg" })
+            {
+                string q;
+                if (!Quality.TryGetValue(stream, out q) || q == "missing") missing++;
+                else if (q == "ok") ok++;
+            }
+            return ok == 3 ? "ok" : missing == 3 ? "missing" : "degraded";
+        }
     }
 
     /// <summary>
