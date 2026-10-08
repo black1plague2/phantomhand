@@ -6,7 +6,7 @@ log path is next to every number. Where two logs disagree, both are listed and m
 - **Status** vocabulary: `done` (O2 review by Opus = PASS), `partial`, `not started`, `awaiting review` (H1 rule),
   `reference only`, `handed to electronics team`.
 - **Commit** = short hash from the local reflog of branch `claude/project-thread-qrz2a9` (`.git/logs/HEAD`); the
-  top entry is `d59d75c`.
+  top entry is `5c0b12d` (second pass, 2026-10-08; the first pass said `d59d75c`).
 - **Last log** = newest log for that prompt under `logs/sessions/`.
 - **Owner model** = from `docs/agent-briefs/ph/00-README.md` (the logs do not record which model ran each builder).
 - **MVP / stretch** = as tagged in `00-README.md` ("Stretch" section and the prompt table). Where `00-README.md`
@@ -22,8 +22,10 @@ log path is next to every number. Where two logs disagree, both are listed and m
 | U1 | SDK: stroke cues, two-node transport, sensor client | MVP | Sonnet | done (O2 PASS) | c900521 | logs/sessions/2026-10-07-PH-U-U1-run1.md | EditMode `DONE passed=290 failed=0 total=290`; +60 new (HapticStrokeTests 21, DiscoveryTests 12, SleeveSensorClientTests 18, SensorRecorderTests 9). **FLAG FOR OPUS**: the same log's arithmetic "208 prior + 60 new" = 268, not 290 (see Flags). |
 | U2 | Game logic + PhantomHand scene (Part A logic, Part B scene) | MVP | Sonnet | done (O2 PASS) | 8f7a734 | logs/sessions/2026-10-07-PH-U-U2-run1.md | PhantomHand group `DONE passed=85 failed=0`; all EditMode 208 at checkpoint 1, 290/290 at checkpoint 3 (same log). |
 | U3 | Virtual arm, brush, strokes, threat | MVP | Sonnet | done (O2 PASS with follow-ups) | a265205 | logs/sessions/2026-10-08-PH-U-U3-run1.md | EditMode 290/290; PlayMode PhantomHand group 20/20; PlayMode all 25 passed, 3 failed, 28 total (the 3 failures are Orchard/Shell tests, not U3 code; same log). |
-| U4 | Calibration, probe, questionnaire, witness, HUD | MVP | Sonnet | **partial**, interrupted by a usage limit, **uncommitted, no log** | — | none | none |
-| U5 | Composition root, session runner, live link, L3 | MVP | Sonnet | not started | — | none | none |
+| U4 | Calibration, probe, questionnaire, witness, HUD | MVP | Sonnet | **PROVISIONAL** (O2 2026-10-08): compiles clean, **tests NOT run** (Unity MCP down); PASS waits on the test run and the CaptureU4Shots screenshots | 362a66c | logs/sessions/2026-10-08-PH-U-U4-run2.md | Editor.log: 6 `error CS` (CS0407) lines at log lines 765–1581, fixed in CHECKPOINT 2; none after line 4338 (same log, Compile evidence). Tests written, not run: `UiModelTests.cs`, `UiPanelTests.cs` (count not in log). |
+| U5 | Composition root, session runner, live link, L3 | MVP | Sonnet | **PROVISIONAL** (O2 2026-10-08): compiles, **UNRUN** (Unity MCP down). Item 4 (PH_FullRun + Orchard totals) not run. | 193a15c | logs/sessions/2026-10-08-PH-U-U5-run1.md | Editor.log: `error CS` = 0 after line 10202 (same log, CHECKPOINT 1). 25 EditMode tests in `PhantomHandShellTests` written, compiled, NOT run; `PH_FullRun_DemoMode_AgainstFakeHubAndTwin` written, NOT run. |
+| MODELS | User's Meta models: importer + presenters with procedural fallback (not a numbered prompt in `00-README.md`) | MVP (manager brief 2026-10-08; tag not in 00-README) | not recorded in log | **PROVISIONAL** (O2 2026-10-08): compiles (standalone Roslyn), **wrappers NOT baked**, presenters fall back to procedural; visual check NOT run | ad9c08c (models were added in 34a5992) | logs/sessions/2026-10-08-PH-U-MODELS-run1.md | Compile: `Pres.dll` 75,776 bytes no errors; `Ed.dll` 29,696 bytes no errors (same log, CHECKPOINT 2). U3 PlayMode 20 tests "NOT RUN" (same log acceptance table). |
+| E-HANDOFF | Electronics team handoff (their boards are flashed with `node_a_haptic` v0.5.0 and `node_b_bio` v0.5.0, per their §A; see FLAG 6) | not a prompt | electronics team | **handed to electronics team**: handoff received, Opus consistency check done (§B), **network untested** on their side (their §A table) | 5c0b12d | docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md | §B: 13 topics, 5 requests. Their stated ports 8790/8791; cap 150; 50–400 ms pulse; 100 ms gap; 50 % duty per 10 s; 2 s watchdog (same doc, §B intro). No test counts. |
 | U6 | APK, demo mode, performance | MVP | Sonnet | not started | — | none | none |
 | U7 | Agency phase | stretch (after G2) | Sonnet | not started | — | none | none |
 | U8 | Synthetic participant sweep | stretch | Sonnet | not started | — | none | none |
@@ -70,27 +72,48 @@ Notes on the table:
 
 ## Next (in this order)
 
-1. **U4 resume.** Partial, interrupted by a usage limit, uncommitted, no log. Resume from the code on disk and the
-   U3 log (`logs/sessions/2026-10-08-PH-U-U3-run1.md`: `ArmThreatPresenter.SetCalibration` is the hook U4 calls).
-   Write the U4 log as it goes. Unity: one driver, via the Unity MCP with the open editor (see the PH box in CONTEXT.md).
-2. **Swap in the 8 Meta models the user added.** All unrigged, about 2 units normalised, Z-up, 15k tris at `_L`,
-   with `_M` and `_S` LODs. Model IDs and paths (folders confirmed present on disk, 2026-10-08):
-   - `1534923` flat stone — `game/Assets/MetaAssets/Prefabs/1534923/1534923_L.fbx`
-   - `1746344` table — `game/Assets/MetaAssets/Prefabs/1746344/1746344_L.fbx`
-   - `182879` stone — `game/Assets/MetaAssets/Prefabs/182879/`
-   - `324213` hand (**no rig**) — `game/Assets/MetaAssets/Prefabs/324213/324213_L.fbx`
-   - `553886` forearm — `game/Assets/MetaAssets/Prefabs/553886/553886_L.fbx`
-   - `83035` stone — `game/Assets/MetaAssets/Prefabs/83035/83035_L.fbx`
-   - `935160` sleeve — `game/Assets/MetaAssets/Prefabs/935160/935160_L.fbx`
-   - `997491` paint brush — `game/Assets/MetaAssets/Prefabs/997491/997491_L.fbx`
+1. **Restart this Claude Code session** so the Unity MCP reconnects. `claude mcp get` shows `meta-xr-unity-runtime` as
+   registered and connected, but this session's client stays disconnected; re-adding the server does not help (manager report
+   2026-10-08). Then `CompilationTools(method: "GetCompilationStatus")` must answer clean (MANUAL_TODO, Phantom Hand human steps).
+2. **Unity test driver (one agent, one driver):** run EditMode (all) and PlayMode. U4 tests (`UiModelTests`, `UiPanelTests`) and
+   `CaptureU4Shots()` (source: U4 log, Next step); U5 `Opus.Shell.Tests` (25) and `PH_FullRun` (source: U5 log, item 9); the
+   Orchard totals must not drop (EditMode ≥ 107, PlayMode ≥ 6, 02-RULES §2). Then bake the models (`EnsureWrappers`, see item 3).
+   Each run writes its own log; Opus sets PASS/REDO.
+3. **Bake the models, with the rigged hand.** The user added a rigged skin hand (`game/Assets/Art/PhantomHand/Models/RiggedHand/handRig_02.fbx`
+   + `hand_Co/No/Ro/Sp` textures; right hand `hand.R`, 68 bones, ~14.5k tris; the file also carries a camera and a light to drop on
+   import; licence/source unknown, credit line TBD). The arm wiring will switch to this hand. The MODELS importer was written for the
+   black glove 324213, which is a LEFT hand and is mirrored in `BuildHand` (MODELS log, open issues 1–2); the rigged right hand needs
+   its own check in the bake. Gloves: 324213 (black LEFT leather glove), 1571125 (brown leather glove); 553886 is an arm guard
+   (manager report 2026-10-08; MODELS log, CHECKPOINT 1 for 324213 and 553886).
+   Model IDs and paths (folders confirmed present on disk, 2026-10-08; slot names from the MODELS log):
+   - `1534923` flat stone — `game/Assets/MetaAssets/Prefabs/1534923/1534923_L.fbx` (unused by the MODELS importer)
+   - `1746344` table — `game/Assets/MetaAssets/Prefabs/1746344/1746344_L.fbx` (slot PH_Table)
+   - `182879` stone — `game/Assets/MetaAssets/Prefabs/182879/` (slot PH_Stone)
+   - `324213` black LEFT leather glove, used as hand (slot PH_Hand) until the rigged hand replaces it — `game/Assets/MetaAssets/Prefabs/324213/324213_L.fbx`
+   - `553886` arm guard, used as forearm (slot PH_Forearm) — `game/Assets/MetaAssets/Prefabs/553886/553886_L.fbx`
+   - `83035` stone — `game/Assets/MetaAssets/Prefabs/83035/83035_L.fbx` (unused by the MODELS importer)
+   - `935160` sleeve — `game/Assets/MetaAssets/Prefabs/935160/935160_L.fbx` (slot PH_Sleeve)
+   - `997491` paint brush — `game/Assets/MetaAssets/Prefabs/997491/997491_L.fbx` (slot PH_Brush)
+   - `1571125` brown leather glove — no role in any log yet (manager report 2026-10-08)
    The ~2-unit size, Z-up, and 15k-tri figures come from the manager's brief (2026-10-08), not from a measured log.
-   The hand has no rig, so fingers cannot pose (fine for the MVP; blocks addition A5 hand-closing). See MANUAL_TODO.
-3. **U5** composition root, session runner, live link (reads `OPUS_PH_HUB`, `OPUS_PH_NODE_A`, `OPUS_PH_NODE_B`,
-   `OPUS_PH_DISCOVERY_PORT`; S2 log, CROSS-TRACK request, accepted at O2).
-4. **L3 with Unity:** `python tools/demo/run_pipeline.py --game phantom_hand --sim` (without `--no-unity`), then
+   The MODELS log's design values (hand fingertip at z 0.19 m, sleeve 1.08x, forearm 0.90x ArmGeometry, table 1.2 x 0.7 x 0.75 m)
+   are design values from a numpy port, not measurements; the importer prints the real bounds when run.
+   The 324213 glove had no rig (fingers could not pose, which blocked addition A5). The rigged hand (above) is meant to answer that.
+4. **Wire the builder hooks** (manager; the agents did not touch the scene builder): `PhantomHandUiInstaller.Install(root, anchors)`
+   (U4 log, builder hook; the existing `AddUi` already does the equivalent); `PhantomHandSceneController` via
+   `root.AddComponent<Opus.Shell.PhantomHandSceneController>()` (U5 log, builder hook); `PhantomModelImporter.EnsureWrappers()`
+   and `PhModels.SpawnTable(table, ...)` in `PhantomHandSceneBuilder` (MODELS log, builder hook lines 1–2);
+   `BootstrapSceneBuilder.BuildBootstrap()` once (U5 log, Bootstrap scene).
+5. **SDK changes (U1), accept and implement.** From the electronics §B table (`docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md`): accept
+   `accepted` on acks (#2); send `keepalive` each second in addition to `ping`/`subscribe` (#3); send both `text` and `mode` on display (#5);
+   match the node by `device_kind`, not by id (#1). From the U5 log open issues (CROSS-TRACK, accepted at O2 2026-10-08):
+   `LiveClient` optional `hubPort` argument, default 8787 (issue 1); the UDP receive loop must ignore WSAECONNRESET 10054 and continue
+   (issue 2); `StrokeDriver` reschedule on resume, because `pause` + `resume` loses the stroke plan (issue 3).
+6. **L3 with Unity:** `python tools/demo/run_pipeline.py --game phantom_hand --sim` (without `--no-unity`), then
    `--faults`. The L3 rows so far are fixture-stamped (S2 log, Open issue 2).
-5. **Gate G2:** one full 4-minute run recorded end to end (PRD §14; `docs/agent-briefs/ph/00-README.md`).
-6. **Additions A1–A3** (PRD v2 §5.1; spec `03-SPEC.md` §12). These are the *additions* named A1–A5, **not** the
+7. **Gate G2:** one full 4-minute run recorded end to end (PRD §14; `docs/agent-briefs/ph/00-README.md`).
+8. **Human, electronics:** the 5 requests (§B) and the Wi-Fi test with their credentials (MANUAL_TODO, Phantom Hand human steps).
+9. **Additions A1–A3** (PRD v2 §5.1; spec `03-SPEC.md` §12). These are the *additions* named A1–A5, **not** the
    prompts A1 (live card) and A2 (report). Stretch items U7, U8, S3, A2, N2 stay behind G2.
 
 ## Flags
@@ -118,6 +141,21 @@ Notes on the table:
 - `logs/sessions/2026-10-08-PH-A-A1b-run1.md` shows the builder installed and launched the debug APK on serial 164cd676
   via adb and read screenshots. This PH_STATUS row says "installed and launched, driven by the builder via adb" and
   makes no "works" claim. A human run is still needed.
+
+**FLAG FOR OPUS (5): Shell compile state, two logs in time order.**
+- `logs/sessions/2026-10-08-PH-U-MODELS-run1.md` (CHECKPOINT 2) says `Shell.Runtime` fails to compile (`PhantomLiveStatus.cs`, missing
+  PhantomHand references), written before the fix.
+- `logs/sessions/2026-10-08-PH-U-U5-run1.md` (CHECKPOINT 1) says the asmdef fix was made and the Editor.log has 0 `error CS` after line 10202.
+- These are not a contradiction in time order, but neither log has a Unity compile since. Opus to confirm with the next compile.
+
+**FLAG FOR OPUS (6): which firmware the boards run.**
+- `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §A: the team flashed `node_a_haptic` v0.5.0 and `node_b_bio` v0.5.0 (sketch names as the team wrote them).
+- The repo has `firmware/opus_sleeve/opus_sleeve.ino` v0.5.0 (`logs/sessions/2026-10-07-PH-F-F1-run1.md`, uncompiled reference, electronics-team owned).
+- The repo file is not the sketch the team flashes. Their device id is `CHETNA_HAPTIC_001` (§A), the contract's is `SLEEVE_001` (03-SPEC D7; §B #1). Opus to decide.
+
+**FLAG FOR OPUS (7): scope of the "§B" SDK change set.**
+- The manager's brief lists `LiveClient` hubPort, the UDP 10054 receive loop and the stroke reschedule on resume as "from the §B table".
+- In the sources they are the U5 log's open issues 1–3 (`logs/sessions/2026-10-08-PH-U-U5-run1.md`, CROSS-TRACK). §B covers items #1, #2, #3, #5 (plus requests). PH_STATUS item 5 lists them by their real source. Opus to confirm the change set.
 
 **Not a disagreement, recorded for clarity:**
 - The git history was read from `.git/logs/HEAD` (no Bash tool in this pass). Its top entries match the manager's

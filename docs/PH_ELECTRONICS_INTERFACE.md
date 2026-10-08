@@ -1,5 +1,7 @@
 # Phantom Hand — what the sleeve nodes must do (interface for the electronics team)
 
+> Pointer: the electronics team's own handoff (received 2026-10-08) and Opus's consistency check against this document are in `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` (§B).
+
 **Authority:** contracts v0.2, PRD v2 (PRD_v2.md), spec v3.1 (docs/agent-briefs/ph/03-SPEC.md). Firmware v0.5.0 on both nodes (F1 Node A, F2 Node B).
 
 This document defines what the firmware team's Node A and Node B boards must send and accept over the network. The software side (Unity Quest app, Flutter hub, analytics) is owned by the Phantom Hand team and speaks these exact wire formats. The electronics team owns the boards, motors, IMU, OLED, EMG sensor and the ESP32 firmware.

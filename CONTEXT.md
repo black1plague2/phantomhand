@@ -19,7 +19,7 @@ Path: Quest 3 (Unity) → laptop hub (Flutter app) → session files → Python 
 - Phone = app hub over USB: `adb forward tcp:8787 tcp:8787`. Phone serial 164cd676, M2101K6P, 393 dp (`logs/sessions/2026-10-08-PH-A-A1b-run1.md`).
 - Electronics and firmware are owned by a separate electronics team (2026-10-07). `firmware/` F1/F2 code is a reference only, uncompiled. Interface: `docs/PH_ELECTRONICS_INTERFACE.md`.
 - Additions A1–A5 approved (spec §12). D9: default condition order `async_first`. D10: passthrough for the reveal only (addition A2).
-**Where:** branch `claude/project-thread-qrz2a9`, PR #4 on black1plague2/chetna (manager brief 2026-10-08). Local HEAD `d59d75c`.
+**Where:** branch `claude/project-thread-qrz2a9`, PR #4 on black1plague2/chetna (manager brief 2026-10-08). Local HEAD `5c0b12d` (`.git/logs/HEAD`).
 **Done (O2 PASS; logs `logs/sessions/2026-10-0[78]-PH-*`; full table in `docs/PH_STATUS.md`):**
 - O1 contracts v0.2 `d7dbb83`; U1 SDK `c900521`; U2 logic+scene `8f7a734`; U3 arm/brush/threat `a265205`; S1 twin `e053f7b`;
   S2 E2E harness + live plot `01551de`; S2b fixtures `d59d75c`; N1 embodiment `082ec6a`; N1b delivery quality `becdd04`;
@@ -28,17 +28,24 @@ Path: Quest 3 (Unity) → laptop hub (Flutter app) → session files → Python 
   flutter +303, analyze 0 errors (`logs/sessions/2026-10-08-PH-A-A1d-run1.md`); analytics 83 (`logs/sessions/2026-10-08-PH-N-N1b-run1.md`);
   tools/demo 114 and sim/live 45 (`logs/sessions/2026-10-08-PH-S-S2b-run1.md`); sim/sleeve 38 (`logs/sessions/2026-10-07-PH-S-S1-run1.md`).
 - L3 smoke 7/7 with `--no-unity` (fixture stamps, not real timing): `logs/sessions/2026-10-08-PH-S-S2-run1.md`.
-**Not done:** U4 (partial, uncommitted, no log) · U5 · U6 · S3, A2, N2 (stretch) · H2, H4, H5 · F1/F2 are the electronics team's.
-**Next:** U4 resume → swap in the 8 Meta models (paths in `docs/PH_STATUS.md`; hand has no rig) → U5 composition + live link →
-L3 with Unity (`run_pipeline.py --game phantom_hand --sim`, no `--no-unity`) → gate G2 (one full 4-min run) → additions A1–A3.
+**Provisional (O2 2026-10-08: compiles, UNRUN, Unity MCP down; no PASS until the tests and screenshots run):**
+- U4 calibration, probe, questionnaire, witness, HUD `362a66c` (`logs/sessions/2026-10-08-PH-U-U4-run2.md`).
+- MODELS: the user's Meta models, importer + presenters with procedural fallback `ad9c08c` (`logs/sessions/2026-10-08-PH-U-MODELS-run1.md`); no wrapper baked yet.
+- U5 composition root, ISessionHost, live status, bootstrap, PH_FullRun `193a15c` (`logs/sessions/2026-10-08-PH-U-U5-run1.md`); 25 EditMode tests written, not run.
+- Electronics handoff received + §B consistency check `5c0b12d` (`docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md`); their Wi-Fi/UDP test not done.
+- Rigged skin hand in the repo `5c0b12d`: `game/Assets/Art/PhantomHand/Models/RiggedHand/handRig_02.fbx` (right hand `hand.R`, 68 bones, ~14.5k tris); licence unknown, credit TBD. Gloves: 324213 (black LEFT), 1571125 (brown); 553886 is an arm guard (`logs/sessions/2026-10-08-PH-U-MODELS-run1.md`).
+**Not done:** U6 · S3, A2, N2 (stretch) · H2, H4, H5 · F1/F2 are the electronics team's.
+**Next:** restart this session (Unity MCP) → Unity test driver runs EditMode/PlayMode (U4, U5, Orchard totals) → bake the models with the rigged hand → wire the builder hooks → SDK changes from §B and the U5 issues → L3 with Unity (`run_pipeline.py --game phantom_hand --sim`, no `--no-unity`) → gate G2 (one full 4-min run) → additions A1–A3. Full list: `docs/PH_STATUS.md` Next.
 **Known traps:**
 - Usage limits killed builders twice (A1 run1 was killed and resumed as run2 from its log; U4 was interrupted). Resume from the log, never from memory.
-- The Unity MCP drops when the editor restarts; reconnect with `/mcp` → `meta-xr-unity-runtime` before any Unity run.
+- The Unity MCP drops when the editor restarts; reconnect with `/mcp` → `meta-xr-unity-runtime` before any Unity run. In the 2026-10-08 session it stayed disconnected: `claude mcp get` shows it registered and connected, and re-adding it did not help. Restart the session (manager report 2026-10-08).
+- Wi-Fi credentials are placeholders in both electronics sketches; a human types them at flash time. Their network test is not done (handoff §A).
 - A test run removed the phone's adb forward. Restore it with `adb forward tcp:8787 tcp:8787`. Nothing on the PC may bind 8787 while it is active.
 - Orchard PlayMode runs overwrite tracked screenshots under `logs/sessions/screens/unity`. Run `git checkout` on them afterwards.
 - Still open: HapticIntegration `low_confidence` regression (U3 log: cueOrder `[trunk_lean, success x4]`, low_confidence 0 in 40 s);
   LiveLink 8787 conflict (adb holds the port); audit test 6.2 cm vs 5 cm flake. U3 O2 follow-ups in `logs/sessions/2026-10-08-PH-U-U3-run1.md`.
 - FLAG FOR OPUS: fixture drift in the N1 log is 2.4/0.4 (fixture witness numbers) vs 2.00/0.00 (analytics computed); see `docs/PH_STATUS.md` Flags.
+- FLAG FOR OPUS (2026-10-08, `docs/PH_STATUS.md` Flags 5–7): the team's flashed sketch names (`node_a_haptic`) differ from the repo's `opus_sleeve.ino`; the Shell compile state needs a fresh Unity compile; the SDK change set source.
 
 ## ★★ LATEST (2026-09-19 ~04:30 IST, Opus) — read this before the older box below
 **Real-hands play over Quest Link works end to end** (commit `f733a43`, local; push pending — needs a rebase on 3 remote doc commits from vaibhav700c).

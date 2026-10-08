@@ -539,3 +539,31 @@ Source of each item: `docs/PH_STATUS.md` (written 2026-10-08) and the CONTEXT.md
   no rig). This is fine for the MVP but blocks addition A5 (hand-closing). If A5 is wanted, source a **rigged** hand
   model (skeleton with finger bones), drop it in the same folder layout, and tell Opus. Source: manager brief
   2026-10-08; `logs/sessions/2026-10-08-PH-U-U3-run1.md` (procedural hand; A5 via `arm.Curl`).
+  **Update 2026-10-08:** a rigged skin hand is now in the repo (`game/Assets/Art/PhantomHand/Models/RiggedHand/handRig_02.fbx`,
+  right hand `hand.R`, 68 bones; commit `5c0b12d`). It is the hand the arm wiring will switch to. Its licence is still open (next item).
+- [ ] (human) **Restart this Claude Code session to reconnect the Unity MCP.** `claude mcp get` shows `meta-xr-unity-runtime`
+  as registered and connected, but this session's MCP client stays disconnected. Adding the server again does not help.
+  Quit and reopen Claude Code in this folder, then run `CompilationTools(method: "GetCompilationStatus")`; expect
+  `{"success":true,"status":"clean","errorCount":0}`. Blocks: every Unity run (U4/U5/MODELS tests, the model bake).
+  Source: manager report 2026-10-08; `docs/PH_STATUS.md` Next 1.
+- [ ] (human) **Check the rigged hand's licence and source, then send Opus the credit line.** Files:
+  `game/Assets/Art/PhantomHand/Models/RiggedHand/` (`handRig_02.fbx`, `hand_Co/No/Ro/Sp` textures). Licence and source are
+  unknown. Check the download page or the author's terms, write the credit line (or "none required") and send it to Opus.
+  The FBX also carries a camera and a light: drop them on import. Blocks: shipping the rigged hand and the credit text.
+  Source: manager report 2026-10-08; `logs/sessions/2026-10-08-PH-U-MODELS-run1.md` (model licence not recorded there).
+- [ ] (human, electronics team) **Forward the 5 requests in `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §B to the electronics team.**
+  (1) Confirm `sensor_chunk.timestamp_ms` is the device time of the first value in `emg_envelope`.
+  (2) Confirm Node A ignores unknown extra fields (`v`, `id`, `ts_ms` on `stop`; `text` next to `mode` on `display`).
+  (3) Say whether the nodes send any `status` message or `emg_burst`; if yes, paste one example of each.
+  (4) Optional: stream to up to 3 recent senders (03-SPEC D3). Not required; the laptop plot reads through the hub.
+  (5) After the Wi-Fi test: run `python tools/demo/node_probe.py <ip> 8790` against each node, send the output, and fill the §5
+  table of `docs/PH_ELECTRONICS_INTERFACE.md`. Blocks: the software side of the §B "who changes" items that wait on them.
+  Source: `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §B.
+- [ ] (human, electronics team) **Wi-Fi credentials and the network test on their side.** Their own table (handoff §A) says
+  Wi-Fi/UDP between the nodes and another device is **not tested yet**, the Wi-Fi credentials are **placeholders** in both
+  sketches, and "everything powered from the power bank together" is not tested. Credentials are typed by a human at flash
+  time, never put in a file or a log (02-RULES §1.5). Blocks: any end-to-end Quest-to-node run.
+  Source: `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §A.
+- [ ] (human) **Delete `rigged-hand (1).zip` from the repo root, but only after confirming the copy.** Confirm that
+  `game/Assets/Art/PhantomHand/Models/RiggedHand/` holds `handRig_02.fbx` and the four `hand_*` textures (open the folder in
+  Unity or Explorer), then delete `rigged-hand (1).zip` by hand. Source: manager report 2026-10-08 (the zip is in the repo root).
