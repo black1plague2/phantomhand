@@ -45,6 +45,14 @@ or, without the GitHub CLI:
 `https://github.com/black1plague2/phantomhand/releases/download/ph-handoff-2026-10-08/chetna-phantom-hand.apk` (Quest, 91 815 702 bytes),
 `.../chetna-operator-app.apk` (65 706 088 bytes) and `.../chetna-operator-app-pc.apk` (65 706 092 bytes) for the phone.
 
+Checksums of the release's files (SHA-256, the same on GitHub and on the build PC at 21:58):
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| `chetna-phantom-hand.apk` | 91 815 702 | `c4d7f1ed0ca8931af2e72f94b15f13956d9e14cfe1c5375875d7de75415d6180` |
+| `chetna-operator-app.apk` | 65 706 088 | `5dfed4c7e622973bd4a8f8fb8bfa3316f785746f34c5cc9e8c1566075bc9d97d` |
+| `chetna-operator-app-pc.apk` | 65 706 092 | `a02567e0d9afa1e13155a6a0669acedf8157c507cecce91a4e79f9926c186357` |
+
 What each kind of work needs installed:
 
 | Work | Needs |
