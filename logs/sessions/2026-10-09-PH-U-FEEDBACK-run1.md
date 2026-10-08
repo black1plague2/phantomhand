@@ -258,3 +258,26 @@ The operator shortened both inductions and the dissolve with "next phase".
 Seen in passing, not changed: when the headset is put on, the seat is taken 0.75 s later, wherever the head is at that
 moment (at 03:07:53 it was 27 cm lower than before); four more "seated" lines followed within 55 ms as the tracking
 settled. The calibration now corrects the seat from the arm, and the seat is taken again right before a run starts.
+
+## 15. 03:25 to 03:30: build 9 on the headset
+Two runs by the owner, started from the phone ("clinician pressed Start", then "Next person"). [V: the sessions' events and
+the headset's log in `sim/out/quest_logs/run2/quest-f43ab9d2/`; `contracts/validate.py` exit 0 for the completed one]
+- **The calibration confirmed, for the first time on a headset**: `ok: true` 5.03 s and 5.04 s into the phase (the least
+  the rule allows: 2 s to settle, 2 s still, 1 s for the room). In `d7f58ef4` the wrist had rested at (-0.12, 0.93, 0.38),
+  16 cm above the virtual table and 6 cm beside the outline; the room moved by (-0.06, -0.16, +0.02) and the wrist then
+  lay on the outline's wrist point within 4 mm for the next 20 s. So it was a resting arm, on a real table 16 cm higher
+  than the virtual one had been, and the two tables now coincide.
+- `c07564da` ran to the end (14 phases, "completed", valid): stones landed at x = -0.03, 15 cm to the right of the real
+  wrist, as laid out; flinches 6.2 and 5.5 times rest; 8 of 8 items answered by fingertip; 62 of 62 sent strokes acked
+  (median 11.7 ms; 100 more cancelled by "next phase"); 72 frames per second; no link drop during a run.
+- `d7f58ef4` (ended by "Next person" in its first questionnaire): `threat aborted: real hand is 8.4 cm from the point under
+  the drop (needs >= 9 cm)`. The recorded wrist had moved 4.7 cm toward the virtual arm 24 s into the run. The rule is the
+  game's own and was not changed; with 15 cm between the arms it leaves 6 cm for an arm that shifts.
+- Not changed, seen on the results panel of `c07564da`: flinch delays of 4 and 7 ms (run `c08c7a38` had 80 and 108 ms), too
+  short for a reaction, so the muscle was probably already tense at the impact; and a drift of 41 cm in one probe, more
+  than the 15 cm between the arms.
+- The link is rebuilt each time the headset reports "put on", also when that happens twice within two seconds while it
+  is being seated on the head (3 times in this boot, 0.4 s each, all before a run). Not changed.
+- Still not judged by anyone: how the virtual hand looks while it copies the fingers (calibration, 4 s; reveal, 10 s).
+  The pictures taken at 03:29 came seconds after the reveal and show the results panel.
+- Committed after build 9, in no build yet (227e3fe): the instruction stands 12 cm higher during the calibration.
