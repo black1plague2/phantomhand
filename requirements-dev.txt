@@ -1,0 +1,33 @@
+# The repository-root virtual environment (.venv) as it was on the build PC on 8 Oct 2026 (Python 3.12.8).
+# It is the only one that runs tools/demo/tests and the sim suites together: python -m venv .venv, then pip install -r requirements-dev.txt
+aiohappyeyeballs==2.7.1
+aiohttp==3.10.5
+aiosignal==1.4.0
+attrs==26.1.0
+colorama==0.4.6
+frozenlist==1.8.0
+hypothesis==6.168.0
+idna==3.20
+iniconfig==2.3.0
+jsonschema==4.23.0
+jsonschema-specifications==2025.9.1
+multidict==6.9.1
+numpy==2.5.3
+-e git+https://github.com/black1plague2/phantomhand.git@f1efe48f271b028ecaa31aafa1dc71809308eb59#egg=opus_analytics&subdirectory=analytics
+packaging==26.3
+pandas==3.0.5
+pluggy==1.6.0
+propcache==0.5.4
+Pygments==2.21.0
+pytest==8.3.1
+pytest-asyncio==0.24.0
+python-dateutil==2.9.0.post0
+referencing==0.35.1
+rpds-py==2026.6.3
+scipy==1.18.1
+six==1.17.0
+sortedcontainers==2.4.0
+-e git+https://github.com/black1plague2/phantomhand.git@f1efe48f271b028ecaa31aafa1dc71809308eb59#egg=synthetic_patients&subdirectory=sim
+typing_extensions==4.16.0
+tzdata==2026.4
+yarl==1.25.1

@@ -8,6 +8,10 @@
 
 ---
 
+## ★★★★★★ HANDOFF (2026-10-08 21:55): the work moves to another machine. READ `docs/PH_HANDOFF_2026-10-08.md` FIRST
+
+It is complete on its own: how to get the code and the two APKs (release `ph-handoff-2026-10-08`), what works with its evidence, what is broken (the EMG sensor shows no muscle activity; 3 of 114 acks lost when worn), what was never run (anything on a Quest), the boards and their rules, where everything is, what exists only on the build PC, every check's command, the next steps in order, the owner's standing rules, and the prompt for the session that continues. The box below is older (19:50) and still correct for what it covers.
+
 ## ★★★★★ PHANTOM HAND (2026-10-08, updated after commit 4e72ead): NEWEST, read first
 **What it is:** Theme 5 entry (PRD v2 `docs/agent-briefs/ph/PRD_v2.md`, spec `docs/agent-briefs/ph/03-SPEC.md`): a virtual arm 15 cm off is stroked in step with a sleeve until it feels like yours, a stone drops on it, a 600 ms touch delay breaks the feeling. Quest 3 (Unity) → laptop hub (Flutter app) → session files → Python analytics; two ESP32 nodes, owned by the electronics team.
 **Where:** `main` @ `4e72ead` (8 Oct 2026, 19:46 IST; whether it is pushed: not recorded), dev PC `H:\Chenta\phantomhand`, Flutter at `H:\flutter\bin`. Drive Unity with `python tools/unity_mcp.py` (one driver, `game/.ph_unity.lock`). The editor's build target is now Android.

@@ -1,5 +1,7 @@
 # Phantom Hand — handoff for the next Claude session
 
+> **Newer and complete: `docs/PH_HANDOFF_2026-10-08.md` (8 Oct 2026, 21:50, written for the move to another machine). Read that one first; this file is the handoff of the morning of 8 Oct and is kept for its history.**
+
 This repo (`black1plague2/phantomhand`) is the **Phantom Hand** build (Chetna PRD v2, Team Kela, Vedanta
 Makeathon 7–9 Oct 2026), split out of `black1plague2/chetna` on 2026-10-08 by user decision:
 **chetna = Orchard Reach only; phantomhand = Phantom Hand.** History starts fresh here; the full history
