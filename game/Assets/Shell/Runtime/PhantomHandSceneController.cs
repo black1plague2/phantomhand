@@ -281,6 +281,7 @@ namespace Opus.Shell
             if (_clock == null) return;
             double now = _clock.NowMs;
             TrackHead(Time.deltaTime);
+            if (!_useDemo) KeepSeated();
 
             // 1. clients Pump
             _haptic.Pump(now);
@@ -549,7 +550,58 @@ namespace Opus.Shell
             if (_nodeB != null) _nodeB.Stop();
         }
 
-        public bool Recenter() { return false; }
+        /// <summary>The operator's "recenter": the wearer back onto the scene's seat. Refused once a run has taken its calibration (the
+        /// arm's position was measured in the room as it stands).</summary>
+        public bool Recenter() { return FreeToSeat() && Seat(); }
+
+        // ---- the seat ------------------------------------------------------------------------------------------------
+
+        private Transform _head;
+        private bool _seated, _headLocalKnown;
+        private Vector3 _headLocalLast;
+        private float _headYawLast;
+
+        private Transform Head()
+        {
+            if (_head == null && anchors != null && anchors.cameraRig != null)
+            {
+                var cam = anchors.cameraRig.GetComponentInChildren<Camera>(true);
+                _head = cam != null ? cam.transform : null;
+            }
+            return _head;
+        }
+
+        private bool Seat()
+        {
+            var head = Head();
+            Vector3 eye = anchors != null && anchors.seatedEyePose != null ? anchors.seatedEyePose.position : new Vector3(0f, 1.18f, 0.02f);
+            if (!PhSeat.Align(anchors != null ? anchors.cameraRig : null, head, eye)) return false;
+            Debug.Log("[PhantomHand] seated: the head is at the scene's eye point " + eye.ToString("F2") + ", camera rig at " + anchors.cameraRig.position.ToString("F2"));
+            return true;
+        }
+
+        /// <summary>Before a run, during its calibration until the arm is taken, and after it: the room may still be moved under the wearer.</summary>
+        private bool FreeToSeat()
+        {
+            if (_module == null) return true;
+            var ph = _module.CurrentPhase;
+            if (ph == PhPhase.Idle || ph == PhPhase.Done) return true;
+            return ph == PhPhase.Calibrate && (uiPresenter == null || uiPresenter.Calibration == null || uiPresenter.Calibration.State != CalibState.Confirmed);
+        }
+
+        /// <summary>Seats the wearer once the head has been tracked for a moment, and again whenever the headset's own origin jumps
+        /// (the system's recentre), as long as no run depends on where the room stands.</summary>
+        private void KeepSeated()
+        {
+            var head = Head();
+            if (head == null) return;
+            Vector3 local = head.localPosition; float yaw = head.localEulerAngles.y;
+            bool jumped = _headLocalKnown && PhSeat.Jumped(_headLocalLast, _headYawLast, local, yaw);
+            _headLocalLast = local; _headYawLast = yaw; _headLocalKnown = true;
+            if (!FreeToSeat()) return;
+            if (!_seated) { if (_headSec >= 0.75f) _seated = Seat(); }
+            else if (jumped) Seat();
+        }
 
         public void StartKinematicsRecording(string sessionId, string sessionDir, double rateHz = 72.0)
         {
@@ -688,7 +740,12 @@ namespace Opus.Shell
 
         private void OnDisable() { StopSleeveSafely("disable"); }
         private void OnApplicationQuit() { StopSleeveSafely("quit"); }
-        private void OnApplicationPause(bool paused) { if (paused) StopSleeveSafely("pause"); }
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) { StopSleeveSafely("pause"); return; }
+            // back on a head: it may be another head, or the same one on another chair
+            if (FreeToSeat()) { _seated = false; _headSec = 0f; _headLocalKnown = false; }
+        }
 
         private void OnDestroy()
         {

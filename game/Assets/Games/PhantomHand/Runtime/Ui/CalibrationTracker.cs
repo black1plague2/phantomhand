@@ -16,7 +16,7 @@ namespace Opus.Games.PhantomHand
         public const double HoldMs = 2000;
 
         private readonly double[] _target;
-        private readonly double _radius, _holdMs;
+        private readonly double _radius, _holdMs, _vertical;
         private double _startMs;
         private bool _started;
         private double _sx, _sy, _sz;
@@ -29,10 +29,13 @@ namespace Opus.Games.PhantomHand
         /// <summary>Distance from the target at the last sample, metres (NaN when untracked).</summary>
         public double LastDistanceM { get; private set; } = double.NaN;
 
-        public CalibrationTracker(double[] targetWrist, double radiusM = RadiusM, double holdMs = HoldMs)
+        /// <param name="verticalToleranceM">0 = the wrist must be within the radius in all three directions (a sphere). Above 0 the
+        /// radius counts on the table plane only and the wrist may rest this much higher or lower than the target: a real table is
+        /// rarely as high as the virtual one, and the presenter then moves the room to the arm (see PhantomHandUiPresenter).</param>
+        public CalibrationTracker(double[] targetWrist, double radiusM = RadiusM, double holdMs = HoldMs, double verticalToleranceM = 0)
         {
             if (targetWrist == null || targetWrist.Length < 3) throw new ArgumentException("target wrist needs x,y,z");
-            _target = (double[])targetWrist.Clone(); _radius = radiusM; _holdMs = holdMs;
+            _target = (double[])targetWrist.Clone(); _radius = radiusM; _holdMs = holdMs; _vertical = verticalToleranceM;
         }
 
         public double[] Target { get { return (double[])_target.Clone(); } }
@@ -52,9 +55,9 @@ namespace Opus.Games.PhantomHand
                 LastDistanceM = double.NaN; Reset(); return State;
             }
             double dx = wrist[0] - _target[0], dy = wrist[1] - _target[1], dz = wrist[2] - _target[2];
-            double d = Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            double d = _vertical > 0 ? Math.Sqrt(dx * dx + dz * dz) : Math.Sqrt(dx * dx + dy * dy + dz * dz);
             LastDistanceM = d;
-            if (d > _radius) { Reset(); return State; }
+            if (d > _radius || (_vertical > 0 && Math.Abs(dy) > _vertical)) { Reset(); return State; }
 
             if (!_started) { _started = true; _startMs = nowMs; _n = 0; _sx = _sy = _sz = 0; }
             _sx += wrist[0]; _sy += wrist[1]; _sz += wrist[2]; _n++;

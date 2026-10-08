@@ -7,7 +7,8 @@ namespace Opus.Games.PhantomHand.Presentation
     /// U3 presenter: owns the virtual arm, brush, stroke driver, threat drop and response collector and drives them from the
     /// module's phase. The composition root (U5) calls <see cref="Bind"/> once and <see cref="Tick"/> every frame AFTER
     /// haptic Pump and module.Tick (frame order: clients Pump -> module Tick -> presenters -> recorders).
-    /// Arm visibility: Calibrate (follows the real wrist + offset), Induction/SelfTouch/Agency/Threat/Dissolve (frozen
+    /// Arm visibility: Calibrate (lies where the real arm is, no offset, so the participant sees the arm they are placing in the
+    /// outline; at table height whatever the height of the real surface), Induction/SelfTouch/Agency/Threat/Dissolve (offset, frozen
     /// except Calibrate/Agency or follow_during_induction; the Dissolve arm fades out after 4 s while the brush goes on);
     /// Reveal (fades in and slides onto the real wrist, no passthrough in this build); hidden for probes, questionnaire and witness.
     /// </summary>
@@ -129,6 +130,24 @@ namespace Opus.Games.PhantomHand.Presentation
             p = default(Vector3); return false;
         }
 
+        /// <summary>The height of a wrist that rests on the virtual table.</summary>
+        private float TableWristY()
+        {
+            return anchors != null && anchors.armRestOutline != null ? anchors.armRestOutline.position.y + 0.021f : 0.771f;
+        }
+
+        /// <summary>The real forearm's direction on the table plane (wrist toward palm), or the outline's when the palm is not tracked.</summary>
+        private Vector3 RealAxis(Vector3 wrist)
+        {
+            Vector3? palm = RealPalm();
+            if (palm.HasValue)
+            {
+                Vector3 a = palm.Value - wrist; a.y = 0f;
+                if (a.sqrMagnitude > 0.03f * 0.03f) return a.normalized;
+            }
+            return anchors != null && anchors.armRestOutline != null ? anchors.armRestOutline.forward : Vector3.forward;
+        }
+
         // ---- per frame -----------------------------------------------------------------------------------------------
 
         public void Tick()
@@ -144,9 +163,11 @@ namespace Opus.Games.PhantomHand.Presentation
             switch (phase)
             {
                 case PhPhase.Calibrate:
+                    if (RealWrist(out w)) arm.Follow(new Vector3(w.x, TableWristY(), w.z), RealAxis(w), 0f);
+                    break;
                 case PhPhase.Agency:
                     if (RealWrist(out w)) arm.Follow(w, _hasCalib ? _calibAxis : Vector3.forward, (float)_module.Params.OffsetCm);
-                    if (phase == PhPhase.Agency) TickAgency(now);
+                    TickAgency(now);
                     break;
                 case PhPhase.Induction:
                 case PhPhase.SelfTouch:
@@ -294,11 +315,12 @@ namespace Opus.Games.PhantomHand.Presentation
         private void PlaceDefault()
         {
             Vector3 w;
-            if (RealWrist(out w)) arm.PlaceFromCalibration(w, _hasCalib ? _calibAxis : Vector3.forward, (float)_module.Params.OffsetCm);
+            // the start of the calibration: where the real arm is, or in the outline until it is tracked
+            if (RealWrist(out w)) arm.PlaceFromCalibration(new Vector3(w.x, TableWristY(), w.z), RealAxis(w), 0f);
             else
             {
                 var a = DefaultCalibration();
-                arm.PlaceFromCalibration(a.Key, a.Value, (float)_module.Params.OffsetCm);
+                arm.PlaceFromCalibration(a.Key, a.Value, 0f);
             }
         }
 

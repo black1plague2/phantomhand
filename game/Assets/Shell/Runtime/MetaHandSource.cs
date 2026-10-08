@@ -23,7 +23,7 @@ namespace Opus.Shell
     /// TODO(verify): written from the documented ISDK v74+ IHand/IHmd surface without a live compile check —
     /// confirm exact method names once com.meta.xr.sdk.interaction.ovr 205.0.0 actually resolves in the editor.
     /// </summary>
-    public sealed class MetaHandSource : IHandSource
+    public sealed class MetaHandSource : IHandSource, IHandSkeletonSource
     {
         private readonly IHand _leftHand, _rightHand;
         private readonly IHmd _hmd;
@@ -91,6 +91,30 @@ namespace Opus.Shell
         }
 
         public int GetDataVersion(HandSide side) => side == HandSide.Left ? _leftVersion : _rightVersion;
+
+        /// <summary>The 21 points of <see cref="Opus.Sdk.HandSkeleton"/> as the OpenXR hand names them: a finger's base joint is its proximal
+        /// joint (the knuckle), the thumb's is its metacarpal joint.</summary>
+        private static readonly HandJointId[] SkeletonJoints =
+        {
+            HandJointId.HandWristRoot,
+            HandJointId.HandThumb1, HandJointId.HandThumb2, HandJointId.HandThumb3, HandJointId.HandThumbTip,
+            HandJointId.HandIndex1, HandJointId.HandIndex2, HandJointId.HandIndex3, HandJointId.HandIndexTip,
+            HandJointId.HandMiddle1, HandJointId.HandMiddle2, HandJointId.HandMiddle3, HandJointId.HandMiddleTip,
+            HandJointId.HandRing1, HandJointId.HandRing2, HandJointId.HandRing3, HandJointId.HandRingTip,
+            HandJointId.HandPinky1, HandJointId.HandPinky2, HandJointId.HandPinky3, HandJointId.HandPinkyTip,
+        };
+
+        public bool TryGetSkeleton(HandSide side, Vector3[] joints)
+        {
+            var hand = side == HandSide.Left ? _leftHand : _rightHand;
+            if (joints == null || joints.Length < Opus.Sdk.HandSkeleton.JointCount || hand == null || !hand.IsConnected || !hand.IsTrackedDataValid) return false;
+            for (int i = 0; i < SkeletonJoints.Length; i++)
+            {
+                if (!hand.GetJointPose(SkeletonJoints[i], out Pose pose)) return false;
+                joints[i] = pose.position;
+            }
+            return true;
+        }
 
         private static double[] ToArray(Vector3 v) => new double[] { v.x, v.y, v.z };
         private static double[] ToArray(Quaternion q) => new double[] { q.x, q.y, q.z, q.w };

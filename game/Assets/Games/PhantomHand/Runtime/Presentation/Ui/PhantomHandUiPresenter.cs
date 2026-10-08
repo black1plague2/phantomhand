@@ -16,6 +16,10 @@ namespace Opus.Games.PhantomHand.Presentation
     public sealed class PhantomHandUiPresenter : MonoBehaviour
     {
         public const double ConfirmDwellMs = 700;
+        /// <summary>How much higher or lower than the virtual table the real arm may rest and still calibrate (the room then moves to it).</summary>
+        public const double CalibrationHeightToleranceM = 0.18;
+        /// <summary>The wrist may be this far from the outline's wrist point on the table plane.</summary>
+        public const double CalibrationRadiusM = 0.04;
 
         public PhantomAnchors anchors;
         [Tooltip("Optional: receives SetCalibration(wrist, forearmAxis) when the calibration is confirmed.")]
@@ -145,7 +149,8 @@ namespace Opus.Games.PhantomHand.Presentation
             {
                 case PhPhase.Calibrate:
                     CalibrationCommitted = false; _confirmAtMs = -1;
-                    Calibration = new CalibrationTracker(ToArr(CalibrationTarget()));
+                    Calibration = new CalibrationTracker(ToArr(CalibrationTarget()), CalibrationRadiusM, CalibrationTracker.HoldMs, CalibrationHeightToleranceM);
+                    _liftBy = _lifted = 0f;
                     SetOutline(true, OutlineTeal);
                     break;
                 case PhPhase.ProbePre:
@@ -189,9 +194,18 @@ namespace Opus.Games.PhantomHand.Presentation
             string title = PhStrings.Get("calib_title", Lang);
             if (st == CalibState.Confirmed)
             {
-                if (_confirmAtMs < 0) { _confirmAtMs = now; PlayTick(); }
+                if (_confirmAtMs < 0)
+                {
+                    _confirmAtMs = now; PlayTick();
+                    // The arm rests on a real surface that is rarely as high as the virtual table. Move the room to the arm, not the
+                    // arm to the room: the camera rig glides up or down while "done" is shown, so that the resting wrist ends up
+                    // at table height and the virtual arm lies ON the table where the real one feels one.
+                    _liftBy = (float)(Calibration.Target[1] - Calibration.Wrist[1]); _lifted = 0f;
+                    if (Mathf.Abs(_liftBy) < 0.005f || anchors == null || anchors.cameraRig == null) _liftBy = 0f;
+                }
                 SetOutline(true, PhUiKit.Good);
                 Instruction.Show(title, PhStrings.Get("calib_done", Lang), 1f, PhUiKit.Good, true);
+                Lift(Mathf.Clamp01((float)((now - _confirmAtMs) / ConfirmDwellMs)));
                 if (now - _confirmAtMs >= ConfirmDwellMs) CommitCalibration();
                 return;
             }
@@ -203,9 +217,22 @@ namespace Opus.Games.PhantomHand.Presentation
                 Instruction.Show(title, tracked ? "" : PhStrings.Get("calib_lost", Lang), 0f, tracked ? PhUiKit.Info : PhUiKit.Warn, true);
         }
 
+        private float _liftBy, _lifted;
+
+        /// <summary>The camera rig's share u (0..1, eased) of the vertical move that brings the resting wrist to table height.</summary>
+        private void Lift(float u)
+        {
+            if (_liftBy == 0f) return;
+            float want = _liftBy * (u * u * (3f - 2f * u));
+            anchors.cameraRig.position += Vector3.up * (want - _lifted);
+            _lifted = want;
+        }
+
         private void CommitCalibration()
         {
+            Lift(1f);
             var w = Calibration.Wrist; var a = Calibration.Axis;
+            w[1] += _liftBy;   // where the wrist is now that the room has moved
             var wv = new Vector3((float)w[0], (float)w[1], (float)w[2]);
             var av = new Vector3((float)a[0], (float)a[1], (float)a[2]);
             if (armPresenter != null) armPresenter.SetCalibration(wv, av);

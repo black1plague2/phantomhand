@@ -641,7 +641,7 @@ namespace Opus.Shell
                     break;
                 case "recenter":
                     ok = _host.Recenter();
-                    if (!ok) err = _orchard != null ? "no head pose to recenter on" : "recenter is not used by this game (sit at the marked seat)";
+                    if (!ok) err = _orchard != null ? "no head pose to recenter on" : "not now: a run has taken its calibration (recenter before a run or while calibrating)";
                     break;
                 case "show_message":
                     _hud?.Flash(p?["text"]?.Value<string>() ?? "");
