@@ -237,6 +237,7 @@ namespace Opus.Sdk
                 req.downloadHandler = new DownloadHandlerBuffer();
                 req.SetRequestHeader("Content-Type", "application/octet-stream");
                 req.SetRequestHeader("X-Sha256", sha256);
+                req.timeout = 15;   // seconds; without it a hub that vanished (phone off, hotspot gone) holds every remaining file for the OS connect timeout
 
                 var op = req.SendWebRequest();
                 while (!op.isDone) await Task.Yield();

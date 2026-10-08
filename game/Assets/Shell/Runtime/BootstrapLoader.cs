@@ -52,9 +52,10 @@ namespace Opus.Shell
             _deviceId = (Application.isEditor ? "editor-" : "quest-") + SystemInfo.deviceUniqueIdentifier.Replace("-", "").Substring(0, 8).ToLowerInvariant();
             string host = ep.HubHost;
             if (string.IsNullOrWhiteSpace(host)) host = PlayerPrefs.GetString("opus_hub_host", "");
+            var games = AdvertisedGames();   // asked here: the client calls its providers on a background thread, and this one uses a Unity API
             _client = new LiveClient(_deviceId,
                 () => new JObject { ["shell"] = "0.2.0", ["sdk"] = "0.1.0" },
-                AdvertisedGames,   // only the games whose scene is in this build
+                () => games,       // only the games whose scene is in this build
                 string.IsNullOrWhiteSpace(host) ? null : host.Trim());
             _client.OnCommand += OnCommand;
             _client.Start();

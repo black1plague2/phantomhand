@@ -106,6 +106,8 @@ namespace Opus.Shell
 
         private readonly Queue<string> _uploadQueue = new Queue<string>();
         private bool _uploading;
+        private const float UploadRetrySec = 10f;
+        private float _uploadRetrySec;
         private OpusHud _hud;
         // Run17 (task 2, HUD bug fix): whether this runner drives the hub/session lifecycle itself. False for a
         // demo-driver scene with runWithDemoDriver left at its default (batch PlayMode tests, which own their own
@@ -197,6 +199,8 @@ namespace Opus.Shell
 
         private void OnDestroy()
         {
+            // Before the handlers go: the closing events of a run that is cut off here (block_end, the last cue records) are written by them.
+            if (CurrentPhase == Phase.Running || CurrentPhase == Phase.Paused) FinishSession("stopped_by_patient", upload: false);
             if (_host != null)
             {
                 _host.OnTrialEvent -= OnTrialEvent;
@@ -207,7 +211,6 @@ namespace Opus.Shell
                 _orchard.OnFormSignal -= OnFormSignal;
                 _orchard.OnHapticCueRecorded -= OnHapticCue;
             }
-            if (CurrentPhase == Phase.Running || CurrentPhase == Phase.Paused) FinishSession("stopped_by_patient", upload: false);
             _client?.Dispose();
         }
 
@@ -277,6 +280,15 @@ namespace Opus.Shell
                         if (_host.IsSessionComplete)
                             FinishSession("completed", upload: true);
                         break;
+                }
+
+                // Uploads start when the link comes up and when a run ends; a file that failed in between (the headset was taken off
+                // two seconds after Stop, first headset night) would otherwise wait for the next of those.
+                _uploadRetrySec += Time.unscaledDeltaTime;
+                if (_uploadRetrySec >= UploadRetrySec)
+                {
+                    _uploadRetrySec = 0f;
+                    if (_uploadQueue.Count > 0 && !_uploading && _client != null && _client.IsConnected) PumpUploads();
                 }
 
                 _statusAccumMs += Time.deltaTime * 1000.0;
@@ -700,6 +712,7 @@ namespace Opus.Shell
                     int ok = 0;
                     foreach (var n in names)
                     {
+                        if (_client == null || !_client.IsConnected) break;   // the hub went away: do not wait out a timeout per file
                         var path = Path.Combine(dir, n);
                         if (!File.Exists(path)) continue;
                         if (await _client.UploadFileAsync(id, n, path)) ok++;
@@ -715,7 +728,8 @@ namespace Opus.Shell
                     else
                     {
                         LastUploadMessage = $"Upload incomplete ({ok}/{names.Count}); will retry";
-                        Debug.LogWarning($"[OPUS] upload of {id} incomplete ({ok}/{names.Count}); retrying on next connect");
+                        Debug.LogWarning($"[OPUS] upload of {id} incomplete ({ok}/{names.Count}); retrying in {UploadRetrySec:F0} s");
+                        _uploadQueue.Enqueue(_uploadQueue.Dequeue());   // to the back: one session that keeps failing must not hold up the others
                         break;
                     }
                 }
