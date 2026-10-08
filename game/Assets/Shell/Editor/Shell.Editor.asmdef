@@ -6,6 +6,7 @@
         "OrchardReach.Runtime",
         "PhantomHand.Runtime",
         "PhantomHand.Presentation",
+        "PhantomHand.Editor",
         "UnityEngine.UI",
         "Shell.Runtime",
         "Opus.Art.Runtime",

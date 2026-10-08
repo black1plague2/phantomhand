@@ -23,7 +23,8 @@ namespace Opus.Games.PhantomHand.Presentation
     /// table plane with the same yaw. <see cref="Freeze"/> stops <see cref="Follow"/> from moving it (induction .. threat).
     /// Exposes <see cref="Alpha"/> (A2 dissolve) and <see cref="WorldPos"/> (A3 self-touch bands, cue positions).
     /// Design note: the hand is a procedural joint hierarchy rather than a duplicated ISDK skinned hand, so it needs no IHand
-    /// driver and can be posed (Curl) deterministically.
+    /// driver and can be posed (Curl) deterministically. When PhantomModelImporter has baked PH_Hand / PH_Forearm / PH_Sleeve the arm uses those
+    /// instead: the rigged hand keeps its own skin texture and Curl drives its finger bones (PhRiggedHand), the glove fallback is squashed.
     /// </summary>
     public sealed class VirtualArmRig : MonoBehaviour
     {
@@ -46,6 +47,7 @@ namespace Opus.Games.PhantomHand.Presentation
         private Transform _handRoot, _visualRoot;
         private Transform _handModel;      // model hand (PhModels.Hand), null when the procedural hand is used
         private PhModelInfo _handInfo;
+        private PhRiggedHand _rig;         // bone driver of the rigged hand model; null for the glove mesh (squash fallback) and the procedural hand
 
         private struct FingerJoint { public Transform T; public float RelaxedDeg, ClosedDeg; }
 
@@ -69,13 +71,15 @@ namespace Opus.Games.PhantomHand.Presentation
 
             float sleeveFrom = 0.012f, sleeveTo = Mathf.Min(forearmM - 0.02f, motorAM + motorSpacingM + 0.045f);
             // 3D models (PhModels, built by PhantomModelImporter) when all three arm wrappers exist; otherwise the procedural arm.
-            bool models = PhModels.Load(PhModels.Hand) != null && PhModels.Load(PhModels.Forearm) != null && PhModels.Load(PhModels.Sleeve) != null;
+            bool models = HandModelUsable() && PhModels.Load(PhModels.Forearm) != null && PhModels.Load(PhModels.Sleeve) != null;
             if (models)
             {
                 var fi = PhModels.Load(PhModels.Forearm).GetComponent<PhModelInfo>();
                 var si = PhModels.Load(PhModels.Sleeve).GetComponent<PhModelInfo>();
                 float fRef = fi != null ? fi.referenceForearmM : 0.25f, sRef = si != null && si.rangeToM > 0.01f ? si.rangeToM : 0.195f;
-                AddModel(PhModels.Forearm, _visualRoot, new Vector3(1f, 1f, forearmM / fRef), materials.skin);
+                // a textured hand keeps its own material, and the forearm then uses its wrapper's tone-matched skin instead of the flat override
+                var hi = PhModels.Load(PhModels.Hand).GetComponent<PhModelInfo>();
+                AddModel(PhModels.Forearm, _visualRoot, new Vector3(1f, 1f, forearmM / fRef), hi != null && hi.texturedSkin ? null : materials.skin);
                 AddModel(PhModels.Sleeve, _visualRoot, new Vector3(1f, 1f, Mathf.Max(0.05f, sleeveTo) / sRef), null);
             }
             else
@@ -97,11 +101,27 @@ namespace Opus.Games.PhantomHand.Presentation
             Alpha = _alpha;
         }
 
+        /// <summary>The hand wrapper exists and its recorded bounds are plausible (a rigged hand must have recorded them; a glove wrapper baked before bounds were recorded is taken as is):
+        /// otherwise the whole arm stays procedural, a degenerate hand is never the default.</summary>
+        private static bool HandModelUsable()
+        {
+            var proto = PhModels.Load(PhModels.Hand);
+            if (proto == null) return false;
+            var info = proto.GetComponent<PhModelInfo>();
+            if (info == null) return true;
+            bool recorded = info.boundsMin != Vector3.zero || info.boundsMax != Vector3.zero;
+            if (!info.rigged && !recorded) return true;
+            string why;
+            if (PhHandFit.BoundsPlausible(info.boundsMin, info.boundsMax, PhHandFit.DefaultHandLenM, out why)) return true;
+            Debug.LogWarning("[VirtualArmRig] the baked hand is not usable (" + why + "): the arm stays procedural. Re-run PhantomModelImporter.RunBatch().");
+            return false;
+        }
+
         private void Teardown()
         {
             foreach (var m in _fade) if (m != null) DestroyImmediate(m);
             _renderers.Clear(); _opaque.Clear(); _fade.Clear(); _hit.Clear(); _joints.Clear();
-            _handModel = null; _handInfo = null;
+            _handModel = null; _handInfo = null; _rig = null;
             for (int i = transform.childCount - 1; i >= 0; i--) DestroyImmediate(transform.GetChild(i).gameObject);
             IsBuilt = false;
         }
@@ -166,21 +186,48 @@ namespace Opus.Games.PhantomHand.Presentation
             var go = PhModels.Spawn(wrapper, parent);
             if (go == null) return null;
             go.transform.localPosition = Vector3.zero; go.transform.localRotation = Quaternion.identity; go.transform.localScale = scale;
-            foreach (var r in go.GetComponentsInChildren<MeshRenderer>(true))
+            RegisterModel(go, overrideMat);
+            return go;
+        }
+
+        /// <summary>Registers every Renderer below an instantiated model (MeshRenderer and SkinnedMeshRenderer alike) for the material override (overrideMat, or each
+        /// renderer's own material when null), shadows off and the alpha / A2 fade swap. Public so EditMode tests can adopt a hand-built model.</summary>
+        public void RegisterModel(GameObject go, Material overrideMat)
+        {
+            foreach (var r in go.GetComponentsInChildren<Renderer>(true))
             {
                 var m = overrideMat != null ? overrideMat : r.sharedMaterial;
                 r.sharedMaterial = m;
                 r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; r.receiveShadows = false;
                 Register(r, m);
             }
-            return go;
         }
 
         private void BuildHandModel()
         {
-            var go = AddModel(PhModels.Hand, _visualRoot, Vector3.one, materials.skin);
+            // the rigged hand carries its own skin texture: no flat colour override (the glove mesh is black, so it still gets the skin colour)
+            var proto = PhModels.Load(PhModels.Hand).GetComponent<PhModelInfo>();
+            var go = AddModel(PhModels.Hand, _visualRoot, Vector3.one, proto != null && proto.texturedSkin ? null : materials.skin);
+            SetHandModel(go);
+        }
+
+        /// <summary>Makes an instantiated hand model the arm's hand: reads its measured info (hit proxy, palm top) and binds its bone driver when it has one;
+        /// without a usable rig <see cref="Curl"/> squashes the model instead. Public so EditMode tests can adopt a hand-built model.</summary>
+        public void SetHandModel(GameObject go)
+        {
             _handRoot = go.transform; _handModel = go.transform;
             _handInfo = go.GetComponent<PhModelInfo>();
+            _rig = go.GetComponent<PhRiggedHand>();
+            if (_rig != null && !_rig.Bind()) _rig = null;
+            if (IsBuilt) RebuildHitProxy();     // a hand swapped in after Build: the proxy follows its measurements
+        }
+
+        private void RebuildHitProxy()
+        {
+            var old = transform.Find("HitProxy");
+            if (old != null) DestroyImmediate(old.gameObject);
+            _hit.Clear();
+            BuildHitProxy();
         }
 
         private void BuildHand(Material skin)
@@ -244,13 +291,20 @@ namespace Opus.Games.PhantomHand.Presentation
             fing.center = new Vector3(0, baseY + 0.011f, PalmLen + 0.04f); fing.size = new Vector3(PalmW - 0.004f, 0.022f, 0.08f);
             if (_handInfo != null)
             {
-                // keep the boxes flush with the visible model hand (top = dorsal surface)
+                // keep the boxes flush with the visible model hand (top = dorsal surface); palm length / width / centre, finger length and the thumb box are
+                // the importer's measurements (for the glove they equal the constants above, so its proxy is unchanged)
                 float ph = Mathf.Max(0.02f, _handInfo.palmTopY - baseY), fh = Mathf.Max(0.015f, _handInfo.fingerTopY - baseY);
-                palm.center = new Vector3(0, baseY + ph * 0.5f, PalmLen * 0.5f); palm.size = new Vector3(PalmW, ph, PalmLen);
-                fing.center = new Vector3(0, baseY + fh * 0.5f, PalmLen + 0.04f); fing.size = new Vector3(PalmW - 0.004f, fh, 0.08f);
+                float pl = _handInfo.palmLenM, pw = _handInfo.palmWidthM, cx = _handInfo.palmCenterX, fl = _handInfo.fingerLenM;
+                palm.center = new Vector3(cx, baseY + ph * 0.5f, pl * 0.5f); palm.size = new Vector3(pw, ph, pl);
+                fing.center = new Vector3(cx, baseY + fh * 0.5f, pl + fl * 0.5f); fing.size = new Vector3(pw - 0.004f, fh, fl);
             }
             var thumb = proxy.AddComponent<BoxCollider>();
             thumb.center = new Vector3(-0.055f, baseY + 0.010f, 0.05f); thumb.size = new Vector3(0.04f, 0.02f, 0.07f);
+            if (_handInfo != null)
+            {
+                thumb.center = new Vector3(_handInfo.thumbCenterXZ.x, baseY + 0.010f, _handInfo.thumbCenterXZ.y);
+                thumb.size = new Vector3(_handInfo.thumbSizeXZ.x, 0.02f, _handInfo.thumbSizeXZ.y);
+            }
             var arm = proxy.AddComponent<BoxCollider>();
             float mid = ForearmLengthM * 0.5f;
             arm.center = new Vector3(0, ArmGeometry.AxisY(mid, ForearmLengthM), -mid);
@@ -285,7 +339,8 @@ namespace Opus.Games.PhantomHand.Presentation
             get
             {
                 float top = _handInfo != null ? _handInfo.palmTopY : -ArmGeometry.WristHalfHeight + PalmT;
-                return transform.TransformPoint(new Vector3(0, top, PalmLen * 0.5f));
+                float cx = _handInfo != null ? _handInfo.palmCenterX : 0f, pl = _handInfo != null ? _handInfo.palmLenM : PalmLen;
+                return transform.TransformPoint(new Vector3(cx, top, pl * 0.5f));
             }
         }
 
@@ -327,9 +382,10 @@ namespace Opus.Games.PhantomHand.Presentation
 
         private void ApplyCurl()
         {
+            if (_rig != null) { _rig.SetCurl(_curl); return; }   // rigged hand: the finger bones close toward the palm
             if (_handModel != null)
             {
-                // the model hand has no bones: approximate a clench by compressing the hand along the fingers and thickening it,
+                // the glove mesh has no bones: approximate a clench by compressing the hand along the fingers and thickening it,
                 // keeping its underside on the table plane
                 float sy = 1f + 0.30f * _curl;
                 _handModel.localScale = new Vector3(1f + 0.08f * _curl, sy, 1f - 0.22f * _curl);
@@ -367,6 +423,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 h = h * 31 + Hash(transform.position);
                 h = h * 31 + Hash(transform.rotation.eulerAngles * 0.01f);
                 foreach (var j in _joints) if (j.T != null) h = h * 31 + Hash(j.T.position) * 7 + Hash(j.T.rotation.eulerAngles * 0.01f);
+                if (_rig != null) h = h * 31 + _rig.PoseHash();
                 if (_handModel != null) h = h * 31 + Mathf.RoundToInt(_curl * 1000f);
                 return h;
             }

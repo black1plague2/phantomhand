@@ -13,8 +13,10 @@ namespace Opus.Games.PhantomHand.EditorTools
     /// copies, ASTC textures, ModelSlot wrapper prefabs, single LOD per role). Everything is baked into the MESH DATA so the wrapper
     /// prefabs have identity child transforms and the presenters only instantiate them (no per-frame or runtime fitting):
     ///
-    ///   324213  right hand (glove, no bones)  -> PH_Hand     L mesh. Orientation from the mesh itself (finger axis from the end slices,
-    ///           palm normal constant), mirrored (the source is a LEFT hand), scaled so wrist crease -> fingertip = 19 cm, wrist crease at
+    ///   handRig_02 rigged right hand (68 bones, skin textures) -> PH_Hand. The rigged hand replaces the glove whenever its FBX exists (see
+    ///           PhantomModelImporter.RiggedHand.cs): skinned mesh kept, root rotated / scaled from the measured bones, no mirroring.
+    ///   324213  left glove (no bones)        -> PH_Hand     L mesh. FALLBACK when the rigged FBX is missing. Orientation from the mesh itself (finger axis from
+    ///           the end slices, palm normal constant), mirrored (the source is a LEFT hand), scaled so wrist crease -> fingertip = 19 cm, wrist crease at
     ///           the arm origin, +z toward the fingers, +y dorsal, underside flush with the table plane; the glove cuff is lofted down to the
     ///           arm's wrist section and trimmed. Skin-tinted flat material (the source texture is a black glove).
     ///   553886  padded arm guard               -> PH_Forearm M mesh. Straightened and re-lofted to 0.90 x ArmGeometry (dome-closed at the elbow),
@@ -27,7 +29,7 @@ namespace Opus.Games.PhantomHand.EditorTools
     /// The motor bands stay procedural overlay rings (the sleeve mesh has none). Idempotent: re-running updates the same assets.
     /// Scene-builder hook (the manager wires it):  PhantomModelImporter.EnsureWrappers();  before the presenters are built.
     /// </summary>
-    public static class PhantomModelImporter
+    public static partial class PhantomModelImporter
     {
         public const string SrcRoot = "Assets/MetaAssets";
         public const string OutRoot = "Assets/Art/PhantomHand/Models";
@@ -58,7 +60,7 @@ namespace Opus.Games.PhantomHand.EditorTools
         /// (false when the MetaAssets sources are absent, in which case the presenters keep their procedural geometry).</summary>
         public static bool EnsureWrappers()
         {
-            if (AllPresent()) return true;
+            if (AllPresent() && !HandNeedsRebuild()) return true;
             Build(false);
             return AllPresent();
         }
@@ -80,7 +82,7 @@ namespace Opus.Games.PhantomHand.EditorTools
             Directory.CreateDirectory(MeshDir); Directory.CreateDirectory(MatDir); Directory.CreateDirectory(ResourcesDir);
             AssetDatabase.Refresh();
 
-            Run1("hand", () => BuildHand(urp, log), log);
+            Run1("hand", () => BuildHandWrapper(urp, log), log);
             Run1("forearm", () => BuildTube(urp, log, "553886", PhModels.Forearm, "Forearm", "M", false), log);
             Run1("sleeve", () => BuildTube(urp, log, "935160", PhModels.Sleeve, "Sleeve", "M", true), log);
             Run1("brush", () => BuildBrush(urp, log), log);
@@ -123,8 +125,9 @@ namespace Opus.Games.PhantomHand.EditorTools
                 var mr = root.GetComponentInChildren<MeshRenderer>(true);
                 if (mf == null || mf.sharedMesh == null) throw new InvalidOperationException("no mesh in " + path);
                 var mesh = mf.sharedMesh;
-                // geometry as it renders with the prefab root at identity (applies the importer's -90 X / x100 node transform)
-                Matrix4x4 m = root.transform.worldToLocalMatrix * mf.transform.localToWorldMatrix;
+                // geometry as the prefab renders when dropped at the origin: the Meta prefabs keep the importer's -90 X / x100 on the ROOT itself (the mesh sits on the
+                // root), so the root's own rotation and scale must stay in. Run 2 cancelled them and measured raw FBX space (Z up, 2 cm): table on its side, brush 59 cm long
+                Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, root.transform.localRotation, root.transform.localScale) * root.transform.worldToLocalMatrix * mf.transform.localToWorldMatrix;
                 var v = mesh.vertices;
                 for (int i = 0; i < v.Length; i++) v[i] = m.MultiplyPoint3x4(v[i]);
                 var g = new Geo { V = v, UV = mesh.uv, T = mesh.triangles };
@@ -323,7 +326,7 @@ namespace Opus.Games.PhantomHand.EditorTools
 
         private static Material SkinMaterial(Shader urp, List<string> log)
         {
-            return SaveMaterial("PHM_Skin", urp, null, new Color(0.74f, 0.58f, 0.48f), 0.25f, 0, log);
+            return SaveMaterial("PHM_Skin", urp, null, _skinTone, 0.25f, 0, log);      // the flat colour, or the rigged hand's average skin tone (set by the hand build)
         }
 
         private static GameObject SaveWrapper(string wrapperName, string childName, Mesh mesh, Material mat, PivotConvention pivot, float sizeM, Action<GameObject> extra)
@@ -420,11 +423,16 @@ namespace Opus.Games.PhantomHand.EditorTools
             float thumbSide = Percentile(lateral, 0.02f) + Percentile(lateral, 0.98f);
             log.Add("[hand] bounds min " + b3.min.ToString("F3") + " max " + b3.max.ToString("F3") + "; palmTopY " + palmTop.ToString("F4") + " fingerTopY " + fingTop.ToString("F4")
                     + (thumbSide > 0f ? "; WARNING thumb is on +x (expected -x for a right hand): flip the mirror in BuildHand" : "; thumb on -x OK"));
+            // never bake a degenerate hand: no wrapper is written and the arm keeps its procedural hand
+            string whyNot;
+            if (!PhHandFit.BoundsPlausible(b3.min, b3.max, HandLenM, out whyNot))
+                throw new InvalidOperationException("implausible glove hand bounds (" + whyNot + "): min " + b3.min.ToString("F4") + " max " + b3.max.ToString("F4"));
             var mat = SkinMaterial(urp, log);
             SaveWrapper(PhModels.Hand, "Hand", mesh, mat, PivotConvention.Joint, HandLenM, root =>
             {
                 var info = root.AddComponent<PhModelInfo>();
                 info.palmTopY = palmTop; info.fingerTopY = fingTop; info.palmLenM = 0.098f; info.handLenM = HandLenM;
+                info.boundsMin = b3.min; info.boundsMax = b3.max;
             });
             log.Add("[hand] wrapper " + PhModels.Hand + " built");
         }
@@ -551,7 +559,7 @@ namespace Opus.Games.PhantomHand.EditorTools
                 o[i] = new Vector3((p.x - b.center.x) / b.size.x * TableW, (p.y - b.max.y) / b.size.y * TableH, (p.z - b.center.z) / b.size.z * TableD);
             }
             var mesh = SaveMesh("PHM_Table", o, g.UV, g.T);
-            var mat = SaveMaterial("PHM_Table", urp, g.Tex, Color.white, 0.12f, 1024, log);
+            var mat = SaveMaterial("PHM_Table", urp, g.Tex, Color.white, 0.08f, 1024, log);   // matte: PhantomHandRigValidatorTest.Table_Is75cmHigh_AndMatte needs smoothness <= 0.1
             SaveWrapper(PhModels.Table, "TableModel", mesh, mat, PivotConvention.TopCenter, TableW, root =>
             {
                 var c = new GameObject("TopCollider"); c.transform.SetParent(root.transform, false);

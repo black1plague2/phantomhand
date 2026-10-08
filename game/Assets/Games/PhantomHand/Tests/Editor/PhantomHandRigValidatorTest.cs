@@ -159,10 +159,22 @@ namespace Opus.Games.PhantomHand.Tests
         public void Table_Is75cmHigh_AndMatte()
         {
             Assert.AreEqual(0.75f, _anchors.tableTop.position.y, 1e-4f);
-            var top = GameObject.Find("TableTopSurface");
-            Assert.AreEqual(0.75f, top.GetComponent<Renderer>().bounds.max.y, 1e-3f);
-            Assert.LessOrEqual(top.GetComponent<Renderer>().sharedMaterial.GetFloat("_Smoothness"), 0.1f);
-            Assert.IsNotNull(top.GetComponent<BoxCollider>());
+            // the Meta table model (wrapper PH_Table: TableModel renderer + a TopCollider box below it) when it is baked, else the box table
+            // (TableTopSurface: renderer and box collider on one object). Both must be 75 cm high, matte and have a collider whose top is the table top.
+            Renderer rend; BoxCollider col;
+            var box = GameObject.Find("TableTopSurface");
+            if (box != null) { rend = box.GetComponent<Renderer>(); col = box.GetComponent<BoxCollider>(); }
+            else
+            {
+                var wrapper = GameObject.Find(Opus.Games.PhantomHand.Presentation.PhModels.Table);
+                Assert.IsNotNull(wrapper, "neither the table model (PH_Table) nor the box table (TableTopSurface) is in the scene");
+                rend = wrapper.GetComponentInChildren<Renderer>(); col = wrapper.GetComponentInChildren<BoxCollider>();
+            }
+            Assert.IsNotNull(rend, "table renderer");
+            Assert.AreEqual(0.75f, rend.bounds.max.y, 1e-3f);
+            Assert.LessOrEqual(rend.sharedMaterial.GetFloat("_Smoothness"), 0.1f);
+            Assert.IsNotNull(col, "table top collider");
+            Assert.AreEqual(0.75f, col.bounds.max.y, 1e-3f, "the collider's top face is the table top");
         }
 
         [Test]

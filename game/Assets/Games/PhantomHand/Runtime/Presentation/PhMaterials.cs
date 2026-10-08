@@ -53,19 +53,6 @@ namespace Opus.Games.PhantomHand.Presentation
     }
 
     /// <summary>
-    /// Metadata the model importer bakes onto each wrapper prefab (Assets/Art/PhantomHand/Models/Resources/PhantomModels). The presenters
-    /// read it to scale the arm parts to forearm_length_cm and to keep the hit proxy flush with the visible hand.
-    /// </summary>
-    public sealed class PhModelInfo : MonoBehaviour
-    {
-        public float referenceForearmM = 0.25f;   // forearm/sleeve meshes were baked for this forearm length (scaled along z at runtime)
-        public float rangeFromM, rangeToM;        // sleeve: baked distance range from the wrist (m)
-        public float palmTopY = 0.025f;           // hand: dorsal height over the palm / fingers in arm-local space (m)
-        public float fingerTopY = 0.021f;
-        public float palmLenM = 0.098f, handLenM = 0.19f;
-    }
-
-    /// <summary>
     /// Optional 3D models for the arm, brush, stone and table. Wrappers live under a Resources folder so the presenters need no
     /// scene references; when a wrapper is missing (or <see cref="UseModels"/> is false) every presenter silently keeps its
     /// procedural geometry. Build the wrappers with Tools/OPUS/Phantom Hand/Build Model Wrappers (PhantomModelImporter).
@@ -74,6 +61,18 @@ namespace Opus.Games.PhantomHand.Presentation
     {
         public const string Hand = "PH_Hand", Forearm = "PH_Forearm", Sleeve = "PH_Sleeve", Brush = "PH_Brush", Stone = "PH_Stone", Table = "PH_Table";
         public const string ResourceFolder = "PhantomModels/";
+
+        /// <summary>Every wrapper the importer bakes, in build order.</summary>
+        public static readonly string[] All = { Hand, Forearm, Sleeve, Brush, Stone, Table };
+
+        /// <summary>What the PH_Hand wrapper is baked from: the rigged right hand (handRig_02.fbx), else the 324213 glove, else nothing (procedural hand).</summary>
+        public enum HandSource { None, Glove, Rigged }
+
+        public static HandSource ChooseHandSource(bool riggedFbxPresent, bool gloveSourcePresent)
+        {
+            if (riggedFbxPresent) return HandSource.Rigged;
+            return gloveSourcePresent ? HandSource.Glove : HandSource.None;
+        }
 
         /// <summary>Master switch (tests / A-B captures can turn the models off).</summary>
         public static bool UseModels = true;

@@ -52,8 +52,12 @@ namespace Opus.Shell.Editor
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(OrchardScenePath) == null)
                 throw new FileNotFoundException("Rig source scene missing: " + OrchardScenePath);
 
+            // CopyAsset gives the copy a new GUID: the scene's .meta is put back, so its GUID (build settings, references) survives a rebuild
+            string metaFile = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ScenePath + ".meta"));
+            string keptMeta = File.Exists(metaFile) ? File.ReadAllText(metaFile) : null;
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null) AssetDatabase.DeleteAsset(ScenePath);
             if (!AssetDatabase.CopyAsset(OrchardScenePath, ScenePath)) throw new IOException("could not copy rig scene");
+            if (keptMeta != null) { File.WriteAllText(metaFile, keptMeta); AssetDatabase.Refresh(); }
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             SceneManager.SetActiveScene(scene);
 
@@ -115,11 +119,16 @@ namespace Opus.Shell.Editor
             Prim(PrimitiveType.Sphere, "Leaves_A", plant, new Vector3(-1.8f, 0.72f, 2.2f), new Vector3(0.55f, 0.6f, 0.55f), matLeaf, removeCollider: true);
             Prim(PrimitiveType.Sphere, "Leaves_B", plant, new Vector3(-1.62f, 0.98f, 2.12f), new Vector3(0.36f, 0.4f, 0.36f), matLeaf, removeCollider: true);
 
+            // models: bake any missing wrapper (rigged hand, table, brush, stone, sleeve) before the table and the presentation use them; the procedural shapes stay the fallback
+            bool modelsReady = Opus.Games.PhantomHand.EditorTools.PhantomModelImporter.EnsureWrappers();
             var table = new GameObject("Table").transform; table.SetParent(env, false);
-            Box("TableTopSurface", table, new Vector3(0f, TableTopY - 0.02f, TableCenterZ), new Vector3(1.2f, 0.04f, 0.7f), matTable, collider: true);
-            foreach (var sx in new[] { -0.55f, 0.55f })
-                foreach (var sz in new[] { -0.30f, 0.30f })
-                    Box("Leg", table, new Vector3(sx, (TableTopY - 0.04f) / 2f, TableCenterZ + sz), new Vector3(0.06f, TableTopY - 0.04f, 0.06f), matTable, collider: false);
+            if (PhModels.SpawnTable(table, new Vector3(0f, TableTopY, TableCenterZ)) == null)   // the table model carries its own top collider; no wrapper -> the box table
+            {
+                Box("TableTopSurface", table, new Vector3(0f, TableTopY - 0.02f, TableCenterZ), new Vector3(1.2f, 0.04f, 0.7f), matTable, collider: true);
+                foreach (var sx in new[] { -0.55f, 0.55f })
+                    foreach (var sz in new[] { -0.30f, 0.30f })
+                        Box("Leg", table, new Vector3(sx, (TableTopY - 0.04f) / 2f, TableCenterZ + sz), new Vector3(0.06f, TableTopY - 0.04f, 0.06f), matTable, collider: false);
+            }
             foreach (var t in env.GetComponentsInChildren<Transform>(true))
                 GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.ContributeGI);
 
@@ -187,7 +196,7 @@ namespace Opus.Shell.Editor
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
             return "built " + ScenePath + ": handRenderersOff=" + handOff + ", camera=" + (cam != null) + ", audio=" + audio +
-                   ", buildScenes=" + EditorBuildSettings.scenes.Length;
+                   ", buildScenes=" + EditorBuildSettings.scenes.Length + ", models=" + modelsReady;
         }
 
         // ---------------------------------------------------------------------------------------------------------
@@ -575,6 +584,72 @@ namespace Opus.Shell.Editor
             pres.threat.EmitDust(palmTop);
             foreach (var ps in pres.threat.GetComponentsInChildren<ParticleSystem>()) ps.Simulate(0.16f, true, true);
             written.Add(Shot(dir, "impact", eye, palmTop + Vector3.up * 0.08f, 52f));
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);   // discard transient changes
+            return string.Join(";", written);
+        }
+
+        private const string ModelsOutDir = "logs/sessions/screens/ph/models";
+
+        /// <summary>Renders the model bake into logs/sessions/screens/ph/models/ so it can be judged in one call: the arm with the hand from the participant's eye (arm_eye), the hand
+        /// from above (hand_top) and from a low side view at curl 0 / 0.5 / 1 with the table hidden (hand_side_curl0/50/100: the finger bones), the brush at contact (brush_contact,
+        /// brush_contact_close), the stone at telegraph and impact, the table and the whole room. Edit mode, no physics; restores the scene. Run
+        /// PhantomModelImporter.RunBatch() and BuildScene() first so the wrappers exist and the scene holds the model table.</summary>
+        public static string CaptureModelShots()
+        {
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var pres = UnityEngine.Object.FindFirstObjectByType<ArmThreatPresenter>();
+            string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", ModelsOutDir));
+            Directory.CreateDirectory(dir);
+            var p = new PhantomHandParams();
+            pres.arm.Build(p); pres.brush.Build(); pres.threat.Build();
+            var realWrist = new Vector3(ArmX, TableTopY + 0.021f, ElbowZ + ForearmLen);
+            pres.arm.PlaceFromCalibration(realWrist, Vector3.forward, (float)p.OffsetCm);
+            pres.arm.Visible = true; pres.brush.Visible = false;
+            var written = new List<string>();
+            Vector3 eye = SeatedEye;
+            Vector3 look = pres.arm.AxisWorldPos(0f) + pres.arm.transform.forward * 0.05f;
+            Vector3 palmTop = pres.arm.PalmTopWorld;
+
+            // 1 the arm with the hand, from the participant's eye
+            written.Add(Shot(dir, "arm_eye", eye, look, 62f));
+            // 2 the hand from above, then the finger bones from a low side view (curl 0 / 0.5 / 1; the table is hidden because closing fingers dive into it)
+            Vector3 above = palmTop + new Vector3(0f, 0.32f, -0.07f), aim = palmTop + pres.arm.transform.forward * 0.045f;
+            written.Add(Shot(dir, "hand_top", above, aim, 45f));
+            var tableGo = GameObject.Find("Table");
+            if (tableGo != null) tableGo.SetActive(false);
+            Vector3 side = palmTop + new Vector3(-0.26f, 0.09f, 0.14f), sideAim = palmTop + pres.arm.transform.forward * 0.07f;
+            // edit mode has no player loop to re-skin the hand between shots: skin at every render
+            foreach (var smr in pres.arm.GetComponentsInChildren<SkinnedMeshRenderer>(true)) smr.forceMatrixRecalculationPerRender = true;
+            foreach (float c in new[] { 0f, 0.5f, 1f })
+            {
+                pres.arm.Curl = c;
+                written.Add(Shot(dir, "hand_side_curl" + Mathf.RoundToInt(c * 100f), side, sideAim, 40f));
+            }
+            pres.arm.Curl = 0f;
+            if (tableGo != null) tableGo.SetActive(true);
+            // 3 the brush at contact (motor A)
+            pres.brush.Visible = true;
+            pres.brush.SetGeometry(pres.arm.WristWorld, pres.arm.ElbowDirection, pres.arm.ForearmLengthM, pres.arm.MotorAFromWristM, pres.arm.MotorSpacingM, p.MotorSoaMs);
+            var plan = new StrokeScheduler(p, 1).Plan(PhCondition.Sync, 0, 20000);
+            pres.brush.SetPlan(plan);
+            pres.brush.PoseAt(plan[1].PassAMs);
+            written.Add(Shot(dir, "brush_contact", eye, look, 62f));
+            written.Add(Shot(dir, "brush_contact_close", pres.arm.WorldPos(5f) + new Vector3(0.12f, 0.22f, -0.20f), pres.arm.WorldPos(5f), 38f));
+            pres.brush.Visible = false;
+            // 4 the stone: telegraph, then on the palm with the dust burst
+            Vector3 drop = palmTop + Vector3.up * PhantomAnchors.DropHeightM;
+            pres.threat.Begin(drop, palmTop, 0);
+            pres.threat.Tick(520);
+            written.Add(Shot(dir, "stone_telegraph", eye, palmTop + Vector3.up * 0.13f, 72f));
+            pres.threat.Body.transform.position = palmTop + Vector3.up * 0.052f;
+            pres.threat.EmitDust(palmTop);
+            foreach (var ps in pres.threat.GetComponentsInChildren<ParticleSystem>()) ps.Simulate(0.16f, true, true);
+            written.Add(Shot(dir, "stone_impact", eye, palmTop + Vector3.up * 0.08f, 52f));
+            pres.threat.Cancel();
+            foreach (var ps in pres.threat.GetComponentsInChildren<ParticleSystem>()) ps.Clear(true);   // no dust left in the table and room shots
+            // 5 the table (model or box fallback) and the whole room
+            written.Add(Shot(dir, "table", eye, new Vector3(0.05f, TableTopY, 0.40f), 95f));
+            written.Add(Shot(dir, "room", new Vector3(1.5f, 1.7f, -1.3f), new Vector3(0f, 0.8f, 1.0f), 62f));
             EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);   // discard transient changes
             return string.Join(";", written);
         }
