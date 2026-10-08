@@ -488,21 +488,22 @@ final FutureProviderFamily<Embodiment?, String> _embodimentProvider = FutureProv
   final opened = ref.watch(openedSessionDirectoriesProvider).where((r) => r.envelope.sessionId == id).firstOrNull;
   final dir = ref.read(hubControllerProvider.notifier).sessionDirFor(id) ?? opened?.sessionDirPath;
   if (dir == null) return null;
+  // First the headset's own summary of the run (the last witness_summary in events.ndjson): the numbers the wearer saw on
+  // the results panel at the end, and the report must say the same. A PC's metrics.json marks most of them "partial" when
+  // an induction was cut short with "next phase", and the report then had no verdict.
   try {
-    final fromAnalysis = Embodiment.tryParseMetrics(jsonDecode(await File('$dir/metrics.json').readAsString()));
-    if (fromAnalysis != null) return fromAnalysis;
-  } on Exception catch (_) {
-    // no metrics.json: only a PC makes one
-  }
-  // The headset's own summary of the run, last line of its kind in events.ndjson.
-  try {
-    Embodiment? found;
+    Embodiment? own;
     for (final line in await File('$dir/events.ndjson').readAsLines()) {
       if (!line.contains('"witness_summary"')) continue;
       final e = jsonDecode(line);
-      if (e is Map && e['type'] == 'witness_summary') found = Embodiment.tryParseWitness(e['data']) ?? found;
+      if (e is Map && e['type'] == 'witness_summary') own = Embodiment.tryParseWitness(e['data']) ?? own;
     }
-    return found;
+    if (own != null) return own;
+  } on Exception catch (_) {
+    // no events yet
+  }
+  try {
+    return Embodiment.tryParseMetrics(jsonDecode(await File('$dir/metrics.json').readAsString()));
   } on Exception catch (_) {
     return null;
   }
