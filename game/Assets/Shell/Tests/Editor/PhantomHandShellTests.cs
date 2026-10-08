@@ -397,6 +397,34 @@ namespace Opus.Shell.Tests
             Assert.IsTrue(h.TryGetJointPose(OpusJoints.Head, out p, out r), "the head has no side");
         }
 
+        // The scripted whole hand is drawn from anatomy (the thumb on the body's side, the fingers closing toward the table); the
+        // solver was written from the tracked hand's side. They must agree on either arm: a sign the two do not share would bend
+        // the virtual fingers backwards, or turn the hand palm up, on the headset as well.
+        [TestCase(HandSide.Right)]
+        [TestCase(HandSide.Left)]
+        public void ScriptedHands_WholeHand_ReadsAsFlatPalmDown_ThenAsAFist(HandSide arm)
+        {
+            var h = new ScriptedHands { Arm = arm, RightWrist = new[] { arm == HandSide.Left ? -0.18 : 0.18, 0.771, 0.40 } };
+            var joints = new UnityEngine.Vector3[HandSkeleton.JointCount];
+            var pose = new Opus.Games.PhantomHand.Presentation.PhHandPose();
+            Assert.IsFalse(h.TryGetSkeleton(arm == HandSide.Left ? HandSide.Right : HandSide.Left, joints), "only the stimulated arm has a whole hand");
+            Assert.IsTrue(h.TryGetSkeleton(arm, joints));
+            Assert.IsTrue(Opus.Games.PhantomHand.Presentation.PhHandPoseSolver.TrySolve(joints, arm, ref pose));
+            Assert.Greater(pose.Dorsal.y, 0.99f, "palm down: the back of the hand faces up");
+            Assert.Greater(pose.Forward.z, 0.99f, "the hand points along the forearm");
+            for (int i = 3; i < 15; i++) Assert.AreEqual(0f, pose.FlexDeg[i], 1.5f, "flat hand, finger joint " + i);
+
+            h.ArmCurl01 = 1f;
+            Assert.IsTrue(h.TryGetSkeleton(arm, joints));
+            Assert.IsTrue(Opus.Games.PhantomHand.Presentation.PhHandPoseSolver.TrySolve(joints, arm, ref pose));
+            Assert.Greater(pose.Dorsal.y, 0.99f, "a fist, still palm down");
+            float[] fist = { 80f, 95f, 60f };
+            for (int f = 1; f < 5; f++)
+                for (int k = 0; k < 3; k++) Assert.AreEqual(fist[k], pose.FlexDeg[f * 3 + k], 6f, "fist, finger " + f + " joint " + k);
+            Assert.Greater(pose.FlexDeg[1], 20f, "the thumb closes too");
+            Assert.Greater(pose.FlexDeg[2], 20f);
+        }
+
         [Test]
         public void AutoParticipant_PlaysDemoRun_ThroughAllPhasesToDone()
         {

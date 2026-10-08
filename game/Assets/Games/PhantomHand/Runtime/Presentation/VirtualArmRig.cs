@@ -389,18 +389,24 @@ namespace Opus.Games.PhantomHand.Presentation
             set { if (_visualRoot != null) _visualRoot.gameObject.SetActive(value); }
         }
 
-        /// <summary>The most the hand turns at the wrist away from lying flat along the forearm.</summary>
+        /// <summary>The most the hand bends at the wrist away from pointing along the forearm.</summary>
         public const float MaxWristDeg = 75f;
 
         /// <summary>Turns the hand at the wrist so that it points along <paramref name="forward"/> with its back toward
-        /// <paramref name="dorsal"/> (world directions, as the real hand is held); the forearm stays where it lies. Limited to
-        /// <see cref="MaxWristDeg"/>, so one bad frame of tracking cannot turn the hand over.</summary>
+        /// <paramref name="dorsal"/> (world directions, as the real hand is held); the forearm stays where it lies. The turn about
+        /// the forearm's own axis (palm up, thumb up) is followed all the way round, as a forearm makes it; the bend away from
+        /// that axis is limited to <see cref="MaxWristDeg"/>, so one bad frame of tracking cannot fold the hand back over the arm.</summary>
         public void SetHandOrientation(Vector3 forward, Vector3 dorsal)
         {
             if (_handRoot == null || forward.sqrMagnitude < 1e-6f || dorsal.sqrMagnitude < 1e-6f) return;
             Vector3 f = transform.InverseTransformDirection(forward), d = transform.InverseTransformDirection(dorsal);
             if (LeftArm) { f.x = -f.x; d.x = -d.x; }   // the hand lives under the mirrored visual
-            _handRoot.localRotation = Quaternion.RotateTowards(Quaternion.identity, Quaternion.LookRotation(f, d), MaxWristDeg);
+            // q = bend * roll, the roll being the part of the turn about the forearm's axis (local z)
+            Quaternion q = Quaternion.LookRotation(f, d);
+            float n = Mathf.Sqrt(q.z * q.z + q.w * q.w);
+            Quaternion roll = n < 1e-4f ? Quaternion.identity : new Quaternion(0f, 0f, q.z / n, q.w / n);
+            Quaternion bend = q * Quaternion.Inverse(roll);
+            _handRoot.localRotation = Quaternion.RotateTowards(Quaternion.identity, bend, MaxWristDeg) * roll;
         }
 
         /// <summary>The hand flat along the forearm again (the pose of the induction and of the stone).</summary>
@@ -413,6 +419,18 @@ namespace Opus.Games.PhantomHand.Presentation
             {
                 if (_handRoot == null) return transform.forward;
                 Vector3 l = _handRoot.localRotation * Vector3.forward;
+                if (LeftArm) l.x = -l.x;
+                return transform.TransformDirection(l);
+            }
+        }
+
+        /// <summary>World direction the back of the hand faces.</summary>
+        public Vector3 HandDorsalWorld
+        {
+            get
+            {
+                if (_handRoot == null) return transform.up;
+                Vector3 l = _handRoot.localRotation * Vector3.up;
                 if (LeftArm) l.x = -l.x;
                 return transform.TransformDirection(l);
             }

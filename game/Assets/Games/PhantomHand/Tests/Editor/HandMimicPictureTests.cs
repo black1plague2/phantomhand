@@ -48,7 +48,23 @@ namespace Opus.Games.PhantomHand.Tests
             Assert.Less(Vector3.Angle(arm.HandForwardWorld, right25), 0.5f, "toward the wearer's right");
             Assert.Greater(arm.HandForwardWorld.x, 0.3f);
 
-            // a wild frame cannot turn the hand over
+            // palm up: the turn about the forearm's own axis has no limit
+            arm.SetHandOrientation(Vector3.forward, Vector3.down);
+            Assert.Less(Vector3.Angle(arm.HandDorsalWorld, Vector3.down), 0.5f, "palm up");
+            Assert.Less(Vector3.Angle(arm.HandForwardWorld, Vector3.forward), 0.5f, "and still along the forearm");
+
+            // the thumb up, as for a handshake: the back of the hand faces away from the body's middle
+            Vector3 outward = left ? Vector3.left : Vector3.right;
+            arm.SetHandOrientation(Vector3.forward, outward);
+            Assert.Less(Vector3.Angle(arm.HandDorsalWorld, outward), 0.5f, "thumb up");
+
+            // palm up and lifted 40 degrees: both are kept
+            Quaternion lift = Quaternion.AngleAxis(-40f, Vector3.right);
+            arm.SetHandOrientation(lift * Vector3.forward, lift * Vector3.down);
+            Assert.Less(Vector3.Angle(arm.HandForwardWorld, lift * Vector3.forward), 0.5f, "palm up, fingers lifted");
+            Assert.Less(Vector3.Angle(arm.HandDorsalWorld, lift * Vector3.down), 0.5f);
+
+            // a wild frame cannot fold the hand back over the forearm
             arm.SetHandOrientation(Vector3.back, Vector3.down);
             Assert.LessOrEqual(Vector3.Angle(arm.HandForwardWorld, Vector3.forward), VirtualArmRig.MaxWristDeg + 0.5f);
 
@@ -70,7 +86,7 @@ namespace Opus.Games.PhantomHand.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Pictures_OfTheHandInFivePoses(bool left)
+        public void Pictures_OfTheHandInSevenPoses(bool left)
         {
             var arm = Arm(left);
             float[] flat = { 0f, 0f, 0f }, closed = { 80f, 95f, 60f }, thumbIn = { 25f, 40f, 45f };
@@ -78,11 +94,12 @@ namespace Opus.Games.PhantomHand.Tests
             if (!arm.ApplyHandPose(in probe)) Assert.Ignore("no rigged hand on this machine (the procedural hand has no finger pose): nothing to picture");
             foreach (var smr in arm.GetComponentsInChildren<SkinnedMeshRenderer>(true)) smr.forceMatrixRecalculationPerRender = true;
 
-            string[] names = { "flat", "fist", "point", "half", "wrist up" };
+            string[] names = { "flat", "fist", "point", "half", "wrist up", "palm up", "thumb up" };
             float[][] poses =
             {
                 Pose(flat, flat, flat), Pose(thumbIn, closed, closed), Pose(thumbIn, flat, closed),
                 Pose(new[] { 10f, 15f, 15f }, new[] { 35f, 45f, 25f }, new[] { 35f, 45f, 25f }), Pose(flat, flat, flat),
+                Pose(flat, flat, flat), Pose(flat, flat, flat),
             };
             const int w = 420, h = 340;
             var sheet = new Texture2D(w * poses.Length, h, TextureFormat.RGB24, false);
@@ -101,6 +118,8 @@ namespace Opus.Games.PhantomHand.Tests
                     var pose = new PhHandPose { FlexDeg = poses[i], Forward = Vector3.forward, Dorsal = Vector3.up };
                     arm.ApplyHandPose(in pose);
                     if (names[i] == "wrist up") arm.SetHandOrientation(Quaternion.AngleAxis(-35f, Vector3.right) * Vector3.forward, Quaternion.AngleAxis(-35f, Vector3.right) * Vector3.up);
+                    else if (names[i] == "palm up") arm.SetHandOrientation(Vector3.forward, Vector3.down);
+                    else if (names[i] == "thumb up") arm.SetHandOrientation(Vector3.forward, left ? Vector3.left : Vector3.right);
                     else arm.ResetHandOrientation();
                     // from the wearer's side: behind and above the wrist, looking at the middle of the hand
                     Vector3 mid = arm.WristWorld + Vector3.forward * 0.09f;

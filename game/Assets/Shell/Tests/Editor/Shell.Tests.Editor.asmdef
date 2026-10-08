@@ -5,6 +5,7 @@
         "Shell.Runtime",
         "OrchardReach.Runtime",
         "PhantomHand.Runtime",
+        "PhantomHand.Presentation",
         "Opus.Sdk.Runtime",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
