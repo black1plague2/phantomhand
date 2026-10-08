@@ -80,8 +80,14 @@ connections, the owner allows it.
 
 ## 5. Git
 
-- `https://github.com/black1plague2/phantomhand`, branch `main`, public. Pull before you start.
-- You own `firmware/team/**`, your log `logs/sessions/2026-10-08-PH-E-MAC-run1.md` and the bench rows of
+- `https://github.com/black1plague2/phantomhand`, branch `main`, public. The whole tree is about 400 MB (game art, pictures
+  in the logs); you need about 16 MB of it:
+  ```bash
+  git clone --depth 1 --filter=blob:none --sparse https://github.com/black1plague2/phantomhand.git ~/phantomhand
+  cd ~/phantomhand && git sparse-checkout set docs contracts tools firmware
+  ```
+  (an old git without `--sparse`: plain `git clone --depth 1`, about 200 MB.) `git pull` before you start a step.
+- You own `firmware/team/**` (your sketches, your handoff, your log `firmware/team/LOG.md`) and the bench rows of
   `docs/PH_ELECTRONICS_INTERFACE.md` §5. You do not edit `contracts/**`, `game/**`, `app/**`, `analytics/**`, `tools/**` or
   other docs: write what you need on the board and the PC session changes it.
 - Commit only what you verified, with explicit paths (never `git add -A`), then `git pull --rebase` and `git push`. Commit
