@@ -204,3 +204,57 @@ still starts a run (an unknown `stimulated_side` is a warning, not a refusal), o
 3. **A person's muscle signal on the phone's trace.** The plot was seen with simulated bursts only; the sensor on a person
    gave 1.39 times rest for its one event on 8 Oct (PH-U-DIAG-run1), which is a matter of the electrodes, not of the plot.
 4. Unchanged from section 8: Hindi for the night's new strings, the side in analytics and the report, the unused poke wiring.
+
+## 14. 02:45 to 03:15: the first runs on the headset with these builds, what they showed, and build 9
+The headset was put on at 02:44:49 (adb then listed it as authorised; a watcher installed build 8 at 02:45:28). The owner
+started a run at 02:50:32 by pinching both hands: session `c08c7a38-...`, `arm=left`, 14 phases, finished "completed" at
+02:54:41, uploaded to the phone (102 files). Mirror: `sim/out/quest_logs/run2/quest-f43ab9d2/` (git-ignored).
+The operator shortened both inductions and the dissolve with "next phase".
+
+**What worked on the headset** [V: the session's events, its log, `contracts/validate.py` exit 0, analytics exit 0]
+- Point 1: `session start: ... arm=left`; the outline is on the left once the run starts (picture `quest_b8_run_2.png`).
+- Point 2: `seated: the head is at the scene's eye point` 0.8 s after the app came up and again right before the run; nobody
+  recentred by hand.
+- Point 3: all 8 questionnaire items were answered by fingertip (4, 5, 6, 5 and 6, 5, 7, 6); no operator command stands
+  between them. The dark probe confirmed four times with the right index finger.
+- The muscle sensor on a person: flinch 7.6 and 7.7 times rest, 108 and 80 ms after the stone; IMU jolt 6.0 and 4.6 m/s2.
+  (PH-U-DIAG-run1 had 1.39 times rest for its one event.)
+- The sleeve: 85 of 85 sent strokes acked, median 12.9 ms, 95 % under 43 ms; 77 more were cancelled by "next phase".
+- The link to the phone: connected once at the start, no drop in the 4 minutes, with the phone's root job firing at
+  02:53:07 in the middle of it. 72 frames per second throughout.
+
+**What did not** [V: the same files]
+- The calibration timed out after 60 s (`"calibration": {"ok": false}`). The recorded left wrist was never inside the
+  4 cm: for 50 of the 60 s it rested about 23 cm from the outline's wrist point (11 cm toward the middle, 18 cm further
+  away, 7 cm above the virtual table). The same had happened in all three runs of the first night; height was only part
+  of it. An arm rests where the real table and the sleeve's cable let it.
+- The instruction read "Rest your right forearm inside the outline", "I can't see your right hand", and the probe told the
+  wearer to point with the left index: three texts that knew only the right arm.
+- Before Start the table showed the scene as saved: a right arm beside its outline on the right, under the card that says
+  "Sleeve arm: left" (picture `quest_build8_1.png`).
+- With the arm that far forward the hand lay behind the instruction panel, so the fingers copying the real ones could not
+  be seen during the calibration.
+
+**Build 9 (commit aa8501a; built 03:03 to 03:09, `result=Succeeded`, 91 877 702 bytes, sha256
+`694aedd89ec0a1c3f0d1e4f8b17a0f89575b67aa73d5609bf73479e4bae8fb86`, token 0 hits; installed and started 03:10:47)**
+- The arm may rest anywhere within 35 cm of the outline's wrist point and 25 cm above or below the table. What counts is
+  that the wrist stays within 3 cm for 2 s, after 2 s in which nothing counts (the hands that pinched to start are still
+  in the air). `CalibrationTracker` has the stillness rule as a fifth argument; without it the old rule holds.
+- The room then glides to the arm in all three directions (1 s), so the wrist ends on the outline's wrist point and the
+  table, the panels and the ruler are where they were laid out to be; the hand is then in front of the instruction panel.
+- `calib_title`, `calib_lost` and `probe_title` have a left-arm twin in English and Hindi (whole sentences, because the
+  Hindi word for a side changes with its noun). The Hindi was not read by a native speaker.
+- Until the first run is bound the scene shows no arm and no outline, and is laid out for the arm the card names.
+- Replayed on the recorded wrist path of that run, the new rule confirms 8.6 s into the phase, with the wrist 13 cm above
+  the table: the arm was held still there for 2 s. A wrist held still in the air calibrates in the air; the rule cannot
+  tell resting from hovering. [V: scratch replay of the kin files; N on the headset]
+- Tests: EditMode calibration, seat and panel tests 41/41 (two new: the tracker's stillness rule with that person's
+  numbers; the presenter with an arm 21 cm beside the outline, the rig moves by (-0.11, -0.07, -0.18) and the recorded
+  wrist is the outline's wrist point). The whole EditMode suite: 859 of 860; the one failure is
+  `RingBuffers_AreSafeUnderConcurrentWritersAndReaders`, a 10 s deadline of the SDK's test missed on a busy PC (it failed
+  2 of 3 times alone during the collector's run and passed the third; the code under it did not change). PlayMode Ready-card
+  test passed with the new checks. The long PlayMode runs were started after the build: see the next lines of this log.
+
+Seen in passing, not changed: when the headset is put on, the seat is taken 0.75 s later, wherever the head is at that
+moment (at 03:07:53 it was 27 cm lower than before); four more "seated" lines followed within 55 ms as the tracking
+settled. The calibration now corrects the seat from the arm, and the seat is taken again right before a run starts.
