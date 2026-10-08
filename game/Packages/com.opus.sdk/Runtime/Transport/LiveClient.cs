@@ -71,6 +71,8 @@ namespace Opus.Sdk
         public enum ConnectionState { Disconnected, Discovering, Connecting, Connected, Reconnecting }
 
         public bool IsConnected => _connected;
+        /// <summary>Messages kept for replay on the next hello_ack: unacked requires_ack messages and every trial_event.</summary>
+        public int OutboxCount => _outbox.Count;
         public double LastRttMs => _lastPongRttMs;
         public string ActiveSessionId => _sessionId;
         /// <summary>The hub port the WebSocket and the HTTP uploads go to (<see cref="HubPort"/> unless the constructor was given another).</summary>
@@ -157,11 +159,13 @@ namespace Opus.Sdk
 
         public void SendTrialEvent(TrialEvent evt)
         {
-            if (!_connected) return;
             var payload = JObject.FromObject(evt);
             var msg = _factory.Build("trial_event", payload, _sessionId);
-            _outbox.Track(msg, _clock.NowMs); // trial_events are kept for resume even though they don't require_ack
-            _ = SendAsync(msg);
+            // Kept for resume whether the link is up or not (LIVE_PROTOCOL.md, Resume: "all trial_events since the last hello_ack"),
+            // although trial_events don't require_ack: an event raised during a hub outage is replayed on the next hello_ack.
+            // With an early return here, a 30 s outage at the end of a run lost block_end for the live view (8 Oct 2026: 203 of 204).
+            _outbox.Track(msg, _clock.NowMs);
+            if (_connected) _ = SendAsync(msg);
         }
 
         public void SendMetricsTick(int windowTrials, JObject metrics)

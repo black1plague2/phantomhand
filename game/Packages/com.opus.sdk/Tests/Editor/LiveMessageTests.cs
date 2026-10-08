@@ -243,4 +243,19 @@ namespace Opus.Sdk.Tests
             }
         }
     }
+
+    /// <summary>LIVE_PROTOCOL.md, Resume: the outbox keeps every trial_event since the last hello_ack, also one raised while the
+    /// link is down. Found by a faulted run of the game (8 Oct 2026): block_end, raised during a hub outage, never reached the hub.</summary>
+    public class LiveClientOutboxTests
+    {
+        [Test]
+        public void TrialEvent_RaisedWhileTheLinkIsDown_IsKeptForReplay()
+        {
+            var client = new LiveClient("outbox-test", () => new JObject(), null, "127.0.0.1");   // never started: not connected
+            Assert.IsFalse(client.IsConnected);
+            client.SendTrialEvent(TrialEvent.Create(0, null, "block_end"));
+            client.SendTrialEvent(TrialEvent.Create(0, 1, "stroke"));
+            Assert.AreEqual(2, client.OutboxCount, "both events wait in the outbox for the next hello_ack");
+        }
+    }
 }
