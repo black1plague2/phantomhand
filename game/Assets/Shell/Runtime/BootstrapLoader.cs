@@ -39,6 +39,7 @@ namespace Opus.Shell
 
         private void Start()
         {
+            AndroidMulticastLock.Acquire();   // Quest: without it Android drops the hub and node UDP beacons
             if (settings == null) settings = Resources.Load<PhantomHandSettings>(PhantomHandSettings.ResourcePath);
             string forced = Environment.GetEnvironmentVariable("OPUS_GAME");
             if (!string.IsNullOrEmpty(forced) && SceneFor(forced) != null) { Load(forced, "env OPUS_GAME"); return; }
@@ -52,10 +53,19 @@ namespace Opus.Shell
             if (string.IsNullOrWhiteSpace(host)) host = PlayerPrefs.GetString("opus_hub_host", "");
             _client = new LiveClient(_deviceId,
                 () => new JObject { ["shell"] = "0.2.0", ["sdk"] = "0.1.0" },
-                () => new JArray(new JObject { ["id"] = "phantom_hand", ["version"] = "0.1.0" }, new JObject { ["id"] = "orchard_reach", ["version"] = "0.2.0" }),
+                AdvertisedGames,   // only the games whose scene is in this build
                 string.IsNullOrWhiteSpace(host) ? null : host.Trim());
             _client.OnCommand += OnCommand;
             _client.Start();
+        }
+
+        /// <summary>hello.games: a game is offered only when its scene can be loaded (the Phantom Hand APK holds Bootstrap + PhantomHand only).</summary>
+        private static JArray AdvertisedGames()
+        {
+            var games = new JArray();
+            if (Application.CanStreamedLevelBeLoaded(SceneFor("phantom_hand"))) games.Add(new JObject { ["id"] = "phantom_hand", ["version"] = "0.1.0" });
+            if (Application.CanStreamedLevelBeLoaded(SceneFor("orchard_reach"))) games.Add(new JObject { ["id"] = "orchard_reach", ["version"] = "0.2.0" });
+            return games;
         }
 
         private string DefaultGame()
@@ -92,6 +102,7 @@ namespace Opus.Shell
             var c = _client; _client = null;
             if (c != null) StartCoroutine(DisposeLater(c));
             string scene = SceneFor(gameId);
+            if (!Application.CanStreamedLevelBeLoaded(scene)) { why += ", '" + gameId + "' is not in this build"; gameId = "phantom_hand"; scene = SceneFor(gameId); }
             Debug.Log($"[OPUS] Bootstrap: opening '{scene}' for game '{gameId}' ({why})");
             SceneManager.LoadScene(scene);
         }

@@ -148,6 +148,7 @@ namespace Opus.Shell
             if (PhantomHandOverrides.ForceDemoHands == true) real = false;
             _useDemo = !real;
 
+            AndroidMulticastLock.Acquire();   // Quest: without it Android drops the node discovery beacons (UDP broadcast)
             _clock = new SessionClock();
             _transportA = new UdpHapticTransport(_ep.NodeAHost, DiscoveryFilter.Haptic, _ep.NodeAPort, _ep.DiscoveryPort);
             _haptic = new HapticClient(_transportA) { Enabled = false, MaxIntensity = 1.0 };

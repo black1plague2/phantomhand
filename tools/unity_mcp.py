@@ -6,7 +6,9 @@ Usage:
   python tools/unity_mcp.py call <tool> '<json args>' # call a tool, print the result text
   python tools/unity_mcp.py call <tool> @args.json    # same, args read from a file
   python tools/unity_mcp.py test EditMode             # run all EditMode tests, print a summary
-  python tools/unity_mcp.py test PlayMode "PhantomHand" [--assembly X] [--timeout 1200] [--out f.json]
+  python tools/unity_mcp.py test PlayMode "PhantomHand|PH_" [--assembly X] [--timeout 1200] [--out f.json]
+                                                      # PlayMode ALWAYS with this filter: never play Orchard Reach
+  python tools/unity_mcp.py recompile                 # after editing C#: refresh + compile + print errors
   python tools/unity_mcp.py register                  # register the bridge with Claude Code (user scope)
 
 The bearer token is read from game/Assets/Resources/DevAgentSettings.asset (written by the
@@ -204,6 +206,40 @@ def run_tests(platform: str, name_filter: str | None, assembly: str | None, time
     return 1 if failed or len(uniq) == 0 else 0
 
 
+def recompile(timeout: float = 600.0) -> int:
+    """ForceRecompile, wait, print the compile errors. Exit 1 on errors, 3 on timeout.
+
+    The wait is SHORT status polls on fresh connections. Never hold one request (WaitForCompilation) open
+    across the domain reload: the old domain's listener then still owns ports 48735/48736 when the new
+    domain binds, the bridge does not come back, and only focusing the editor window recovers it
+    (2026-10-08). "Done" = 5 clean polls in a row; an unreachable bridge or "compiling" resets the count,
+    so a run where nothing changed on disk ends after about 5 s.
+    """
+    try:
+        pumped("CompilationTools", {"method": "ForceRecompile"}, 60)
+    except McpError:
+        pass  # the reload can cut this very call
+    deadline, clean, status = time.time() + timeout, 0, None
+    while clean < 5:
+        if time.time() > deadline:
+            print(f"TIMEOUT after {timeout:.0f} s; last status = {status}")
+            return 3
+        time.sleep(1.0)
+        try:
+            c = connect(10)
+            c.tool("IReflectionService", PUMP_ARGS)
+            status = _value(c.tool("CompilationTools", {"method": "GetCompilationStatus"}))
+        except McpError:
+            clean = 0  # domain reload in progress
+            continue
+        clean = clean + 1 if status.get("status") != "compiling" else 0
+    print("status:", json.dumps(status))
+    if status.get("errorCount"):
+        print(connect(30).tool("CompilationTools", {"method": "GetCompilationErrors"})[:6000])
+        return 1
+    return 0
+
+
 def register():
     """Register the bridge with Claude Code at USER scope.
 
@@ -233,6 +269,8 @@ def main(argv) -> int:
     cmd = argv[1]
     if cmd == "register":
         return register()
+    if cmd == "recompile":
+        return recompile()
     if cmd == "test":
         opts = {"--assembly": None, "--timeout": "1200", "--out": None}
         rest = argv[2:]
@@ -242,6 +280,10 @@ def main(argv) -> int:
                 opts[k] = rest[i + 1]
                 del rest[i:i + 2]
         platform = rest[0] if rest else "EditMode"
+        if platform == "PlayMode" and (len(rest) < 2 or rest[1] in ("", ".*")):
+            print('refused: PlayMode needs a name filter, e.g. "PhantomHand|PH_" '
+                  "(an unfiltered run plays Orchard Reach, which is out of scope)")
+            return 2
         out = pathlib.Path(opts["--out"]) if opts["--out"] else REPO / "game" / "Logs" / f"ph_tests_{platform}.json"
         return run_tests(platform, rest[1] if len(rest) > 1 else None, opts["--assembly"], float(opts["--timeout"]), out)
     if cmd == "call":
