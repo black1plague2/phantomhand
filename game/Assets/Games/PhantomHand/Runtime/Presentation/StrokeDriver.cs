@@ -72,7 +72,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 _brush.Active = true;
             }
             if (_haptic != null)
-                _haptic.SendDisplay(_module.CurrentCondition == PhCondition.Sync ? "SYNC" : "ASYNC", nowMs);
+                _haptic.SendDisplay(_module.StrokeCondition == PhCondition.Sync ? "SYNC" : "ASYNC", nowMs);
             _active = true;
         }
 

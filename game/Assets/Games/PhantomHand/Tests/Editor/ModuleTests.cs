@@ -127,7 +127,7 @@ namespace Opus.Games.PhantomHand.Tests
             StringAssert.Contains("4.0 cm", en[0]); StringAssert.Contains("130 ms", en[0]); StringAssert.Contains("+2.0", en[0]);
             Assert.AreEqual(WitnessSummary.ClosingEn, en.Last());
             Assert.AreEqual(WitnessSummary.ClosingHi, hi.Last());
-            StringAssert.Contains("The witness that noticed the change did not change.", en.Last());
+            StringAssert.Contains("You noticed every change.", en.Last());
             StringAssert.Contains("4.0 cm", hi[0]);
         }
 
@@ -288,7 +288,7 @@ namespace Opus.Games.PhantomHand.Tests
             h.M.Begin(); h.Calibrate(); h.Probe(-0.16);
             Assert.AreEqual(PhPhase.Induction, h.M.CurrentPhase);
             Assert.AreEqual(h.M.InductionStartMs + 500, h.M.CurrentStrokes[0].StartMs, 1e-6);
-            Assert.Greater(h.M.CurrentStrokes.Count, 75);
+            Assert.That(h.M.CurrentStrokes.Count, Is.InRange(35, 39));   // D16 slow brush: 37 strokes in 90 s
             Assert.Less(h.M.CurrentStrokes.Last().EndMs, h.M.InductionStartMs + 90000);
         }
 
@@ -406,8 +406,8 @@ namespace Opus.Games.PhantomHand.Tests
             var h = new Harness("{\"induction_s\":60}", additions: true);
             h.M.Begin(); h.Calibrate(); h.Probe(-0.16);
             h.Adv(45000);   // induction 60 - 15 self-touch
-            Assert.AreEqual(PhPhase.SelfTouch, h.M.CurrentPhase);
-            Assert.Less(h.M.CurrentStrokes.Last().EndMs, h.M.InductionStartMs + 45000);
+            Assert.AreEqual(PhPhase.Induction, h.M.CurrentPhase);   // D13: no self-touch phase
+            Assert.Less(h.M.CurrentStrokes.Last().EndMs, h.M.InductionStartMs + 60000);
             h.Adv(15000);
             Assert.AreEqual(PhPhase.Threat, h.M.CurrentPhase);
             h.Adv(5000); h.Probe(-0.18);

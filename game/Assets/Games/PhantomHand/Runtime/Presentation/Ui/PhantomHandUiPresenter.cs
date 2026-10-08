@@ -294,6 +294,7 @@ namespace Opus.Games.PhantomHand.Presentation
 
             var m = HudData;
             m.Lang = Lang; m.Phase = _phase; m.Condition = _module.CurrentCondition; m.RemainingS = _module.RemainingS(now);
+            m.AgencyNow = _phase == PhPhase.Agency && _module.Agency != null ? (AgencyStep?)_module.Agency.Step : null;   // the caption names the step
             m.HapticConnected = _haptic != null && _haptic.Connected;
             m.BioConnected = _nodeB != null && _nodeB.Connected;
             m.EmgLevel01 = _nodeB != null ? _nodeB.EmgLevel01 : 0.0;

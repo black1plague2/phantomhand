@@ -43,7 +43,7 @@ namespace Opus.Shell
         [Tooltip("Start a run as soon as the scene is up and the headset tracks (no clinician Start needed). Off for the clinic; on for a stand-alone kiosk.")]
         public bool autoStartOnHeadset = false;
         [Tooltip("A2/A3 additions (self-touch, dissolve, reveal). Off until gate G2 is green and a teammate test passed.")]
-        public bool additionsEnabled = false;
+        public bool additionsEnabled = true;
         [Tooltip("Editor / batch (no headset): a scripted participant plays the run so the whole pipeline can be exercised.")]
         public bool scriptedParticipantWithoutHeadset = true;
         [Tooltip("0 = a new random seed per run (logged); otherwise the fixed seed (tests).")]

@@ -407,12 +407,12 @@ namespace Opus.Shell.Tests
                 if (phases[phases.Count - 1] != m.CurrentPhase) phases.Add(m.CurrentPhase);
             }
             Assert.IsTrue(m.Machine.IsDone, "run did not finish; phases=" + string.Join(",", phases));
-            var expected = new[] { PhPhase.Calibrate, PhPhase.ProbePre, PhPhase.Induction, PhPhase.Threat, PhPhase.ProbePost,
+            var expected = new[] { PhPhase.Calibrate, PhPhase.ProbePre, PhPhase.Induction, PhPhase.Threat, PhPhase.ProbePost, PhPhase.Questionnaire,
                                    PhPhase.ProbePre, PhPhase.Induction, PhPhase.Threat, PhPhase.ProbePost, PhPhase.Questionnaire,
                                    PhPhase.Witness, PhPhase.Done };
             CollectionAssert.AreEqual(expected, phases);
             Assert.AreEqual(2, events.Count(e => e.Type == "drift_probe" && (bool)Get(e, "confirmed") && (string)Get(e, "when") == "post"));
-            Assert.AreEqual(3, events.Count(e => e.Type == "questionnaire_item"));
+            Assert.AreEqual(2, events.Count(e => e.Type == "questionnaire_item"));   // D18: q1 after each condition
             Assert.IsTrue(m.Results[0].DriftChangeCm.HasValue && m.Results[1].DriftChangeCm.HasValue);
             var sync = m.Results.First(r => r.Condition == PhCondition.Sync);
             var asyn = m.Results.First(r => r.Condition == PhCondition.Async);

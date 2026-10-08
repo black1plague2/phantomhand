@@ -18,6 +18,8 @@ namespace Opus.Games.PhantomHand
         /// <summary>q4: shown as a pointer, not proof.</summary>
         public bool Pointer;
         public string PointerText;
+        /// <summary>Row group ("body", "mind", "observer") and its header in the chosen language; the panel draws the header above the first row of each group.</summary>
+        public string Group, GroupHeader;
     }
 
     public sealed class WitnessCardView
@@ -39,6 +41,8 @@ namespace Opus.Games.PhantomHand
 
         public string Lang = PhStrings.En;
         public string Title, PreliminaryLabel, ClosingLine;
+        /// <summary>"You closed it 3 times. It closed by itself 2 times." when the agency phase ran, else null.</summary>
+        public string AgencyLine;
         public WitnessCardView Sync, Async;
 
         public static double ClosingAlpha(double secondsSinceShown)
@@ -55,6 +59,7 @@ namespace Opus.Games.PhantomHand
                 Title = PhStrings.Get("w_title", lang),
                 PreliminaryLabel = PhStrings.Get("w_preliminary", lang),
                 ClosingLine = s.ClosingLine(lang),
+                AgencyLine = s.AgencyRan ? PhStrings.Format("w_agency_facts", lang, s.DrivenCloses, s.AutonomousCloses) : null,
                 Sync = new WitnessCardView { Condition = PhCondition.Sync, Title = PhStrings.Get("w_sync", lang) },
                 Async = new WitnessCardView { Condition = PhCondition.Async, Title = PhStrings.Get("w_async", lang) },
             };
@@ -69,7 +74,8 @@ namespace Opus.Games.PhantomHand
         private static WitnessEntry Entry(WitnessRow row, object val, string lang)
         {
             bool hi = lang == PhStrings.Hi;
-            var e = new WitnessEntry { Key = row.Key, Label = hi ? row.LabelHi : row.LabelEn, Pointer = row.Pointer, HasData = val != null };
+            var e = new WitnessEntry { Key = row.Key, Label = hi ? row.LabelHi : row.LabelEn, Pointer = row.Pointer, HasData = val != null, Group = row.Group };
+            if (row.Group != null) e.GroupHeader = PhStrings.Get("w_group_" + row.Group, lang);
             if (row.Pointer) e.PointerText = PhStrings.Get("w_pointer", lang);
             string nodata = PhStrings.Get("w_nodata", lang);
             switch (row.Key)

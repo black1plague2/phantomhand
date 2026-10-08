@@ -76,6 +76,21 @@ namespace Opus.Sdk.Tests
         }
 
         [Test]
+        public void BackgroundWrites_GiveTheSameFiles_OnceFlushed()
+        {
+            string[] dirs = { Path.Combine(_dir, "sync"), Path.Combine(_dir, "bg") };
+            for (int k = 0; k < 2; k++)
+            {
+                var r = new SensorRecorder("s", SessionClock.Manual(0), dirs[k]) { BackgroundWrites = k == 1 };
+                for (int i = 0; i < 1200; i++) r.AddImu(Imu(2000 + 10.0 * i));    // 12 s at 100 Hz: two rollovers on the way
+                r.Flush();                                                         // returns only when every file is on disk
+                Assert.AreEqual(3, r.ChunksWritten);
+            }
+            foreach (var name in new[] { "sens_000.json", "sens_001.json", "sens_002.json" })
+                Assert.AreEqual(File.ReadAllText(Path.Combine(dirs[0], name)), File.ReadAllText(Path.Combine(dirs[1], name)), name);
+        }
+
+        [Test]
         public void Chunks_RollEvery5Seconds_OnSampleTime()
         {
             var clock = SessionClock.Manual(0);

@@ -467,7 +467,7 @@ namespace Opus.Shell
 
         public void StartKinematicsRecording(string sessionId, string sessionDir, double rateHz = 72.0)
         {
-            _kinRecorder = new KinematicsRecorder(sessionId, _clock, sessionDir, rateHz, _useDemo ? "synthetic" : "xr_hands");
+            _kinRecorder = new KinematicsRecorder(sessionId, _clock, sessionDir, rateHz, _useDemo ? "synthetic" : "xr_hands") { BackgroundWrites = true };
             _kinSampler = new KinematicsSampler(_kinRecorder, _hands);
             _kinSampler.OnTrackingChanged += (side, tracked) => RaiseEvent(new TrialEvent
             {
@@ -478,7 +478,7 @@ namespace Opus.Shell
             });
             _kinLastMs = -1;
             _rateMeter = new TrackingRateMeter(HandSide.Right);
-            _sensRecorder = new SensorRecorder(sessionId, _clock, sessionDir, "udp");
+            _sensRecorder = new SensorRecorder(sessionId, _clock, sessionDir, "udp") { BackgroundWrites = true };
             if (_cues != null) _sensRecorder.MotorExclusion = _cues.InMotorWindow;
         }
 

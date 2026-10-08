@@ -21,7 +21,7 @@ using Debug = UnityEngine.Debug;
 namespace Opus.Shell.Tests.PlayMode
 {
     /// <summary>
-    /// PH U5 item 4: PH_FullRun. One complete Phantom Hand run in demo_mode (induction 45 s, one questionnaire at the end, ~2.5 min) in the real
+    /// PH U5 item 4: PH_FullRun. One complete Phantom Hand run in demo_mode (induction 60 s at most, one rating after each condition, then dissolve and reveal, ~3.5 min) in the real
     /// PhantomHand scene, driven by the scripted participant, against sim/live/fake_hub.py (live link + uploads) and the sleeve twin
     /// (sim/sleeve/twin.py --kind both: Node A haptic+IMU, Node B bio+EMG) on OFFSET ports.
     ///
@@ -208,7 +208,8 @@ namespace Opus.Shell.Tests.PlayMode
             // ---- local session content -----------------------------------------------------------------------------------
             var events = File.ReadAllLines(Path.Combine(sessionDir, "events.ndjson")).Where(l => l.Trim().Length > 0).Select(JObject.Parse).ToList();
             var phaseOrder = events.Where(e => (string)e["type"] == "phase_start").Select(e => (string)e["data"]["phase"]).ToList();
-            var expected = new[] { "calibrate", "probe_pre", "induction", "threat", "probe_post", "probe_pre", "induction", "threat", "probe_post", "questionnaire", "witness" };
+            var expected = new[] { "calibrate", "probe_pre", "induction", "threat", "probe_post", "questionnaire", "probe_pre", "induction", "threat", "probe_post", "questionnaire",
+                                   "dissolve", "reveal", "witness" };
             CollectionAssert.AreEqual(expected, phaseOrder, "phase order");
             int strokes = events.Count(e => (string)e["type"] == "stroke");
             Assert.GreaterOrEqual(strokes, 30, "stroke events");

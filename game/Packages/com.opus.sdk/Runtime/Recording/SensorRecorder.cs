@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -40,6 +41,12 @@ namespace Opus.Sdk
         private readonly List<double> _ax = new List<double>(), _ay = new List<double>(), _az = new List<double>(),
                                       _gx = new List<double>(), _gy = new List<double>(), _gz = new List<double>();
 
+        /// <summary>Mid-run chunk rollovers serialise and write the finished chunk on a background thread, in order. A 5 s chunk is about 150 KB of JSON and cost
+        /// 150-400 ms of main-thread time in the editor: frames froze every 5 s and stroke cues due in that window went out late. <see cref="Flush"/> still
+        /// returns only when every file is on disk. Off by default, so tests and older callers see each file at once.</summary>
+        public bool BackgroundWrites;
+        private Task _pendingWrite = Task.CompletedTask;
+        private volatile string _writeError;
         public int ChunksWritten { get; private set; }
         public string LastPath { get; private set; }
         public int DroppedForeign { get; private set; }
@@ -92,7 +99,7 @@ namespace Opus.Sdk
         /// <summary>Call each frame so a quiet stream still gets flushed on time.</summary>
         public void Tick()
         {
-            if (!double.IsNaN(_chunkStartMs) && _clock.NowMs - _chunkStartMs >= ChunkDurationMs) Flush();
+            if (!double.IsNaN(_chunkStartMs) && _clock.NowMs - _chunkStartMs >= ChunkDurationMs) Roll();
         }
 
         private static bool Finite(params double[] v)
@@ -109,11 +116,23 @@ namespace Opus.Sdk
 
         private void RollIfDue(double t)
         {
-            if (!double.IsNaN(_chunkStartMs) && t - _chunkStartMs >= ChunkDurationMs) Flush();
+            if (!double.IsNaN(_chunkStartMs) && t - _chunkStartMs >= ChunkDurationMs) Roll();
         }
 
         /// <summary>Write the current chunk (also call at session end). No file when nothing was recorded.</summary>
-        public void Flush()
+        public void Flush() { Roll(); Drain(); }
+
+        /// <summary>Waits for the background writes and reports a failed one (a lost chunk must not pass silently).</summary>
+        private void Drain()
+        {
+            _pendingWrite.Wait(10000);
+            if (_writeError == null) return;
+            string e = _writeError; _writeError = null;
+            throw new IOException(e);
+        }
+
+        /// <summary>Closes the current chunk; the file is written here, or queued when <see cref="BackgroundWrites"/> is on.</summary>
+        private void Roll()
         {
             bool hasEmg = _emgT.Count > 0, hasImu = _imuT.Count > 0;
             if (!hasEmg && !hasImu) { Reset(); return; }
@@ -158,11 +177,19 @@ namespace Opus.Sdk
             {
                 Directory.CreateDirectory(_sessionDir);
                 LastPath = Path.Combine(_sessionDir, $"sens_{_nextSeq:000}.json");
-                File.WriteAllText(LastPath, root.ToString(Formatting.None));
+                string path = LastPath;    // root is a private copy of the samples: nothing touches it after this point
+                if (BackgroundWrites) _pendingWrite = _pendingWrite.ContinueWith(_ => WriteFile(path, () => root.ToString(Formatting.None)), TaskScheduler.Default);
+                else File.WriteAllText(path, root.ToString(Formatting.None));
             }
             ChunksWritten++;
             _nextSeq++;
             Reset();
+        }
+
+        private void WriteFile(string path, Func<string> json)
+        {
+            try { File.WriteAllText(path, json()); }
+            catch (Exception e) { _writeError = path + ": " + e.Message; }
         }
 
         private void Reset()

@@ -22,6 +22,6 @@ MonoBehaviour:
   defaultGameId: phantom_hand
   bootstrapProgramWaitSec: 3
   autoStartOnHeadset: 0
-  additionsEnabled: 0
+  additionsEnabled: 1
   scriptedParticipantWithoutHeadset: 1
   seed: 0

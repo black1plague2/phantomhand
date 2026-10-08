@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Opus.Sdk
@@ -24,6 +25,12 @@ namespace Opus.Sdk
         private KinematicsChunk _current;
         private double _chunkStartMs;
         private int _nextChunkSeq;
+        /// <summary>Mid-run chunk rollovers serialise and write the finished chunk on a background thread, in order. A 5 s chunk is about 150 KB of JSON and cost
+        /// 150-400 ms of main-thread time in the editor: frames froze every 5 s and stroke cues due in that window went out late. <see cref="Flush"/> still
+        /// returns only when every file is on disk. Off by default, so tests and older callers see each file at once.</summary>
+        public bool BackgroundWrites;
+        private Task _pendingWrite = Task.CompletedTask;
+        private volatile string _writeError;
         public int ChunksWritten { get; private set; }
         public IReadOnlyList<KinematicsChunk> WrittenChunks => _writtenInMemory;
         private readonly List<KinematicsChunk> _writtenInMemory = new List<KinematicsChunk>();
@@ -112,7 +119,7 @@ namespace Opus.Sdk
             }
 
             if (_clock.NowMs - _chunkStartMs >= ChunkDurationMs)
-                Flush();
+                Roll();
         }
 
         private static readonly double[] IdentityRot = { 0, 0, 0, 1 };
@@ -138,7 +145,19 @@ namespace Opus.Sdk
         }
 
         /// <summary>Force-write the current chunk (call at block/session end even if under 5 s).</summary>
-        public void Flush()
+        public void Flush() { Roll(); Drain(); }
+
+        /// <summary>Waits for the background writes and reports a failed one (a lost chunk must not pass silently).</summary>
+        private void Drain()
+        {
+            _pendingWrite.Wait(10000);
+            if (_writeError == null) return;
+            string e = _writeError; _writeError = null;
+            throw new IOException(e);
+        }
+
+        /// <summary>Closes the current chunk and starts the next one; the file is written here, or queued when <see cref="BackgroundWrites"/> is on.</summary>
+        private void Roll()
         {
             if (_current.TMs.Count == 0) { return; } // nothing sampled this chunk; don't emit an empty file
 
@@ -149,12 +168,20 @@ namespace Opus.Sdk
             {
                 Directory.CreateDirectory(_sessionDir);
                 var path = Path.Combine(_sessionDir, $"kin_{_current.Seq:000}.json");
-                File.WriteAllText(path, JsonConvert.SerializeObject(_current, Formatting.None));
+                var chunk = _current;      // complete: StartNewChunk replaces it below and nothing mutates it again
+                if (BackgroundWrites) _pendingWrite = _pendingWrite.ContinueWith(_ => WriteFile(path, () => JsonConvert.SerializeObject(chunk, Formatting.None)), TaskScheduler.Default);
+                else File.WriteAllText(path, JsonConvert.SerializeObject(chunk, Formatting.None));
             }
             _writtenInMemory.Add(_current);
             ChunksWritten++;
             _nextChunkSeq++;
             StartNewChunk();
+        }
+
+        private void WriteFile(string path, Func<string> json)
+        {
+            try { File.WriteAllText(path, json()); }
+            catch (Exception e) { _writeError = path + ": " + e.Message; }
         }
     }
 }

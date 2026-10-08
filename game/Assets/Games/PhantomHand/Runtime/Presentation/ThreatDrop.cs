@@ -27,6 +27,8 @@ namespace Opus.Games.PhantomHand.Presentation
         public const float StoneDiameterM = 0.11f;
         public const double TelegraphMs = 600, MissTimeoutMs = 2000, FadeStartAfterImpactMs = 1000, FadeDurationMs = 800;
         public const float RealHandClearanceM = 0.09f;
+        /// <summary>Half the old volume: a loud thud startles people whether or not the hand feels theirs, which blurs the in-step against delayed difference.</summary>
+        public const float ThudVolume = 0.5f, CreakVolume = 0.5f;
 
         public enum State { Idle, Telegraph, Falling, Settled, Done }
 
@@ -154,7 +156,7 @@ namespace Opus.Games.PhantomHand.Presentation
             Body.position = dropPoint; _stone.position = dropPoint; _stone.rotation = Quaternion.identity;
             _shadow.position = surfacePoint + Vector3.up * 0.003f;
             UpdateShadow(0f);
-            if (creakSource != null) ProceduralSfx.Play(creakSource, ProceduralSfx.Creak(), 0.8f);
+            if (creakSource != null) ProceduralSfx.Play(creakSource, ProceduralSfx.Creak(), CreakVolume);
             return true;
         }
 
@@ -255,7 +257,7 @@ namespace Opus.Games.PhantomHand.Presentation
             double impact = ReleaseMs + _steps * _fixedDt * 1000.0;
             Phase = State.Settled; _impactSessionMs = impact; _impactPos = pos;
             _shadow.gameObject.SetActive(false);
-            if (thudSource != null) ProceduralSfx.Play(thudSource, ProceduralSfx.Thud(), 1f, 0.95f);
+            if (thudSource != null) ProceduralSfx.Play(thudSource, ProceduralSfx.Thud(), ThudVolume, 0.95f);
             EmitDust(pos);
             // roll off: nudge away from the hand centre
             var away = Body.position - c.collider.bounds.center; away.y = 0;

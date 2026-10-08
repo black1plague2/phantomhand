@@ -8,7 +8,7 @@ using Opus.Sdk;
 namespace Opus.Shell.Tests
 {
     /// <summary>
-    /// PH U6 item 1, the parts that are logic. demo_mode itself (induction 45 s, one questionnaire at the end) was built in U2 and is covered by
+    /// PH U6 item 1, the parts that are logic. demo_mode itself (induction 60 s at most, one rating after each condition) was built in U2 and is covered by
     /// PhaseAndParamsTests and ScriptedParticipantTests; this adds what U6 states and nothing yet measured: how long a demo run is
     /// (the "~2.5 min"), that the questionnaire really comes once and last, that a second run from a fresh module (what the next-person scene
     /// reload builds) starts from nothing and repeats the first, and that demo_mode shortens the timeline without touching the stroke or safety
@@ -72,21 +72,21 @@ namespace Opus.Shell.Tests
         }
 
         [Test]
-        public void TimerPhases_DemoIs130Seconds_FullRunIs220()
+        public void TimerPhases_DemoIs160Seconds_FullRunIs220()
         {
-            Assert.AreEqual(2 * (45 + 5) + 30, TimedBudgetS("{\"demo_mode\":true}"), 1e-9, "2 x (induction 45 + threat 5) + witness 30");
+            Assert.AreEqual(2 * (60 + 5) + 30, TimedBudgetS("{\"demo_mode\":true}"), 1e-9, "2 x (induction 60 + threat 5) + witness 30");
             Assert.AreEqual(2 * (90 + 5) + 30, TimedBudgetS("{}"), 1e-9, "2 x (induction 90 + threat 5) + witness 30");
-            Assert.AreEqual(130.0, TimedBudgetS("{\"demo_mode\":true,\"induction_s\":180}"), 1e-9, "demo_mode wins over a long induction_s");
+            Assert.AreEqual(160.0, TimedBudgetS("{\"demo_mode\":true,\"induction_s\":180}"), 1e-9, "demo_mode wins over a long induction_s");
         }
 
         [Test]
-        public void ScriptedDemoRun_TakesAboutTwoAndAHalfMinutes()
+        public void ScriptedDemoRun_TakesAboutThreeMinutes()
         {
             var run = Play("{\"demo_mode\":true}");
             Assert.IsTrue(run.Module.Machine.IsDone, "the run reached Done");
             double s = run.TotalMs / 1000.0;
-            Assert.GreaterOrEqual(s, 130.0, "cannot be shorter than its timers");
-            Assert.LessOrEqual(s, 165.0, "a scripted participant needs about 140 s (timers 130 s + about 10 s of calibrate, probes and questions); got " + s + " s");
+            Assert.GreaterOrEqual(s, 160.0, "cannot be shorter than its timers");
+            Assert.LessOrEqual(s, 190.0, "a scripted participant needs about 170 s (timers 160 s + about 10 s of calibrate, probes and questions); got " + s + " s");
         }
 
         [Test]
@@ -97,20 +97,20 @@ namespace Opus.Shell.Tests
             double fullS = full.TotalMs / 1000.0, demoS = demo.TotalMs / 1000.0;
             Assert.IsTrue(full.Module.Machine.IsDone);
             Assert.GreaterOrEqual(fullS, 215.0); Assert.LessOrEqual(fullS, 250.0, "the PRD's four-minute run; got " + fullS + " s");
-            Assert.Less(demoS, 0.7 * fullS, "demo " + demoS + " s vs full " + fullS + " s");
+            Assert.Less(demoS, 0.8 * fullS, "demo " + demoS + " s vs full " + fullS + " s");
         }
 
         [Test]
-        public void Demo_AsksOneQuestionnaire_AtTheEnd_ForTheLastConditionOnly()
+        public void Demo_AsksOneRating_AfterEachCondition()
         {
             var run = Play("{\"demo_mode\":true}");
-            var expected = new[] { PhPhase.Calibrate, PhPhase.ProbePre, PhPhase.Induction, PhPhase.Threat, PhPhase.ProbePost,
+            var expected = new[] { PhPhase.Calibrate, PhPhase.ProbePre, PhPhase.Induction, PhPhase.Threat, PhPhase.ProbePost, PhPhase.Questionnaire,
                                    PhPhase.ProbePre, PhPhase.Induction, PhPhase.Threat, PhPhase.ProbePost, PhPhase.Questionnaire,
                                    PhPhase.Witness, PhPhase.Done };
             CollectionAssert.AreEqual(expected, run.Order);
-            Assert.AreEqual(3, run.Events.Count(e => e.Type == "questionnaire_item"), "one set of three items");
+            Assert.AreEqual(2, run.Events.Count(e => e.Type == "questionnaire_item"), "q1 after each condition");
             Assert.AreEqual(1, run.Events.Count(e => e.Type == "witness_summary"));
-            Assert.IsFalse(run.Module.Results[0].Ownership.HasValue, "the first condition was never asked");
+            Assert.IsTrue(run.Module.Results[0].Ownership.HasValue, "the first condition is rated too (D18)");
             Assert.IsTrue(run.Module.Results[1].Ownership.HasValue, "the single set of answers describes the last condition");
             Assert.IsTrue(run.Module.Results[0].DriftChangeCm.HasValue && run.Module.Results[1].DriftChangeCm.HasValue, "both probes ran in both conditions");
 
@@ -140,7 +140,7 @@ namespace Opus.Shell.Tests
             var normal = PhantomHandParams.From(new ParamSet(new JObject()));
             var demo = PhantomHandParams.From(new ParamSet(new JObject { ["demo_mode"] = true }));
             Assert.AreEqual(90, normal.EffectiveInductionS, 1e-9);
-            Assert.AreEqual(45, demo.EffectiveInductionS, 1e-9);
+            Assert.AreEqual(60, demo.EffectiveInductionS, 1e-9);
             Assert.AreEqual(normal.StrokeRateHz, demo.StrokeRateHz, 1e-9);
             Assert.AreEqual(normal.StrokeJitterMs, demo.StrokeJitterMs, 1e-9);
             Assert.AreEqual(normal.MotorSoaMs, demo.MotorSoaMs, 1e-9);

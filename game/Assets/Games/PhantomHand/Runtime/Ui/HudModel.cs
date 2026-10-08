@@ -18,11 +18,16 @@ namespace Opus.Games.PhantomHand
         public double EmgLevel01;
         public int StrokeCount;
         public bool SpectatorVisible;
+        /// <summary>The step of the agency phase while it runs: the caption says what to do right now.</summary>
+        public AgencyStep? AgencyNow;
 
         public bool SleeveOffline { get { return !HapticConnected; } }
         public bool EmgOffline { get { return !BioConnected; } }
 
-        public string PhaseText { get { return PhStrings.PhaseWord(Phase, Lang); } }
+        public string PhaseText
+        {
+            get { return Phase == PhPhase.Agency && AgencyNow.HasValue ? PhStrings.AgencyWord(AgencyNow.Value, Lang) : PhStrings.PhaseWord(Phase, Lang); }
+        }
 
         public string TimeLeftText
         {

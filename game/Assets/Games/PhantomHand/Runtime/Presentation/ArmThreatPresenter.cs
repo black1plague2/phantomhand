@@ -8,7 +8,8 @@ namespace Opus.Games.PhantomHand.Presentation
     /// module's phase. The composition root (U5) calls <see cref="Bind"/> once and <see cref="Tick"/> every frame AFTER
     /// haptic Pump and module.Tick (frame order: clients Pump -> module Tick -> presenters -> recorders).
     /// Arm visibility: Calibrate (follows the real wrist + offset), Induction/SelfTouch/Agency/Threat/Dissolve (frozen
-    /// except Calibrate/Agency or follow_during_induction); hidden for probes, questionnaire, reveal and witness.
+    /// except Calibrate/Agency or follow_during_induction; the Dissolve arm fades out after 4 s while the brush goes on);
+    /// Reveal (fades in and slides onto the real wrist, no passthrough in this build); hidden for probes, questionnaire and witness.
     /// </summary>
     public sealed class ArmThreatPresenter : MonoBehaviour
     {
@@ -18,6 +19,11 @@ namespace Opus.Games.PhantomHand.Presentation
         public PhantomAnchors anchors;
         [Tooltip("Seconds after the Threat phase starts before the 0.6 s telegraph begins.")]
         public float threatLeadInS = 0.5f;
+
+        /// <summary>A2 dissolve: the arm stays fully visible for DissolveHoldS seconds, then fades 1 to 0 over DissolveFadeS; the brush keeps stroking.</summary>
+        public const double DissolveHoldS = 4, DissolveFadeS = 3;
+        /// <summary>A2 reveal (fallback, no passthrough): the arm fades in over RevealFadeInS and slides onto the tracked real hand over RevealSlideS.</summary>
+        public const double RevealFadeInS = 1, RevealSlideS = 3;
 
         public StrokeDriver Driver { get; private set; }
         public ThreatResponseCollector Collector { get; private set; }
@@ -32,10 +38,16 @@ namespace Opus.Games.PhantomHand.Presentation
         private bool _hasCalib, _bound;
         private Vector3 _calibWrist, _calibAxis = Vector3.forward;
         private double _threatAtMs = -1;
+        // A5 agency: where the muscle level comes from
+        private SleeveSensorClient _nodeB;
+        private AgencyStep _agencyStep = AgencyStep.Rest;
+        private bool _restOk, _emgReady;
+        private FlexionCalibration _flexion = new FlexionCalibration();
+        private const double RestSettleS = 1.0, RestWindowMs = 3000, SqueezeWindowMs = 4000;
 
         public void Bind(PhantomHandModule module, HapticClient haptic, SleeveSensorClient nodeA, SleeveSensorClient nodeB, SessionClock clock, IHandSource hands)
         {
-            _module = module; _haptic = haptic; _clock = clock; _hands = hands;
+            _module = module; _haptic = haptic; _clock = clock; _hands = hands; _nodeB = nodeB;
             var p = module.Params;
             if (arm == null) { arm = new GameObject("VirtualArm").AddComponent<VirtualArmRig>(); arm.transform.SetParent(transform, false); }
             if (brush == null) { brush = new GameObject("BrushRig").AddComponent<BrushRig>(); brush.transform.SetParent(transform, false); }
@@ -75,6 +87,28 @@ namespace Opus.Games.PhantomHand.Presentation
             return t != null ? t.GetComponent<AudioSource>() : null;
         }
 
+        /// <summary>Arm opacity tSec seconds into the dissolve. Pure.</summary>
+        public static float DissolveAlpha(double tSec)
+        {
+            double a = 1.0 - (tSec - DissolveHoldS) / DissolveFadeS;
+            return (float)(a < 0 ? 0 : a > 1 ? 1 : a);
+        }
+
+        /// <summary>Arm opacity tSec seconds into the reveal: 0 to 1 over RevealFadeInS. Pure.</summary>
+        public static float RevealAlpha(double tSec)
+        {
+            double a = tSec / RevealFadeInS;
+            return (float)(a < 0 ? 0 : a > 1 ? 1 : a);
+        }
+
+        /// <summary>Lateral offset (cm) tSec seconds into the reveal: offset_cm eased to 0 (smoothstep) over RevealSlideS, 0 after. Pure.</summary>
+        public static double RevealOffsetCm(double tSec, double offsetCm)
+        {
+            double u = tSec / RevealSlideS;
+            u = u < 0 ? 0 : u > 1 ? 1 : u;
+            return offsetCm * (1.0 - u * u * (3.0 - 2.0 * u));
+        }
+
         private Vector3? RealPalm()
         {
             double[] pos, rot;
@@ -108,17 +142,71 @@ namespace Opus.Games.PhantomHand.Presentation
                 case PhPhase.Calibrate:
                 case PhPhase.Agency:
                     if (RealWrist(out w)) arm.Follow(w, _hasCalib ? _calibAxis : Vector3.forward, (float)_module.Params.OffsetCm);
+                    if (phase == PhPhase.Agency) TickAgency(now);
                     break;
                 case PhPhase.Induction:
                 case PhPhase.SelfTouch:
                 case PhPhase.Dissolve:
                     if (_module.Params.FollowDuringInduction && RealWrist(out w)) arm.Follow(w, _calibAxis, (float)_module.Params.OffsetCm);
+                    if (phase == PhPhase.Dissolve)
+                    {
+                        float a = DissolveAlpha(_module.Machine.ElapsedMs(now) / 1000.0);   // the machine's elapsed time stops with a pause
+                        if (a != arm.Alpha) arm.Alpha = a;
+                    }
                     break;
+                case PhPhase.Reveal:
+                {
+                    double t = _module.Machine.ElapsedMs(now) / 1000.0;
+                    float ra = RevealAlpha(t);
+                    if (ra != arm.Alpha) arm.Alpha = ra;
+                    if (!RealWrist(out w)) w = DefaultCalibration().Key;   // the calibrated wrist when the hand is not tracked
+                    arm.Follow(w, _calibAxis, (float)RevealOffsetCm(t, _module.Params.OffsetCm));
+                    break;
+                }
                 case PhPhase.Threat:
                     TickThreat(now);
                     break;
             }
             if (Driver.Active) { brush.Tick(now); Driver.Tick(now); }
+        }
+
+        // ---- A5 agency: the muscle (or, without a sensor, the real hand) closes the virtual hand, then it closes by itself ----------
+
+        /// <summary>Fingertip-to-palm distance of the real right hand in metres (the flexion signal), null when the hand is not tracked.
+        /// Only the index fingertip: OpusJoints has no middle or ring fingertip.</summary>
+        private double? IndexToPalmM()
+        {
+            double[] tip, palm, rot;
+            if (_hands == null || !_hands.IsTracked(HandSide.Right) ||
+                !_hands.TryGetJointPose(OpusJoints.RIndexTip, out tip, out rot) || !_hands.TryGetJointPose(OpusJoints.RPalm, out palm, out rot)) return null;
+            return Vector3.Distance(new Vector3((float)tip[0], (float)tip[1], (float)tip[2]), new Vector3((float)palm[0], (float)palm[1], (float)palm[2]));
+        }
+
+        private void TickAgency(double now)
+        {
+            var run = _module.Agency;
+            if (run == null) return;
+            double? d = IndexToPalmM();
+            var step = run.Step;                                       // the step of the previous frame
+            if (step == AgencyStep.Rest && run.ElapsedS >= RestSettleS && d.HasValue) _flexion.AddRest(d.Value);
+            if (step == AgencyStep.Squeeze && d.HasValue) _flexion.AddSqueeze(d.Value);
+            double? level = null;                                      // no source at all: the hand stays open
+            if (step == AgencyStep.Driven || step == AgencyStep.Watch)
+                level = _emgReady ? _nodeB.EmgLevel01 : _flexion.Ready && d.HasValue ? (double?)_flexion.Level(d.Value) : null;
+            run.Tick(run.StartMs + _module.Machine.ElapsedMs(now), level);   // the machine's elapsed time stops with a pause
+            if (run.Step != _agencyStep)
+            {
+                // each calibration runs once, when its step is over: Node B rest, then Node B MVC; the hand-tracking fallback at the same time
+                if (_agencyStep <= AgencyStep.Rest && run.Step > AgencyStep.Rest)
+                    _restOk = _nodeB != null && _nodeB.Connected && _nodeB.CalibrateRest(now - RestWindowMs, now);
+                if (_agencyStep <= AgencyStep.Squeeze && run.Step > AgencyStep.Squeeze)
+                {
+                    _emgReady = _restOk && _nodeB.CalibrateMvc(now - SqueezeWindowMs, now);
+                    _flexion.Calibrate();
+                }
+                _agencyStep = run.Step;
+            }
+            arm.Curl = (float)run.Curl01;
         }
 
         private void TickThreat(double now)
@@ -152,6 +240,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 Driver.End(nowMs);
                 brush.Active = false; brush.Visible = false;
             }
+            if (prev == PhPhase.Agency) arm.Curl = 0f;   // the stone falls on an open hand
             if (prev == PhPhase.Threat && now != PhPhase.Threat)
             {
                 if (Collector.Armed) Debug.Log("[PhantomHand] threat phase ended before the 1.5 s response window closed");
@@ -167,14 +256,21 @@ namespace Opus.Games.PhantomHand.Presentation
                     PlaceDefault();
                     break;
                 case PhPhase.Induction:
+                case PhPhase.Dissolve:   // the dissolve starts like an induction: arm placed and frozen, brush and strokes running (the arm then fades)
                     BeginInduction(nowMs);
                     break;
                 case PhPhase.Agency:
                     arm.Unfreeze(); arm.Visible = true;
+                    _agencyStep = AgencyStep.Rest; _restOk = _emgReady = false;
+                    _flexion = new FlexionCalibration();
                     break;
                 case PhPhase.SelfTouch:
-                case PhPhase.Dissolve:
                     arm.Visible = true;
+                    break;
+                case PhPhase.Reveal:
+                    // fallback reveal: the arm fades in and slides onto the real hand (no passthrough layer in this build)
+                    arm.Unfreeze(); arm.Curl = 0f; arm.Alpha = 0f; arm.Visible = true;
+                    _module.SubmitReveal(true);
                     break;
                 case PhPhase.Threat:
                     arm.Visible = true;

@@ -1,18 +1,24 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Opus.Games.PhantomHand.Presentation
 {
     /// <summary>
-    /// U4 item 4 (PRD section 5 row 7): two cards, SYNC and ASYNC, with the participant's own numbers (drift change with an
-    /// arrow, flinch latency with strong/weak/none, ownership bar, and the q4 row labelled "a pointer, not proof" when the
-    /// summary has it), a "Preliminary" label, and the closing line that fades in 3 s after the panel opens.
-    /// Content comes from <see cref="WitnessView"/>; this class only draws it.
+    /// U4 item 4 (PRD section 5 row 7): two cards, SYNC and ASYNC, with the participant's own numbers grouped as Body (drift
+    /// change with an arrow, flinch latency with strong/weak/none), Mind (ownership bar) and The one who noticed (the q4 row,
+    /// labelled "a pointer, not proof" when the summary has it), a "Preliminary" label, and the closing lines that fade in 3 s
+    /// after the panel opens. Content comes from <see cref="WitnessView"/>; this class only draws it. The panel is
+    /// <see cref="HeightMm"/> high and grows only when the rows need more room.
     /// </summary>
     public sealed class PhWitnessPanel : MonoBehaviour
     {
         public const float WidthMm = 1000f, HeightMm = 660f;
-        private const float CardW = 470f, CardH = 420f, CardY = 84f;
+        private const float CardW = 470f, CardY = 84f;
+        // inside a card, mm from its top-left corner
+        private const float RowsTop = 60f, GroupHeaderH = 32f, GroupHeaderTextH = 26f, RowH = 76f, PointerRowH = 104f, CardPad = 14f;
+        // closing lines: one text line is allowed ClosingLineH, plus one spare line in case a long line wraps
+        private const float ClosingLineH = 40f, ClosingGap = 10f, PanelPad = 12f, FactH = 44f;
 
         private Text _closing;
         private double _shownAtMs;
@@ -20,6 +26,15 @@ namespace Opus.Games.PhantomHand.Presentation
         public WitnessView View { get; private set; }
         public Text ClosingText { get { return _closing; } }
         public float ClosingAlpha { get { return _closing == null ? 0f : _closing.color.a; } }
+
+        /// <summary>One drawn item of a card: a group header (Entry == null) or a row, placed in mm inside the card.</summary>
+        private sealed class Slot
+        {
+            public WitnessEntry Entry;
+            public string Group, Header;
+            public float X, Y, W;
+            public bool WithLabel;
+        }
 
         public void Build(Camera worldCamera, bool attachPoke)
         {
@@ -34,15 +49,22 @@ namespace Opus.Games.PhantomHand.Presentation
         public void Show(WitnessView view, double nowMs)
         {
             View = view; _shownAtMs = nowMs;
+            float cardH = Mathf.Max(CardHeight(view.Sync), CardHeight(view.Async));
+            float factY = CardY + cardH + ClosingGap;                                       // one factual line under the cards when the agency phase ran
+            float closingY = view.AgencyLine != null ? factY + FactH + ClosingGap : factY;
+            float closingH = ClosingLineH * (view.ClosingLine.Split('\n').Length + 1);
+            float h = Mathf.Max(HeightMm, closingY + closingH + PanelPad);
+            _root.sizeDelta = new Vector2(WidthMm, h);
             PhUiKit.ClearChildren(_root);
-            PhUiKit.Box(_root, "Backdrop", 0, 0, WidthMm, HeightMm, PhUiKit.PanelBg);
+            PhUiKit.Box(_root, "Backdrop", 0, 0, WidthMm, h, PhUiKit.PanelBg);
             PhUiKit.Box(_root, "AccentBar", 0, 0, WidthMm, 6, PhUiKit.Oxblood);
             PhUiKit.Label(_root, "Title", view.Title, 40, PhUiKit.Ink, 30, 18, 600, 56, TextAnchor.MiddleLeft, FontStyle.Bold);
             var chip = PhUiKit.Box(_root, "PreliminaryChip", WidthMm - 230, 28, 200, 40, PhUiKit.PanelLine);
             PhUiKit.Label(chip.transform, "PreliminaryLabel", view.PreliminaryLabel, 22, PhUiKit.Warn, 0, 0, 200, 40, TextAnchor.MiddleCenter, FontStyle.Bold);
-            BuildCard(view.Sync, 30, PhUiKit.Good);
-            BuildCard(view.Async, 500, PhUiKit.Warn);
-            _closing = PhUiKit.Label(_root, "ClosingLine", view.ClosingLine, 27, PhUiKit.Ink, 40, CardY + CardH + 14, WidthMm - 80, 130, TextAnchor.MiddleCenter, FontStyle.Italic);
+            BuildCard(view.Sync, 30, PhUiKit.Info, cardH);     // blue and amber: green against amber has no lightness difference
+            BuildCard(view.Async, 500, PhUiKit.Warn, cardH);
+            if (view.AgencyLine != null) PhUiKit.Label(_root, "AgencyFacts", view.AgencyLine, 24, PhUiKit.Ink, 40, factY, WidthMm - 80, FactH, TextAnchor.MiddleCenter);
+            _closing = PhUiKit.Label(_root, "ClosingLine", view.ClosingLine, 26, PhUiKit.Ink, 40, closingY, WidthMm - 80, closingH, TextAnchor.MiddleCenter, FontStyle.Italic);
             SetClosingAlpha(0f);
             gameObject.SetActive(true);
         }
@@ -61,26 +83,45 @@ namespace Opus.Games.PhantomHand.Presentation
             var c = _closing.color; c.a = a; _closing.color = c;
         }
 
-        private void BuildCard(WitnessCardView card, float x, Color accent)
+        /// <summary>Height of a card in mm: title strip, one header per group, the rows. Pure, so the same pass that draws a card also sizes the panel.</summary>
+        public static float CardHeight(WitnessCardView card) { return Layout(card, null); }
+
+        private static float Layout(WitnessCardView card, List<Slot> slots)
         {
-            var bg = PhUiKit.Box(_root, "Card_" + card.Condition, x, CardY, CardW, CardH, PhUiKit.PanelLine);
-            var t = bg.transform;
-            PhUiKit.Box(t, "CardBar", 0, 0, 8, CardH, accent);
-            PhUiKit.Label(t, "CardTitle", card.Title, 32, accent, 26, 8, CardW - 40, 44, TextAnchor.MiddleLeft, FontStyle.Bold);
-            float y = 60, prevY = 60; string prevKey = null;
+            float y = RowsTop, prevY = RowsTop; string prevKey = null, prevGroup = null;
             foreach (var e in card.Entries)
             {
                 if (e.Key == "flinch_strength" && prevKey == "flinch_latency_ms")
                 {
                     // strength shares the latency row: "420 ms   [Strong]"
-                    BuildEntry(t, e, 26 + 230, prevY, CardW - 46 - 230, accent, withLabel: false);
+                    if (slots != null) slots.Add(new Slot { Entry = e, X = 26 + 230, Y = prevY, W = CardW - 46 - 230, WithLabel = false });
                     prevKey = e.Key;
                     continue;
                 }
-                float h = e.Kind == WitnessEntryKind.Bar && e.Pointer ? 104 : 76;
-                BuildEntry(t, e, 26, y, CardW - 46, accent, withLabel: true);
+                if (e.Group != null && e.Group != prevGroup)
+                {
+                    if (slots != null) slots.Add(new Slot { Group = e.Group, Header = e.GroupHeader, X = 26, Y = y, W = CardW - 46 });
+                    y += GroupHeaderH; prevGroup = e.Group;
+                }
+                if (slots != null) slots.Add(new Slot { Entry = e, X = 26, Y = y, W = CardW - 46, WithLabel = true });
                 prevY = y; prevKey = e.Key;
-                y += h;
+                y += e.Kind == WitnessEntryKind.Bar && e.Pointer ? PointerRowH : RowH;
+            }
+            return y + CardPad;
+        }
+
+        private void BuildCard(WitnessCardView card, float x, Color accent, float cardH)
+        {
+            var bg = PhUiKit.Box(_root, "Card_" + card.Condition, x, CardY, CardW, cardH, PhUiKit.PanelLine);
+            var t = bg.transform;
+            PhUiKit.Box(t, "CardBar", 0, 0, 8, cardH, accent);
+            PhUiKit.Label(t, "CardTitle", card.Title, 32, accent, 26, 8, CardW - 40, 44, TextAnchor.MiddleLeft, FontStyle.Bold);
+            var slots = new List<Slot>();
+            Layout(card, slots);
+            foreach (var s in slots)
+            {
+                if (s.Entry == null) PhUiKit.Label(t, "Group_" + s.Group, s.Header, 20, accent, s.X, s.Y, s.W, GroupHeaderTextH, TextAnchor.MiddleLeft, FontStyle.Bold);
+                else BuildEntry(t, s.Entry, s.X, s.Y, s.W, accent, s.WithLabel);
             }
         }
 
@@ -119,7 +160,8 @@ namespace Opus.Games.PhantomHand.Presentation
                         fill.name = "BarFill_" + e.Key;
                     }
                     PhUiKit.Box(card, "BarMid_" + e.Key, x + barW / 2f - 1, vy + 6, 2, 34, PhUiKit.InkDim);
-                    PhUiKit.Label(card, "Value_" + e.Key, e.ValueText, 30, e.HasData ? PhUiKit.Ink : PhUiKit.InkDim, x + barW + 10, vy, 100, 44, TextAnchor.MiddleLeft, FontStyle.Bold);
+                    // a rating that was not asked in this condition (q5 exists in one condition only) shows a dash: "no data" does not fit beside the bar
+                    PhUiKit.Label(card, "Value_" + e.Key, e.HasData ? e.ValueText : "–", 30, e.HasData ? PhUiKit.Ink : PhUiKit.InkDim, x + barW + 10, vy, 100, 44, TextAnchor.MiddleLeft, FontStyle.Bold);
                     if (e.Pointer) PhUiKit.Label(card, "Pointer_" + e.Key, e.PointerText, 20, PhUiKit.Info, x, vy + 46, w, 26, TextAnchor.MiddleLeft, FontStyle.Italic);
                     break;
                 }

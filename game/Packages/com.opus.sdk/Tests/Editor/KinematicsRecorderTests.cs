@@ -78,6 +78,32 @@ namespace Opus.Sdk.Tests
         }
 
         [Test]
+        public void BackgroundWrites_GiveTheSameFiles_OnceFlushed()
+        {
+            var root = Path.Combine(Path.GetTempPath(), "opus_kin_bg_" + System.Guid.NewGuid());
+            try
+            {
+                string[] dirs = { Path.Combine(root, "sync"), Path.Combine(root, "bg") };
+                for (int k = 0; k < 2; k++)
+                {
+                    var clock = SessionClock.Manual();
+                    var recorder = new KinematicsRecorder("sess-bg", clock, dirs[k], rateHz: 72, source: "synthetic") { BackgroundWrites = k == 1 };
+                    for (int i = 0; i < 900; i++)      // 12.5 s at 72 Hz: two rollovers on the way
+                    {
+                        clock.Advance(13.889);
+                        recorder.Sample(clock.NowMs, OpusJoints.Head, new[] { 0.1, 0.2 + i, 0.3 }, new[] { 0.0, 0.0, 0.0, 1.0 }, 1.0);
+                        recorder.Sample(clock.NowMs, OpusJoints.RWrist, new[] { 0.4, 0.5, 0.6 + i }, null, 0.9);
+                    }
+                    recorder.Flush();                  // returns only when every file is on disk
+                    Assert.AreEqual(3, recorder.ChunksWritten);
+                }
+                foreach (var name in new[] { "kin_000.json", "kin_001.json", "kin_002.json" })
+                    Assert.AreEqual(File.ReadAllText(Path.Combine(dirs[0], name)), File.ReadAllText(Path.Combine(dirs[1], name)), name);
+            }
+            finally { try { Directory.Delete(root, true); } catch { /* best effort */ } }
+        }
+
+        [Test]
         public void WritesChunkFileMatchingSchemaShape()
         {
             var dir = Path.Combine(Path.GetTempPath(), "opus_kin_test_" + System.Guid.NewGuid());

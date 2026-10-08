@@ -40,15 +40,21 @@ namespace Opus.Games.PhantomHand
     /// Plans the brush strokes and the matching motor cues for one induction (03-SPEC D1).
     /// Brush speed = motor_spacing_cm / motor_soa_ms, constant wrist to elbow, so sight and touch stay in step:
     /// SYNC cue == the moment the brush passes the motor; ASYNC cue = pass + async_delay_ms (+/- 100 ms), and the A/B
-    /// motor order is swapped on 50 % of strokes. Strokes never overlap and the last stroke (with its cues) ends before
-    /// the induction ends. Pure maths, seeded, no Unity dependency.
+    /// motor order is swapped on 50 % of strokes when async_delay_ms - motor_soa_ms >= <see cref="SwapMinMs"/> (not at the default
+    /// slow brush: a swapped B tap would land almost in step with the brush). Strokes never overlap (the next starts at least <see cref="MinStrokeGapMs"/>
+    /// after the previous ended) and the last stroke (with its cues) ends before the induction ends. At the default
+    /// motor_soa_ms of 833 the brush moves at 12 cm/s, a stroke takes 2.08 s and the gap rule sets the rhythm. Pure maths,
+    /// seeded, no Unity dependency.
     /// </summary>
     public sealed class StrokeScheduler
     {
         public const double AsyncJitterMs = 100;
-        public const double MinStrokeGapMs = 50;
+        /// <summary>A stroke starts no earlier than the previous stroke's end plus this (the brush has to lift and swing back); the nominal rate and jitter still apply when they give a longer interval.</summary>
+        public const double MinStrokeGapMs = 300;
         public const double LeadInMs = 500;
         public const double TailMarginMs = 100;
+        /// <summary>ASYNC swaps the A/B slots only when async_delay_ms - motor_soa_ms is at least this: with the slow brush a swapped B tap would otherwise land almost in step with the brush.</summary>
+        public const double SwapMinMs = 300;
         public const double MinMotorGapMs = 250;   // software limit per motor (02-RULES 4.2)
         public const int MaxSendsPerSecond = 4;
 
@@ -68,6 +74,7 @@ namespace Opus.Games.PhantomHand
             var list = new List<StrokePlan>();
             double nominal = 1000.0 / _p.StrokeRateHz;
             double dur = StrokeDurationMs;
+            bool canSwap = _p.AsyncDelayMs - _p.MotorSoaMs >= SwapMinMs;
             double endLimit = t0Ms + durationMs - TailMarginMs;
             double start = t0Ms + LeadInMs;
             double prevEnd = double.NegativeInfinity;
@@ -93,7 +100,7 @@ namespace Opus.Games.PhantomHand
                 }
                 else
                 {
-                    s.Swapped = rng.Chance(0.5);
+                    s.Swapped = canSwap && rng.Chance(0.5);
                     double slotA = s.PassAMs + _p.AsyncDelayMs + rng.Jitter(AsyncJitterMs);
                     double slotB = s.PassBMs + _p.AsyncDelayMs + rng.Jitter(AsyncJitterMs);
                     s.CueMotor0Ms = s.Swapped ? slotB : slotA;

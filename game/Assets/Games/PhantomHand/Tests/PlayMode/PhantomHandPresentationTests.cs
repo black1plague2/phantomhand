@@ -118,7 +118,7 @@ namespace Opus.Games.PhantomHand.Tests.PlayMode
     public class PhantomHandPresentationTests
     {
         private const string Sync = "{\"condition_order\":\"sync_first\",\"induction_s\":40}";
-        private const string Async = "{\"condition_order\":\"async_first\",\"induction_s\":60}";
+        private const string Async = "{\"condition_order\":\"async_first\",\"induction_s\":60,\"motor_soa_ms\":100}";
 
         // -- strokes -------------------------------------------------------------------------------------------
 
@@ -129,7 +129,7 @@ namespace Opus.Games.PhantomHand.Tests.PlayMode
             {
                 f.ToInduction();
                 int planned = f.M.CurrentStrokes.Count;
-                Assert.GreaterOrEqual(planned, 25);
+                Assert.GreaterOrEqual(planned, 12);   // D16 slow brush: 16 strokes in 40 s
                 f.StepUntil(() => f.M.CurrentPhase != PhPhase.Induction, 60000, "induction end");
                 var strokes = f.Events("stroke");
                 Assert.AreEqual(planned, strokes.Count, "stroke events must equal the plan");

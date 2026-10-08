@@ -32,7 +32,10 @@ namespace Opus.Games.PhantomHand
             { "q_progress",       new[] { "{0} of {1}", "{1} में से {0}" } },
 
             // witness
-            { "w_title",          new[] { "Your result", "आपका परिणाम" } },
+            { "w_title",          new[] { "What changed?", "क्या बदला?" } },
+            { "w_group_body",     new[] { "Body", "शरीर" } },
+            { "w_group_mind",     new[] { "Mind", "मन" } },
+            { "w_group_observer", new[] { "The one who noticed", "देखने वाला" } },
             { "w_preliminary",    new[] { "Preliminary", "प्रारंभिक" } },
             { "w_sync",           new[] { "In sync", "साथ-साथ" } },
             { "w_async",          new[] { "Delayed", "देरी से" } },
@@ -44,6 +47,7 @@ namespace Opus.Games.PhantomHand
             { "w_weak",           new[] { "Weak", "हल्का" } },
             { "w_none",           new[] { "None", "कोई नहीं" } },
             { "w_nodata",         new[] { "no data", "कोई डेटा नहीं" } },
+            { "w_agency_facts",   new[] { "You closed it {0} times. It closed by itself {1} times.", "आपने इसे {0} बार बंद किया। यह अपने आप {1} बार बंद हुआ।" } },
 
             // hud
             { "hud_sleeve_offline", new[] { "Sleeve offline", "स्लीव बंद" } },
@@ -61,11 +65,15 @@ namespace Opus.Games.PhantomHand
             { "ph_induction",     new[] { "Watch the hand", "हाथ को देखें" } },
             { "ph_self_touch",    new[] { "Your turn", "अब आपकी बारी" } },
             { "ph_agency",        new[] { "Squeeze", "दबाएँ" } },
+            { "ph_agency_rest",    new[] { "Relax your hand", "हाथ ढीला छोड़ें" } },
+            { "ph_agency_squeeze", new[] { "Squeeze hard, once", "एक बार ज़ोर से मुट्ठी कसें" } },
+            { "ph_agency_driven",  new[] { "Squeeze to close the hand", "मुट्ठी कसें, हाथ बंद होगा" } },
+            { "ph_agency_watch",   new[] { "Relax. Just watch", "ढीला छोड़ें। बस देखें" } },
             { "ph_threat",        new[] { "Stay still", "स्थिर रहें" } },
             { "ph_questionnaire", new[] { "A few questions", "कुछ सवाल" } },
-            { "ph_dissolve",      new[] { "Keep watching", "देखते रहें" } },
-            { "ph_reveal",        new[] { "Look", "देखें" } },
-            { "ph_witness",       new[] { "Your result", "आपका परिणाम" } },
+            { "ph_dissolve",      new[] { "The touch is still here", "स्पर्श अब भी यहीं है" } },
+            { "ph_reveal",        new[] { "Your hand was here all along", "आपका हाथ शुरू से यहीं था" } },
+            { "ph_witness",       new[] { "What changed?", "क्या बदला?" } },
             { "ph_done",          new[] { "Finished", "समाप्त" } },
         };
 
@@ -103,6 +111,18 @@ namespace Opus.Games.PhantomHand
                 case PhPhase.Witness: return Get("ph_witness", lang);
                 case PhPhase.Done: return Get("ph_done", lang);
                 default: return Get("ph_idle", lang);
+            }
+        }
+
+        /// <summary>The caption for one step of the agency phase (what to do right now).</summary>
+        public static string AgencyWord(AgencyStep step, string lang)
+        {
+            switch (step)
+            {
+                case AgencyStep.Rest: return Get("ph_agency_rest", lang);
+                case AgencyStep.Squeeze: return Get("ph_agency_squeeze", lang);
+                case AgencyStep.Driven: return Get("ph_agency_driven", lang);
+                default: return Get("ph_agency_watch", lang);
             }
         }
 

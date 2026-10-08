@@ -89,6 +89,68 @@ namespace Opus.Games.PhantomHand.Tests
 
         [TestCase("en")]
         [TestCase("hi")]
+        public void Witness_EveryTextStaysInsideThePanel_WhenTheCardsGrow(string lang)
+        {
+            var p = NewPanel<PhWitnessPanel>(); p.Build(null, false);
+            p.Show(UiModelTests.Scripted(true), lang, 0);       // the longest default screen: Body + Mind + The one who noticed
+            AssertTextsInsidePanel(p);
+        }
+
+        private static void AssertTextsInsidePanel(PhWitnessPanel p)
+        {
+            var root = new Vector3[4]; ((RectTransform)p.transform).GetWorldCorners(root);
+            Assert.GreaterOrEqual(((RectTransform)p.transform).sizeDelta.y, PhWitnessPanel.HeightMm, "the panel never gets smaller than the scene's");
+            var c = new Vector3[4];
+            foreach (var t in p.GetComponentsInChildren<Text>(true))
+            {
+                t.rectTransform.GetWorldCorners(c);
+                Assert.GreaterOrEqual(c[0].y, root[0].y - 1e-4f, t.name + " hangs below the panel");
+                Assert.LessOrEqual(c[2].y, root[2].y + 1e-4f, t.name + " pokes above the panel");
+            }
+        }
+
+        /// <summary>The agency run: a q5 row in the Mind group, the facts line under the cards and four closing lines.</summary>
+        private static WitnessSummary ScriptedAgency()
+        {
+            var sync = new ConditionResult { Condition = PhCondition.Sync, PreDriftCm = 0.5, PostDriftCm = 4.1, Ownership = 2.0, Awareness = 2, Agency = 1.0,
+                Threat = new ThreatResponse { EmgPeakX = 4.6, EmgLatencyMs = 180 } };
+            var async = new ConditionResult { Condition = PhCondition.Async, PreDriftCm = 0.2, PostDriftCm = 0.6, Ownership = -1.5, Awareness = 2,
+                Threat = new ThreatResponse { EmgPeakX = 1.8, EmgLatencyMs = 330 } };
+            var w = WitnessSummary.Build(sync, async);
+            w.AgencyRan = true; w.DrivenCloses = 3; w.AutonomousCloses = 2;
+            return w;
+        }
+
+        [TestCase("en")]
+        [TestCase("hi")]
+        public void Witness_WithTheAgencyRun_TextFits_AndStaysInsideThePanel(string lang)
+        {
+            var p = NewPanel<PhWitnessPanel>(); p.Build(null, false);
+            p.Show(ScriptedAgency(), lang, 0);
+            AssertTextsFit(p, "witness agency " + lang);
+            AssertTextsInsidePanel(p);
+            var texts = p.GetComponentsInChildren<Text>(true);
+            Assert.IsTrue(System.Array.Exists(texts, t => t.name == "AgencyFacts" && t.text == PhStrings.Format("w_agency_facts", lang, 3, 2)));
+            Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Value_q5"), "the q5 row is drawn");
+            Assert.AreEqual(4, p.ClosingText.text.Split('\n').Length);
+        }
+
+        [TestCase("en")]
+        [TestCase("hi")]
+        public void Hud_AgencyCaptions_Fit(string lang)
+        {
+            var p = NewPanel<PhHudPanel>(); p.Build(null);
+            foreach (AgencyStep step in System.Enum.GetValues(typeof(AgencyStep)))
+            {
+                var m = new HudModel { Lang = lang, Phase = PhPhase.Agency, AgencyNow = step, RemainingS = 25, SpectatorVisible = true, StrokeCount = 12 };
+                p.Apply(m, 0.5f);
+                AssertTextsFit(p, "hud agency " + step + " " + lang);
+                Assert.AreEqual(PhStrings.AgencyWord(step, lang), p.PhaseText.text);
+            }
+        }
+
+        [TestCase("en")]
+        [TestCase("hi")]
         public void Hud_TextFits_WithChipsAndSpectator(string lang)
         {
             var p = NewPanel<PhHudPanel>(); p.Build(null);
@@ -159,7 +221,14 @@ namespace Opus.Games.PhantomHand.Tests
             Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Value_drift_change_cm" && t.text == "+3.6 cm"));
             Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Value_flinch_latency_ms" && t.text == "180 ms"));
             Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Pointer_q4" && t.text == "A pointer, not proof"));
+            Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Group_body" && t.text == "Body"));
+            Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Group_mind" && t.text == "Mind"));
+            Assert.IsTrue(System.Array.Exists(texts, t => t.name == "Group_observer" && t.text == "The one who noticed"));
             Assert.IsTrue(System.Array.Exists(texts, t => t.text == "Preliminary"));
+            // SYNC is blue and ASYNC amber (green against amber has no lightness difference)
+            var bars = p.GetComponentsInChildren<Image>(true);
+            Assert.AreEqual(PhUiKit.Info, System.Array.Find(bars, i => i.name == "CardBar" && i.transform.parent.name == "Card_Sync").color);
+            Assert.AreEqual(PhUiKit.Warn, System.Array.Find(bars, i => i.name == "CardBar" && i.transform.parent.name == "Card_Async").color);
             Assert.AreEqual(0f, p.ClosingAlpha, 1e-4);
             p.Tick(2900); Assert.AreEqual(0f, p.ClosingAlpha, 1e-4);
             p.Tick(4500); Assert.AreEqual(1f, p.ClosingAlpha, 1e-4);

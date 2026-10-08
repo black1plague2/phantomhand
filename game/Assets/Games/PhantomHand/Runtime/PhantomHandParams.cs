@@ -20,7 +20,8 @@ namespace Opus.Games.PhantomHand
         public double TactileLeadMs = 40;
 
         // Build params (03-SPEC section 6)
-        public double MotorSoaMs = 100;
+        /// <summary>Time the brush takes from motor A to motor B (brush speed = motor_spacing_cm / this). 833 ms = 12 cm/s, a rubber-hand stroke; 100-130 ms = fast flick.</summary>
+        public double MotorSoaMs = 833;
         public double StrokeJitterMs = 150;
         public double MotorAFromWristCm = 5;
         public double MotorSpacingCm = 10;
@@ -41,10 +42,10 @@ namespace Opus.Games.PhantomHand
         public double BreathReplayLagS = 20;
         public bool AutonomousCloseEnabled = false;
 
-        public const double DemoInductionS = 45;
+        public const double DemoInductionS = 60;
 
-        /// <summary>Induction length actually used (demo_mode forces 45 s).</summary>
-        public double EffectiveInductionS => DemoMode ? DemoInductionS : InductionS;
+        /// <summary>Induction length actually used: demo_mode caps it at 60 s (induction_s 30-60 still shortens a demo run).</summary>
+        public double EffectiveInductionS => DemoMode ? Math.Min(InductionS, DemoInductionS) : InductionS;
 
         public bool SyncFirst => ConditionOrder == "sync_first";
 
@@ -61,7 +62,7 @@ namespace Opus.Games.PhantomHand
                 AgencyEnabled = p.GetBool("agency_enabled", false),
                 EmgThreshold = Clamp(p.GetDouble("emg_threshold", 0.3), 0, 1),
                 TactileLeadMs = Clamp(p.GetDouble("tactile_lead_ms", 40), 0, 150),
-                MotorSoaMs = Clamp(p.GetDouble("motor_soa_ms", 100), 60, 300),
+                MotorSoaMs = Clamp(p.GetDouble("motor_soa_ms", 833), 60, 1700),
                 StrokeJitterMs = Clamp(p.GetDouble("stroke_jitter_ms", 150), 0, 300),
                 MotorAFromWristCm = Clamp(p.GetDouble("motor_a_from_wrist_cm", 5), 2, 10),
                 MotorSpacingCm = Clamp(p.GetDouble("motor_spacing_cm", 10), 5, 15),
@@ -86,6 +87,7 @@ namespace Opus.Games.PhantomHand
             // Self-touch is the tail of the induction; keep at least 20 s of brush before it.
             double maxSelfTouch = Math.Max(0, r.EffectiveInductionS - 20);
             if (r.SelfTouchS > maxSelfTouch) r.SelfTouchS = maxSelfTouch;
+            r.SelfTouchS = 0;   // ponytail: self_touch_s is parsed but ignored until A3 (self-touch) exists; else the additions add an empty SelfTouch phase and cut 15 s off the brush
             return r;
         }
 

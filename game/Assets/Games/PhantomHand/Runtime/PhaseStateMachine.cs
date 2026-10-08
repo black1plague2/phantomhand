@@ -50,7 +50,7 @@ namespace Opus.Games.PhantomHand
 
     /// <summary>
     /// Phase walk for one Phantom Hand run (03-SPEC section 5 + 12):
-    /// Calibrate, then per condition ProbePre, Induction, [SelfTouch], [Agency], [Threat], ProbePost, Questionnaire,
+    /// Calibrate, then per condition ProbePre, Induction, [SelfTouch], [Agency, last condition only], [Threat], ProbePost, Questionnaire,
     /// then [Dissolve], [Reveal], Witness, Done. Timer phases end by Tick; Calibrate, probes and the
     /// questionnaire end by Complete or after 60 s (confirmed=false). Time is passed in (session ms) so
     /// tests drive it with a manual clock; Pause/Resume freeze every timer.
@@ -119,11 +119,11 @@ namespace Opus.Games.PhantomHand
                 add(PhPhase.ProbePre, c);
                 add(PhPhase.Induction, c);
                 if (_additions && _p.SelfTouchS > 0) add(PhPhase.SelfTouch, c);
-                if (_p.AgencyEnabled) add(PhPhase.Agency, c);
+                if (_p.AgencyEnabled && c == 1) add(PhPhase.Agency, c);   // D12: once, in the LAST condition only (the hand that closes by itself comes at the end)
                 if (_p.ThreatEnabled) add(PhPhase.Threat, c);
                 add(PhPhase.ProbePost, c);
-                // demo_mode: one questionnaire, at the end of the run.
-                if (!_p.DemoMode || c == 1) add(PhPhase.Questionnaire, c);
+                // D18: a questionnaire follows every condition in every mode (in demo_mode its list is short, see PhantomHandModule.BuildItems)
+                add(PhPhase.Questionnaire, c);
             }
             if (_additions && _p.DissolveEnabled) add(PhPhase.Dissolve, -1);
             if (_additions && _p.PassthroughReveal) add(PhPhase.Reveal, -1);

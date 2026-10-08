@@ -39,6 +39,9 @@ namespace Opus.Games.PhantomHand
         public IReadOnlyList<StrokePlan> CurrentStrokes { get { return _strokes; } }
         public double InductionStartMs { get; private set; }
 
+        /// <summary>A5: the agency phase of this run (set when the phase starts, in the last condition only). The presenter ticks it with the muscle level.</summary>
+        public AgencyRun Agency { get; private set; }
+
         /// <summary>Set true when the A2/A3 additions start (after gate G2); inserts SelfTouch/Dissolve/Reveal phases.</summary>
         public bool AdditionsEnabled;
 
@@ -48,6 +51,8 @@ namespace Opus.Games.PhantomHand
         public PhPhase CurrentPhase { get { return Machine == null ? PhPhase.Idle : Machine.Phase; } }
         public PhCondition? CurrentCondition { get { return Machine == null ? null : Machine.Condition; } }
         public int? CurrentConditionIndex { get { return Machine == null ? null : Machine.ConditionIndex; } }
+        /// <summary>Condition whose stroke plan is running: the current one, or the last one while the arm dissolves (the current condition and trial are null there).</summary>
+        public PhCondition? StrokeCondition { get { return CurrentCondition ?? (CurrentPhase == PhPhase.Dissolve ? LastCondition : (PhCondition?)null); } }
         public bool IsRunning { get { return _running; } }
 
         private ISessionContext _session;
@@ -55,6 +60,7 @@ namespace Opus.Games.PhantomHand
         private List<StrokePlan> _strokes = new List<StrokePlan>();
         private bool _running;
         private bool _blockStarted;
+        private bool _revealReported;
         private int? _trialForEvents;
 
         public void LoadManifest(string manifestJson) { Manifest = GameManifest.FromJson(manifestJson); }
@@ -71,6 +77,8 @@ namespace Opus.Games.PhantomHand
             CurrentQuestionnaire = null;
             _running = false;
             _blockStarted = false;
+            _revealReported = false;
+            Agency = null;
         }
 
         /// <summary>Operator "set_condition_order": only before the first induction. Returns false when locked or unknown.</summary>
@@ -131,6 +139,8 @@ namespace Opus.Games.PhantomHand
 
         private double Now { get { return _session.Clock.NowMs; } }
 
+        private PhCondition LastCondition { get { return Machine.Order[Machine.Order.Count - 1]; } }
+
         // ---- submissions ------------------------------------------------------------------------------------------
 
         public bool SubmitCalibration(double[] wristPos, double[] forearmAxis, bool ok)
@@ -188,7 +198,7 @@ namespace Opus.Games.PhantomHand
             var p = CurrentPhase;
             if (!_running || (p != PhPhase.Induction && p != PhPhase.SelfTouch && p != PhPhase.Dissolve)) return false;
             double? err = s.TimingErrMs;
-            if (!err.HasValue && CurrentCondition == PhCondition.Sync)
+            if (!err.HasValue && StrokeCondition == PhCondition.Sync)
                 err = StrokeTimingErrMs(s.CueASendMs, s.CueBSendMs, s.PassAMs, s.PassBMs, Params.TactileLeadMs);
             Emit("stroke", _trialForEvents, new
             {
@@ -230,6 +240,18 @@ namespace Opus.Games.PhantomHand
                 emg_latency_ms = r.EmgLatencyMs,
                 quality = r.OverallQuality(),   // one value, like the schema and the fixtures; per-stream flags stay on r.Quality
             });
+            return true;
+        }
+
+        /// <summary>
+        /// A2 reveal: the real hand is shown (`fallback` = the arm slides onto the tracked hand instead of passthrough). Emits
+        /// passthrough_on {fallback}; once per run, only in the Reveal phase.
+        /// </summary>
+        public bool SubmitReveal(bool fallback)
+        {
+            if (!_running || CurrentPhase != PhPhase.Reveal || _revealReported) return false;
+            _revealReported = true;
+            Emit("passthrough_on", _trialForEvents, new { fallback = fallback });
             return true;
         }
 
@@ -294,6 +316,15 @@ namespace Opus.Games.PhantomHand
                     InductionStartMs = c.StartMs;
                     _strokes = new StrokeScheduler(Params, Seed).Plan(c.Condition.Value, c.StartMs, Machine.InductionPhaseMs);
                     break;
+                case PhPhase.Agency:
+                    Agency = new AgencyRun(c.StartMs, Params.EmgThreshold, Params.AutonomousCloseEnabled);
+                    Agency.OnAutonomousClose += level => Emit("autonomous_close", _trialForEvents, new { emg_level = level });
+                    break;
+                case PhPhase.Dissolve:
+                    // the brush and the motors go on for the whole phase, with the LAST condition's timing (the arm that dissolves)
+                    Emit("dissolve_start", c.TrialIndex, new { condition = PhNames.Of(LastCondition) });
+                    _strokes = new StrokeScheduler(Params, Seed).Plan(LastCondition, c.StartMs, PhaseStateMachine.DissolveMs);
+                    break;
                 case PhPhase.ProbePre:
                 case PhPhase.ProbePost:
                     Probe.Begin();
@@ -309,11 +340,16 @@ namespace Opus.Games.PhantomHand
 
         private List<QItem> BuildItems()
         {
-            var items = Questionnaire.DefaultItems();
-            if (Machine.AdditionsEnabled && Params.VoiceoverEnabled) items.Add(Questionnaire.Q4);
-            if (Machine.AdditionsEnabled && Params.AgencyEnabled && Params.AutonomousCloseEnabled) items.Add(Questionnaire.Q5);
+            bool last = Machine.ConditionIndex == Machine.Order.Count - 1;
+            // demo_mode keeps it short: q1 after the first condition; q1 plus the pointers after the last one
+            var items = Params.DemoMode ? new List<QItem> { Questionnaire.Q1 } : Questionnaire.DefaultItems();
+            if (Machine.AdditionsEnabled && Params.VoiceoverEnabled && (last || !Params.DemoMode)) items.Add(Questionnaire.Q4);
+            if (HandClosedByItself && last) items.Add(Questionnaire.Q5);   // q5 only after the hand really closed by itself, in the last condition
             return items;
         }
+
+        /// <summary>A5 ran: the agency phase had the autonomous close on and the hand closed by itself at least once.</summary>
+        private bool HandClosedByItself { get { return Agency != null && Agency.AutonomousEnabled && Agency.AutonomousCloses > 0; } }
 
         private void FinishQuestionnaire()
         {
@@ -323,7 +359,8 @@ namespace Opus.Games.PhantomHand
             r.Ownership = CurrentQuestionnaire.Ownership;
             r.Control = CurrentQuestionnaire.Control;
             r.Awareness = CurrentQuestionnaire.Awareness;
-            // demo_mode asks once, at the end: the single set of answers describes the last condition only.
+            r.Agency = CurrentQuestionnaire.RoleMean(QRole.Agency);
+            // demo_mode asks q1 only after the first condition, so there Ownership is q1 and Control is null
         }
 
         private ConditionResult ResultFor(int conditionIndex)
@@ -342,6 +379,13 @@ namespace Opus.Games.PhantomHand
                 if (r.Condition == PhCondition.Sync) sync = r; else async = r;
             }
             Witness = WitnessSummary.Build(sync, async);
+            Witness.ConditionOrder = Machine.Order;
+            if (HandClosedByItself)
+            {
+                Witness.AgencyRan = true;
+                Witness.DrivenCloses = Agency.DrivenCloses;
+                Witness.AutonomousCloses = Agency.AutonomousCloses;
+            }
             Emit("witness_summary", null, Witness.ToEventData());
         }
 
