@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart' show MethodChannel;
 import 'package:opus_app/core/hub/hub_connection.dart';
 import 'package:opus_app/core/hub/hub_server.dart';
 import 'package:opus_app/core/hub/live_message.dart';
@@ -16,6 +17,14 @@ part 'hub_providers.g.dart';
 /// `false` on web -- the web build is a viewer only (Phase 3 cloud relay),
 /// never a hub (`docs/agent-briefs/A-flutter-app.md` M3).
 bool get hubCapable => !kIsWeb;
+
+/// Android only: `HubKeepAliveService.kt` holds the process in the foreground class while the hub runs. Without it
+/// Android freezes the app, and the hub's sockets with it, seconds after another app takes the screen, and the
+/// headset shows a lost link until the operator opens this app again.
+void _keepHubAlive(bool on) {
+  if (kIsWeb || !Platform.isAndroid) return;
+  unawaited(const MethodChannel('opus/hub_keepalive').invokeMethod<bool>(on ? 'start' : 'stop'));
+}
 
 /// Read-only snapshot of one headset (connected or recently-disconnected)
 /// for the Devices screen. `connected: false` rows render the
@@ -75,6 +84,7 @@ class HubController extends _$HubController {
     _beacon = beacon;
     _sub = server.knownHeadsetsStream.listen((_) => _emit(server));
     state = HubControllerState.running(hubId: server.hubId, port: port, headsets: const []);
+    _keepHubAlive(true);
   }
 
   Future<void> stop() async {
@@ -84,6 +94,7 @@ class HubController extends _$HubController {
     _server = null;
     _beacon = null;
     state = const HubControllerState.stopped();
+    _keepHubAlive(false);
   }
 
   void _emit(HubServer server) {
