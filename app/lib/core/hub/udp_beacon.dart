@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+/// A socket can report success and still deliver nowhere, so a fresh one is bound every this many ticks.
+const beaconRebindEveryTicks = 15;
+
 /// UDP discovery beacon (`contracts/LIVE_PROTOCOL.md`): every 1 s, broadcasts
 /// `{"opus_hub":1,"hub_id":…,"port":…,"name":…}` on port 8788 to the global
 /// broadcast address AND to each active IPv4 interface's own subnet
@@ -18,45 +21,104 @@ import 'dart:io';
 /// (Android) there is no equivalent zero-dependency way to read the netmask,
 /// so this beacon falls back to the global broadcast address only for those
 /// interfaces; see `docs/MANUAL_TODO.md` for that limitation.
+///
+/// The socket replaces itself. After the phone dozed (on-device, 2026-10-08)
+/// no beacon reached the headset while TCP 8787 still answered, and the cause
+/// is unknown. So a tick that no target accepted swaps the socket at once, and
+/// it is swapped every [beaconRebindEveryTicks] ticks anyway.
 class UdpBeacon {
-  new({required this.hubId, required this.port, required this.name, this.beaconPort = 8788});
+  /// [bindSocket] and [targets] let a test run the beacon without a real socket.
+  new({
+    required this.hubId,
+    required this.port,
+    required this.name,
+    this.beaconPort = 8788,
+    Future<RawDatagramSocket> Function()? bindSocket,
+    List<InternetAddress>? targets,
+  }) : _bindSocket = bindSocket ?? _bindAnyIpv4,
+       _fixedTargets = targets;
 
   final String hubId;
   final int port;
   final String name;
   final int beaconPort;
+  final Future<RawDatagramSocket> Function() _bindSocket;
+  final List<InternetAddress>? _fixedTargets;
 
   RawDatagramSocket? _socket;
   Timer? _timer;
+  int _ticksOnSocket = 0;
 
   Future<void> start() async {
-    _socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
-    _socket!.broadcastEnabled = true;
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _sendBeacon());
-    unawaited(_sendBeacon());
+    _socket = await _bindBroadcast();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) => sendBeacon());
+    unawaited(sendBeacon());
   }
 
   Future<void> stop() async {
     _timer?.cancel();
+    _timer = null;
     _socket?.close();
+    _socket = null;
   }
 
-  Future<void> _sendBeacon() async {
-    final socket = _socket;
-    if (socket == null) return;
+  /// One beacon round, run by the timer every second. Exposed (not private)
+  /// so `test/hub/udp_beacon_test.dart` can drive it without waiting on real
+  /// time.
+  Future<void> sendBeacon() async {
+    if (_timer == null) return;
     final message = utf8.encode(jsonEncode({'opus_hub': 1, 'hub_id': hubId, 'port': port, 'name': name}));
 
-    final targets = <InternetAddress>{InternetAddress('255.255.255.255')};
-    targets.addAll(await _subnetBroadcastAddresses());
+    final targets = await _targets();
+    // stop() may have run while the targets were looked up.
+    if (_timer == null) return;
+    final socket = _socket ?? await _replaceSocket();
+    if (socket == null) return;
 
+    var accepted = 0;
     for (final target in targets) {
       try {
-        socket.send(message, target, beaconPort);
+        if (socket.send(message, target, beaconPort) > 0) accepted++;
       } catch (_) {
         // A single unreachable/disabled interface shouldn't stop the beacon.
       }
     }
+
+    // Nothing was accepted, or the socket is old: swap it before the next tick.
+    _ticksOnSocket++;
+    if (accepted == 0 || _ticksOnSocket >= beaconRebindEveryTicks) await _replaceSocket();
   }
+
+  /// Binds a new broadcast socket; the tick count starts again for it.
+  Future<RawDatagramSocket> _bindBroadcast() async {
+    final socket = await _bindSocket();
+    socket.broadcastEnabled = true;
+    _ticksOnSocket = 0;
+    return socket;
+  }
+
+  /// Closes the current socket and swaps in a new one. Null when the bind
+  /// failed or stop() ran meanwhile; the next tick then tries again.
+  Future<RawDatagramSocket?> _replaceSocket() async {
+    _socket?.close();
+    _socket = null;
+    try {
+      final fresh = await _bindBroadcast();
+      if (_timer == null) {
+        // stop() ran while it was binding, so do not keep it.
+        fresh.close();
+        return null;
+      }
+      return _socket = fresh;
+    } on Exception {
+      return null;
+    }
+  }
+
+  /// The injected targets, else the global broadcast address plus the subnet
+  /// broadcast address of each interface.
+  Future<Iterable<InternetAddress>> _targets() async =>
+      _fixedTargets ?? {InternetAddress('255.255.255.255'), ...await _subnetBroadcastAddresses()};
 
   /// Real per-interface broadcast addresses computed from `ipconfig` on
   /// Windows; empty on other platforms (global broadcast above still runs).
@@ -94,6 +156,8 @@ class UdpBeacon {
     }
   }
 }
+
+Future<RawDatagramSocket> _bindAnyIpv4() => RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
 
 /// Every directed broadcast address for [ip] (4-byte IPv4) across prefix
 /// lengths [minPrefix]..[maxPrefix] inclusive (deduped -- adjacent prefix

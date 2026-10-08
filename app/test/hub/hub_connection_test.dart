@@ -179,6 +179,9 @@ void main() {
       while (!fake.closed && DateTime.now().isBefore(deadline)) {
         await Future<void>.delayed(const Duration(milliseconds: 10));
       }
+      // The socket closes in the same step that announces the disconnect; the
+      // announcement reaches its listener one turn of the event loop later.
+      await Future<void>.delayed(const Duration(milliseconds: 20));
       expect(disconnected, 1, reason: 'the hub writes the headset off after 3 unanswered pings');
       // The socket must go with it: a headset that was only asleep keeps its
       // end open and would otherwise go on talking to a hub that shows it as
