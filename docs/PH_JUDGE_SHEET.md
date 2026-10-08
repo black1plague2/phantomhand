@@ -19,7 +19,13 @@ watches it happen to them.
 | We created an **artificial sense of self**: "this hand is mine" (ownership) and "I moved it" (agency). | "We created consciousness." |
 | That feeling is **conditional**: it is built from timing and it falls apart when the timing breaks. | "We proved consciousness is beyond the body." |
 | The visitor was aware of every state. That is our **pointer** to the Tattva. | "The witness did not change" as a result. |
-| q4 is a pointer, not proof. | "q4 measures consciousness." |
+| q4 is a pointer, not proof. | "q4 measures consciousness", "awareness stayed constant". |
+| One run on one person is indicative. We report "X of N" whatever it is. | Any percentage or p-value from one person; "works on everyone". |
+| A measurement and demonstration rig, built on Chetna's rehab engine. | "Treats / relieves" anything; "clinically validated"; "medical device". |
+
+Engineering one-liner (safe with any judge): *Phantom Hand is a bench prototype that reproduces a published
+body-ownership illusion on a Quest 3 and a vibrating, muscle-sensing sleeve, and records how your own body
+responds when touch is in time with sight and when it is not.*
 
 **self vs Self.** Small-s *self* is the constructed "mine" and "I did it": that is what the machine changes.
 Capital-S *Self* is what the Tattva points to: we do not build it and we do not measure it. The demo makes the
@@ -60,11 +66,15 @@ Closing copy in the headset (EN, Hindi alongside):
 
 ## 5. Three channels, not one question
 
-1. **Felt position:** pointing drift toward the virtual hand (implicit).
-2. **Body reaction:** flinch after the stone: EMG, IMU, wrist speed (implicit).
-3. **Report:** ownership items q1–q2, with q3 as the control item.
+1. **Body reaction:** flinch after the stone: EMG, IMU, wrist speed (implicit). Lead with this: the audience
+   sees it on the trace.
+2. **Report:** ownership items q1–q2, with q3 as the control item.
+3. **Felt position:** pointing drift toward the virtual hand (implicit). Show it, never promise it: on one
+   person it is small, about the size of the tracking error, and it can come out either way (research R4, A.4).
 
-The result is the **direction** in step vs delayed, on that visitor, not a particular number.
+The result is the **direction** in step vs delayed, on that visitor, not a particular number. "No clear
+difference this time" is a normal outcome: say it plainly and show the published pattern instead of arguing
+with the screen.
 
 ## 6. Questions judges ask
 
@@ -82,6 +92,12 @@ same person. We lead with the two that do not depend on what the person says.
 
 **Isn't the questionnaire just suggestion?** Partly, and the literature says so. That is why q3 is a control
 item, why drift and flinch come first, and why q4 is labelled a pointer.
+
+**What if this person shows no difference?** Then that is what we show. People differ a lot in this illusion,
+which is why we record instead of assume. One run is one data point.
+
+**Does the order matter?** Possibly. The judged run is delayed-first on purpose and has one stone per condition,
+so the second stone is the expected one. In the pilot we alternate the order and report X of N.
 
 **Why 600 ms?** In step we target under 100 ms between seeing and feeling. 600 ms is far outside the window in
 which the brain binds sight and touch into one event, so it is a clear break, not a subtle one.
@@ -105,6 +121,10 @@ while I watched."
 ## 8. Deliberately left out of the judge run
 
 - Breathing arm (A4) and voice-over lines: nice, but they read as effects, and they are not built.
+- Agency (A5) is opt-in. Two reviews disagree on it: the Theme 5 audit calls it central to "mind", the demo
+  review (R4) says cut it for the judged three minutes. Switch it on only after it has worked on two teammates.
+- If the headset path is down: the tier ladder and the no-headset sleeve station are in
+  `docs/PH_ON_DEVICE_RUNBOOK.md`. The tier is announced, never hidden.
 - A third block (in step → delayed → in step): the run must stay near four minutes and the build, analytics and
   witness screen compare exactly two conditions.
 - Engineering detail (two nodes, EMG isolation, watchdog, stroke limits): one sentence if asked; it is in
