@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:opus_app/core/hub/hub_connection.dart';
 import 'package:opus_app/core/hub/live_message.dart' as hub;
 import 'package:opus_app/data/models/phantom_live.dart';
+import 'package:opus_app/data/models/phantom_witness.dart';
 import 'package:opus_app/data/repositories/phantom_live_repository.dart';
 
 /// [PhantomLiveRepository] over one connected headset's [HubConnection]:
 /// turns `status` (with `game_state` + `trace`) and `trial_event`
-/// (`threat_impact`, `emg_burst`) into [PhantomLiveSnapshot]s, and sends the
-/// operator commands as `requires_ack` `command` messages.
+/// (`threat_impact`, `emg_burst`, `witness_summary`) into
+/// [PhantomLiveSnapshot]s, and sends the operator commands as `requires_ack`
+/// `command` messages.
 class HubPhantomLiveRepository implements PhantomLiveRepository {
   HubPhantomLiveRepository(this.connection) {
     _controller = StreamController<PhantomLiveSnapshot>.broadcast(onListen: _attach, onCancel: _detach);
@@ -22,6 +24,10 @@ class HubPhantomLiveRepository implements PhantomLiveRepository {
   PhantomRunState _runState = PhantomRunState.idle;
   PhantomGameState? _game;
   bool _connected = true;
+
+  /// When the latest status was handed to us (also the replayed `lastStatus`
+  /// on attach, so a card opened onto a silent link turns stale within seconds).
+  DateTime? _statusAt;
 
   @override
   Stream<PhantomLiveSnapshot> watch() => _controller.stream;
@@ -51,6 +57,7 @@ class HubPhantomLiveRepository implements PhantomLiveRepository {
   }
 
   void _onStatus(Map<String, dynamic> payload) {
+    _statusAt = DateTime.now();
     _runState = PhantomRunState.parse(payload['state']);
     _game = PhantomGameState.tryParse(payload['game_state']) ?? _game;
     final order = (payload['params'] as Map?)?['condition_order'];
@@ -58,11 +65,16 @@ class HubPhantomLiveRepository implements PhantomLiveRepository {
   }
 
   void _onEvent(Map<String, dynamic> payload) {
+    final witness = PhantomWitness.tryParseEvent(payload);
+    if (witness != null) {
+      _emit(witness: witness);
+      return;
+    }
     final marker = TraceMarker.fromEvent(payload);
     if (marker != null) _emit(markers: [marker]);
   }
 
-  void _emit({TraceChunk? chunk, List<TraceMarker> markers = const [], String? order}) {
+  void _emit({TraceChunk? chunk, List<TraceMarker> markers = const [], PhantomWitness? witness, String? order}) {
     if (_controller.isClosed) return;
     _controller.add(
       PhantomLiveSnapshot(
@@ -71,7 +83,10 @@ class HubPhantomLiveRepository implements PhantomLiveRepository {
         game: _game,
         chunk: chunk,
         markers: markers,
+        witness: witness,
         conditionOrder: order,
+        rttMs: connection.lastRtt?.inMilliseconds,
+        receivedAt: _statusAt,
       ),
     );
   }

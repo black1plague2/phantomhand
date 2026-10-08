@@ -114,6 +114,36 @@ void main() {
     expect(peakFor('sync_first'), greaterThan(peakFor('async_first')));
   });
 
+  test('B8: the demo flinch is sized for the fixed trace scale (SYNC about 5x resting, ASYNC about 3.5x, both inside it)', () {
+    double ratioFor(String order) {
+      final e = PhantomMockEngine(conditionOrder: order)..apply(PhantomCommand.start);
+      final model = PhantomLiveModel();
+      var hit = false;
+      for (var i = 0; i < 600 && !hit; i++) {
+        final s = e.step(const Duration(milliseconds: 200));
+        model.apply(s);
+        hit = s.markers.any((m) => m.kind == TraceMarkerKind.threatImpact);
+      }
+      expect(hit, isTrue);
+      var peak = 0.0;
+      for (var i = 0; i < 10; i++) {
+        final s = e.step(const Duration(milliseconds: 200));
+        model.apply(s);
+        for (final v in s.chunk!.emgEnv) {
+          if (v > peak) peak = v;
+        }
+      }
+      expect(peak, lessThan(phantomEmgScale.max));
+      return peak / restingLevel(model.buffer.emg)!;
+    }
+
+    final sync = ratioFor('sync_first');
+    final async = ratioFor('async_first');
+    expect(sync, inInclusiveRange(4.5, 7));
+    expect(async, inInclusiveRange(2.5, 4.5));
+    expect(sync, greaterThan(async));
+  });
+
   group('commands', () {
     test('start only from paired; pause and resume; end finishes', () {
       final e = PhantomMockEngine();

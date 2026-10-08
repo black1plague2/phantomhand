@@ -108,16 +108,22 @@ void main() {
       expect(b.latestMs, 350);
     });
 
-    test('keeps only the last 10 s (201 samples, both edges inclusive)', () {
+    test('keeps only the last 20 s (401 samples, both edges inclusive)', () {
       final b = TraceBuffer();
       // 30 s of data in 100-sample (5 s) chunks
       for (var i = 0; i < 6; i++) {
         b.addChunk(_chunk(i * 5000.0, 100));
       }
       expect(b.latestMs, closeTo(29950, 1e-9));
-      expect(b.emg.first.tMs, greaterThanOrEqualTo(b.latestMs! - 10000));
-      expect(b.emg.length, 201);
-      expect(b.accel.length, 201);
+      expect(b.emg.first.tMs, greaterThanOrEqualTo(b.latestMs! - 20000));
+      expect(b.emg.length, 401);
+      expect(b.accel.length, 401);
+    });
+
+    test('B8: the window is 20 s for the buffer, the model and the screen default', () {
+      expect(phantomTraceWindowMs, 20000);
+      expect(TraceBuffer().windowMs, phantomTraceWindowMs);
+      expect(PhantomLiveModel().buffer.windowMs, phantomTraceWindowMs);
     });
 
     test('drops markers once they scroll out of the window', () {
@@ -151,6 +157,66 @@ void main() {
         b.addChunk(_chunk(i * 1000.0, 20));
       }
       expect(b.emg.length, 41);
+    });
+  });
+
+  group('B8 resting level and fixed scales', () {
+    List<TracePoint> pts(Iterable<double> values) => [for (final (i, v) in values.indexed) TracePoint(i * 50.0, v)];
+
+    test('the resting level is the median of the trace in view', () {
+      expect(restingLevel(pts(List.filled(40, 420))), 420);
+      expect(restingLevel(pts([for (var i = 0; i < 41; i++) 400.0 + i])), 420, reason: 'odd count: the middle value');
+      expect(restingLevel(pts([for (var i = 0; i < 40; i++) 400.0 + i])), 419.5, reason: 'even count: mean of the two middle values');
+    });
+
+    test('a flinch is a short spike, so it does not move the resting level', () {
+      final withFlinch = List<double>.generate(400, (i) => i >= 300 && i < 320 ? 2500 : 420); // 1 s of the 20 s window
+      expect(restingLevel(pts(withFlinch)), 420);
+    });
+
+    test('too few samples (under 2 s): no resting level yet', () {
+      expect(restingLevel(pts(List.filled(39, 420))), isNull);
+      expect(restingLevel(const []), isNull);
+    });
+
+    test('the fixed scales hold the real rest and flinch levels (L3 fixture: EMG 420 and 2534, |accel| 9.8 and 23.9)', () {
+      expect(phantomEmgScale.min, 0);
+      expect(phantomEmgScale.max, greaterThan(2534));
+      expect(phantomAccelScale.min, 0);
+      expect(phantomAccelScale.max, greaterThan(23.94));
+    });
+  });
+
+  group('B12 link health', () {
+    final t0 = DateTime(2026, 10, 8, 14);
+    PhantomLiveSnapshot snap({bool connected = true, DateTime? at, int? rtt}) =>
+        PhantomLiveSnapshot(runState: PhantomRunState.running, connected: connected, receivedAt: at, rttMs: rtt);
+    PhantomLinkHealth health(PhantomLiveSnapshot? s, Duration later) => PhantomLinkHealth.of(s, t0.add(later));
+
+    test('fresh statuses: live, with the round trip', () {
+      final h = health(snap(at: t0, rtt: 18), const Duration(milliseconds: 600));
+      expect(h.state, PhantomLinkState.live);
+      expect(h.rttMs, 18);
+      expect(h.stale, isFalse);
+    });
+
+    test('2 s without a status: stale, with the whole seconds since', () {
+      expect(health(snap(at: t0, rtt: 18), const Duration(milliseconds: 1999)).state, PhantomLinkState.live);
+      final h = health(snap(at: t0, rtt: 18), const Duration(seconds: 4, milliseconds: 700));
+      expect(h.state, PhantomLinkState.stale);
+      expect(h.ageS, 4);
+      expect(h.stale, isTrue);
+      expect(health(snap(at: t0), const Duration(seconds: 2)).ageS, 2);
+    });
+
+    test('a lost connection or no snapshot at all: offline, whatever the age', () {
+      expect(health(snap(connected: false, at: t0), Duration.zero).state, PhantomLinkState.offline);
+      expect(health(null, Duration.zero).state, PhantomLinkState.offline);
+      expect(health(snap(connected: false, at: t0), Duration.zero).stale, isTrue);
+    });
+
+    test('an unknown receive time (the scripted demo) counts as live, never stale', () {
+      expect(health(snap(), const Duration(hours: 1)).state, PhantomLinkState.live);
     });
   });
 

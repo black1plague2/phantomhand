@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opus_app/core/theme/app_theme.dart';
+import 'package:opus_app/core/theme/opus_tokens.dart';
 import 'package:opus_app/data/models/phantom_live.dart';
 import 'package:opus_app/data/repositories/mock/mock_phantom_live_repository.dart';
 import 'package:opus_app/data/repositories/phantom_live_repository.dart';
@@ -46,6 +47,8 @@ PhantomLiveSnapshot _snap(
   bool connected = true,
   TraceChunk? chunk,
   List<TraceMarker> markers = const [],
+  int? rtt,
+  DateTime? at,
 }) =>
     PhantomLiveSnapshot(
       runState: state,
@@ -60,6 +63,16 @@ PhantomLiveSnapshot _snap(
       ),
       chunk: chunk,
       markers: markers,
+      rttMs: rtt,
+      receivedAt: at,
+    );
+
+/// [n] samples at 20 Hz from [t0]: EMG rests at 420 and |accel| at 9.8; the last
+/// [flinchLast] samples are a flinch (2100 and 14.0).
+TraceChunk _rest(int n, {double t0 = 0, int flinchLast = 0}) => TraceChunk(
+      emgEnv: [for (var i = 0; i < n; i++) if (i >= n - flinchLast) 2100.0 else 420.0],
+      accelMag: [for (var i = 0; i < n; i++) if (i >= n - flinchLast) 14.0 else 9.8],
+      t0Ms: t0,
     );
 
 Widget _app(Widget home, {Locale locale = const Locale('en'), double textScale = 1}) => MaterialApp(
@@ -95,14 +108,25 @@ Future<_FakePhantomRepo> _pump(
   Locale locale = const Locale('en'),
   PhantomLiveSnapshot? first,
   bool observer = false,
+  DateTime Function()? clock,
 }) async {
   await _size(tester, size);
   final repo = _FakePhantomRepo();
   addTearDown(repo.controller.close);
-  await tester.pumpWidget(_app(PhantomLiveScreen(repository: repo, initialObserver: observer), locale: locale, textScale: textScale));
+  await tester.pumpWidget(
+    _app(PhantomLiveScreen(repository: repo, initialObserver: observer, clock: clock), locale: locale, textScale: textScale),
+  );
   repo.push(first ?? _snap(PhantomRunState.paired, phase: 'calibrate', condition: null, remaining: null));
   await tester.pump();
   return repo;
+}
+
+/// Hands [s] to the screen and renders it. The stream delivers on a microtask,
+/// which a lone `pump()` right after a timed pump does not draw.
+Future<void> _push(WidgetTester tester, _FakePhantomRepo repo, PhantomLiveSnapshot s) async {
+  repo.push(s);
+  await tester.pump();
+  await tester.pump();
 }
 
 bool _enabled(WidgetTester tester, PhantomCommand c) {
@@ -159,6 +183,42 @@ void main() {
     expect(find.text('—'), findsOneWidget);
     expect(find.text('Offline'), findsNWidgets(2));
     expect(find.text('Muscle activity'), findsNothing);
+  });
+
+  // B3 (R3 D7): before the first Start the headset reports phase `idle` and no condition.
+  testWidgets('B3: idle reads "Waiting to start", not the raw id, and there is no "No condition" slab', (tester) async {
+    await _pump(tester, first: _snap(PhantomRunState.ready, phase: 'idle', condition: null, remaining: null));
+    expect(find.text('Waiting to start'), findsOneWidget);
+    expect(find.text('idle'), findsNothing);
+    expect(find.byKey(const ValueKey('ph-condition')), findsNothing);
+    expect(find.text('No condition'), findsNothing);
+    expect(find.text('—'), findsOneWidget, reason: 'the countdown slot stays');
+  });
+
+  testWidgets('B3: the condition chip comes back with the first induction', (tester) async {
+    final repo = await _pump(tester, first: _snap(PhantomRunState.ready, phase: 'idle', condition: null, remaining: null));
+    expect(find.byKey(const ValueKey('ph-condition')), findsNothing);
+    repo.push(_snap(PhantomRunState.running, condition: PhantomCondition.async));
+    await tester.pump();
+    expect(find.byKey(const ValueKey('ph-condition')), findsOneWidget);
+    expect(find.text('ASYNC'), findsOneWidget);
+  });
+
+  testWidgets('B3: the audience view shows no "No condition" slab before the induction either', (tester) async {
+    await _pump(
+      tester,
+      size: const Size(1600, 1000),
+      observer: true,
+      first: _snap(PhantomRunState.ready, phase: 'idle', condition: null, remaining: null),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text('Waiting to start'), findsOneWidget);
+    expect(find.byKey(const ValueKey('ph-condition')), findsNothing);
+  });
+
+  testWidgets('B3: Hindi reads the waiting label too', (tester) async {
+    await _pump(tester, locale: const Locale('hi'), first: _snap(PhantomRunState.ready, phase: 'idle', condition: null, remaining: null));
+    expect(find.text('शुरू होने की प्रतीक्षा'), findsOneWidget);
   });
 
   testWidgets('while running: phase buttons live, order locked once the induction has begun', (tester) async {
@@ -256,12 +316,116 @@ void main() {
     expect(find.text('Confirmed'), findsOneWidget);
   });
 
-  testWidgets('everything is disabled when the headset is offline, with a tag in the app bar', (tester) async {
+  testWidgets('everything is disabled when the headset is offline, with the Offline pill in the app bar', (tester) async {
     await _pump(tester, first: _snap(PhantomRunState.running, connected: false));
     for (final c in PhantomCommand.values.where((c) => c != PhantomCommand.conditionOrder)) {
       expect(_enabled(tester, c), isFalse, reason: c.wire);
     }
-    expect(find.text('Headset offline'), findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('ph-link')), matching: find.text('Offline')), findsOneWidget);
+  });
+
+  // B12 (R3 D5, D17): the operator can tell a live card from a frozen one, and an offline node says what to do.
+  group('B12 link health', () {
+    final t0 = DateTime(2026, 10, 8, 14);
+    Finder dotOf(String id) => find.descendant(
+          of: find.byKey(ValueKey('ph-plot-$id')),
+          matching: find.byWidgetPredicate((w) => w is Container && w.decoration is BoxDecoration && (w.decoration! as BoxDecoration).shape == BoxShape.circle),
+        );
+    Color traceTint(WidgetTester tester, String id) => (tester.widget<Container>(dotOf(id).first).decoration! as BoxDecoration).color!;
+    final grey = OpusTokens.dark.slate;
+
+    testWidgets('live: "Quest 18 ms" with a round trip, plain "Quest" without one', (tester) async {
+      final now = t0.add(const Duration(milliseconds: 500));
+      final repo = await _pump(tester, clock: () => now, first: _snap(PhantomRunState.running, rtt: 18, at: t0));
+      expect(find.descendant(of: find.byKey(const ValueKey('ph-link')), matching: find.text('Quest 18 ms')), findsOneWidget);
+      repo.push(_snap(PhantomRunState.running, at: t0));
+      await tester.pump();
+      expect(find.text('Quest'), findsOneWidget);
+      expect(find.textContaining('ms'), findsNothing);
+    });
+
+    testWidgets('a quiet link turns the pill amber on its own, the traces grey, and the next status restores them', (tester) async {
+      var now = t0;
+      final repo = await _pump(tester, clock: () => now, first: _snap(PhantomRunState.running, rtt: 18, at: t0, chunk: _rest(400)));
+      expect(find.text('Quest 18 ms'), findsOneWidget);
+      expect(traceTint(tester, 'emg'), OpusTokens.metricColorV3('emg'));
+      expect(traceTint(tester, 'accel'), OpusTokens.metricColorV3('accel'));
+
+      // Nothing arrives for 4 s: only the 1 s tick re-reads the clock.
+      now = t0.add(const Duration(seconds: 4, milliseconds: 300));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('No update 4 s'), findsOneWidget);
+      expect(find.text('Quest 18 ms'), findsNothing);
+      expect(traceTint(tester, 'emg'), grey);
+      expect(traceTint(tester, 'accel'), grey);
+
+      await _push(tester, repo, _snap(PhantomRunState.running, rtt: 12, at: now));
+      expect(find.text('Quest 12 ms'), findsOneWidget);
+      expect(find.textContaining('No update'), findsNothing);
+      expect(traceTint(tester, 'emg'), OpusTokens.metricColorV3('emg'));
+    });
+
+    testWidgets('under 2 s of silence is still live (statuses come every 0.5 s)', (tester) async {
+      var now = t0;
+      await _pump(tester, clock: () => now, first: _snap(PhantomRunState.running, rtt: 18, at: t0));
+      now = t0.add(const Duration(milliseconds: 1900));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('Quest 18 ms'), findsOneWidget);
+      now = t0.add(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('No update 2 s'), findsOneWidget);
+    });
+
+    testWidgets('a lost link: red "Offline" pill and grey traces (the node chips are untouched)', (tester) async {
+      await _pump(tester, first: _snap(PhantomRunState.running, connected: false, chunk: _rest(400)));
+      expect(find.text('Offline'), findsOneWidget, reason: 'the pill only: both nodes were reported connected');
+      expect(traceTint(tester, 'emg'), grey);
+    });
+
+    testWidgets('the audience view has no pill but its traces still turn grey when stale', (tester) async {
+      var now = t0;
+      await _pump(
+        tester,
+        size: const Size(1600, 1000),
+        observer: true,
+        clock: () => now,
+        first: _snap(PhantomRunState.running, rtt: 18, at: t0, chunk: _rest(400)),
+      );
+      expect(find.byKey(const ValueKey('ph-link')), findsNothing);
+      expect(traceTint(tester, 'emg'), OpusTokens.metricColorV3('emg'));
+      now = t0.add(const Duration(seconds: 5));
+      await tester.pump(const Duration(seconds: 1));
+      expect(traceTint(tester, 'emg'), grey);
+    });
+
+    testWidgets('Hindi pill words', (tester) async {
+      var now = t0;
+      await _pump(tester, locale: const Locale('hi'), clock: () => now, first: _snap(PhantomRunState.running, rtt: 18, at: t0));
+      expect(find.text('क्वेस्ट 18 ms'), findsOneWidget);
+      now = t0.add(const Duration(seconds: 4));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('4 सेकंड से कोई अपडेट नहीं'), findsOneWidget);
+    });
+
+    const fix = 'Not reachable. Check its power cable and the hotspot.';
+
+    testWidgets('an offline node says what to do next to "Offline"; a connected one does not', (tester) async {
+      await _pump(tester, first: _snap(PhantomRunState.running, haptic: false));
+      expect(find.descendant(of: find.byKey(const ValueKey('ph-node-haptic')), matching: find.text('Offline')), findsOneWidget);
+      expect(find.descendant(of: find.byKey(const ValueKey('ph-node-haptic')), matching: find.text(fix)), findsOneWidget);
+      expect(find.descendant(of: find.byKey(const ValueKey('ph-node-bio')), matching: find.text(fix)), findsNothing);
+    });
+
+    testWidgets('the audience view says Offline for a node but gives no instructions', (tester) async {
+      await _pump(tester, size: const Size(1600, 1000), observer: true, first: _snap(PhantomRunState.running, haptic: false, bio: false));
+      expect(find.text('Offline'), findsNWidgets(2));
+      expect(find.text(fix), findsNothing);
+    });
+
+    testWidgets('Hindi node fix', (tester) async {
+      await _pump(tester, locale: const Locale('hi'), first: _snap(PhantomRunState.running, bio: false));
+      expect(find.text('पहुँच से बाहर। इसकी पावर केबल और हॉटस्पॉट जाँचें।'), findsOneWidget);
+    });
   });
 
   testWidgets('traces: empty state, then values with markers once a chunk arrives', (tester) async {
@@ -271,7 +435,10 @@ void main() {
       _snap(
         PhantomRunState.running,
         chunk: TraceChunk(emgEnv: List.filled(10, 431), accelMag: List.filled(10, 9.8), t0Ms: 0),
-        markers: const [TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 200)],
+        markers: const [
+          TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 200),
+          TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: 320),
+        ],
       ),
     );
     await tester.pump();
@@ -281,6 +448,114 @@ void main() {
     expect(find.byKey(const ValueKey('ph-plot-emg')), findsOneWidget);
     expect(find.text('Stone lands'), findsOneWidget);
     expect(find.text('Muscle burst'), findsOneWidget);
+  });
+
+  group('B8 traces that prove the flinch', () {
+    Finder inPlot(String id, Finder f) => find.descendant(of: find.byKey(ValueKey('ph-plot-$id')), matching: f);
+    const impact = TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 17000);
+    const burst = TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: 17120);
+
+    testWidgets('fixed scale: min and max are labelled on each plot and do not move with the data', (tester) async {
+      final repo = await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(400)));
+      expect(inPlot('emg', find.text('3000')), findsOneWidget);
+      expect(inPlot('emg', find.text('0')), findsOneWidget);
+      expect(inPlot('accel', find.text('25')), findsOneWidget);
+      expect(inPlot('accel', find.text('0')), findsOneWidget);
+
+      // A far bigger signal: the axis stays where it was (auto-scale would have moved it).
+      repo.push(_snap(PhantomRunState.running, chunk: TraceChunk(emgEnv: List.filled(40, 2900), accelMag: List.filled(40, 24), t0Ms: 20000)));
+      await tester.pump();
+      expect(inPlot('emg', find.text('3000')), findsOneWidget);
+      expect(inPlot('accel', find.text('25')), findsOneWidget);
+    });
+
+    testWidgets('"x resting" is read off the trace: none under 2 s of samples, then the latest value over the median', (tester) async {
+      final repo = await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(30)));
+      expect(find.byKey(const ValueKey('ph-resting-emg')), findsNothing);
+
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(370, t0: 1500, flinchLast: 20)));
+      await tester.pump();
+      expect(find.text('5.0× resting'), findsOneWidget, reason: '2100 over a resting level of 420');
+      expect(inPlot('emg', find.text('5.0× resting')), findsOneWidget);
+      expect(inPlot('accel', find.text('1.4× resting')), findsOneWidget, reason: '14.0 over 9.8');
+    });
+
+    testWidgets('the latest stone and burst are named once, on the EMG plot, just left of their line', (tester) async {
+      await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(400), markers: const [impact, burst]));
+      expect(find.text('Stone lands'), findsOneWidget);
+      expect(find.text('Muscle burst'), findsOneWidget);
+      expect(inPlot('emg', find.text('Stone lands')), findsOneWidget);
+      expect(inPlot('accel', find.text('Stone lands')), findsNothing);
+
+      final canvas = tester.getRect(inPlot('emg', find.byType(CustomPaint)));
+      final markerX = canvas.left + (17000 - (19950 - 20000)) / 20000 * canvas.width;
+      expect(tester.getTopRight(find.text('Stone lands')).dx, lessThan(markerX));
+      expect(tester.getTopRight(find.text('Muscle burst')).dx, lessThan(canvas.left + (17120 + 50) / 20000 * canvas.width));
+      expect(tester.getTopLeft(find.text('Muscle burst')).dy, greaterThan(tester.getTopLeft(find.text('Stone lands')).dy), reason: 'two rows, no overlap');
+    });
+
+    testWidgets('a marker at the left edge is named on its right instead, and stays inside the plot', (tester) async {
+      await _pump(
+        tester,
+        first: _snap(PhantomRunState.running, chunk: _rest(400), markers: const [TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 300)]),
+      );
+      final canvas = tester.getRect(inPlot('emg', find.byType(CustomPaint)));
+      final markerX = canvas.left + (300 + 50) / 20000 * canvas.width;
+      expect(tester.getTopLeft(find.text('Stone lands')).dx, greaterThan(markerX));
+      expect(tester.getTopRight(find.text('Stone lands')).dx, lessThanOrEqualTo(canvas.right));
+    });
+
+    testWidgets('no marker names before a marker exists, and none once it has scrolled out of the window', (tester) async {
+      final repo = await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(400)));
+      expect(find.text('Stone lands'), findsNothing);
+      expect(find.text('Muscle burst'), findsNothing);
+
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(40, t0: 20000), markers: const [TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 20500)]));
+      await tester.pump();
+      expect(find.text('Stone lands'), findsOneWidget);
+
+      repo.push(_snap(PhantomRunState.running, chunk: _rest(400, t0: 22000)));
+      await tester.pump();
+      expect(find.text('Stone lands'), findsNothing, reason: 'older than the 20 s window');
+    });
+
+    testWidgets('the 20 s window and the axis words and units come from l10n, in both languages', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pump(tester, first: _snap(PhantomRunState.running, chunk: _rest(400)));
+      expect(find.text('20 s ago'), findsNWidgets(2));
+      expect(find.text('now'), findsNWidgets(2));
+      expect(find.text('9.8 m/s²'), findsOneWidget);
+      expect(find.bySemanticsLabel(RegExp('Muscle signal, Last 20 s')), findsWidgets);
+      semantics.dispose();
+
+      await _pump(tester, locale: const Locale('hi'), first: _snap(PhantomRunState.running, chunk: _rest(400)));
+      expect(find.text('20 सेकंड पहले'), findsNWidgets(2));
+      expect(find.text('अभी'), findsNWidgets(2));
+    });
+
+    for (final observer in const [false, true]) {
+      testWidgets('wide and tall: the two plots share the pane height${observer ? ' (audience view)' : ''}', (tester) async {
+        await _pump(tester, size: const Size(1600, 1000), observer: observer, first: _snap(PhantomRunState.running, chunk: _rest(400)));
+        expect(tester.takeException(), isNull);
+        final emg = tester.getRect(find.byKey(const ValueKey('ph-plot-emg')));
+        final accel = tester.getRect(find.byKey(const ValueKey('ph-plot-accel')));
+        expect(emg.height, greaterThan(250));
+        expect(accel.height, greaterThan(250));
+        expect((emg.height - accel.height).abs(), lessThan(1), reason: 'an equal share each');
+        expect(accel.bottom, greaterThan(1000 - 80), reason: 'down to the bottom of the pane, no empty half');
+      });
+    }
+
+    testWidgets('narrow, or wide but short: fixed-height plots in a scroll view, no overflow', (tester) async {
+      await _pump(tester, size: const Size(390, 844), first: _snap(PhantomRunState.running, chunk: _rest(400)));
+      expect(tester.takeException(), isNull);
+      final phone = tester.getSize(find.byKey(const ValueKey('ph-plot-emg'))).height;
+      expect(phone, lessThan(200), reason: '128 dp of plot plus header and axis');
+
+      await _pump(tester, size: const Size(1280, 500), first: _snap(PhantomRunState.running, chunk: _rest(400)));
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(find.byKey(const ValueKey('ph-plot-emg'))).height, closeTo(phone, 1));
+    });
   });
 
   testWidgets('observer mode hides the controls and the section titles, keeps SYNC, and can be left', (tester) async {
@@ -341,6 +616,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('Phantom Hand'), findsOneWidget);
     expect(find.text('Demo, no headset'), findsOneWidget);
+    expect(find.byKey(const ValueKey('ph-link')), findsNothing, reason: 'the demo has no link to report on');
     expect(_enabled(tester, PhantomCommand.start), isTrue);
 
     // Drive the demo: Start, then the clock moves.

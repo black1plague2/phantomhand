@@ -842,12 +842,6 @@ abstract class AppLocalizations {
   /// **'ASYNC'**
   String get phCondAsync;
 
-  /// No description provided for @phCondNone.
-  ///
-  /// In en, this message translates to:
-  /// **'No condition'**
-  String get phCondNone;
-
   /// No description provided for @phTimeLeft.
   ///
   /// In en, this message translates to:
@@ -899,8 +893,32 @@ abstract class AppLocalizations {
   /// No description provided for @phTraceWindow.
   ///
   /// In en, this message translates to:
-  /// **'Last 10 s'**
-  String get phTraceWindow;
+  /// **'Last {seconds} s'**
+  String phTraceWindow(int seconds);
+
+  /// No description provided for @phAxisAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s ago'**
+  String phAxisAgo(int seconds);
+
+  /// No description provided for @phAxisNow.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get phAxisNow;
+
+  /// No description provided for @phUnitAccel.
+  ///
+  /// In en, this message translates to:
+  /// **'m/s²'**
+  String get phUnitAccel;
+
+  /// No description provided for @phResting.
+  ///
+  /// In en, this message translates to:
+  /// **'{ratio}× resting'**
+  String phResting(String ratio);
 
   /// No description provided for @phMarkerImpact.
   ///
@@ -1016,11 +1034,29 @@ abstract class AppLocalizations {
   /// **'Demo, no headset'**
   String get phDemo;
 
-  /// No description provided for @phHeadsetOffline.
+  /// No description provided for @phLinkQuest.
   ///
   /// In en, this message translates to:
-  /// **'Headset offline'**
-  String get phHeadsetOffline;
+  /// **'Quest'**
+  String get phLinkQuest;
+
+  /// No description provided for @phLinkQuestMs.
+  ///
+  /// In en, this message translates to:
+  /// **'Quest {ms} ms'**
+  String phLinkQuestMs(int ms);
+
+  /// No description provided for @phLinkStale.
+  ///
+  /// In en, this message translates to:
+  /// **'No update {seconds} s'**
+  String phLinkStale(int seconds);
+
+  /// No description provided for @phNodeFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Not reachable. Check its power cable and the hotspot.'**
+  String get phNodeFix;
 
   /// No description provided for @phConfirmEnd.
   ///

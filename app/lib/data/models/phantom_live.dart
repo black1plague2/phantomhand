@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:opus_app/data/models/phantom_witness.dart';
+
 /// Live-session models for the generic "game-state" operator card
 /// (FR-AP-01, `docs/agent-briefs/ph/03-SPEC.md` §4/§9, `contracts/LIVE_PROTOCOL.md`
 /// v0.2): `status.payload.game_state`, `status.payload.trace`, the operator
@@ -158,11 +160,36 @@ class TracePoint {
   final double value;
 }
 
+/// How much of each trace the card keeps and draws: long enough that a flinch
+/// is still on screen while the operator looks back at the phone.
+const phantomTraceWindowMs = 20000.0;
+
+/// Fixed y range of each live trace. The plots never rescale to the data, so a
+/// small flinch looks small and a big one big, and the labelled min / max tell
+/// the reader the size. EMG envelope in raw ADC counts: rest sits near 420 and
+/// a strong flinch reaches about 2500 (the L3 fixture,
+/// `tools/demo/tests/fixtures/ph_l3_main`); retune once real hardware has run.
+/// |accel| in m/s²: rest is gravity (9.8), a jolt peaks at 14 to 24 there.
+const ({double min, double max}) phantomEmgScale = (min: 0, max: 3000);
+const ({double min, double max}) phantomAccelScale = (min: 0, max: 25);
+
+/// Resting level of a trace, estimated in the app (no protocol field): the
+/// median of the samples in view, or null until [minSamples] have arrived (2 s
+/// at 20 Hz). The median ignores a flinch, which is a short spike, so
+/// "× resting" is measured against where the signal sits when quiet.
+double? restingLevel(List<TracePoint> points, {int minSamples = 40}) {
+  if (points.length < minSamples) return null;
+  final v = [for (final p in points) p.value]..sort();
+  final mid = v.length ~/ 2;
+  return v.length.isOdd ? v[mid] : (v[mid - 1] + v[mid]) / 2;
+}
+
 /// Rolling window over successive [TraceChunk]s ("The app concatenates
-/// successive traces"). Keeps only the last [windowMs] (default 10 s) before
-/// the newest sample; markers older than the window are dropped with them.
+/// successive traces"). Keeps only the last [windowMs] (default
+/// [phantomTraceWindowMs]) before the newest sample; markers older than the
+/// window are dropped with them.
 class TraceBuffer {
-  TraceBuffer({this.windowMs = 10000});
+  TraceBuffer({this.windowMs = phantomTraceWindowMs});
 
   final double windowMs;
   final List<TracePoint> _emg = [];
@@ -233,7 +260,10 @@ class PhantomLiveSnapshot {
     this.game,
     this.chunk,
     this.markers = const [],
+    this.witness,
     this.conditionOrder,
+    this.rttMs,
+    this.receivedAt,
   });
 
   final PhantomRunState runState;
@@ -248,8 +278,52 @@ class PhantomLiveSnapshot {
   /// Markers that arrived with this snapshot.
   final List<TraceMarker> markers;
 
+  /// The `witness_summary` event that arrived with this snapshot (null: none).
+  /// [PhantomLiveModel] keeps the latest one for the audience mirror.
+  final PhantomWitness? witness;
+
   /// The order the headset reports for the next run, if known.
   final String? conditionOrder;
+
+  /// Round trip to the headset (ping / pong) in ms, if measured.
+  final int? rttMs;
+
+  /// When the latest `status` arrived; null when unknown (the scripted demo).
+  /// Events do not move it: it is the age of the numbers on the card.
+  final DateTime? receivedAt;
+}
+
+/// Is the link behind the card alive, quiet, or gone.
+enum PhantomLinkState { live, stale, offline }
+
+/// How far the card's numbers can be trusted right now. The headset sends a
+/// status every 0.5 s, and the hub only drops the link after about three
+/// missed 1 s pongs, so for a few seconds a frozen card looks live: this makes
+/// that visible.
+class PhantomLinkHealth {
+  const new(this.state, {this.rttMs, this.ageS});
+
+  factory of(PhantomLiveSnapshot? s, DateTime now) {
+    if (s == null || !s.connected) return const PhantomLinkHealth(PhantomLinkState.offline);
+    final at = s.receivedAt;
+    final age = at == null ? Duration.zero : now.difference(at);
+    if (age >= staleAfter) return PhantomLinkHealth(PhantomLinkState.stale, ageS: age.inSeconds);
+    return PhantomLinkHealth(PhantomLinkState.live, rttMs: s.rttMs);
+  }
+
+  /// No status for this long counts as stale (four missed statuses).
+  static const staleAfter = Duration(seconds: 2);
+
+  final PhantomLinkState state;
+
+  /// Live: the round trip in ms, if known.
+  final int? rttMs;
+
+  /// Stale: whole seconds since the last status.
+  final int? ageS;
+
+  /// The numbers on the card are not current.
+  bool get stale => state != PhantomLinkState.live;
 }
 
 /// Operator buttons of the live card.
@@ -347,11 +421,15 @@ class CommandTracker {
 /// Accumulates snapshots into what the card draws, and tracks whether the
 /// first induction has been seen (for the condition-order lock).
 class PhantomLiveModel {
-  PhantomLiveModel({double windowMs = 10000}) : buffer = TraceBuffer(windowMs: windowMs);
+  PhantomLiveModel({double windowMs = phantomTraceWindowMs}) : buffer = TraceBuffer(windowMs: windowMs);
 
   final TraceBuffer buffer;
   PhantomLiveSnapshot? latest;
   bool inductionSeen = false;
+
+  /// The latest `witness_summary` of this run: snapshots carry it once, the
+  /// audience mirror needs it for as long as the witness phase lasts.
+  PhantomWitness? witness;
 
   /// Order the operator last chose or the headset last reported (default
   /// `async_first`, spec D9).
@@ -368,8 +446,11 @@ class PhantomLiveModel {
     if (wasRunOrOver && waitingAgain) {
       buffer.clear();
       inductionSeen = false;
+      // The next person must not see the last person's numbers.
+      witness = null;
     }
     latest = s;
+    if (s.witness != null) witness = s.witness;
     if (PhantomCommandRules.phaseLocksOrder(s.game?.phase) && s.runState != PhantomRunState.idle && s.runState != PhantomRunState.paired) {
       inductionSeen = true;
     }

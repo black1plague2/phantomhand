@@ -13,8 +13,11 @@ class AppLocale extends _$AppLocale {
 
 @Riverpod(keepAlive: true)
 class AppThemeMode extends _$AppThemeMode {
+  // Dark by default (R3 D11): the live card's status colours only reach 3:1 on
+  // the dark panel, and the laptop/projector then matches the phone. The
+  // Settings toggle (light / auto / dark) still overrides it.
   @override
-  ThemeMode build() => ThemeMode.system;
+  ThemeMode build() => ThemeMode.dark;
 
   void set(ThemeMode mode) => state = mode;
 }

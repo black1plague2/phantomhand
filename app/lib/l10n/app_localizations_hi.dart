@@ -405,9 +405,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get phCondAsync => 'ASYNC';
 
   @override
-  String get phCondNone => 'कोई स्थिति नहीं';
-
-  @override
   String get phTimeLeft => 'बचा समय';
 
   @override
@@ -432,7 +429,25 @@ class AppLocalizationsHi extends AppLocalizations {
   String get phTraceAccel => 'बाँह की गति';
 
   @override
-  String get phTraceWindow => 'पिछले 10 सेकंड';
+  String phTraceWindow(int seconds) {
+    return 'पिछले $seconds सेकंड';
+  }
+
+  @override
+  String phAxisAgo(int seconds) {
+    return '$seconds सेकंड पहले';
+  }
+
+  @override
+  String get phAxisNow => 'अभी';
+
+  @override
+  String get phUnitAccel => 'm/s²';
+
+  @override
+  String phResting(String ratio) {
+    return 'आराम स्तर का $ratio×';
+  }
 
   @override
   String get phMarkerImpact => 'पत्थर गिरा';
@@ -492,7 +507,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String get phDemo => 'डेमो, हेडसेट नहीं';
 
   @override
-  String get phHeadsetOffline => 'हेडसेट ऑफ़लाइन';
+  String get phLinkQuest => 'क्वेस्ट';
+
+  @override
+  String phLinkQuestMs(int ms) {
+    return 'क्वेस्ट $ms ms';
+  }
+
+  @override
+  String phLinkStale(int seconds) {
+    return '$seconds सेकंड से कोई अपडेट नहीं';
+  }
+
+  @override
+  String get phNodeFix => 'पहुँच से बाहर। इसकी पावर केबल और हॉटस्पॉट जाँचें।';
 
   @override
   String get phConfirmEnd => 'यह सत्र समाप्त करें?';

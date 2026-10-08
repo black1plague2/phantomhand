@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:opus_app/core/providers/hub_providers.dart';
 import 'package:opus_app/data/repositories/mock/mock_phantom_live_repository.dart';
 import 'package:opus_app/features/live/live_monitor_screen.dart';
+import 'package:opus_app/features/live/phantom_live_providers.dart';
+import 'package:opus_app/features/live/phantom_live_screen.dart';
 import 'package:opus_app/l10n/app_localizations.dart';
 
 /// The top-level Monitor tab (bottom nav = Patients / Monitor / Programs /
@@ -14,7 +16,8 @@ import 'package:opus_app/l10n/app_localizations.dart';
 /// (if any) and renders the real [LiveMonitorScreen] for it -- otherwise the
 /// fixed empty state design v2 specifies (`docs/design/OPUS_DESIGN_V2.md`
 /// §5): "No headset connected" + "Start hub" + the Wi-Fi IP, one line, no
-/// paragraph (v2 §3 "titles only").
+/// paragraph (v2 §3 "titles only"). A connected Phantom Hand headset takes
+/// precedence and gets its operator card whether or not it has a session.
 ///
 /// Task 4 (run 2, BINDING user ask -- "I want to see the app get data from
 /// Unity, not backend logs"): the hub now starts automatically the moment
@@ -51,6 +54,14 @@ class _MonitorHomeScreenState extends ConsumerState<MonitorHomeScreen> {
 
     final hub = ref.watch(hubControllerProvider);
     final notifier = ref.read(hubControllerProvider.notifier);
+
+    // A connected Phantom Hand headset gets its card from the moment it reports
+    // state. It has no session id before the first Start or after a run, which
+    // is exactly when Start and Next person are needed.
+    final phantomId = phantomDeviceId(hub);
+    final phantom = phantomId == null ? null : ref.watch(phantomLiveRepositoryProvider(phantomDeviceKey(phantomId)));
+    if (phantom != null) return PhantomLiveScreen(repository: phantom);
+
     final liveSessionIds = hub is HubRunning ? notifier.allRunningSessionIds() : const <String>{};
 
     if (liveSessionIds.isEmpty) {

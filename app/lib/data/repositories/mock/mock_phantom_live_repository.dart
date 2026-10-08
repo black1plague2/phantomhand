@@ -2,10 +2,38 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:opus_app/data/models/phantom_live.dart';
+import 'package:opus_app/data/models/phantom_witness.dart';
 import 'package:opus_app/data/repositories/phantom_live_repository.dart';
 
 /// Session id the app uses for the scripted demo (no hub needed).
 const mockPhantomSessionId = 'mock-phantom-hand';
+
+/// What the demo's audience mirror shows in the witness phase: the numbers of
+/// the fixture session `contracts/fixtures/sessions/phantom_hand_min`, plus
+/// flinch latency and strength. One shared object, so the mirror does not
+/// restart its closing-line fade on every snapshot. The demo run has no agency
+/// phase, hence no `agency_q5`.
+const mockPhantomWitness = PhantomWitness(
+  conditionOrder: ['async', 'sync'],
+  sync: PhantomWitnessCondition(
+    driftChangeCm: 2,
+    flinchLatencyMs: 96,
+    flinchStrength: PhantomFlinchStrength.strong,
+    flinchEmgPeakX: 6.4,
+    ownership: 5.5,
+    control: 3,
+    witnessQ4: 6,
+  ),
+  async: PhantomWitnessCondition(
+    driftChangeCm: 0,
+    flinchLatencyMs: 140,
+    flinchStrength: PhantomFlinchStrength.weak,
+    flinchEmgPeakX: 2.1,
+    ownership: 2.5,
+    control: 3,
+    witnessQ4: 6,
+  ),
+);
 
 /// One scripted step of the demo run.
 class _Step {
@@ -157,7 +185,8 @@ class PhantomMockEngine {
     var v = 410 + 8 * math.sin(t / 700) + (_rand.nextDouble() - 0.5) * 6;
     if (_impactMs >= 0) {
       final b = _impactMs + _burstAfterImpactMs;
-      if (t >= b) v += 170 * _flinchGain() * math.exp(-(t - b) / 260);
+      // Sized like the real thing (rest ~420, SYNC flinch ~5x) so it shows on the fixed trace scale.
+      if (t >= b) v += 1900 * _flinchGain() * math.exp(-(t - b) / 260);
     }
     return double.parse(v.toStringAsFixed(1));
   }
@@ -166,7 +195,7 @@ class PhantomMockEngine {
     var v = 9.8 + (_rand.nextDouble() - 0.5) * 0.08;
     if (_impactMs >= 0) {
       final a = _impactMs + 60;
-      if (t >= a) v += 2.6 * _flinchGain() * math.exp(-(t - a) / 140) * math.cos((t - a) / 45);
+      if (t >= a) v += 4.5 * _flinchGain() * math.exp(-(t - a) / 140) * math.cos((t - a) / 45);
     }
     return double.parse(v.toStringAsFixed(2));
   }
@@ -174,7 +203,7 @@ class PhantomMockEngine {
   /// Snapshot of the current state (no new samples unless given).
   PhantomLiveSnapshot snapshot({TraceChunk? chunk, List<TraceMarker> markers = const []}) {
     final s = _step;
-    final emgLevel = chunk == null || chunk.emgEnv.isEmpty ? 0.0 : ((chunk.emgEnv.last - 410) / 320).clamp(0.0, 1.0);
+    final emgLevel = chunk == null || chunk.emgEnv.isEmpty ? 0.0 : ((chunk.emgEnv.last - 410) / 2000).clamp(0.0, 1.0);
     final level = bioConnected ? double.parse(emgLevel.toStringAsFixed(2)) : null;
     return PhantomLiveSnapshot(
       runState: runState,
@@ -198,6 +227,8 @@ class PhantomMockEngine {
             ),
       chunk: chunk,
       markers: markers,
+      // The headset sends its witness_summary as the witness phase begins.
+      witness: s?.phase == 'witness' ? mockPhantomWitness : null,
       conditionOrder: conditionOrder,
     );
   }

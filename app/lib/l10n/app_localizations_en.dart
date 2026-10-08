@@ -404,9 +404,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phCondAsync => 'ASYNC';
 
   @override
-  String get phCondNone => 'No condition';
-
-  @override
   String get phTimeLeft => 'Time left';
 
   @override
@@ -431,7 +428,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phTraceAccel => 'Arm movement';
 
   @override
-  String get phTraceWindow => 'Last 10 s';
+  String phTraceWindow(int seconds) {
+    return 'Last $seconds s';
+  }
+
+  @override
+  String phAxisAgo(int seconds) {
+    return '$seconds s ago';
+  }
+
+  @override
+  String get phAxisNow => 'now';
+
+  @override
+  String get phUnitAccel => 'm/s²';
+
+  @override
+  String phResting(String ratio) {
+    return '$ratio× resting';
+  }
 
   @override
   String get phMarkerImpact => 'Stone lands';
@@ -491,7 +506,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phDemo => 'Demo, no headset';
 
   @override
-  String get phHeadsetOffline => 'Headset offline';
+  String get phLinkQuest => 'Quest';
+
+  @override
+  String phLinkQuestMs(int ms) {
+    return 'Quest $ms ms';
+  }
+
+  @override
+  String phLinkStale(int seconds) {
+    return 'No update $seconds s';
+  }
+
+  @override
+  String get phNodeFix =>
+      'Not reachable. Check its power cable and the hotspot.';
 
   @override
   String get phConfirmEnd => 'End this session?';

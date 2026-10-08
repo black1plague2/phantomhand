@@ -60,7 +60,7 @@
           "group": "Illusion",
           "order": 3,
           "unit": "s",
-          "help": "Length of each induction (demo_mode shortens it to 45 s)"
+          "help": "Length of each induction (demo_mode caps it at 60 s)"
         }
       },
       "condition_order": {
@@ -146,15 +146,15 @@
       "motor_soa_ms": {
         "type": "integer",
         "minimum": 60,
-        "maximum": 300,
-        "default": 100,
+        "maximum": 1700,
+        "default": 833,
         "x-ui": {
           "title": { "en": "Gap between motors", "hi": "दो मोटरों के बीच का अंतर" },
           "widget": "slider",
           "group": "Timing",
           "order": 4,
           "unit": "ms",
-          "help": "Gap between motor A and motor B onset. Brush speed follows: 10 cm / this value"
+          "help": "Time the brush takes from motor A to motor B; 833 ms = 12 cm/s, 100-130 ms = fast flick"
         }
       },
       "haptics_enabled": {
@@ -362,7 +362,7 @@
           "widget": "switch",
           "group": "Demo",
           "order": 1,
-          "help": "Shorter run for demos: induction 45 s and one questionnaire at the end"
+          "help": "Shorter run for demos: induction 60 s at most and a short rating after each condition"
         }
       }
     }

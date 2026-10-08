@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:opus_app/core/providers/hub_providers.dart';
 import 'package:opus_app/core/providers/repository_providers.dart';
+import 'package:opus_app/data/models/embodiment.dart';
 import 'package:opus_app/data/models/metrics.dart';
 import 'package:opus_app/data/models/session_envelope.dart';
 import 'package:opus_app/data/repositories/sessions_repository.dart';
+import 'package:opus_app/features/sessions/embodiment_report.dart';
 import 'package:opus_app/l10n/app_localizations.dart';
 import 'package:opus_app/shared/design/v2_colors.dart';
 import 'package:opus_app/shared/metrics/events_derived_metrics.dart';
@@ -116,6 +121,15 @@ class _SessionReportScreenState extends ConsumerState<SessionReportScreen> {
                   ],
                 );
               },
+            );
+          }
+          // A Phantom Hand session: its result is the embodiment report. Its
+          // metrics.json has no trials, so the trial layout below would be empty.
+          final embodiment = ref.watch(_embodimentProvider(widget.sessionId)).value;
+          if (embodiment != null) {
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [EmbodimentReport(embodiment: embodiment, lang: Localizations.localeOf(context).languageCode)],
             );
           }
           final trials = metrics.trials;
@@ -398,6 +412,21 @@ class _SpeedProfileForTrial extends StatelessWidget {
 final FutureProviderFamily<SessionMetrics?, String> _metricsProvider = FutureProvider.family<SessionMetrics?, String>(
   (ref, id) => ref.watch(sessionsRepositoryProvider).getSessionMetrics(id),
 );
+
+/// The `embodiment` block of a session's `metrics.json`, read from the raw file
+/// because [SessionMetrics] drops it. Null for any other session: no folder on
+/// disk (the bundled fixtures), no file, bad JSON, or no `embodiment` in it.
+final FutureProviderFamily<Embodiment?, String> _embodimentProvider = FutureProvider.family<Embodiment?, String>((ref, id) async {
+  if (!hubCapable) return null;
+  final opened = ref.watch(openedSessionDirectoriesProvider).where((r) => r.envelope.sessionId == id).firstOrNull;
+  final dir = ref.read(hubControllerProvider.notifier).sessionDirFor(id) ?? opened?.sessionDirPath;
+  if (dir == null) return null;
+  try {
+    return Embodiment.tryParseMetrics(jsonDecode(await File('$dir/metrics.json').readAsString()));
+  } on Exception catch (_) {
+    return null;
+  }
+});
 
 final FutureProviderFamily<ReachTraceSet, String> _reachTracesProvider = FutureProvider.family<ReachTraceSet, String>(
   (ref, id) => ref.watch(sessionsRepositoryProvider).getReachTraces(id),

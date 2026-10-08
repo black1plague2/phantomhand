@@ -52,12 +52,14 @@ class _Repo implements PhantomLiveRepository {
   Future<bool> send(PhantomCommand command, {Map<String, dynamic>? params}) async => true;
 }
 
-/// A deterministic mid-induction moment: ~7.5 s of traces with one stone
-/// landing and a muscle burst just after it.
+/// A deterministic mid-induction moment: the full 20 s window of traces with
+/// one stone landing at 15 s and a muscle burst just after it, at the levels of
+/// a real run (EMG rests near 420 and the flinch reaches ~5x; |accel| rests at
+/// 9.8 and jolts to ~14).
 PhantomLiveSnapshot _snapshot({PhantomCondition? condition = PhantomCondition.sync, PhantomRunState state = PhantomRunState.running}) {
-  const n = 100;
-  final emg = List<double>.generate(n, (i) => 380 + 20 * math.sin(i / 6) + (i > 25 && i < 45 ? 260 * math.exp(-(i - 26) / 8) : 0));
-  final acc = List<double>.generate(n, (i) => 9.8 + 0.4 * math.sin(i / 4) + (i > 25 && i < 40 ? 3.5 * math.exp(-(i - 26) / 5) : 0));
+  const n = 400;
+  final emg = List<double>.generate(n, (i) => 420 + 14 * math.sin(i / 6) + (i >= 302 ? 1900 * math.exp(-(i - 302) / 8) : 0));
+  final acc = List<double>.generate(n, (i) => 9.8 + 0.3 * math.sin(i / 4) + (i >= 301 && i < 316 ? 4.5 * math.exp(-(i - 301) / 5) : 0));
   return PhantomLiveSnapshot(
     runState: state,
     connected: true,
@@ -69,12 +71,13 @@ PhantomLiveSnapshot _snapshot({PhantomCondition? condition = PhantomCondition.sy
       bioConnected: true,
       emgLevel: 0.42,
     ),
-    chunk: TraceChunk(emgEnv: emg, accelMag: acc, t0Ms: 5000),
+    chunk: TraceChunk(emgEnv: emg, accelMag: acc, t0Ms: 0),
     markers: const [
-      TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 6300),
-      TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: 6550),
+      TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: 15000),
+      TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: 15120),
     ],
     conditionOrder: 'async_first',
+    rttMs: 18,
   );
 }
 
