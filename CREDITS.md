@@ -14,6 +14,22 @@ This repository is public. Every third-party asset kept in it is listed here wit
 Credit line for slides, the demo table and an About screen:
 "Rigged hand" by Elena FF, CC BY-SA 4.0, sketchfab.com/elenaferfor
 
+## Room and table props (made for this project)
+
+- **Files:** `game/Assets/Art/PhantomHand/Models/` `Brush/PH_Brush.glb`, `Lamp/PH_PendantLamp.glb`, `Plant/PH_Plant.glb`, `Window/PH_Window.glb`, `Props/PH_SingingBowl.glb`, `Props/PH_TeaCup.glb`, `Props/PH_FramedPicture.glb`.
+- **Origin:** added by the team on 8 Oct 2026. The files carry no author or licence field. Their generator tag is `THREE.GLTFExporter r184` and their material names use this project's `PH_` prefix, so they are taken to be the team's own procedural models, not third-party downloads. Confirm this before a public release build.
+
+## Unity Asset Store packages (not in this repository)
+
+The Unity Asset Store licence lets a team use a package in its built game but not publish the package's files. These packages must stay out of this public repository (keep them in a git-ignored folder on the build PC):
+
+- Pack Gesta Furniture #1: <https://assetstore.unity.com/packages/3d/props/furniture/pack-gesta-furniture-1-28237>
+- Stones: <https://assetstore.unity.com/packages/3d/props/exterior/stones-40329>
+- Dark Wave Paint Table 01: <https://assetstore.unity.com/packages/3d/props/dark-wave-paint-table-01-306300>
+- Mobile Books: <https://assetstore.unity.com/packages/3d/props/interior/mobile-books-3356>
+
+None of them is imported yet (8 Oct 2026).
+
 ## Meta asset-library models
 
 `game/Assets/MetaAssets/` holds models taken from Meta's asset library inside the Unity editor (table, stone, brush, sleeve, glove and others). Their licence terms have not been checked yet: confirm them before a public release build (open item in `docs/MANUAL_TODO.md`).
