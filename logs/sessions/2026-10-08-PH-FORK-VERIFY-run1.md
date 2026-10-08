@@ -72,21 +72,20 @@ applied its test hunks by hand and will add the tool).
 - For Phantom Hand this is harmless by reading: `TraceBuffer.addMarker` drops a marker of the same kind within 1 ms, a
   `witness_summary` replaces the previous one, and `phantomLiveRepositoryProvider` rebuilds onto the new connection. It
   would show in the Orchard monitor and in `GET /opus/v1/live/last_status` ("events").
-- The same replay is what refills the card after a reconnect, so fixing the two deviations alone would break it:
+- WRONG as first written here ("the same replay is what refills the card after a reconnect"): see the correction in
+  section 7. What I read correctly is the chain that makes the card lose its state:
   `phantom_live_providers.dart:52` keeps one repository per connection object, `phantom_live_screen.dart:68-72` starts a new
   `PhantomLiveModel` when the repository changes, and the witness and the markers only ever arrive as trial events
   (`hub_phantom_live_repository.dart:67-75`; the status replayed on attach has `game_state` and the trace, not the
-  witness). With replays de-duplicated or no longer sent, a reconnect during the witness phase would leave the audience
-  mirror empty. A hub fix needs the card's state to survive a reconnect of the same device, with tests for it
-  (witness still shown; `threat_impact` and `emg_burst` markers still there, once each).
+  witness). So the card's state has to survive a reconnect of the same device, with tests for it (witness still shown;
+  `threat_impact` and `emg_burst` markers still there, once each).
 - No test in `app/test` has a headset that reconnects. Not changed by me; the main session has a subagent on it (18:40).
 
 ## 5. Not done / not verified
 
-- "204 of 204 after a hub outage" with the fix a25ab93: the `hub_absent` run has not been repeated (the editor and
-  port 8787 are in use for the real boards).
-- Fault B (Node B absent) with the game: needs `OPUS_PH_FAULT=node_b_absent` in the test, then
-  `unity_fault_run.py node_b_absent <out dir>`.
+- (Closed in section 7: "204 of 204 after a hub outage" with the fix a25ab93, and Fault B with the game.)
+- A fault run of the game on a quiet PC: all four fault runs so far ended with the test Inconclusive or failed on
+  cue delivery because the host was slow, so none of them says anything about cue delivery.
 - Unity in batch mode: not tried (the owner's rule is the open editor).
 - Nothing here ran on a Quest or against the real boards.
 
@@ -94,5 +93,68 @@ applied its test hunks by hand and will add the tool).
 
 - Clean export: section 1, first paragraph; then the commands of the table from the export's root.
 - A faulted game run: take `game/.ph_unity.lock`, quiet CPU, then
-  `.venv\Scripts\python.exe sim\out\unity_faults_2026-10-08\unity_fault_run.py hub_absent <out dir>` (about 5 minutes;
+  `.venv\Scripts\python.exe tools\demo\unity_fault_run.py hub_absent <out dir>` (about 5 minutes;
   `node_a_off`, `node_b_absent`, `none` likewise). Expect `204/204; missing: none` in the Fault C rows.
+
+## 7. Two more faulted runs of the game, on the fixed build (20:07 to 20:16)
+
+By the main session's hand-over ("editor yours", lock FREE): simulator only (the script's own twin at port offset 33000,
+hub on 8787), nothing sent to the real boards, no recompile, no build. Checkout clean at 4e72ead. Lock taken 20:07:15,
+written FREE 20:16:43; afterwards the editor was not playing, the five `OPUS_PH_*` variables read back empty, no process
+of mine was left and nothing listened on 8787 or 41790 to 41793. Evidence: `sim/out/unity_faults_2026-10-08b/<fault>/`
+(`run.log`, `result.json`, `status_records.json`, `twin.jsonl`, `playmode.json`), git-ignored.
+
+Commands, from the repository root:
+
+```
+.venv\Scripts\python.exe tools\demo\unity_fault_run.py hub_absent sim\out\unity_faults_2026-10-08b\hub_absent
+.venv\Scripts\python.exe tools\demo\unity_fault_run.py node_b_absent sim\out\unity_faults_2026-10-08b\node_b_absent
+```
+
+Both times the test itself ended Inconclusive ("host too slow to judge cue delivery"): this PC was also running the
+Flutter suite of a subagent. Every undelivered cue has the reason `late`; none is `no_ack`; the twin executed every cue
+it was sent and rejected none. So the row "Stroke cues acked by the twin" is red for the host's reason in both runs and
+says nothing about the pipeline. Not repeated, as agreed.
+
+**hub_absent** (20:07:26 to 20:12:09; session `324f210f-a8e6-4f5d-a115-9af2fa907512`; hub stopped at 200.3 s after the
+test's start, back at 230.3 s; test: Inconclusive, 247.2 s; frames over 50 ms took 38.5 % of the run)
+
+| Result | Check | Threshold | Observed |
+|---|---|---|---|
+| PASS | Fault C: hub absent 30 s: run completes | yes | run complete=True |
+| PASS | Fault C: websocket re-established after the outage | a hello after the comeback | 2 hellos; after the comeback: 1 |
+| PASS | Fault C: the session's files landed after the hub came back | all, written after the comeback | 83 of 83 files on the hub; 83 written after the comeback |
+| PASS | Fault C: every trial_event arrived exactly once after resume | all | **204/204; missing: none** (203/204 before a25ab93) |
+| PASS | Phases in order, both conditions | 100 % | 14 phases, 2 conditions (async/sync) |
+| FAIL (host) | Stroke cues acked by the twin | >= 98 % | 77.2 % (88/114; 26 dropped as `late`, 0 `no_ack`; twin: 88 executed / 0 rejected) |
+| PASS | SYNC visual-to-send timing error | mean <= 20 ms, p95 <= 40 ms | mean 12.5, p95 26.0 ms (n=16) |
+| PASS | ASYNC delay | 500-700 ms on >= 95 % of strokes | 100 % of 22 strokes (min 511, max 712 ms; +/-40 ms send tolerance) |
+| PASS | Live status RTT to hub | p50 < 250 ms; invalid 0 | p50 5.7 ms, p95 1168.6 ms (n=201; the outage is in the p95); 0 invalid; 364 statuses |
+| PASS | Session valid and uploaded to the hub | yes | `validate.py --session` exit 0; 83/83 files; 204/204 trial events exactly once |
+| PASS | Analytics writes embodiment with quality flags | yes | flags: degraded 5, missing 7, ok 20 |
+
+**node_b_absent** (20:12:20 to 20:16:22; session `aa71c4b2-c4e7-4890-8bbf-f610ab935d33`; twin started with Node A only;
+test: Inconclusive, 216.6 s; frames over 50 ms took 16.8 % of the run)
+
+| Result | Check | Threshold | Observed |
+|---|---|---|---|
+| PASS | Fault B: Node B absent: run completes | yes | run complete=True |
+| PASS | Fault B: status shows bio.connected=false throughout, no EMG recorded | yes | 392 statuses bio down, 0 up; emg in sens files=False; emg_burst events=0 |
+| PASS | Fault B: flinch EMG flagged missing with a reason in analytics | missing + reason | `{"quality": "missing", "reasons": ["node_absent_bio"]}` |
+| PASS | Phases in order, both conditions | 100 % | 14 phases, 2 conditions (async/sync) |
+| FAIL (host) | Stroke cues acked by the twin | >= 98 % | 91.2 % (104/114; 10 dropped as `late`, 0 `no_ack`; twin: 104 executed / 0 rejected) |
+| PASS | SYNC visual-to-send timing error | mean <= 20 ms, p95 <= 40 ms | mean 10.1, p95 26.1 ms (n=20) |
+| PASS | ASYNC delay | 500-700 ms on >= 95 % of strokes | 100 % of 25 strokes (min 514, max 725 ms; +/-40 ms send tolerance) |
+| PASS | Live status RTT to hub | p50 < 250 ms; invalid 0 | p50 5.0 ms, p95 35.4 ms (n=208); 0 invalid; 392 statuses |
+| PASS | Session valid and uploaded to the hub | yes | `validate.py --session` exit 0; 82/82 files; 202/202 trial events exactly once (no `emg_burst` events in this run) |
+| PASS | Analytics writes embodiment with quality flags | yes | flags: missing 13, ok 19 |
+
+With section 3 this makes the three faults of the L3 table played by the game itself: Node A off mid-run, Node B absent,
+hub absent 30 s. In each the run completed and the fault rows are green; cue delivery was never judged (slow host).
+
+**Correction to section 4 (20:15, measured by the main session's reconnect tests, not by me).** I wrote that the headset's
+replay refills the Phantom card after a reconnect. It does not: the replay is handled about 10 ms after `hello_ack`,
+the card's new repository is built 250 to 300 ms later (the hub republishes its headset list every 250 ms), and
+`trialEventStream` is a broadcast stream, so the replay has already gone by. A reconnect in the witness phase therefore
+empties the audience mirror already today. The consumers are idempotent as read (the same replay sent once the card is
+back makes both tests pass). The main session has a subagent on the smallest fix in `app/lib/features/live`.
