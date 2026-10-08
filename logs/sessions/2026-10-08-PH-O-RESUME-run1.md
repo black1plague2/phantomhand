@@ -126,7 +126,44 @@ Flutter → install to `H:\flutter`. Port 8787 → stop the user's dashboard (do
 | SDK change set (worktree, from wave 1) | Sonnet | 7 items | `2026-10-08-PH-U-SDKB-run1.md` |
 | Scribe | Haiku | CHANGELOG, PH_STATUS, MANUAL_TODO | — |
 
+## Interruption 09:56 and recovery (times from the system clock; earlier clock times in this log run ~20 min fast)
+- 09:56:48 the user restarted the PC (System log event 1074, user-initiated; not a crash). It closed the editor and killed the four
+  running agents (Unity driver in step 7, Sim in step 1, Flutter mid-download at 1.54 of 1.93 GB, U6 code before any write).
+- After the restart: the user's dashboard came back on 127.0.0.1:8787 (scheduled task `MomentumDashboard`, runs at logon) → stopped
+  again (same-day approval; not disabled: the task is the user's). The user reopened the editor at 10:05 (bridge up). The bridge kept
+  a stale "test run in progress" flag from the interrupted PlayMode run → cleared with `TestRunnerTools.CancelTestRun`.
+  A crash-recovery scene `game/Assets/_Recovery/0 (1).unity` written at startup was deleted (untracked junk).
+- Phone `164cd676` is now authorised (`adb devices` → `device`); it carries an older `com.opus.opus_app` 1.0.0 (installed 01:39).
+  The user approved using and testing it.
+- Agents were resumed from their transcripts with SendMessage (driver, sim, Flutter, U6 code); nothing committed was lost.
+
+## Work since the restart
+| What | Result | Evidence |
+|---|---|---|
+| SDK change set (worktree) reviewed and merged | 7/7 items; one review change by Opus: `keepalive` keeps going to a silent node (a power-cycled node only streams to a peer it has heard from) | `logs/sessions/2026-10-08-PH-U-SDKB-run1.md`; commit `f9b7ae8` |
+| Unity EditMode after the merge | **378 passed, 0 failed** (343 + 35 new) | `python tools/unity_mcp.py test EditMode` (run `7204271b`, 20.4 s) |
+| Unity driver steps 1–6 | EditMode 343/343 before the merge; scene rebuilt with U4 UI + controller; Bootstrap scene; build order Bootstrap, PhantomHand, OrchardReach | `logs/sessions/2026-10-08-PH-U-U45FIX-run1.md`; commit `f9b7ae8` |
+| Contracts v0.2.1 | ack `accepted` (bool), `keepalive`, display `mode`; HAPTIC_PROTOCOL v1.3 | commit `8c88d0d`; `validate.py` PASS |
+| Fixture drift (PH_STATUS Flag 1) | fixtures' witness numbers were raw x in cm; now post − pre like Unity and analytics (2.0 / 0.0) | commit `4a1c93e`; `test_embodiment` 32 passed, fixture freshness 9 passed |
+| Docs (scribe, reviewed) | CHANGELOG, PH_STATUS counts, MANUAL_TODO new-machine steps | commit `b61dd73` |
+
+## Agents — wave 3 (10:20–10:45)
+| Agent | Model | Scope | Output |
+|---|---|---|---|
+| Unity driver (resumed; holds the editor) | Sonnet | step 7 PlayMode all + PH_FullRun, step 8 U4 shots, step 9 proof, step 10 hubPort through ISessionHost, step 11 app-pause → Pause/ResumeSession | `2026-10-08-PH-U-U45FIX-run1.md` |
+| Sim (resumed) | Sonnet | twin on LAN, `--lan` harness, firewall script, old-PC paths, **`--dialect team`** twin (real firmware behaviour) | `2026-10-08-PH-S-XMACHINE-run1.md` |
+| App (resumed) | Sonnet | Flutter 3.47.4 at `H:\flutter`, tests, Windows build, APK → install on the phone, hub check through `adb forward tcp:8797 tcp:8787`, replay → live card screenshots | `2026-10-08-PH-A-SETUP-run1.md` |
+| U6 code (resumed, worktree) | Sonnet | PH APK build method, demo mode, Quest endpoint file, multicast lock | `2026-10-08-PH-U-U6CODE-run1.md` |
+| Models (worktree; user: "incorporate the 3D models") | Sonnet | rigged skin hand replaces the procedural hand, wrappers baked from the builder, model table, roles for the other Meta models, capture method | `2026-10-08-PH-U-MODELS-run2.md` |
+| Research R1 illusion levers · R2 two-motor stroke rendering · R3 app/operator UX · R4 demo, pitch, alternatives (user: "alternative research agents", "keep adding features from the research") | Sonnet ×4 | one report each, ranked change lists | `docs/agent-briefs/ph/research/R1…R4-*.md` |
+
+Queue for the editor (serial), after the driver's current run: merge + bake MODELS → merge U6 code → Android target switch + APK →
+L3 with Unity (`run_pipeline.py --game phantom_hand --sim`, both twin dialects) → research-driven features → Orchard removal.
+
 ## CHECKPOINT
-09:55 — baseline committed and pushed (`018682b`); wave 2 running; the Unity driver holds `game/.ph_unity.lock`.
-Resume: read this file, then `logs/sessions/2026-10-08-PH-O-WORKLIST-run1.md` and the wave-2 logs above. Opus still owes: O2 review
-of each agent diff, merging the two worktree patches (SDKB, U6CODE), contract requests, L3 with Unity, APK build, models, Orchard removal.
+10:50 — commits `018682b`, `b61dd73`, `8c88d0d`, `f9b7ae8`, `4a1c93e` pushed. Nine agents running (table above). The driver holds
+`game/.ph_unity.lock`. PC port 8787 is free; the phone forward uses PC port 8797.
+Resume: read this file, then each agent's log above; worktrees are under `.claude/worktrees/` (`git worktree list`); merge a worktree
+with `git -C <worktree> diff --binary > patch` + `git apply --3way patch` on main, then recompile and `python tools/unity_mcp.py test EditMode`.
+Opus still owes: O2 of every agent diff; merging MODELS and U6CODE; choosing and assigning features from R1–R4; L3 with Unity; APK;
+Orchard removal; CONTEXT/PH_STATUS refresh; the firewall commands for the user.
