@@ -13,7 +13,9 @@ namespace Opus.Shell
     ///    presenter exists (<see cref="SubmitCalibrationItself"/>) it submits the calibration itself after 2.2 s.
     ///  - Probes: the left index tip points still at the right index tip, shifted toward the virtual hand by <see cref="SyncDriftCm"/> /
     ///    <see cref="AsyncDriftCm"/> in ProbePost (so sync drifts more than async, the expected direction).
-    ///  - Questionnaire: one item every <see cref="AnswerEveryMs"/>; ownership high after SYNC, low after ASYNC.
+    ///  - Questionnaire: ownership high after SYNC, low after ASYNC. With a panel (<see cref="AnswerPoint"/>) the pointing
+    ///    fingertip goes to the button and stays until the panel has taken the answer, then leaves it before the next item, the way
+    ///    a person does; without one, one item every <see cref="AnswerEveryMs"/> straight into the module.
     /// </summary>
     public sealed class PhantomAutoParticipant
     {
@@ -23,11 +25,18 @@ namespace Opus.Shell
         public double AnswerEveryMs = 700;
         public double SyncDriftCm = 3.0, AsyncDriftCm = 1.0;
         public int Answered { get; private set; }
+        /// <summary>Where a fingertip answers <c>value</c> (-3..3) on the questionnaire panel, world metres; null (or a null result)
+        /// when there is no panel to touch.</summary>
+        public Func<int, double[]> AnswerPoint;
+        /// <summary>How long the fingertip stays away from the panel between two items.</summary>
+        public double LeaveMs = 350;
 
         private PhPhase _phase = PhPhase.Idle;
         private double _phaseStartMs;
         private double _nextAnswerMs;
         private bool _calibSent;
+        private string _touchingItem;      // the item the fingertip is answering
+        private double _awayUntilMs;
 
         public PhantomAutoParticipant(ScriptedHands hands) { Hands = hands; }
 
@@ -38,7 +47,9 @@ namespace Opus.Shell
             var phase = m.CurrentPhase;
             if (phase != _phase)
             {
+                if (_phase == PhPhase.Questionnaire && _touchingItem != null) Answered++;   // the last item's answer ended the phase
                 _phase = phase; _phaseStartMs = nowMs; _nextAnswerMs = nowMs + AnswerEveryMs; _calibSent = false;
+                _touchingItem = null; _awayUntilMs = 0;
             }
 
             var target = CalibrationTarget != null ? CalibrationTarget() : null;
@@ -65,15 +76,30 @@ namespace Opus.Shell
                     Hands.LeftIndexTip = new[] { PhArm.X(Hands.Arm, -0.25), 0.90, 0.30 };
                     break;
                 case PhPhase.Questionnaire:
-                    if (m.CurrentQuestionnaire != null && !m.CurrentQuestionnaire.IsComplete && nowMs >= _nextAnswerMs)
+                {
+                    var q = m.CurrentQuestionnaire;
+                    var item = q != null && !q.IsComplete ? q.Current : null;
+                    int v = 0;
+                    if (item != null && item.Role == QRole.Ownership) v = m.CurrentCondition == PhCondition.Sync ? 2 : -1;
+                    double[] at = item != null && AnswerPoint != null ? AnswerPoint(v) : null;
+                    if (at != null)
+                    {
+                        // by fingertip: a new item means the last one was taken, so leave the panel for a moment first
+                        if (_touchingItem != item.Id)
+                        {
+                            if (_touchingItem != null) { Answered++; _awayUntilMs = nowMs + LeaveMs; }
+                            _touchingItem = item.Id;
+                        }
+                        Hands.LeftIndexTip = nowMs < _awayUntilMs ? new[] { at[0], at[1] + 0.12, at[2] - 0.15 } : at;
+                    }
+                    else if (item != null && nowMs >= _nextAnswerMs)
                     {
                         _nextAnswerMs = nowMs + AnswerEveryMs;
-                        var item = m.CurrentQuestionnaire.Current;
-                        int v = 0;
-                        if (item != null && item.Role == QRole.Ownership) v = m.CurrentCondition == PhCondition.Sync ? 2 : -1;
                         if (m.SubmitQuestionnaireAnswer(v)) Answered++;
                     }
+                    else if (item == null && _touchingItem != null) { Answered++; _touchingItem = null; }
                     break;
+                }
                 default:
                     Hands.LeftIndexTip = new[] { PhArm.X(Hands.Arm, -0.25), 0.90, 0.30 };
                     break;

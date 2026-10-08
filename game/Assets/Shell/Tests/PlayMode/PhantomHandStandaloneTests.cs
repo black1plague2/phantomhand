@@ -217,6 +217,13 @@ namespace Opus.Shell.Tests.PlayMode
             Assert.AreEqual(0, cues.Count(e => (bool)e["data"]["delivered"]), "no sleeve: no cue can be delivered");
             Assert.AreEqual(1, events.Count(e => (string)e["type"] == "witness_summary"), "witness_summary");
             Assert.AreEqual(3, events.Count(e => (string)e["type"] == "questionnaire_item"), "questionnaire items");
+            // the two paths a wearer uses and the editor never did before 9 Oct: the questions answered by a fingertip on the panel,
+            // and the virtual hand taking its finger pose from a tracked hand's 21 joints
+            var ui = UnityEngine.Object.FindFirstObjectByType<Opus.Games.PhantomHand.Presentation.PhantomHandUiPresenter>();
+            var armPresenter = UnityEngine.Object.FindFirstObjectByType<Opus.Games.PhantomHand.Presentation.ArmThreatPresenter>();
+            Assert.IsNotNull(ui); Assert.IsNotNull(armPresenter);
+            Assert.GreaterOrEqual(ui.TouchPresses, 3, "the questions were answered by a fingertip on the panel's buttons");
+            Assert.Greater(armPresenter.HandPosesApplied, 30, "the virtual hand copied the tracked hand's fingers while it followed the arm");
             var sessionJson = JObject.Parse(File.ReadAllText(Path.Combine(sessionDir, "session.json")));
             Assert.AreEqual("completed", (string)sessionJson["end_reason"]);
             Assert.IsTrue((bool)sessionJson["blocks"][0]["completed"]);

@@ -35,6 +35,8 @@ namespace Opus.Games.PhantomHand.Presentation
         public PinchToggle Pinch { get; } = new PinchToggle();
         /// <summary>The fingertip press on the questionnaire's buttons (the hands are tracked but not shown, and nothing else presses them).</summary>
         public PhFingerTouch Touch { get; } = new PhFingerTouch();
+        /// <summary>How many buttons a fingertip has pressed in this run.</summary>
+        public int TouchPresses { get; private set; }
         public CalibrationTracker Calibration { get; private set; }
         public ProbeState LastProbeState { get; private set; } = ProbeState.Waiting;
         public bool CalibrationCommitted { get; private set; }
@@ -324,6 +326,15 @@ namespace Opus.Games.PhantomHand.Presentation
         private readonly List<Button> _touchButtons = new List<Button>();
         private Button _touchShown;
 
+        /// <summary>The point 2 cm in front of the scale button for <paramref name="value"/> (-3..3): where a fingertip answers.
+        /// Null while the questionnaire is not on screen.</summary>
+        public Vector3? AnswerPoint(int value)
+        {
+            if (Questionnaire == null || !Questionnaire.gameObject.activeInHierarchy || value < -3 || value > 3) return null;
+            var rt = (RectTransform)Questionnaire.Buttons[value + 3].transform;
+            return rt.TransformPoint(new Vector3(rt.rect.center.x, rt.rect.center.y, -20f));
+        }
+
         private Vector3? IndexTip(HandSide side)
         {
             double[] p;
@@ -339,7 +350,7 @@ namespace Opus.Games.PhantomHand.Presentation
             _touchButtons.AddRange(Questionnaire.Buttons);
             if (Questionnaire.BackButton != null) _touchButtons.Add(Questionnaire.BackButton);
             Vector3? free = IndexTip(_pointer), other = IndexTip(_arm);
-            if (Touch.Tick(now, _touchButtons, free, other) != null) PlayTick();
+            if (Touch.Tick(now, _touchButtons, free, other) != null) { TouchPresses++; PlayTick(); }
 
             if (_touchShown != Touch.Hovered)
             {

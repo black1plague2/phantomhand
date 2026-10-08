@@ -185,6 +185,11 @@ namespace Opus.Shell
                 {
                     _auto = new PhantomAutoParticipant(_scripted) { CalibrationTarget = CalibrationTargetArray };
                     _auto.SubmitCalibrationItself = uiPresenter == null;
+                    _auto.AnswerPoint = v =>
+                    {
+                        Vector3? p = uiPresenter != null && _bound ? uiPresenter.AnswerPoint(v) : null;
+                        return p.HasValue ? new double[] { p.Value.x, p.Value.y, p.Value.z } : null;
+                    };
                 }
             }
             else _hands = BuildLiveHandSource();

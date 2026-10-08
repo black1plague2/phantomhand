@@ -30,6 +30,8 @@ namespace Opus.Games.PhantomHand.Presentation
         public ThreatResponseCollector Collector { get; private set; }
         public PhPhase LastPhase { get { return _phase; } }
         public bool HasCalibration { get { return _hasCalib; } }
+        /// <summary>How many frames the virtual hand took its finger pose from the tracked hand in this run.</summary>
+        public int HandPosesApplied { get; private set; }
 
         private PhantomHandModule _module;
         private HapticClient _haptic;
@@ -146,7 +148,7 @@ namespace Opus.Games.PhantomHand.Presentation
             if (!PhHandPoseSolver.TrySolve(_joints, _side, ref _poseTarget)) return;
             PhHandPoseSolver.Smooth(ref _pose, in _poseTarget, _poseLive ? Time.deltaTime : 0f, MimicSmoothingS);
             _poseLive = true;
-            arm.ApplyHandPose(in _pose);
+            if (arm.ApplyHandPose(in _pose)) HandPosesApplied++;
             arm.SetHandOrientation(_pose.Forward, _pose.Dorsal);
         }
 
