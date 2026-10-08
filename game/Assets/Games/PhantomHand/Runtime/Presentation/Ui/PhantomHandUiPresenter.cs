@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Opus.Sdk;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Opus.Games.PhantomHand.Presentation
 {
@@ -27,6 +29,8 @@ namespace Opus.Games.PhantomHand.Presentation
         public PhHudPanel Hud { get; private set; }
         public HudModel HudData { get; } = new HudModel();
         public PinchToggle Pinch { get; } = new PinchToggle();
+        /// <summary>The fingertip press on the questionnaire's buttons (the hands are tracked but not shown, and nothing else presses them).</summary>
+        public PhFingerTouch Touch { get; } = new PhFingerTouch();
         public CalibrationTracker Calibration { get; private set; }
         public ProbeState LastProbeState { get; private set; } = ProbeState.Waiting;
         public bool CalibrationCommitted { get; private set; }
@@ -38,6 +42,7 @@ namespace Opus.Games.PhantomHand.Presentation
         private IHandSource _hands;
         private PhPhase _phase = PhPhase.Idle;
         private bool _bound;
+        private HandSide _arm = HandSide.Right, _pointer = HandSide.Left;   // the stimulated arm, and the free hand that points and answers
         private double _confirmAtMs = -1;
         private bool _probeTicked;
         private AudioSource _sfx;
@@ -55,6 +60,8 @@ namespace Opus.Games.PhantomHand.Presentation
                 Lang = module.Params.VoiceoverLang;
             if (anchors == null) anchors = GetComponentInParent<PhantomAnchors>();
             if (anchors == null) anchors = FindFirstObjectByType<PhantomAnchors>();
+            if (module.Params != null) { _arm = module.Params.Arm; _pointer = module.Params.Pointer; }
+            if (anchors != null) anchors.LayOutFor(_arm);
             Camera cam = null;
             if (anchors != null && anchors.cameraRig != null) cam = anchors.cameraRig.GetComponentInChildren<Camera>(true);
             if (cam == null) cam = Camera.main;
@@ -62,7 +69,7 @@ namespace Opus.Games.PhantomHand.Presentation
             Instruction = Ensure<PhInstructionPanel>(anchors != null ? anchors.instructionPanel : null, "InstructionPanel", new Vector3(0f, 1.00f, 0.60f), new Vector3(26f, 0f, 0f));
             Questionnaire = Ensure<PhQuestionnairePanel>(anchors != null ? anchors.questionnairePanel : null, "QuestionnairePanel", new Vector3(0f, 1.06f, 0.47f), new Vector3(18f, 0f, 0f));
             Witness = Ensure<PhWitnessPanel>(anchors != null ? anchors.witnessPanel : null, "WitnessPanel", new Vector3(0f, 1.30f, 0.95f), new Vector3(8f, 0f, 0f));
-            Hud = Ensure<PhHudPanel>(anchors != null ? anchors.hudPanel : null, "HudPanel", new Vector3(-0.30f, 1.38f, 0.80f), new Vector3(10f, 0f, 0f));
+            Hud = Ensure<PhHudPanel>(anchors != null ? anchors.hudPanel : null, "HudPanel", new Vector3((float)PhArm.X(_arm, -0.30), 1.38f, 0.80f), new Vector3(10f, 0f, 0f));
             Instruction.Build(cam);
             Questionnaire.Build(cam, attachPoke);
             Witness.Build(cam, attachPoke);
@@ -119,7 +126,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 case PhPhase.Calibrate: TickCalibrate(now); break;
                 case PhPhase.ProbePre:
                 case PhPhase.ProbePost: TickProbe(now); break;
-                case PhPhase.Questionnaire: Questionnaire.Tick(now); break;
+                case PhPhase.Questionnaire: Questionnaire.Tick(now); TickTouch(now); break;
                 case PhPhase.Witness: Witness.Tick(now); break;
             }
             TickHud(now);
@@ -130,7 +137,7 @@ namespace Opus.Games.PhantomHand.Presentation
             // leave
             if (prev == PhPhase.Calibrate) { Instruction.Hide(); SetOutline(false, OutlineTeal); }
             if (prev == PhPhase.ProbePre || prev == PhPhase.ProbePost) EndProbeLook();
-            if (prev == PhPhase.Questionnaire) Questionnaire.Hide();
+            if (prev == PhPhase.Questionnaire) { Questionnaire.Hide(); EndTouch(); }
             if (prev == PhPhase.Witness) Witness.Hide();
 
             // enter
@@ -157,7 +164,7 @@ namespace Opus.Games.PhantomHand.Presentation
 
         // ---- calibration (item 1) --------------------------------------------------------------------------------------
 
-        /// <summary>World position where the real right wrist should rest: the outline's wrist end, wrist height above the table.</summary>
+        /// <summary>World position where the real wrist of the stimulated arm should rest: the outline's wrist end, wrist height above the table.</summary>
         public Vector3 CalibrationTarget()
         {
             float forearm = (float)(_module.Params.ForearmLengthCm / 100.0);
@@ -166,16 +173,16 @@ namespace Opus.Games.PhantomHand.Presentation
                 var o = anchors.armRestOutline;
                 return o.position + o.forward * forearm + Vector3.up * 0.021f;
             }
-            return new Vector3(0.18f, 0.771f, 0.40f);
+            return new Vector3((float)PhArm.X(_arm, 0.18), 0.771f, 0.40f);
         }
 
         private void TickCalibrate(double now)
         {
             if (CalibrationCommitted || Calibration == null) return;
             double[] wrist = null, palm = null;
-            bool tracked = _hands != null && _hands.IsTracked(HandSide.Right) &&
-                           _hands.TryGetJointPose(OpusJoints.RWrist, out wrist, out _);
-            if (tracked) _hands.TryGetJointPose(OpusJoints.RPalm, out palm, out _);
+            bool tracked = _hands != null && _hands.IsTracked(_arm) &&
+                           _hands.TryGetJointPose(PhArm.Wrist(_arm), out wrist, out _);
+            if (tracked) _hands.TryGetJointPose(PhArm.Palm(_arm), out palm, out _);
             var fallback = anchors != null && anchors.armRestOutline != null ? ToArr(anchors.armRestOutline.forward) : null;
             var st = Calibration.Update(now, tracked, wrist, palm, fallback);
 
@@ -245,12 +252,13 @@ namespace Opus.Games.PhantomHand.Presentation
 
         private void TickProbe(double now)
         {
+            // "left" is the pointing hand and "right" the stimulated arm here, as in the right-arm layout these names come from
             double[] leftTip = null, rightWrist = null, rightIdx = null;
-            bool leftTracked = _hands != null && _hands.IsTracked(HandSide.Left) && _hands.TryGetJointPose(OpusJoints.LIndexTip, out leftTip, out _);
-            bool rightTracked = _hands != null && _hands.IsTracked(HandSide.Right);
-            if (rightTracked) { _hands.TryGetJointPose(OpusJoints.RWrist, out rightWrist, out _); _hands.TryGetJointPose(OpusJoints.RIndexTip, out rightIdx, out _); }
+            bool leftTracked = _hands != null && _hands.IsTracked(_pointer) && _hands.TryGetJointPose(PhArm.IndexTip(_pointer), out leftTip, out _);
+            bool rightTracked = _hands != null && _hands.IsTracked(_arm);
+            if (rightTracked) { _hands.TryGetJointPose(PhArm.Wrist(_arm), out rightWrist, out _); _hands.TryGetJointPose(PhArm.IndexTip(_arm), out rightIdx, out _); }
 
-            // the dot rides the tracked left index tip (the hand mesh itself stays invisible)
+            // the dot rides the tracked index tip of the pointing hand (the hand mesh itself stays invisible)
             var dotT = anchors != null ? anchors.leftIndexDot : null;
             var tip = dotT != null ? dotT.GetComponent<TipDot>() : null;
             if (tip != null)
@@ -282,6 +290,54 @@ namespace Opus.Games.PhantomHand.Presentation
                     Instruction.Show(title, "", 0f, PhUiKit.Info, false);
                     break;
             }
+        }
+
+        // ---- fingertip press on the questionnaire ----------------------------------------------------------------------------
+
+        private readonly List<Button> _touchButtons = new List<Button>();
+        private Button _touchShown;
+
+        private Vector3? IndexTip(HandSide side)
+        {
+            double[] p;
+            if (_hands == null || !_hands.IsTracked(side) || !_hands.TryGetJointPose(PhArm.IndexTip(side), out p, out _)) return null;
+            return new Vector3((float)p[0], (float)p[1], (float)p[2]);
+        }
+
+        /// <summary>The index finger of either hand presses the scale buttons and Back; the dot of the probes shows where the
+        /// fingertip is (on the free hand when it is tracked, else on the other), because no hand is drawn.</summary>
+        private void TickTouch(double now)
+        {
+            _touchButtons.Clear();
+            _touchButtons.AddRange(Questionnaire.Buttons);
+            if (Questionnaire.BackButton != null) _touchButtons.Add(Questionnaire.BackButton);
+            Vector3? free = IndexTip(_pointer), other = IndexTip(_arm);
+            if (Touch.Tick(now, _touchButtons, free, other) != null) PlayTick();
+
+            if (_touchShown != Touch.Hovered)
+            {
+                if (_touchShown != null) _touchShown.transform.localScale = Vector3.one;
+                _touchShown = Touch.Hovered;
+            }
+            if (_touchShown != null) _touchShown.transform.localScale = Vector3.one * (1.06f + 0.10f * Touch.Progress01);   // grows while the finger dwells
+
+            var dotT = anchors != null ? anchors.leftIndexDot : null;
+            var dot = dotT != null ? dotT.GetComponent<TipDot>() : null;
+            if (dot != null)
+            {
+                Vector3? tip = free ?? other;
+                dot.SetVisible(tip.HasValue);
+                if (tip.HasValue) dotT.position = tip.Value;
+            }
+        }
+
+        private void EndTouch()
+        {
+            if (_touchShown != null) _touchShown.transform.localScale = Vector3.one;
+            _touchShown = null; Touch.Reset();
+            var dotT = anchors != null ? anchors.leftIndexDot : null;
+            var dot = dotT != null ? dotT.GetComponent<TipDot>() : null;
+            if (dot != null) dot.SetVisible(false);
         }
 
         // ---- HUD (item 5) ----------------------------------------------------------------------------------------------

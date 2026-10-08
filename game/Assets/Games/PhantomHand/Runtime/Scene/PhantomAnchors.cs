@@ -1,3 +1,4 @@
+using Opus.Sdk;
 using UnityEngine;
 
 namespace Opus.Games.PhantomHand
@@ -28,6 +29,27 @@ namespace Opus.Games.PhantomHand
         public Transform seatedEyePose;      // design eye pose for editor screenshots only (the headset drives the real one)
         public DarkenController darken;
         public Transform audioRoot;          // placeholder AudioSources routed to the Sfx / Voice mixer groups
+
+        /// <summary>The arm the layout currently suits. The scene is saved for a right arm.</summary>
+        public HandSide LayoutArm { get; private set; } = HandSide.Right;
+
+        /// <summary>Puts the arm-rest outline, the virtual arm's anchor and the HUD where they belong for this arm: the scene as saved
+        /// for a right arm, its mirror image in x for a left arm (the real arm then rests on the left, the virtual one toward the
+        /// middle, the HUD on the other side). Safe to call again; the presenters call it when they are bound.</summary>
+        public void LayOutFor(HandSide arm)
+        {
+            if (arm == LayoutArm) return;
+            LayoutArm = arm;
+            Mirror(armRestOutline); Mirror(virtualArmAnchor); Mirror(hudPanel);
+        }
+
+        private static void Mirror(Transform t)
+        {
+            if (t == null) return;
+            Vector3 p = t.position, f = t.forward, u = t.up;
+            // a proper rotation again (not a reflection): text on a mirrored panel still reads the right way round
+            t.SetPositionAndRotation(new Vector3(-p.x, p.y, p.z), Quaternion.LookRotation(new Vector3(-f.x, f.y, f.z), new Vector3(-u.x, u.y, u.z)));
+        }
 
         public const float TableHeightM = 0.75f;
         public const float RulerDistanceM = 0.35f;

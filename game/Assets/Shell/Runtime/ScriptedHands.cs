@@ -22,6 +22,9 @@ namespace Opus.Shell
         public double[] HeadPos = { 0.0, 1.18, 0.02 };
         public bool RightTracked = true, LeftTracked = true;
         public float LeftPinch, RightPinch;
+        /// <summary>The stimulated arm. The fields above keep their names from the right-arm layout: "Right..." is the stimulated
+        /// arm, "Left..." the pointing hand. With a left arm the same poses answer to the other side's joint names.</summary>
+        public HandSide Arm = HandSide.Right;
 
         private int _version;
 
@@ -44,6 +47,8 @@ namespace Opus.Shell
         {
             posMeters = null; rotQuatXyzw = null;
             double[] p;
+            if (Arm == HandSide.Left && joint != null && joint.Length > 2 && joint[1] == '_' && (joint[0] == 'l' || joint[0] == 'r'))
+                joint = (joint[0] == 'l' ? "r" : "l") + joint.Substring(1);
             switch (joint)
             {
                 case OpusJoints.Head: p = HeadPos; break;
@@ -67,9 +72,9 @@ namespace Opus.Shell
             return IsTracked(side) ? TrackingConfidence.High : TrackingConfidence.None;
         }
 
-        public bool IsTracked(HandSide side) { return side == HandSide.Left ? LeftTracked : RightTracked; }
+        public bool IsTracked(HandSide side) { return side == Arm ? RightTracked : LeftTracked; }
 
-        public float GetPinchStrength(HandSide side) { return side == HandSide.Left ? LeftPinch : RightPinch; }
+        public float GetPinchStrength(HandSide side) { return side == Arm ? RightPinch : LeftPinch; }
 
         public int GetDataVersion(HandSide side) { return _version; }
     }

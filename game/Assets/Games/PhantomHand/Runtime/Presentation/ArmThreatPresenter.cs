@@ -36,6 +36,7 @@ namespace Opus.Games.PhantomHand.Presentation
         private IHandSource _hands;
         private PhPhase _phase = PhPhase.Idle;
         private bool _hasCalib, _bound;
+        private HandSide _side = HandSide.Right;   // the stimulated arm
         private Vector3 _calibWrist, _calibAxis = Vector3.forward;
         private double _threatAtMs = -1;
         // A5 agency: where the muscle level comes from
@@ -49,7 +50,10 @@ namespace Opus.Games.PhantomHand.Presentation
         {
             _module = module; _haptic = haptic; _clock = clock; _hands = hands; _nodeB = nodeB;
             var p = module.Params;
+            _side = p.Arm;
+            if (anchors != null) anchors.LayOutFor(_side);
             if (arm == null) { arm = new GameObject("VirtualArm").AddComponent<VirtualArmRig>(); arm.transform.SetParent(transform, false); }
+            arm.LeftArm = _side == HandSide.Left;
             if (brush == null) { brush = new GameObject("BrushRig").AddComponent<BrushRig>(); brush.transform.SetParent(transform, false); }
             if (threat == null) { threat = new GameObject("ThreatDrop").AddComponent<ThreatDrop>(); threat.transform.SetParent(transform, false); }
             arm.Build(p);
@@ -67,7 +71,7 @@ namespace Opus.Games.PhantomHand.Presentation
             _phase = PhPhase.Idle; _bound = true;
         }
 
-        /// <summary>Calibrated real right wrist and forearm axis (elbow toward fingers), from the calibration phase (U4).</summary>
+        /// <summary>Calibrated real wrist of the stimulated arm and its forearm axis (elbow toward fingers), from the calibration phase (U4).</summary>
         public void SetCalibration(Vector3 wrist, Vector3 forearmAxis)
         {
             _calibWrist = wrist; _calibAxis = forearmAxis; _hasCalib = true;
@@ -112,7 +116,7 @@ namespace Opus.Games.PhantomHand.Presentation
         private Vector3? RealPalm()
         {
             double[] pos, rot;
-            if (_hands != null && _hands.IsTracked(HandSide.Right) && _hands.TryGetJointPose(OpusJoints.RPalm, out pos, out rot))
+            if (_hands != null && _hands.IsTracked(_side) && _hands.TryGetJointPose(PhArm.Palm(_side), out pos, out rot))
                 return new Vector3((float)pos[0], (float)pos[1], (float)pos[2]);
             return null;
         }
@@ -120,7 +124,7 @@ namespace Opus.Games.PhantomHand.Presentation
         private bool RealWrist(out Vector3 p)
         {
             double[] pos, rot;
-            if (_hands != null && _hands.IsTracked(HandSide.Right) && _hands.TryGetJointPose(OpusJoints.RWrist, out pos, out rot))
+            if (_hands != null && _hands.IsTracked(_side) && _hands.TryGetJointPose(PhArm.Wrist(_side), out pos, out rot))
             { p = new Vector3((float)pos[0], (float)pos[1], (float)pos[2]); return true; }
             p = default(Vector3); return false;
         }
@@ -132,7 +136,7 @@ namespace Opus.Games.PhantomHand.Presentation
             if (!_bound) return;
             double now = _clock.NowMs;
             Vector3 w;
-            if (RealWrist(out w)) Collector.PushWrist(now, w, _hands.GetDataVersion(HandSide.Right));
+            if (RealWrist(out w)) Collector.PushWrist(now, w, _hands.GetDataVersion(_side));
 
             var phase = _module.CurrentPhase;
             if (phase != _phase) { var prev = _phase; _phase = phase; OnPhase(prev, phase, now); }
@@ -172,13 +176,13 @@ namespace Opus.Games.PhantomHand.Presentation
 
         // ---- A5 agency: the muscle (or, without a sensor, the real hand) closes the virtual hand, then it closes by itself ----------
 
-        /// <summary>Fingertip-to-palm distance of the real right hand in metres (the flexion signal), null when the hand is not tracked.
+        /// <summary>Fingertip-to-palm distance of the real hand of the stimulated arm in metres (the flexion signal), null when it is not tracked.
         /// Only the index fingertip: OpusJoints has no middle or ring fingertip.</summary>
         private double? IndexToPalmM()
         {
             double[] tip, palm, rot;
-            if (_hands == null || !_hands.IsTracked(HandSide.Right) ||
-                !_hands.TryGetJointPose(OpusJoints.RIndexTip, out tip, out rot) || !_hands.TryGetJointPose(OpusJoints.RPalm, out palm, out rot)) return null;
+            if (_hands == null || !_hands.IsTracked(_side) ||
+                !_hands.TryGetJointPose(PhArm.IndexTip(_side), out tip, out rot) || !_hands.TryGetJointPose(PhArm.Palm(_side), out palm, out rot)) return null;
             return Vector3.Distance(new Vector3((float)tip[0], (float)tip[1], (float)tip[2]), new Vector3((float)palm[0], (float)palm[1], (float)palm[2]));
         }
 
@@ -306,7 +310,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 var o = anchors.armRestOutline; var axis = o.forward;
                 return new System.Collections.Generic.KeyValuePair<Vector3, Vector3>(o.position + axis * (float)(_module.Params.ForearmLengthCm / 100.0) + Vector3.up * 0.021f, axis);
             }
-            return new System.Collections.Generic.KeyValuePair<Vector3, Vector3>(new Vector3(0.18f, 0.771f, 0.40f), Vector3.forward);
+            return new System.Collections.Generic.KeyValuePair<Vector3, Vector3>(new Vector3((float)PhArm.X(_side, 0.18), 0.771f, 0.40f), Vector3.forward);
         }
 
         private void BeginInduction(double nowMs)

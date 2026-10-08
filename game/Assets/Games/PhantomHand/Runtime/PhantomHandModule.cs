@@ -68,6 +68,7 @@ namespace Opus.Games.PhantomHand
         public void Configure(ParamSet parameters, ISessionContext session)
         {
             Params = PhantomHandParams.From(parameters);
+            Probe.TowardVirtualSignX = Params.Arm == HandSide.Left ? 1 : -1;   // the virtual hand lies toward the body's midline
             _session = session;
             Machine = new PhaseStateMachine(Params, AdditionsEnabled);
             Machine.PhaseChanged += OnPhaseChanged;

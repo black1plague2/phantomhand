@@ -383,6 +383,21 @@ namespace Opus.Shell.Tests
         }
 
         [Test]
+        public void ScriptedHands_WithALeftArm_AnswerToTheOtherSidesNames()
+        {
+            var h = new ScriptedHands { Arm = HandSide.Left, RightWrist = new[] { -0.18, 0.771, 0.40 }, LeftIndexTip = new[] { 0.25, 0.90, 0.30 } };
+            double[] p, r;
+            Assert.IsTrue(h.TryGetJointPose(OpusJoints.LWrist, out p, out r));
+            Assert.AreEqual(-0.18, p[0], 1e-9, "the stimulated arm's wrist is the LEFT wrist now");
+            Assert.IsTrue(h.TryGetJointPose(OpusJoints.RIndexTip, out p, out r));
+            Assert.AreEqual(0.25, p[0], 1e-9, "and the right index finger points");
+            h.RightTracked = false;   // "Right..." is the stimulated arm, whichever side it is
+            Assert.IsFalse(h.IsTracked(HandSide.Left)); Assert.IsTrue(h.IsTracked(HandSide.Right));
+            Assert.IsFalse(h.TryGetJointPose(OpusJoints.LPalm, out p, out r));
+            Assert.IsTrue(h.TryGetJointPose(OpusJoints.Head, out p, out r), "the head has no side");
+        }
+
+        [Test]
         public void AutoParticipant_PlaysDemoRun_ThroughAllPhasesToDone()
         {
             var ctx = new Ctx();

@@ -271,7 +271,7 @@ namespace Opus.Shell
                 var p = o.position + o.forward * (float)(_module.Params.ForearmLengthCm / 100.0) + Vector3.up * 0.021f;
                 return new double[] { p.x, p.y, p.z };
             }
-            return new double[] { 0.18, 0.771, 0.40 };
+            return new double[] { PhArm.X(_module != null ? _module.Params.Arm : HandSide.Right, 0.18), 0.771, 0.40 };
         }
 
         // ---- per frame ----------------------------------------------------------------------------------------------
@@ -456,6 +456,7 @@ namespace Opus.Shell
             module.Configure(bind.Params, new Ctx(_clock));
             module.OnTrialEvent += HandleModuleEvent;
             _module = module;
+            if (_scripted != null) _scripted.Arm = module.Params.Arm;
             _blockParams = (JObject)bind.Params.Raw.DeepClone();
             _blockParams["seed"] = seed;
 
@@ -476,9 +477,15 @@ namespace Opus.Shell
 
             if (!_bound) BindPresenters();
             else RefreshGeometryIfChanged();
+            if (_scripted != null && anchors != null && anchors.armRestOutline != null)
+            {
+                var f = anchors.armRestOutline.forward; f.y = 0;   // the outline as laid out for this run's arm
+                if (f.sqrMagnitude > 1e-6f) { f.Normalize(); _scripted.RightAxis = new double[] { f.x, 0, f.z }; }
+            }
             _prevPhase = PhPhase.Idle; _prevCond = null;
 
-            Debug.Log("[PhantomHand] session start: seed=" + seed + " order=" + module.Params.ConditionOrder + " demo_mode=" + module.Params.DemoMode);
+            Debug.Log("[PhantomHand] session start: seed=" + seed + " order=" + module.Params.ConditionOrder + " demo_mode=" + module.Params.DemoMode +
+                      " arm=" + module.Params.StimulatedSide);
             module.Begin(); // emits block_start + phase_start(calibrate) synchronously; the runner replays them
         }
 
@@ -556,7 +563,7 @@ namespace Opus.Shell
                 Hand = side == HandSide.Left ? "left" : "right",
             });
             _kinLastMs = -1;
-            _rateMeter = new TrackingRateMeter(HandSide.Right);
+            _rateMeter = new TrackingRateMeter(_module != null ? _module.Params.Arm : HandSide.Right);
             _sensRecorder = new SensorRecorder(sessionId, _clock, sessionDir, "udp") { BackgroundWrites = true };
             if (_cues != null) _sensRecorder.MotorExclusion = _cues.InMotorWindow;
         }

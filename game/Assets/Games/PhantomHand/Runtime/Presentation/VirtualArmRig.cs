@@ -35,6 +35,8 @@ namespace Opus.Games.PhantomHand.Presentation
         public float MotorSpacingM { get; private set; } = 0.10f;
         public bool IsBuilt { get; private set; }
         public bool Frozen { get; private set; }
+        /// <summary>A left arm: the same arm mirrored in its own x (thumb on +x), placed to the RIGHT of the real wrist. Set before <see cref="Build(PhantomHandParams)"/>.</summary>
+        public bool LeftArm { get; set; }
         public Collider[] HitColliders { get { return _hit.ToArray(); } }
 
         private const float PalmLen = 0.098f, PalmW = 0.092f, PalmT = 0.022f;
@@ -92,6 +94,9 @@ namespace Opus.Games.PhantomHand.Presentation
 
             if (models) BuildHandModel();
             else BuildHand(skin);
+            // After the hand is bound: the bones are driven by local rotations found in the unmirrored pose, and a mirror above them
+            // turns a closing right hand into a closing left hand without touching any of that.
+            _visualRoot.localScale = new Vector3(LeftArm ? -1f : 1f, 1f, 1f);
             BuildHitProxy();
             var rb = gameObject.GetComponent<Rigidbody>();
             if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
@@ -218,7 +223,11 @@ namespace Opus.Games.PhantomHand.Presentation
             _handRoot = go.transform; _handModel = go.transform;
             _handInfo = go.GetComponent<PhModelInfo>();
             _rig = go.GetComponent<PhRiggedHand>();
+            // bind in the unmirrored pose (see Build): a hand swapped in later finds the mirror already there
+            Vector3 mirror = _visualRoot != null ? _visualRoot.localScale : Vector3.one;
+            if (_visualRoot != null) _visualRoot.localScale = Vector3.one;
             if (_rig != null && !_rig.Bind()) _rig = null;
+            if (_visualRoot != null) _visualRoot.localScale = mirror;
             if (IsBuilt) RebuildHitProxy();     // a hand swapped in after Build: the proxy follows its measurements
         }
 
@@ -309,6 +318,8 @@ namespace Opus.Games.PhantomHand.Presentation
             float mid = ForearmLengthM * 0.5f;
             arm.center = new Vector3(0, ArmGeometry.AxisY(mid, ForearmLengthM), -mid);
             arm.size = new Vector3(ArmGeometry.HalfWidth(mid, ForearmLengthM) * 2f, ArmGeometry.HalfHeight(mid, ForearmLengthM) * 2f, ForearmLengthM);
+            if (LeftArm)   // the proxy is not under the mirrored visual: mirror its boxes by hand
+                foreach (var b in new[] { palm, fing, thumb, arm }) b.center = new Vector3(-b.center.x, b.center.y, b.center.z);
             _hit.AddRange(new Collider[] { palm, fing, thumb, arm });
         }
 
@@ -340,18 +351,19 @@ namespace Opus.Games.PhantomHand.Presentation
             {
                 float top = _handInfo != null ? _handInfo.palmTopY : -ArmGeometry.WristHalfHeight + PalmT;
                 float cx = _handInfo != null ? _handInfo.palmCenterX : 0f, pl = _handInfo != null ? _handInfo.palmLenM : PalmLen;
-                return transform.TransformPoint(new Vector3(cx, top, pl * 0.5f));
+                return transform.TransformPoint(new Vector3(LeftArm ? -cx : cx, top, pl * 0.5f));
             }
         }
 
-        /// <summary>Wrist position = calibrated real wrist, offset_cm to the LEFT on the table plane, palm down, same yaw.</summary>
+        /// <summary>Wrist position = calibrated real wrist, offset_cm toward the body's midline on the table plane (to the LEFT of a
+        /// right arm, to the RIGHT of a left arm), palm down, same yaw.</summary>
         public void PlaceFromCalibration(Vector3 realWrist, Vector3 forearmAxis, float offsetCm)
         {
             var f = new Vector3(forearmAxis.x, 0, forearmAxis.z);
             if (f.sqrMagnitude < 1e-6f) f = Vector3.forward;
             f.Normalize();
-            var left = Vector3.Cross(f, Vector3.up);   // f=+z -> -x
-            SetPose(realWrist + left * (offsetCm / 100f), Quaternion.LookRotation(f, Vector3.up));
+            var inward = Vector3.Cross(f, Vector3.up) * (LeftArm ? -1f : 1f);   // f=+z: -x for a right arm, +x for a left arm
+            SetPose(realWrist + inward * (offsetCm / 100f), Quaternion.LookRotation(f, Vector3.up));
         }
 
         /// <summary>Follows the real wrist (+offset) unless frozen. Returns whether the pose changed.</summary>

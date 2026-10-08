@@ -1,5 +1,6 @@
 using System;
 using Opus.Games.PhantomHand;
+using Opus.Sdk;
 
 namespace Opus.Shell
 {
@@ -51,8 +52,8 @@ namespace Opus.Shell
                 {
                     double driftCm = 0;
                     if (phase == PhPhase.ProbePost) driftCm = m.CurrentCondition == PhCondition.Sync ? SyncDriftCm : AsyncDriftCm;
-                    // positive drift = perceived position toward the virtual hand = toward -x (the virtual arm is to the left)
-                    Hands.LeftIndexTip = new[] { tip[0] - driftCm / 100.0, tip[1] + 0.10, 0.35 };
+                    // positive drift = perceived position toward the virtual hand: toward -x for a right arm (the virtual arm is to its left), +x for a left arm
+                    Hands.LeftIndexTip = new[] { tip[0] + (Hands.Arm == HandSide.Left ? 1 : -1) * driftCm / 100.0, tip[1] + 0.10, 0.35 };
                     break;
                 }
                 case PhPhase.Calibrate:
@@ -61,7 +62,7 @@ namespace Opus.Shell
                         _calibSent = true;
                         m.SubmitCalibration((double[])Hands.RightWrist.Clone(), (double[])Hands.RightAxis.Clone(), true);
                     }
-                    Hands.LeftIndexTip = new[] { -0.25, 0.90, 0.30 };
+                    Hands.LeftIndexTip = new[] { PhArm.X(Hands.Arm, -0.25), 0.90, 0.30 };
                     break;
                 case PhPhase.Questionnaire:
                     if (m.CurrentQuestionnaire != null && !m.CurrentQuestionnaire.IsComplete && nowMs >= _nextAnswerMs)
@@ -74,7 +75,7 @@ namespace Opus.Shell
                     }
                     break;
                 default:
-                    Hands.LeftIndexTip = new[] { -0.25, 0.90, 0.30 };
+                    Hands.LeftIndexTip = new[] { PhArm.X(Hands.Arm, -0.25), 0.90, 0.30 };
                     break;
             }
         }

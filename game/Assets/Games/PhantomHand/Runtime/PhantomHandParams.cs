@@ -30,6 +30,8 @@ namespace Opus.Games.PhantomHand
         public double HapticMaxIntensity = 1.0;
         public bool FollowDuringInduction = false;
         public bool DemoMode = false;
+        /// <summary>The arm that wears the sleeve and is replaced by the virtual one: "left" or "right". The manifest decides (left since
+        /// 9 Oct 2026: that is the arm the sleeve is worn on); "right" here is only what a hand-built parameter set gets.</summary>
         public string StimulatedSide = "right";
 
         // Additions A1-A5 (03-SPEC section 12). Parsed now; behaviour starts after gate G2.
@@ -48,6 +50,11 @@ namespace Opus.Games.PhantomHand
         public double EffectiveInductionS => DemoMode ? Math.Min(InductionS, DemoInductionS) : InductionS;
 
         public bool SyncFirst => ConditionOrder == "sync_first";
+
+        /// <summary>The stimulated arm as a hand.</summary>
+        public HandSide Arm => StimulatedSide == "left" ? HandSide.Left : HandSide.Right;
+        /// <summary>The free hand: it points in the probes and answers the questions.</summary>
+        public HandSide Pointer => PhArm.Other(Arm);
 
         public static PhantomHandParams From(ParamSet p)
         {
@@ -71,7 +78,7 @@ namespace Opus.Games.PhantomHand
                 HapticMaxIntensity = Clamp(p.GetDouble("haptic_max_intensity", 1.0), 0, 1),
                 FollowDuringInduction = p.GetBool("follow_during_induction", false),
                 DemoMode = p.GetBool("demo_mode", false),
-                StimulatedSide = "right", // MVP: right only (left = stretch)
+                StimulatedSide = p.GetString("stimulated_side", "right") == "left" ? "left" : "right",
                 VoiceoverEnabled = p.GetBool("voiceover_enabled", true),
                 VoiceoverLang = p.GetString("voiceover_lang", "en") == "hi" ? "hi" : "en",
                 DissolveEnabled = p.GetBool("dissolve_enabled", true),

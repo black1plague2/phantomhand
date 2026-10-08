@@ -79,15 +79,16 @@
       },
       "stimulated_side": {
         "enum": [
+          "left",
           "right"
         ],
-        "default": "right",
+        "default": "left",
         "x-ui": {
           "title": { "en": "Which arm", "hi": "कौन सी बाँह" },
           "widget": "segmented",
           "group": "Illusion",
           "order": 5,
-          "help": "Right arm only for now"
+          "help": "The arm that wears the sleeve. The other hand points and answers."
         }
       },
       "threat_enabled": {

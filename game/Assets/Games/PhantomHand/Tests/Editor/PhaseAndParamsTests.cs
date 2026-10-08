@@ -72,9 +72,14 @@ namespace Opus.Games.PhantomHand.Tests
         }
 
         [Test]
-        public void StimulatedSide_IsAlwaysRightForMvp()
+        public void StimulatedSide_ChoosesTheArm_AndTheOtherHandPoints()
         {
-            Assert.AreEqual("right", Ph.Params("{\"stimulated_side\":\"left\"}").StimulatedSide);
+            var left = Ph.Params("{\"stimulated_side\":\"left\"}");
+            Assert.AreEqual("left", left.StimulatedSide);
+            Assert.AreEqual(Opus.Sdk.HandSide.Left, left.Arm); Assert.AreEqual(Opus.Sdk.HandSide.Right, left.Pointer);
+            var right = Ph.Params("{\"stimulated_side\":\"right\"}");
+            Assert.AreEqual(Opus.Sdk.HandSide.Right, right.Arm); Assert.AreEqual(Opus.Sdk.HandSide.Left, right.Pointer);
+            Assert.AreEqual("right", Ph.Params("{\"stimulated_side\":\"both\"}").StimulatedSide, "anything else is the right arm");
         }
 
         [Test]
