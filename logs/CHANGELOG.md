@@ -148,3 +148,10 @@ Format: `YYYY-MM-DD | track | model | summary | commit/tag`
 2026-10-08 | PH-A | opus | The hub closes the socket of a headset it has written off after 3 missed pongs. Flutter 496/496. 2759d32
 2026-10-08 | PH-A | sonnet+opus | The hub's discovery beacon replaces its own socket (silent after the phone had dozed while HTTP answered). Nine tests, Flutter 505/505. 21c42d5
 2026-10-08 | PH-O | opus | One whole run through headset, both boards and the phone, the Quest on battery: 113 of 113 sent strokes acked (median 45 ms, 95 % under 285 ms), EMG 99.8 Hz and IMU 99.4 Hz recorded on the headset, 72 frames per second with 9 slow frames in 20 548, the session valid. PH-U-DIAG-run1 section 8
+
+## 2026-10-09, 00:15 to 01:30 IST: the owner's five points after the first headset runs (from `git log` and PH-U-FEEDBACK-run1)
+2026-10-09 | PH-U | opus | The stimulated arm can be the left one, now the default (`stimulated_side`, three manifest copies); the layout, the virtual arm, the drift's sign and the scripted participant mirror. f30d4ff
+2026-10-09 | PH-U | opus | A tracked fingertip presses the questionnaire's buttons (touch, or 0.6 s over one): the scene has no poke interactor and draws no hands, so nothing could press them on the headset. f30d4ff
+2026-10-09 | PH-U | opus | The wearer is seated at the scene's eye point (the camera rig moves; also after the system's recentre); the calibration takes an arm at any table height, shows the arm where it really is, and moves the room to it. c5307bc
+2026-10-09 | PH-A | sonnet+opus | The live EMG trace follows the signal instead of a fixed 0 to 3000 axis; a rest line and "x resting". Flutter 526/526. 7b67165
+2026-10-09 | PH-U | sonnet+opus | The virtual hand copies the real one: 15 finger joints and the wrist from 21 tracked joints. EditMode 855/855, pose sheets looked at for both arms.
