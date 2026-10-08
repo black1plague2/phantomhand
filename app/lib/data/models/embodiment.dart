@@ -107,6 +107,40 @@ class Embodiment {
     );
   }
 
+  /// The headset's own summary of a run (the `witness_summary` event it writes at the end and shows on its results panel),
+  /// as an [Embodiment]: plain numbers per condition, so every value is taken as it is and marked `ok`. Used when no
+  /// `metrics.json` exists (nothing but a PC can make one), so a run's results are on the phone as soon as its events are.
+  /// Null when the event has neither condition.
+  static Embodiment? tryParseWitness(Object? data) {
+    if (data is! Map || (data['sync'] is! Map && data['async'] is! Map)) return null;
+    const units = {
+      'drift_change_cm': 'cm',
+      'ownership': 'likert_1_7',
+      'control': 'likert_1_7',
+      'witness_q4': 'likert_1_7',
+      'flinch_emg_peak_x': 'x_baseline_rms',
+      'flinch_emg_latency_ms': 'ms',
+      'flinch_wrist_peak_mps': 'm/s',
+    };
+    Map<String, Object?> wrap(Object? raw) => {
+          if (raw is Map)
+            for (final e in raw.entries)
+              if (e.value is num)
+                // the headset calls the EMG onset "flinch_latency_ms"
+                (e.key == 'flinch_latency_ms' ? 'flinch_emg_latency_ms' : e.key as String): {
+                  'value': e.value,
+                  'unit': units[e.key == 'flinch_latency_ms' ? 'flinch_emg_latency_ms' : e.key],
+                  'quality': 'ok',
+                },
+        };
+    return tryParse({
+      'condition_order': data['condition_order'],
+      'sync': wrap(data['sync']),
+      'async': wrap(data['async']),
+      'sync_minus_async': wrap(data['sync_minus_async']),
+    });
+  }
+
   /// Parses a whole decoded `metrics.json`; null when it has no usable
   /// `embodiment` (an Orchard Reach session).
   static Embodiment? tryParseMetrics(Object? metricsJson) => metricsJson is Map ? tryParse(metricsJson['embodiment']) : null;

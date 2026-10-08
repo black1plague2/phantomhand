@@ -19,6 +19,25 @@ const _min = 'contracts/fixtures/sessions/phantom_hand_min/metrics.json';
 const _main = 'tools/demo/tests/fixtures/ph_l3_main/metrics.json';
 
 void main() {
+  test('the headset\'s own end-of-run summary is a report: plain numbers per condition, the EMG onset under its report name', () {
+    final e = Embodiment.tryParseWitness({
+      'condition_order': ['sync', 'async'],
+      'sync': {'drift_change_cm': -1.2, 'flinch_latency_ms': 80.0, 'flinch_strength': 'strong', 'flinch_emg_peak_x': 5.5, 'ownership': 5.5},
+      'async': {'drift_change_cm': 3.0, 'flinch_latency_ms': 108.0, 'flinch_emg_peak_x': 6.1, 'ownership': 4.5},
+      'sync_minus_async': {'drift_change_cm': -4.2, 'ownership': 1.0},
+    })!;
+    expect(e.conditionOrder, ['sync', 'async']);
+    expect(e.sync['drift_change_cm']!.value, -1.2);
+    expect(e.sync['drift_change_cm']!.unit, 'cm');
+    expect(e.sync['drift_change_cm']!.quality, EmbodimentQuality.ok);
+    expect(e.sync['flinch_emg_latency_ms']!.value, 80.0);
+    expect(e.sync.containsKey('flinch_strength'), isFalse, reason: 'a word is not a number');
+    expect(e.async['flinch_emg_peak_x']!.value, 6.1);
+    expect(e.difference['ownership']!.value, 1.0);
+    expect(Embodiment.tryParseWitness({'closing_en': 'x'}), isNull);
+    expect(Embodiment.tryParseWitness(null), isNull);
+  });
+
   group('phantom_hand_min metrics.json', () {
     test('both conditions, the contrast and the order', () {
       final e = _fixture(_min);

@@ -9,6 +9,15 @@
     "onset_date": "2026-10-08"
   },
   {
+    "id": "vaibhav-jangid",
+    "display_name": "Vaibhav Jangid",
+    "age": 22,
+    "gender": "male",
+    "affected_side": "none",
+    "diagnosis": "Phantom Hand participant",
+    "onset_date": "2026-10-09"
+  },
+  {
     "id": "synthetic-healthy-42",
     "display_name": "Asha Rao",
     "age": 58,

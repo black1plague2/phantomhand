@@ -64,6 +64,19 @@ class _SessionReportScreenState extends ConsumerState<SessionReportScreen> {
         ),
         data: (metrics) {
           if (metrics == null) {
+            // A Phantom Hand run without a metrics.json (no PC analysed it): the headset's own summary is the report.
+            final own = ref.watch(_embodimentProvider(widget.sessionId));
+            if (own.isLoading && !own.hasValue) return const Center(child: CircularProgressIndicator());
+            if (own.value != null) {
+              final lang = Localizations.localeOf(context).languageCode;
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  if (envelopeAsync.value?.mode == SessionMode.simulation) _SimulatedRunLabel(lang: lang),
+                  EmbodimentReport(embodiment: own.value!, lang: lang),
+                ],
+              );
+            }
             // A hub session (real headset upload) has no metrics.json until
             // the clinician runs analysis. Rather than an empty screen, show
             // whatever `events.ndjson` already lets us derive (reaction
@@ -476,7 +489,20 @@ final FutureProviderFamily<Embodiment?, String> _embodimentProvider = FutureProv
   final dir = ref.read(hubControllerProvider.notifier).sessionDirFor(id) ?? opened?.sessionDirPath;
   if (dir == null) return null;
   try {
-    return Embodiment.tryParseMetrics(jsonDecode(await File('$dir/metrics.json').readAsString()));
+    final fromAnalysis = Embodiment.tryParseMetrics(jsonDecode(await File('$dir/metrics.json').readAsString()));
+    if (fromAnalysis != null) return fromAnalysis;
+  } on Exception catch (_) {
+    // no metrics.json: only a PC makes one
+  }
+  // The headset's own summary of the run, last line of its kind in events.ndjson.
+  try {
+    Embodiment? found;
+    for (final line in await File('$dir/events.ndjson').readAsLines()) {
+      if (!line.contains('"witness_summary"')) continue;
+      final e = jsonDecode(line);
+      if (e is Map && e['type'] == 'witness_summary') found = Embodiment.tryParseWitness(e['data']) ?? found;
+    }
+    return found;
   } on Exception catch (_) {
     return null;
   }
