@@ -381,10 +381,10 @@ namespace Opus.Shell
                    ", hands " + (_useDemo ? "scripted" : HandWord(HandSide.Left) + "/" + HandWord(HandSide.Right));
         }
 
-        private static string NodeWord(UdpHapticTransport t, SleeveSensorClient c)
+        private string NodeWord(UdpHapticTransport t, SleeveSensorClient c)
         {
             if (t == null || !t.HasDevice) return "not found";
-            return t.DeviceEndpoint + (c == null ? "" : c.Connected ? " streaming" : " silent");
+            return t.DeviceEndpoint + (c == null || !_asking ? "" : c.Connected ? " streaming" : " silent");
         }
 
         private string HandWord(HandSide s) { return _hands != null && _hands.IsTracked(s) ? "tracked" : "lost"; }
@@ -499,6 +499,7 @@ namespace Opus.Shell
             // kept writing a sens_###.json every 5 s into the closed session folder, after the uploader had listed the files.)
             ForwardSamplesToRecorder(_nodeA); ForwardSamplesToRecorder(_nodeB);
             _haptic.StartKeepalive(_clock.NowMs);
+            _asking = true;
 
             _cues = new HapticCueEventAdapter { Trial = () => _module != null ? _module.CurrentConditionIndex : null };
             _cues.OnEvent += RaiseEvent;
@@ -575,7 +576,12 @@ namespace Opus.Shell
             if (_haptic != null) _haptic.StopKeepalive();
             if (_nodeA != null) _nodeA.Stop();
             if (_nodeB != null) _nodeB.Stop();
+            _asking = false;
         }
+
+        // The boards stream only while a run asks them to (the keepalive of a session). Between runs a board that is found is
+        // ready, not lost: on the headset (9 Oct) the phone showed both sensors as gone after every run, until the next Start.
+        private bool _asking;
 
         /// <summary>The operator's "recenter": the wearer back onto the scene's seat. Refused once a run has taken its calibration (the
         /// arm's position was measured in the room as it stands).</summary>
@@ -717,8 +723,8 @@ namespace Opus.Shell
             string phase = m != null ? PhNames.Of(m.CurrentPhase) : "idle";
             string cond = m != null && m.CurrentCondition.HasValue ? PhNames.Of(m.CurrentCondition.Value) : null;
             double? rem = m != null ? PhantomLiveStatus.RemainingFor(m.CurrentPhase, m.RemainingS(nowMs)) : (double?)null;
-            bool hap = _nodeA != null ? _nodeA.Connected : (_haptic != null && _haptic.Connected);
-            bool bio = _nodeB != null ? _nodeB.Connected : (_transportB != null && _transportB.HasDevice);
+            bool hap = _nodeA != null && _asking ? _nodeA.Connected : (_transportA != null && _transportA.HasDevice);
+            bool bio = _nodeB != null && _asking ? _nodeB.Connected : (_transportB != null && _transportB.HasDevice);
             double? emg = _nodeB != null && bio && _nodeB.HasEmgCalibration ? _nodeB.EmgLevel01 : (double?)null;
             status["game_state"] = PhantomLiveStatus.GameState(phase, cond, rem, hap, bio, emg);
             if (_nodeA != null || _nodeB != null)
