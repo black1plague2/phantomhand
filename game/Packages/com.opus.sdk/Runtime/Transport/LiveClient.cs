@@ -237,6 +237,14 @@ namespace Opus.Sdk
                 bool ok = req.responseCode == 200 || req.responseCode == 201;
                 if (req.responseCode == 409)
                     Debug.LogWarning($"[LiveClient] file_available sha256 mismatch for {name} (409) — hub already has a different version");
+                else if (!ok && !_uploadFailureLogged)
+                {
+                    // once per outage, with Unity's own reason: "Insecure connection not allowed" here means the player was built without
+                    // Player > Allow downloads over HTTP = Always allowed, and no file will ever reach a hub on the LAN
+                    _uploadFailureLogged = true;
+                    Debug.LogWarning($"[LiveClient] upload of {name} to {_hostForHttp}:{_hubPort} failed: {req.result}, {req.error} (HTTP {req.responseCode}); further failures are not logged until one succeeds");
+                }
+                if (ok) _uploadFailureLogged = false;
                 if (ok) NotifyFileAvailable(name, bytes.LongLength, sha256);
                 tcs.TrySetResult(ok);
             }
@@ -259,6 +267,7 @@ namespace Opus.Sdk
         // ---- connection lifecycle -----------------------------------------------------------------------
 
         private string _hostForHttp;
+        private bool _uploadFailureLogged;   // main thread only (the upload path runs from the main-thread queue)
 
         private async Task ConnectionLoopAsync(CancellationToken ct)
         {

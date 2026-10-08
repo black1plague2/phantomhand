@@ -237,5 +237,15 @@ namespace Opus.Shell.Tests.Build
         {
             Assert.IsNull(PhantomBuildPlan.ApkProblem(MakeZip("AndroidManifest.xml", "classes.dex", "lib/arm64-v8a/libunity.so", "lib/arm64-v8a/libil2cpp.so"), 1));
         }
+
+        /// <summary>The headset uploads its session files with UnityWebRequest to a hub at a LAN address over plain http://. Unity's default
+        /// (NotAllowed) permits that only to localhost / 127.0.0.1, which is where every editor test has its hub: nothing here would notice
+        /// a player that can upload nothing. So the project setting itself is pinned.</summary>
+        [Test]
+        public void Project_AllowsPlainHttp_OrAHeadsetUploadsNothingToTheLanHub()
+        {
+            Assert.AreEqual(UnityEditor.InsecureHttpOption.AlwaysAllowed, UnityEditor.PlayerSettings.insecureHttpOption,
+                "Player > Other Settings > Allow downloads over HTTP must be 'Always allowed' (the hub is http:// on the LAN)");
+        }
     }
 }

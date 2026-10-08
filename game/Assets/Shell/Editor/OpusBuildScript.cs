@@ -191,6 +191,11 @@ namespace Opus.Shell.Editor
                    v => EditorUserBuildSettings.buildAppBundle = v);
             Ensure("export as Gradle project instead of an APK", EditorUserBuildSettings.exportAsGoogleAndroidProject, false,
                    v => EditorUserBuildSettings.exportAsGoogleAndroidProject = v);
+            // The hub is plain http:// on the LAN and the session files go up with UnityWebRequest (LiveClient.UploadFileAsync). With Unity's default,
+            // NotAllowed, a player may use plain HTTP only to localhost / 127.0.0.1: every editor run passes (its hub is on 127.0.0.1) and a headset,
+            // whose hub is a LAN address, would upload nothing. Found on 8 Oct 2026 by reading the settings behind the first APKs, before any ran.
+            Ensure("plain HTTP to the LAN hub (Player > Allow downloads over HTTP)", PlayerSettings.insecureHttpOption, InsecureHttpOption.AlwaysAllowed,
+                   v => PlayerSettings.insecureHttpOption = v);
 
             // Vulkan only: automatic API selection off and the list exactly [Vulkan].
             bool automatic = PlayerSettings.GetUseDefaultGraphicsAPIs(BuildTarget.Android);
