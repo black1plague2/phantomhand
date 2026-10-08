@@ -7,10 +7,13 @@ import 'package:opus_app/core/providers/hub_providers.dart';
 import 'package:opus_app/core/providers/repository_providers.dart';
 import 'package:opus_app/data/models/embodiment.dart';
 import 'package:opus_app/data/models/metrics.dart';
+import 'package:opus_app/data/models/phantom_demo.dart';
 import 'package:opus_app/data/models/session_envelope.dart';
+import 'package:opus_app/data/repositories/mock/phantom_demo_repository.dart';
 import 'package:opus_app/data/repositories/sessions_repository.dart';
 import 'package:opus_app/features/sessions/embodiment_report.dart';
 import 'package:opus_app/l10n/app_localizations.dart';
+import 'package:opus_app/shared/clinical/phantom_demo_strings.dart';
 import 'package:opus_app/shared/design/v2_colors.dart';
 import 'package:opus_app/shared/metrics/events_derived_metrics.dart';
 import 'package:opus_app/shared/metrics/haptic_analysis.dart';
@@ -125,11 +128,20 @@ class _SessionReportScreenState extends ConsumerState<SessionReportScreen> {
           }
           // A Phantom Hand session: its result is the embodiment report. Its
           // metrics.json has no trials, so the trial layout below would be empty.
-          final embodiment = ref.watch(_embodimentProvider(widget.sessionId)).value;
+          final embodimentAsync = ref.watch(_embodimentProvider(widget.sessionId));
+          // A session without trials waits for the report rather than flash the empty trial layout.
+          if (metrics.trials.isEmpty && embodimentAsync.isLoading && !embodimentAsync.hasValue) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final embodiment = embodimentAsync.value;
           if (embodiment != null) {
+            final lang = Localizations.localeOf(context).languageCode;
             return ListView(
               padding: const EdgeInsets.all(16),
-              children: [EmbodimentReport(embodiment: embodiment, lang: Localizations.localeOf(context).languageCode)],
+              children: [
+                if (envelopeAsync.value?.mode == SessionMode.simulation) _SimulatedRunLabel(lang: lang),
+                EmbodimentReport(embodiment: embodiment, lang: lang),
+              ],
             );
           }
           final trials = metrics.trials;
@@ -233,6 +245,46 @@ class _SessionReportScreenState extends ConsumerState<SessionReportScreen> {
   String _formatDate(DateTime d) {
     final local = d.toLocal();
     return '${local.year}-${local.month.toString().padLeft(2, '0')}-${local.day.toString().padLeft(2, '0')}';
+  }
+}
+
+/// The plain "Simulated run" label of a Phantom Hand session recorded against
+/// the simulator (the demo participant's): simulated data is called simulated
+/// wherever it is shown.
+class _SimulatedRunLabel extends StatelessWidget {
+  const new({required this.lang});
+  final String lang;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = PhantomDemoStrings.forLang(lang);
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            key: const ValueKey('ph-simulated-run'),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              border: Border.all(color: V2Colors.textDim, width: 1.5),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.science_outlined, size: 18, color: V2Colors.text),
+                const SizedBox(width: 8),
+                Flexible(child: Text(s.t('simulatedRun'), style: textTheme.labelLarge?.copyWith(color: V2Colors.text))),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(s.t('simulatedNote'), style: textTheme.bodySmall?.copyWith(color: V2Colors.textDim)),
+        ],
+      ),
+    );
   }
 }
 
@@ -417,6 +469,8 @@ final FutureProviderFamily<SessionMetrics?, String> _metricsProvider = FuturePro
 /// because [SessionMetrics] drops it. Null for any other session: no folder on
 /// disk (the bundled fixtures), no file, bad JSON, or no `embodiment` in it.
 final FutureProviderFamily<Embodiment?, String> _embodimentProvider = FutureProvider.family<Embodiment?, String>((ref, id) async {
+  // The demo participant's recorded session is bundled: no folder, hub or platform needed.
+  if (id == demoPhantomSessionId) return const PhantomDemoAssets().embodiment();
   if (!hubCapable) return null;
   final opened = ref.watch(openedSessionDirectoriesProvider).where((r) => r.envelope.sessionId == id).firstOrNull;
   final dir = ref.read(hubControllerProvider.notifier).sessionDirFor(id) ?? opened?.sessionDirPath;

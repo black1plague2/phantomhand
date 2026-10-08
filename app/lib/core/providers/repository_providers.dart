@@ -14,6 +14,7 @@ import 'package:opus_app/data/repositories/mock/mock_outcomes_repository.dart';
 import 'package:opus_app/data/repositories/mock/mock_patients_repository.dart';
 import 'package:opus_app/data/repositories/mock/mock_programs_repository.dart';
 import 'package:opus_app/data/repositories/mock/mock_sessions_repository.dart';
+import 'package:opus_app/data/repositories/mock/phantom_demo_repository.dart';
 import 'package:opus_app/data/repositories/outcomes_repository.dart';
 import 'package:opus_app/data/repositories/patients_repository.dart';
 import 'package:opus_app/data/repositories/programs_repository.dart';
@@ -88,7 +89,9 @@ SessionsRepository sessionsRepository(Ref ref) {
   // which this app instance's own hub never wrote and so `hub` above never
   // sees. Watched so opening a new folder refreshes any screen already open.
   final opened = ref.watch(openedSessionDirectoriesProvider);
-  return CompositeSessionsRepository(mock: mock, hub: hub, opened: opened);
+  // The Phantom Hand demo participant's recorded session ("Run Phantom Hand
+  // demo"): bundled, so it is there with or without a hub.
+  return CompositeSessionsRepository(mock: mock, hub: hub, opened: [...opened, const PhantomDemoSessionsRepository()]);
 }
 
 /// Session directories opened one-off via "Open a session folder..."

@@ -85,6 +85,7 @@ flutter:
     - assets/fixtures/manifests/
     - assets/fixtures/sessions/
     - assets/fixtures/patients.json
+    - assets/demo/phantom_hand/
 
   # Atkinson Hyperlegible Next (OFL, github.com/google/fonts) -- one variable
   # font file covers the 400/600/700 weights the design tokens use; Flutter

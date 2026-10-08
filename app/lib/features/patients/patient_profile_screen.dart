@@ -6,8 +6,11 @@ import 'package:opus_app/core/providers/hub_providers.dart';
 import 'package:opus_app/core/providers/repository_providers.dart';
 import 'package:opus_app/data/models/metrics.dart';
 import 'package:opus_app/data/models/patient.dart';
+import 'package:opus_app/data/models/phantom_demo.dart';
 import 'package:opus_app/data/models/session_envelope.dart';
+import 'package:opus_app/features/live/phantom_demo_button.dart';
 import 'package:opus_app/l10n/app_localizations.dart';
+import 'package:opus_app/shared/clinical/phantom_demo_strings.dart';
 import 'package:opus_app/shared/design/v2_colors.dart';
 import 'package:opus_app/shared/metrics/dose_adherence.dart';
 import 'package:opus_app/shared/metrics/progress_data.dart';
@@ -161,68 +164,78 @@ class _OverviewTab extends ConsumerWidget {
     return overviewAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => ErrorRetryView(message: e.toString(), onRetry: () => ref.invalidate(_overviewProvider(patient.id))),
-      data: (data) => ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          GridView.count(
-            crossAxisCount: 3,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            childAspectRatio: 1.1,
-            children: [
-              StatTile(label: 'Sessions', value: '${data.sessions.length}'),
-              StatTile(label: 'Success %', value: '${data.outcomeCounts.successPct}', unit: '%'),
-              StatTile(
-                label: 'Dose this week',
-                value: data.dose == null ? '-' : '${data.dose!.completedDays}',
-                unit: data.dose == null ? null : '/ ${data.dose!.prescribedSessionsPerWeek}',
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // v3 amendment (BINDING): "a Metric dropdown switches one big trend
-          // chart between Reaction time / Movement time / Peak speed /
-          // Smoothness / Trunk lean, instead of 5 stacked charts" -- was two
-          // separate always-visible sections (Reaction time, Smoothness);
-          // now one section, keeping the screen at 4 sections total (this +
-          // Outcomes + Weekly dose + Sessions).
-          _MetricTrendSection(patientId: patient.id),
-          const SizedBox(height: 16),
-          Section(title: 'Outcomes', child: OutcomeDonut(counts: data.outcomeCounts)),
-          const SizedBox(height: 16),
-          Section(
-            title: 'Weekly dose',
-            child: WeeklyDoseBars(weeks: data.weeklyDose, target: data.dose?.prescribedSessionsPerWeek ?? 0),
-          ),
-          const SizedBox(height: 16),
-          Section(
-            title: 'Sessions',
-            child: data.sessions.isEmpty
-                ? const Text('No sessions yet.', style: TextStyle(color: V2Colors.textDim))
-                : Column(
-                    children: [
-                      for (final s in data.sessions.take(8))
-                        _SessionListRow(patientId: patient.id, session: s),
-                    ],
+      data: (data) {
+        // A patient whose sessions are all Phantom Hand ones (the demo participant) has no
+        // trials: the Orchard tiles and charts would read "0 %" and "no sessions", so only
+        // the sessions are listed.
+        final phantomOnly = data.sessions.isNotEmpty &&
+            data.sessions.every((s) => s.blocks.isNotEmpty && s.blocks.every((b) => b.gameId == 'phantom_hand'));
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            if (patient.id == demoPhantomPatientId) ...[const PhantomDemoButton(), const SizedBox(height: 16)],
+            if (!phantomOnly) ...[
+              GridView.count(
+                crossAxisCount: 3,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1.1,
+                children: [
+                  StatTile(label: 'Sessions', value: '${data.sessions.length}'),
+                  StatTile(label: 'Success %', value: '${data.outcomeCounts.successPct}', unit: '%'),
+                  StatTile(
+                    label: 'Dose this week',
+                    value: data.dose == null ? '-' : '${data.dose!.completedDays}',
+                    unit: data.dose == null ? null : '/ ${data.dose!.prescribedSessionsPerWeek}',
                   ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: V2Colors.oxblood,
-                foregroundColor: V2Colors.text,
-                minimumSize: const Size.fromHeight(48),
+                ],
               ),
-              onPressed: () => context.go('/patients/${patient.id}/programs/new'),
-              child: const Text('New program'),
+              const SizedBox(height: 16),
+              // v3 amendment (BINDING): "a Metric dropdown switches one big trend
+              // chart between Reaction time / Movement time / Peak speed /
+              // Smoothness / Trunk lean, instead of 5 stacked charts" -- was two
+              // separate always-visible sections (Reaction time, Smoothness);
+              // now one section, keeping the screen at 4 sections total (this +
+              // Outcomes + Weekly dose + Sessions).
+              _MetricTrendSection(patientId: patient.id),
+              const SizedBox(height: 16),
+              Section(title: 'Outcomes', child: OutcomeDonut(counts: data.outcomeCounts)),
+              const SizedBox(height: 16),
+              Section(
+                title: 'Weekly dose',
+                child: WeeklyDoseBars(weeks: data.weeklyDose, target: data.dose?.prescribedSessionsPerWeek ?? 0),
+              ),
+              const SizedBox(height: 16),
+            ],
+            Section(
+              title: 'Sessions',
+              child: data.sessions.isEmpty
+                  ? const Text('No sessions yet.', style: TextStyle(color: V2Colors.textDim))
+                  : Column(
+                      children: [
+                        for (final s in data.sessions.take(8))
+                          _SessionListRow(patientId: patient.id, session: s),
+                      ],
+                    ),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: V2Colors.oxblood,
+                  foregroundColor: V2Colors.text,
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                onPressed: () => context.go('/patients/${patient.id}/programs/new'),
+                child: const Text('New program'),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -248,6 +261,14 @@ class _SessionListRow extends ConsumerWidget {
     );
     final local = session.startedAt.toLocal();
     final dateText = '${local.year}-${local.month.toString().padLeft(2, '0')}-${local.day.toString().padLeft(2, '0')}';
+    // A Phantom Hand session has no trials to score: say what it is rather than "Pending".
+    final phantom = session.blocks.any((b) => b.gameId == 'phantom_hand');
+    final simulated = session.mode == SessionMode.simulation;
+    final trailing = successPct != null
+        ? '$successPct%'
+        : phantom
+            ? (simulated ? PhantomDemoStrings.forLang(Localizations.localeOf(context).languageCode).t('simulatedRun') : 'Phantom Hand')
+            : 'Pending';
     return InkWell(
       onTap: () => context.go('/patients/$patientId/sessions/${session.sessionId}'),
       child: Padding(
@@ -261,7 +282,7 @@ class _SessionListRow extends ConsumerWidget {
               ),
             ),
             Text(
-              successPct == null ? 'Pending' : '$successPct%',
+              trailing,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: V2Colors.textDim),
             ),
           ],

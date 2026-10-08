@@ -298,6 +298,7 @@ class PhantomLiveView extends StatelessWidget {
     required this.onOrder,
     this.observer = false,
     this.stale = false,
+    this.showControls = true,
     super.key,
   });
 
@@ -309,6 +310,9 @@ class PhantomLiveView extends StatelessWidget {
 
   /// The link is quiet or gone: the traces are drawn grey, they are not current.
   final bool stale;
+
+  /// False leaves the Controls section out (the recorded demo has nothing to press).
+  final bool showControls;
 
   @override
   Widget build(BuildContext context) {
@@ -350,13 +354,15 @@ class PhantomLiveView extends StatelessWidget {
         },
       );
     }
-    final controls = _ControlsSection(
-      rules: model.rules,
-      statuses: statuses,
-      order: model.conditionOrder,
-      onCommand: onCommand,
-      onOrder: onOrder,
-    );
+    final controls = showControls
+        ? _ControlsSection(
+            rules: model.rules,
+            statuses: statuses,
+            order: model.conditionOrder,
+            onCommand: onCommand,
+            onOrder: onOrder,
+          )
+        : null;
     return LayoutBuilder(
       builder: (context, box) {
         if (box.maxWidth >= 900) {
@@ -369,7 +375,10 @@ class PhantomLiveView extends StatelessWidget {
                 SizedBox(
                   width: 420,
                   child: SingleChildScrollView(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [status, const SizedBox(height: 16), controls]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [status, if (controls != null) ...[const SizedBox(height: 16), controls]],
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -383,7 +392,7 @@ class PhantomLiveView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             // Controls above the traces so the operator never scrolls to Start / Next / Abort / End.
-            children: [status, const SizedBox(height: 16), controls, const SizedBox(height: 16), signals()],
+            children: [status, const SizedBox(height: 16), if (controls != null) ...[controls, const SizedBox(height: 16)], signals()],
           ),
         );
       },

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:opus_app/data/models/phantom_demo.dart';
 import 'package:opus_app/data/models/phantom_live.dart';
 import 'package:opus_app/data/models/phantom_witness.dart';
 import 'package:opus_app/data/repositories/phantom_live_repository.dart';
@@ -47,11 +48,19 @@ class _Step {
 /// conditions of spec §5 (short durations), `game_state`-style fields and a
 /// 20 Hz synthetic EMG envelope + |accel| trace with a flinch after the stone
 /// lands (bigger in SYNC than ASYNC). No timers here: call [step].
+///
+/// With a [demo] script it plays a recorded run instead: the recording's 14
+/// phases in its order and conditions, its EMG / |accel| trace (the two flinch
+/// spikes included), its stone and muscle-burst markers and its
+/// `witness_summary`, in the script's compressed time.
 class PhantomMockEngine {
-  PhantomMockEngine({int seed = 7, this.conditionOrder = 'async_first'}) : _rand = math.Random(seed);
+  PhantomMockEngine({int seed = 7, this.conditionOrder = 'async_first', this.demo}) : _rand = math.Random(seed);
 
   final math.Random _rand;
   String conditionOrder;
+
+  /// The recorded run to play, or null for the synthetic one.
+  final PhantomDemoScript? demo;
 
   PhantomRunState runState = PhantomRunState.paired;
   bool hapticConnected = true;
@@ -62,6 +71,11 @@ class PhantomMockEngine {
   int _stepIdx = -1;
   double _stepElapsed = 0;
   double _impactMs = -1;
+
+  /// Demo only: samples played in this phase / since the start, so a phase
+  /// ends on exactly the sample the script allotted it.
+  int _stepSamples = 0;
+  int _demoIdx = 0;
 
   static const _threatImpactAfterS = 1.5;
   static const _burstAfterImpactMs = 120.0;
@@ -74,6 +88,8 @@ class PhantomMockEngine {
   _Step? get _step => (_stepIdx >= 0 && _stepIdx < _plan.length) ? _plan[_stepIdx] : null;
 
   List<_Step> _buildPlan() {
+    final script = demo;
+    if (script != null) return [for (final s in script.steps) _Step(s.phase, s.condition, s.seconds)];
     final first = conditionOrder == 'sync_first' ? PhantomCondition.sync : PhantomCondition.async;
     final second = first == PhantomCondition.sync ? PhantomCondition.async : PhantomCondition.sync;
     return [
@@ -100,6 +116,8 @@ class PhantomMockEngine {
         _plan = _buildPlan();
         _stepIdx = 0;
         _stepElapsed = 0;
+        _stepSamples = 0;
+        _demoIdx = 0;
         _impactMs = -1;
         runState = PhantomRunState.running;
         return true;
@@ -125,6 +143,8 @@ class PhantomMockEngine {
         _plan = const [];
         _stepIdx = -1;
         _stepElapsed = 0;
+        _stepSamples = 0;
+        _demoIdx = 0;
         _impactMs = -1;
         runState = PhantomRunState.paired;
         return true;
@@ -140,6 +160,7 @@ class PhantomMockEngine {
     if (_stepIdx < _plan.length - 1) {
       _stepIdx++;
       _stepElapsed = 0;
+      _stepSamples = 0;
       _impactMs = -1;
       if (_plan[_stepIdx].phase == 'done') runState = PhantomRunState.finished;
     }
@@ -155,25 +176,39 @@ class PhantomMockEngine {
     final emg = <double>[];
     final acc = <double>[];
     final markers = <TraceMarker>[];
+    final script = demo;
     for (var i = 0; i < n; i++) {
       if (runState == PhantomRunState.running) {
         _stepElapsed += 0.05;
+        _stepSamples++;
         final s = _step;
-        if (s != null && s.phase == 'threat' && _impactMs < 0 && _stepElapsed >= _threatImpactAfterS) {
-          _impactMs = clockMs;
-          markers.add(TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: _impactMs));
-        }
-        if (s != null && s.phase == 'threat' && _impactMs >= 0) {
-          final burstAt = _impactMs + _burstAfterImpactMs;
-          if (clockMs <= burstAt && burstAt < clockMs + 50) {
-            markers.add(TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: burstAt));
+        if (script != null) {
+          // The recording's own stone and muscle burst, placed on this sample.
+          final from = _demoIdx * 1000.0 / PhantomDemoScript.fsHz;
+          for (final m in script.markersIn(from, from + 1000.0 / PhantomDemoScript.fsHz)) {
+            markers.add(TraceMarker(kind: m.kind, tMs: clockMs + (m.tMs - from)));
+          }
+        } else {
+          if (s != null && s.phase == 'threat' && _impactMs < 0 && _stepElapsed >= _threatImpactAfterS) {
+            _impactMs = clockMs;
+            markers.add(TraceMarker(kind: TraceMarkerKind.threatImpact, tMs: _impactMs));
+          }
+          if (s != null && s.phase == 'threat' && _impactMs >= 0) {
+            final burstAt = _impactMs + _burstAfterImpactMs;
+            if (clockMs <= burstAt && burstAt < clockMs + 50) {
+              markers.add(TraceMarker(kind: TraceMarkerKind.emgBurst, tMs: burstAt));
+            }
           }
         }
-        if (s != null && s.seconds > 0 && _stepElapsed >= s.seconds) _advanceStep();
+        if (s != null && s.seconds > 0) {
+          final over = script == null ? _stepElapsed >= s.seconds : _stepSamples >= (s.seconds * PhantomDemoScript.fsHz).round();
+          if (over) _advanceStep();
+        }
       }
       final t = clockMs;
-      emg.add(_emgAt(t));
-      acc.add(_accelAt(t));
+      emg.add(script == null ? _emgAt(t) : script.emgAt(_demoIdx));
+      acc.add(script == null ? _accelAt(t) : script.accelAt(_demoIdx));
+      if (script != null && runState == PhantomRunState.running) _demoIdx++;
       _sample++;
     }
     return snapshot(chunk: TraceChunk(emgEnv: emg, accelMag: acc, t0Ms: t0), markers: markers);
@@ -228,7 +263,7 @@ class PhantomMockEngine {
       chunk: chunk,
       markers: markers,
       // The headset sends its witness_summary as the witness phase begins.
-      witness: s?.phase == 'witness' ? mockPhantomWitness : null,
+      witness: s?.phase == 'witness' ? (demo?.witness ?? mockPhantomWitness) : null,
       conditionOrder: conditionOrder,
     );
   }

@@ -1,5 +1,14 @@
 [
   {
+    "id": "demo-phantom-hand",
+    "display_name": "Demo participant (simulated)",
+    "age": 0,
+    "gender": "n/a",
+    "affected_side": "none",
+    "diagnosis": "Simulated participant",
+    "onset_date": "2026-10-08"
+  },
+  {
     "id": "synthetic-healthy-42",
     "display_name": "Asha Rao",
     "age": 58,
