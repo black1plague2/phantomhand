@@ -66,9 +66,10 @@ Closing copy in the headset (EN, Hindi alongside):
 
 ## 5. Three channels, not one question
 
-1. **Body reaction:** flinch after the stone: EMG, IMU, wrist speed (implicit). Lead with this: the audience
-   sees it on the trace.
-2. **Report:** ownership items q1–q2, with q3 as the control item.
+1. **Body reaction:** flinch after the stone: EMG, IMU, wrist speed (implicit). This is the spectacle: the
+   audience sees it on the trace. It is a proxy with thin published support, so do not rest the claim on it.
+2. **Report:** the rating "it felt like my hand", asked after both conditions (q3 is the control item). This is
+   the best-supported measure: lead the claim with it.
 3. **Felt position:** pointing drift toward the virtual hand (implicit). Show it, never promise it: on one
    person it is small, about the size of the tracking error, and it can come out either way (research R4, A.4).
 
