@@ -8,6 +8,19 @@
 /[Mm]emoryCaptures/
 # Android build scratch (Gradle/IL2CPP), written by the first Quest APK build on 8 Oct 2026
 /.utmp/
+# Unity Asset Store packs (Standard Asset Store EULA: usable in the built game, never to be published).
+# Imported on the build PC through Package Manager > My Assets; listed in CREDITS.md.
+/[Aa]ssets/Free/
+/[Aa]ssets/Free.meta
+/[Aa]ssets/Books/
+/[Aa]ssets/Books.meta
+/[Aa]ssets/Dark Wave Paint/
+/[Aa]ssets/Dark Wave Paint.meta
+/[Aa]ssets/Furniture_ges1/
+/[Aa]ssets/Furniture_ges1.meta
+# scenes Unity sets aside after a crash
+/[Aa]ssets/_Recovery/0 (*).unity
+/[Aa]ssets/_Recovery/0 (*).unity.meta
 # the Meta SDK's editor build config, created by itself when a build needs it
 /[Aa]ssets/Resources/OVRBuildConfig.asset
 /[Aa]ssets/Resources/OVRBuildConfig.asset.meta
