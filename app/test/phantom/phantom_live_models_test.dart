@@ -261,7 +261,7 @@ void main() {
     });
 
     test('finished or done: next person only', () {
-      expect(enabled(rules(PhantomRunState.finished, phase: 'done', induction: true)), {PhantomCommand.nextPerson});
+      expect(enabled(rules(PhantomRunState.finished, phase: 'done', induction: true)), {PhantomCommand.nextPerson, PhantomCommand.conditionOrder});
       expect(rules(PhantomRunState.running, phase: 'done', induction: true).isEnabled(PhantomCommand.phaseNext), isFalse);
     });
 

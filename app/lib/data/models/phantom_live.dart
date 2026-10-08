@@ -502,7 +502,10 @@ class PhantomCommandRules {
       case PhantomCommand.nextPerson:
         return runState.active || runState == PhantomRunState.finished || runState == PhantomRunState.error || _phaseDone;
       case PhantomCommand.conditionOrder:
-        return !inductionSeen && !runState.active && runState != PhantomRunState.finished;
+        // Locked only from the first induction of a run to its end. After a run the headset keeps the choice for the next
+        // person (it starts at once on "Next person", so there is no waiting state in which to choose).
+        if (runState == PhantomRunState.finished || _phaseDone) return true;
+        return !inductionSeen && !runState.active;
     }
   }
 
