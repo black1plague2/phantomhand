@@ -18,6 +18,7 @@ Credit line for slides, the demo table and an About screen:
 
 - **Files:** `game/Assets/Art/PhantomHand/Models/` `Brush/PH_Brush.glb`, `Lamp/PH_PendantLamp.glb`, `Plant/PH_Plant.glb`, `Window/PH_Window.glb`, `Props/PH_SingingBowl.glb`, `Props/PH_TeaCup.glb`, `Props/PH_FramedPicture.glb`.
 - **Origin:** added by the team on 8 Oct 2026. The files carry no author or licence field. Their generator tag is `THREE.GLTFExporter r184` and their material names use this project's `PH_` prefix, so they are taken to be the team's own procedural models, not third-party downloads. Confirm this before a public release build.
+- **In the game since 8 Oct 2026:** the importer reads each `.glb` and writes a wrapper prefab, one mesh, URP materials and the embedded textures under `game/Assets/Art/PhantomHand/Models/` (`Resources/PhantomModels/PH_*.prefab`, `Meshes/PHP_*`, `Materials/PHP_*`, `Textures/PHP_*`). Those files are derived from the `.glb` files above and carry the same origin.
 
 ## Unity Asset Store packages (not in this repository)
 

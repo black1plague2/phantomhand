@@ -42,6 +42,12 @@ namespace Opus.Shell.Editor
         public const float OffsetM = 0.15f;
         public static readonly Vector3 SeatedEye = new Vector3(0f, 1.18f, 0.02f);
 
+        // GLB props (metres, world frame). Lamp: over the table's far half (z >= 0.47) but short of z 0.54, where the seated eye's line to the top of the results panel starts to hit the shade.
+        // Window: on Wall_Left's inner face. Bowl and cup: the far right corner, >= 10 cm from the real hand's area (x .136-.224, z .15-.58) and clear of the virtual arm, the ruler and the table edges.
+        private const float LampX = 0.10f, LampZ = 0.50f, LampShadeAboveTableM = 1.10f;   // 0.75 put the shade on the top edge of the results panel in the seated view (witness_en_t4_5s, 8 Oct)
+        private const float WallLeftInnerX = -2.45f, WindowZ = 1.65f, WindowCenterY = 1.45f;
+        private const float BowlX = 0.49f, BowlZ = 0.64f, CupX = 0.34f, CupZ = 0.71f;
+
         [MenuItem("Tools/OPUS/Build PhantomHand Scene")]
         public static string BuildMenu() { return BuildScene(); }
 
@@ -101,6 +107,9 @@ namespace Opus.Shell.Editor
             var matDot = UnlitMat("PH_Dot", new Color(1.0f, 0.35f, 0.30f));
             var matPanel = UnlitMat("PH_Panel", new Color(0.07f, 0.07f, 0.09f));
 
+            // models: bake any missing wrapper (rigged hand, table, brush, stone, sleeve, GLB props) before the room, the table and the presentation use them; the primitives stay the fallback
+            bool modelsReady = Opus.Games.PhantomHand.EditorTools.PhantomModelImporter.EnsureWrappers();
+
             // 4. root object + environment
             var root = new GameObject("PhantomHand");
             var env = new GameObject("Environment").transform; env.SetParent(root.transform, false);
@@ -110,17 +119,36 @@ namespace Opus.Shell.Editor
             Box("Wall_Left", roomRoot, new Vector3(-2.5f, 1.5f, 1.0f), new Vector3(0.1f, 3f, 7f), matWall, collider: false);
             Box("Baseboard_Front", roomRoot, new Vector3(0f, 0.06f, 2.64f), new Vector3(7f, 0.12f, 0.03f), matTable, collider: false);
             Box("Baseboard_Left", roomRoot, new Vector3(-2.44f, 0.06f, 1.0f), new Vector3(0.03f, 0.12f, 7f), matTable, collider: false);
-            Box("Picture", roomRoot, new Vector3(0.9f, 1.55f, 2.64f), new Vector3(0.9f, 0.6f, 0.02f), matArt, collider: false);
-            Box("PictureFrame", roomRoot, new Vector3(0.9f, 1.55f, 2.655f), new Vector3(0.98f, 0.68f, 0.01f), matTable, collider: false);
+            // the room is closed: a wearer who turns right or round must not look into the void (8 Oct, seen in room_eye once the ceiling was there)
+            Box("Wall_Right", roomRoot, new Vector3(2.5f, 1.5f, 1.0f), new Vector3(0.1f, 3f, 7f), matWall, collider: false);
+            Box("Wall_Back", roomRoot, new Vector3(0f, 1.5f, -1.6f), new Vector3(5.1f, 3f, 0.1f), matWall, collider: false);
+            Box("Baseboard_Right", roomRoot, new Vector3(2.44f, 0.06f, 1.0f), new Vector3(0.03f, 0.12f, 7f), matTable, collider: false);
+            Box("Baseboard_Back", roomRoot, new Vector3(0f, 0.06f, -1.54f), new Vector3(5.1f, 0.12f, 0.03f), matTable, collider: false);
+            var placed = new List<string>();     // GLB prop wrappers that made it into the scene (reported at the end)
+            // framed picture: pivot = middle of the back face on the front wall's inner face (z 2.65), front (+z) turned to the room; the two boxes stay the fallback
+            if (Place(PhModels.Picture, roomRoot, new Vector3(0.9f, 1.55f, 2.65f), Quaternion.Euler(0f, 180f, 0f), placed) == null)
+            {
+                Box("Picture", roomRoot, new Vector3(0.9f, 1.55f, 2.64f), new Vector3(0.9f, 0.6f, 0.02f), matArt, collider: false);
+                Box("PictureFrame", roomRoot, new Vector3(0.9f, 1.55f, 2.655f), new Vector3(0.98f, 0.68f, 0.01f), matTable, collider: false);
+            }
             var rug = Prim(PrimitiveType.Cylinder, "Rug", roomRoot, new Vector3(0f, 0.004f, 0.55f), new Vector3(2.2f, 0.004f, 2.2f), matRug);
             UnityEngine.Object.DestroyImmediate(rug.GetComponent<Collider>());
             var plant = new GameObject("Plant").transform; plant.SetParent(roomRoot, false); plant.position = new Vector3(-1.8f, 0f, 2.2f);
-            Prim(PrimitiveType.Cylinder, "Pot", plant, new Vector3(-1.8f, 0.22f, 2.2f), new Vector3(0.34f, 0.22f, 0.34f), matPot, removeCollider: true);
-            Prim(PrimitiveType.Sphere, "Leaves_A", plant, new Vector3(-1.8f, 0.72f, 2.2f), new Vector3(0.55f, 0.6f, 0.55f), matLeaf, removeCollider: true);
-            Prim(PrimitiveType.Sphere, "Leaves_B", plant, new Vector3(-1.62f, 0.98f, 2.12f), new Vector3(0.36f, 0.4f, 0.36f), matLeaf, removeCollider: true);
+            if (Place(PhModels.Plant, plant, plant.position, Quaternion.identity, placed) == null)      // pivot = bottom centre of the pot, on the floor
+            {
+                Prim(PrimitiveType.Cylinder, "Pot", plant, new Vector3(-1.8f, 0.22f, 2.2f), new Vector3(0.34f, 0.22f, 0.34f), matPot, removeCollider: true);
+                Prim(PrimitiveType.Sphere, "Leaves_A", plant, new Vector3(-1.8f, 0.72f, 2.2f), new Vector3(0.55f, 0.6f, 0.55f), matLeaf, removeCollider: true);
+                Prim(PrimitiveType.Sphere, "Leaves_B", plant, new Vector3(-1.62f, 0.98f, 2.12f), new Vector3(0.36f, 0.4f, 0.36f), matLeaf, removeCollider: true);
+            }
 
-            // models: bake any missing wrapper (rigged hand, table, brush, stone, sleeve) before the table and the presentation use them; the procedural shapes stay the fallback
-            bool modelsReady = Opus.Games.PhantomHand.EditorTools.PhantomModelImporter.EnsureWrappers();
+            // window on the left wall (pivot = middle of the back face, flush with the wall, front turned to the room) and the pendant lamp; both carry something that shines by itself
+            var glowRenderers = new List<Renderer>();     // registered with the DarkenController: they go black in the probe phases
+            var window = Place(PhModels.Window, roomRoot, new Vector3(WallLeftInnerX, WindowCenterY, WindowZ), Quaternion.Euler(0f, 90f, 0f), placed);
+            if (window != null) { var glow = BuildWindowGlow(window.transform); if (glow != null) glowRenderers.Add(glow); }
+            var lamp = Place(PhModels.Lamp, roomRoot, new Vector3(LampX, 0f, LampZ), Quaternion.identity, placed);
+            float shadeBottomY = TableTopY + LampShadeAboveTableM;
+            if (lamp != null) glowRenderers.Add(HangLamp(lamp, roomRoot, matWall, shadeBottomY));
+
             var table = new GameObject("Table").transform; table.SetParent(env, false);
             if (PhModels.SpawnTable(table, new Vector3(0f, TableTopY, TableCenterZ)) == null)   // the table model carries its own top collider; no wrapper -> the box table
             {
@@ -129,6 +157,10 @@ namespace Opus.Shell.Editor
                     foreach (var sz in new[] { -0.30f, 0.30f })
                         Box("Leg", table, new Vector3(sx, (TableTopY - 0.04f) / 2f, TableCenterZ + sz), new Vector3(0.06f, TableTopY - 0.04f, 0.06f), matTable, collider: false);
             }
+            // the singing bowl (striker on the near side) and the tea cup (handle to the right) on the table's far right corner; bottom-centre pivots stand on the table top
+            var tableProps = new GameObject("TableProps").transform; tableProps.SetParent(env, false);
+            Place(PhModels.Bowl, tableProps, new Vector3(BowlX, TableTopY, BowlZ), Quaternion.Euler(0f, 180f, 0f), placed);
+            Place(PhModels.Cup, tableProps, new Vector3(CupX, TableTopY, CupZ), Quaternion.Euler(0f, 205f, 0f), placed);
             foreach (var t in env.GetComponentsInChildren<Transform>(true))
                 GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.BatchingStatic | StaticEditorFlags.ContributeGI);
 
@@ -137,7 +169,15 @@ namespace Opus.Shell.Editor
             var keyGo = new GameObject("KeyLight"); keyGo.transform.SetParent(lighting, false);
             keyGo.transform.rotation = Quaternion.Euler(52f, -28f, 0f);
             var key = keyGo.AddComponent<Light>();
-            key.type = LightType.Directional; key.color = new Color(1f, 0.90f, 0.76f); key.intensity = 1.05f; key.shadows = LightShadows.None;
+            key.type = LightType.Directional; key.color = new Color(1f, 0.90f, 0.76f); key.intensity = lamp != null ? 0.80f : 1.05f; key.shadows = LightShadows.None;   // under the pendant the key drops a little: the table is the bright spot
+            Light pendantLight = null;
+            if (lamp != null)
+            {
+                var pendantGo = new GameObject("PendantLight"); pendantGo.transform.SetParent(lighting, false);
+                pendantGo.transform.position = new Vector3(LampX, shadeBottomY - 0.06f, LampZ);       // just under the shade; realtime, no shadows
+                pendantLight = pendantGo.AddComponent<Light>();
+                pendantLight.type = LightType.Point; pendantLight.color = new Color(1f, 0.76f, 0.48f); pendantLight.intensity = 1.3f; pendantLight.range = 2.6f; pendantLight.shadows = LightShadows.None;
+            }
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.56f, 0.57f, 0.60f);
             RenderSettings.ambientEquatorColor = new Color(0.44f, 0.40f, 0.37f);
@@ -176,7 +216,8 @@ namespace Opus.Shell.Editor
             // 8. darken controller (probes), seated eye pose, audio
             var darkGo = new GameObject("DarkenController"); darkGo.transform.SetParent(root.transform, false);
             var dark = darkGo.AddComponent<DarkenController>();
-            dark.lights = new[] { key }; dark.cameraToTint = cam; dark.fadeSeconds = 0.6f;
+            dark.lights = pendantLight != null ? new[] { key, pendantLight } : new[] { key };     // the key stays first (the rig test reads lights[0])
+            dark.renderers = glowRenderers.ToArray(); dark.cameraToTint = cam; dark.fadeSeconds = 0.6f;
             dark.Capture();
             anchors.darken = dark;
             anchors.seatedEyePose = Empty("SeatedEyePose", root.transform, SeatedEye);
@@ -196,7 +237,7 @@ namespace Opus.Shell.Editor
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
             return "built " + ScenePath + ": handRenderersOff=" + handOff + ", camera=" + (cam != null) + ", audio=" + audio +
-                   ", buildScenes=" + EditorBuildSettings.scenes.Length + ", models=" + modelsReady;
+                   ", buildScenes=" + EditorBuildSettings.scenes.Length + ", models=" + modelsReady + ", props=" + string.Join("+", placed.ToArray());
         }
 
         // ---------------------------------------------------------------------------------------------------------
@@ -348,6 +389,51 @@ namespace Opus.Shell.Editor
         {
             var go = new GameObject(name); go.transform.SetParent(parent, false); go.transform.position = worldPos;
             return go.transform;
+        }
+
+        /// <summary>Spawns a baked prop wrapper (PhModels) at a world pose and notes it in `placed`; null, and nothing in the scene, when the wrapper does not exist.</summary>
+        private static GameObject Place(string wrapper, Transform parent, Vector3 worldPos, Quaternion rot, List<string> placed)
+        {
+            var go = PhModels.Spawn(wrapper, parent);
+            if (go == null) return null;
+            go.transform.SetPositionAndRotation(worldPos, rot);
+            placed.Add(wrapper);
+            return go;
+        }
+
+        /// <summary>The unlit dusk-coloured quad behind the window glass (the scene has no sky): a little larger than the glass quad, which the frame hides, 4 cm behind it, facing the room.</summary>
+        private static Renderer BuildWindowGlow(Transform window)
+        {
+            var mr = window.GetComponentInChildren<MeshRenderer>();
+            var mats = mr.sharedMaterials; int glass = -1;
+            for (int i = 0; i < mats.Length; i++) if (mats[i] != null && mats[i].name.Contains("Glass")) glass = i;
+            if (glass < 0) return null;
+            Bounds gb = mr.GetComponent<MeshFilter>().sharedMesh.GetSubMesh(glass).bounds;         // the glass in the wrapper's own space (the model child sits at the wrapper's origin)
+            var quad = Prim(PrimitiveType.Quad, "WindowGlow", mr.transform, Vector3.zero, new Vector3(gb.size.x + 0.06f, gb.size.y + 0.06f, 1f), UnlitMat("PH_WindowDusk", new Color(0.74f, 0.47f, 0.33f)), removeCollider: true);
+            quad.transform.localPosition = gb.center + new Vector3(0f, 0f, -0.04f);
+            quad.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);                         // the Quad primitive faces -z, the room is on +z
+            return quad.GetComponent<MeshRenderer>();
+        }
+
+        /// <summary>Hangs the pendant (pivot = top of the canopy) so that the lowest point of the shade is at shadeBottomY, closes the room with a ceiling slab at the canopy, and swaps the
+        /// linen shade for an unlit warm one with the same weave (it has to glow without the lights; the probe phases darken it through the DarkenController). Returns the lamp's renderer.</summary>
+        private static MeshRenderer HangLamp(GameObject lamp, Transform room, Material wallMat, float shadeBottomY)
+        {
+            var mr = lamp.GetComponentInChildren<MeshRenderer>();
+            float topY = shadeBottomY + (lamp.transform.position.y - mr.bounds.min.y);              // the lamp was placed at y 0: bounds.min.y is how far the shade hangs below the canopy
+            lamp.transform.position = new Vector3(LampX, topY, LampZ);
+            Box("Ceiling", room, new Vector3(0f, topY - 0.002f + 0.025f, 1.0f), new Vector3(7f, 0.05f, 7f), wallMat, collider: false);
+            var mats = mr.sharedMaterials;
+            for (int i = 0; i < mats.Length; i++)
+                if (mats[i] != null && mats[i].name.Contains("Linen"))
+                {
+                    var shade = UnlitMat("PH_LampShade", new Color(1f, 0.88f, 0.68f));
+                    shade.SetTexture("_BaseMap", mats[i].GetTexture("_BaseMap"));
+                    EditorUtility.SetDirty(shade);
+                    mats[i] = shade;
+                }
+            mr.sharedMaterials = mats;
+            return mr;
         }
 
         // ---------------------------------------------------------------------------------------------------------
@@ -592,7 +678,8 @@ namespace Opus.Shell.Editor
 
         /// <summary>Renders the model bake into logs/sessions/screens/ph/models/ so it can be judged in one call: the arm with the hand from the participant's eye (arm_eye), the hand
         /// from above (hand_top) and from a low side view at curl 0 / 0.5 / 1 with the table hidden (hand_side_curl0/50/100: the finger bones), the brush at contact (brush_contact,
-        /// brush_contact_close), the stone at telegraph and impact, the table and the whole room. Edit mode, no physics; restores the scene. Run
+        /// brush_contact_close), the stone at telegraph and impact, the table and the whole room, the room from the seated eye (room_eye) and the props on the table's far right
+        /// corner (table_props). Edit mode, no physics; restores the scene. Run
         /// PhantomModelImporter.RunBatch() and BuildScene() first so the wrappers exist and the scene holds the model table.</summary>
         public static string CaptureModelShots()
         {
@@ -650,8 +737,68 @@ namespace Opus.Shell.Editor
             // 5 the table (model or box fallback) and the whole room
             written.Add(Shot(dir, "table", eye, new Vector3(0.05f, TableTopY, 0.40f), 95f));
             written.Add(Shot(dir, "room", new Vector3(1.5f, 1.7f, -1.3f), new Vector3(0f, 0.8f, 1.0f), 62f));
+            // 6 the room as the seated participant sees it when looking straight ahead (the window at the left edge, the pendant above the table, the picture and the plant on the far wall),
+            // and the bowl and the tea cup on the table's far right corner
+            written.Add(Shot(dir, "room_eye", eye, new Vector3(eye.x, eye.y, 2.65f), 80f));
+            written.Add(Shot(dir, "room_eye_right", eye, new Vector3(2.45f, eye.y, -0.6f), 80f));     // turned right and a little back: the right and back walls close the room
+            written.Add(Shot(dir, "table_props", eye, new Vector3(0.42f, TableTopY + 0.04f, 0.68f), 40f));
             EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);   // discard transient changes
             return string.Join(";", written);
+        }
+
+        // ---------------------------------------------------------------------------------------------------------
+        // budget
+
+        /// <summary>What the saved scene and the model wrappers ask the GPU to draw, counted without batching: enabled renderers, draw entries (renderer x
+        /// material: the upper bound of the draw calls, the SRP batcher only lowers it) and triangles. The asset guide's Quest budget is 100 draw calls and
+        /// 300 k triangles. The arm, brush, stone and the UI panels are built at run time, so the wrappers that are not already in the scene are listed apart.</summary>
+        [MenuItem("Tools/OPUS/PhantomHand Scene Stats")]
+        public static string SceneStats()
+        {
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            int renderers = 0, entries = 0, lights = 0; long tris = 0;
+            var inScene = new HashSet<Mesh>();
+            foreach (var r in UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                var mesh = MeshOf(r);
+                if (!r.enabled || mesh == null) continue;
+                renderers++; entries += Mathf.Max(1, r.sharedMaterials.Length); tris += Triangles(mesh); inScene.Add(mesh);
+            }
+            foreach (var l in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)) if (l.enabled) lights++;
+            int wEntries = 0; long wTris = 0; var spawned = new List<string>();
+            foreach (var name in PhModels.All)
+            {
+                var w = PhModels.Load(name);
+                if (w == null) continue;
+                bool counted = false;
+                foreach (var r in w.GetComponentsInChildren<Renderer>(true))
+                {
+                    var mesh = MeshOf(r);
+                    if (mesh == null || inScene.Contains(mesh)) continue;
+                    wEntries += Mathf.Max(1, r.sharedMaterials.Length); wTris += Triangles(mesh); counted = true;
+                }
+                if (counted) spawned.Add(name);
+            }
+            string msg = "PhantomHand scene, no batching: renderers=" + renderers + ", draw entries=" + entries + ", triangles=" + tris + ", realtime lights=" + lights +
+                         "; wrappers spawned at run time (" + string.Join("+", spawned.ToArray()) + "): draw entries=" + wEntries + ", triangles=" + wTris +
+                         "; together draw entries=" + (entries + wEntries) + ", triangles=" + (tris + wTris) + " (budget 100 draw calls, 300000 triangles; UI panels not counted)";
+            Debug.Log("[PH-SCENE] " + msg);
+            return msg;
+        }
+
+        private static Mesh MeshOf(Renderer r)
+        {
+            var smr = r as SkinnedMeshRenderer;
+            if (smr != null) return smr.sharedMesh;
+            var mf = r.GetComponent<MeshFilter>();
+            return mf != null ? mf.sharedMesh : null;
+        }
+
+        private static long Triangles(Mesh m)
+        {
+            long n = 0;
+            for (int i = 0; i < m.subMeshCount; i++) n += m.GetIndexCount(i) / 3;
+            return n;
         }
 
         // ---------------------------------------------------------------------------------------------------------

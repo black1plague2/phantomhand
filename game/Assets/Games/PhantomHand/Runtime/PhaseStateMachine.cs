@@ -119,7 +119,7 @@ namespace Opus.Games.PhantomHand
                 add(PhPhase.ProbePre, c);
                 add(PhPhase.Induction, c);
                 if (_additions && _p.SelfTouchS > 0) add(PhPhase.SelfTouch, c);
-                if (_p.AgencyEnabled && c == 1) add(PhPhase.Agency, c);   // D12: once, in the LAST condition only (the hand that closes by itself comes at the end)
+                if (_p.AgencyEnabled && c == 1) add(PhPhase.Agency, c);   // D14: once, in the LAST condition only (the hand that closes by itself comes at the end)
                 if (_p.ThreatEnabled) add(PhPhase.Threat, c);
                 add(PhPhase.ProbePost, c);
                 // D18: a questionnaire follows every condition in every mode (in demo_mode its list is short, see PhantomHandModule.BuildItems)

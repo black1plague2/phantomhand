@@ -25,6 +25,9 @@ namespace Opus.Games.PhantomHand.EditorTools
     ///   997491  paint brush                    -> PH_Brush   L mesh. 22 cm long, bristle tip at the origin, handle +y, head wide along x.
     ///   182879  round stone                    -> PH_Stone   M mesh. Unit mean diameter, centred (ThreatDrop scales it to 11 cm).
     ///   1746344 table                          -> PH_Table   M mesh. Top surface at y = 0 (pivot top centre), 1.2 x 0.7 m top, 0.75 m tall, top collider.
+    ///   PH_Brush.glb                           -> PH_Brush   replaces the 997491 brush whenever the file exists (bristle tip at the origin, handle +y, authored size).
+    ///   Lamp / Plant / Window / Props *.glb    -> PH_PendantLamp, PH_Plant, PH_Window, PH_SingingBowl, PH_TeaCup, PH_FramedPicture (PhantomModelImporter.Props.cs).
+    ///           A missing .glb only skips its wrapper.
     ///
     /// The motor bands stay procedural overlay rings (the sleeve mesh has none). Idempotent: re-running updates the same assets.
     /// Scene-builder hook (the manager wires it):  PhantomModelImporter.EnsureWrappers();  before the presenters are built.
@@ -60,15 +63,18 @@ namespace Opus.Games.PhantomHand.EditorTools
         /// (false when the MetaAssets sources are absent, in which case the presenters keep their procedural geometry).</summary>
         public static bool EnsureWrappers()
         {
-            if (AllPresent() && !HandNeedsRebuild()) return true;
+            if (AllPresent() && !HandNeedsRebuild() && !BrushNeedsRebuild()) return true;
             Build(false);
             return AllPresent();
         }
 
+        /// <summary>The six Meta-sourced wrappers exist, and so does every GLB prop whose .glb file exists (a prop without its file is skipped, never required).</summary>
         public static bool AllPresent()
         {
             foreach (var w in Wrappers)
-                if (AssetDatabase.LoadAssetAtPath<GameObject>(ResourcesDir + "/" + w + ".prefab") == null) return false;
+                if (!WrapperExists(w)) return false;
+            foreach (var s in PropFit.Specs)
+                if (GlbPresent(s) && !WrapperExists(s.Wrapper)) return false;
             return true;
         }
 
@@ -79,7 +85,7 @@ namespace Opus.Games.PhantomHand.EditorTools
             var log = new List<string>();
             var urp = Shader.Find("Universal Render Pipeline/Lit");
             if (urp == null) { Debug.LogError("[PhantomModelImporter] URP Lit shader not found; aborting."); return; }
-            Directory.CreateDirectory(MeshDir); Directory.CreateDirectory(MatDir); Directory.CreateDirectory(ResourcesDir);
+            Directory.CreateDirectory(MeshDir); Directory.CreateDirectory(MatDir); Directory.CreateDirectory(ResourcesDir); Directory.CreateDirectory(TexDir);
             AssetDatabase.Refresh();
 
             Run1("hand", () => BuildHandWrapper(urp, log), log);
@@ -88,6 +94,11 @@ namespace Opus.Games.PhantomHand.EditorTools
             Run1("brush", () => BuildBrush(urp, log), log);
             Run1("stone", () => BuildStone(urp, log), log);
             Run1("table", () => BuildTable(urp, log), log);
+            foreach (var spec in PropFit.Specs)
+            {
+                var s = spec;
+                if (s.Wrapper != PhModels.Brush) Run1(s.Wrapper, () => BuildProp(urp, log, s), log);      // the brush is baked by BuildBrush (its GLB first, else the Meta brush)
+            }
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -331,6 +342,11 @@ namespace Opus.Games.PhantomHand.EditorTools
 
         private static GameObject SaveWrapper(string wrapperName, string childName, Mesh mesh, Material mat, PivotConvention pivot, float sizeM, Action<GameObject> extra)
         {
+            return SaveWrapper(wrapperName, childName, mesh, new[] { mat }, pivot, sizeM, extra);
+        }
+
+        private static GameObject SaveWrapper(string wrapperName, string childName, Mesh mesh, Material[] mats, PivotConvention pivot, float sizeM, Action<GameObject> extra)
+        {
             var root = new GameObject(wrapperName);
             try
             {
@@ -340,7 +356,7 @@ namespace Opus.Games.PhantomHand.EditorTools
                 child.transform.SetParent(root.transform, false);
                 child.AddComponent<MeshFilter>().sharedMesh = mesh;
                 var mr = child.AddComponent<MeshRenderer>();
-                mr.sharedMaterial = mat;
+                mr.sharedMaterials = mats;
                 mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; mr.receiveShadows = false;
                 if (extra != null) extra(root);
                 string path = ResourcesDir + "/" + wrapperName + ".prefab";
@@ -495,6 +511,7 @@ namespace Opus.Games.PhantomHand.EditorTools
 
         private static void BuildBrush(Shader urp, List<string> log)
         {
+            if (GlbPresent(BrushSpec)) { BuildProp(urp, log, BrushSpec); return; }       // PH_Brush.glb replaces the Meta paint brush
             var g = LoadGeo("997491", "L", log);
             Vector3 lo, hi; Ends(g.V, 0.12f, out lo, out hi);
             Vector3 a = (hi - lo).normalized;                       // handle -> bristle tip

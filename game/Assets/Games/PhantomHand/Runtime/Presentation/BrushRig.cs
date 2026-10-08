@@ -56,7 +56,7 @@ namespace Opus.Games.PhantomHand.Presentation
             var model = PhModels.Spawn(PhModels.Brush, _visual);
             if (model != null)
             {
-                // 3D brush: 22 cm, bristle tip at the visual's origin (= the contact point), handle along +y
+                // 3D brush: 19 cm (PH_Brush.glb; the Meta paint brush fallback is 22 cm), bristle tip at the visual's origin (= the contact point), handle along +y
                 _model = model.transform; _model.localPosition = Vector3.zero; _model.localRotation = Quaternion.identity;
                 PhModels.StripShadows(model);
                 _visual.gameObject.SetActive(false);

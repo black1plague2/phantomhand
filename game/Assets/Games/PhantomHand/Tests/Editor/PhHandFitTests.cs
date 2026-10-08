@@ -326,8 +326,8 @@ namespace Opus.Games.PhantomHand.Tests
         [Test]
         public void WrapperNames_AreTheFixedPhNames_InTheResourcesFolder()
         {
-            CollectionAssert.AreEqual(new[] { "PH_Hand", "PH_Forearm", "PH_Sleeve", "PH_Brush", "PH_Stone", "PH_Table" }, PhModels.All);
-            Assert.AreEqual(6, PhModels.All.Distinct().Count());
+            CollectionAssert.AreEqual(new[] { "PH_Hand", "PH_Forearm", "PH_Sleeve", "PH_Brush", "PH_Stone", "PH_Table", "PH_PendantLamp", "PH_Plant", "PH_Window", "PH_SingingBowl", "PH_TeaCup", "PH_FramedPicture" }, PhModels.All);
+            Assert.AreEqual(12, PhModels.All.Distinct().Count());
             foreach (var n in PhModels.All) StringAssert.StartsWith("PH_", n);
             Assert.AreEqual("PhantomModels/", PhModels.ResourceFolder);
             Assert.AreEqual("PH_Hand", PhModels.Hand);

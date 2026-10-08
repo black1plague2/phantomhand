@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4296463376536194775}
-  m_Mesh: {fileID: 4300000, guid: fcc5ad427e4939e40a1aecb1977a5577, type: 2}
+  m_Mesh: {fileID: 4300000, guid: f7d8798defcf1a54f946e9c109adaefb, type: 2}
 --- !u!23 &437867519747798630
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -66,7 +66,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1277c63828ad0174fb422b7f5f013364, type: 2}
+  - {fileID: 2100000, guid: ec638a8414928454e959337eb0bbb058, type: 2}
+  - {fileID: 2100000, guid: d80082142f4a98346ae0616830974cac, type: 2}
+  - {fileID: 2100000, guid: 131610413347a3d4b8d6e91859d84860, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Opus.Art.Runtime::Opus.Art.ModelSlot
   slotId: PH_Brush
-  realWorldSizeM: 0.22
+  realWorldSizeM: 0.193
   pivot: 3
   axisFixApplied: 1
   anchors: []

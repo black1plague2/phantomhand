@@ -53,17 +53,19 @@ namespace Opus.Games.PhantomHand.Presentation
     }
 
     /// <summary>
-    /// Optional 3D models for the arm, brush, stone and table. Wrappers live under a Resources folder so the presenters need no
+    /// Optional 3D models for the arm, brush, stone and table, and the room props (pendant lamp, plant, window, singing bowl, tea cup, framed picture; baked from
+    /// their .glb files, the brush too when PH_Brush.glb exists). Wrappers live under a Resources folder so the presenters need no
     /// scene references; when a wrapper is missing (or <see cref="UseModels"/> is false) every presenter silently keeps its
     /// procedural geometry. Build the wrappers with Tools/OPUS/Phantom Hand/Build Model Wrappers (PhantomModelImporter).
     /// </summary>
     public static class PhModels
     {
         public const string Hand = "PH_Hand", Forearm = "PH_Forearm", Sleeve = "PH_Sleeve", Brush = "PH_Brush", Stone = "PH_Stone", Table = "PH_Table";
+        public const string Lamp = "PH_PendantLamp", Plant = "PH_Plant", Window = "PH_Window", Bowl = "PH_SingingBowl", Cup = "PH_TeaCup", Picture = "PH_FramedPicture";
         public const string ResourceFolder = "PhantomModels/";
 
         /// <summary>Every wrapper the importer bakes, in build order.</summary>
-        public static readonly string[] All = { Hand, Forearm, Sleeve, Brush, Stone, Table };
+        public static readonly string[] All = { Hand, Forearm, Sleeve, Brush, Stone, Table, Lamp, Plant, Window, Bowl, Cup, Picture };
 
         /// <summary>What the PH_Hand wrapper is baked from: the rigged right hand (handRig_02.fbx), else the 324213 glove, else nothing (procedural hand).</summary>
         public enum HandSource { None, Glove, Rigged }

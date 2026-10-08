@@ -5,6 +5,7 @@
         "Opus.Sdk.Runtime",
         "PhantomHand.Runtime",
         "PhantomHand.Presentation",
+        "PhantomHand.Editor",
         "UnityEngine.UI",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
