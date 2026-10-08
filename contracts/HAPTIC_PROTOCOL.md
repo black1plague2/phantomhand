@@ -62,7 +62,7 @@ Sent to Node A on UDP 8790 (device-level form, no `type`):
 
 **Lead and delay semantics.** A stroke has two brush passes (`brush_pass_a_ms`, `brush_pass_b_ms`). The *intended* cue time for each motor is `brush_pass − tactile_lead_ms (+ async_delay_ms ± 100 ms in ASYNC)`; the game sends the command at that time (`cue_*_send_ms` in the `stroke` event) and `timing_err_ms = actual send − intended`. `tactile_lead_ms` compensates the measured link delay plus motor spin-up. In ASYNC the whole delay is applied to both motors, the A/B order is random (50 %, `swapped:true` when B fired first).
 
-**D1 brush/SOA rule.** `motor_soa_ms` (default 100, range 60–300) is the onset gap between motor A and motor B. The visible brush speed between the two motor positions is derived from it: **brush speed = `motor_spacing_cm` / `motor_soa_ms`** (10 cm / 100 ms = 1 m/s), and the rest of the stroke (wrist → A, B → elbow) runs at the same speed, so sight and touch stay in step. `stroke_rate_hz` sets how often a stroke starts, `stroke_jitter_ms` adds random spread.
+**D1 brush/SOA rule.** `motor_soa_ms` (default 833, range 60–1700; 03-SPEC D16) is the onset gap between motor A and motor B. The visible brush speed between the two motor positions is derived from it: **brush speed = `motor_spacing_cm` / `motor_soa_ms`** (10 cm / 833 ms = 12 cm/s; 100–130 ms is the fast flick, about 1 m/s), and the rest of the stroke (wrist → A, B → elbow) runs at the same speed, so sight and touch stay in step. `stroke_rate_hz` sets how often a stroke starts, `stroke_jitter_ms` adds random spread.
 
 ### Other messages
 | Message | Direction | Shape and rules |

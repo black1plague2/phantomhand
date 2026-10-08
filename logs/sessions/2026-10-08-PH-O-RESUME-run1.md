@@ -168,7 +168,7 @@ with `git -C <worktree> diff --binary > patch` + `git apply --3way patch` on mai
 Opus still owes: O2 of every agent diff; merging MODELS and U6CODE; choosing and assigning features from R1–R4; L3 with Unity; APK;
 Orchard removal; CONTEXT/PH_STATUS refresh; the firewall commands for the user.
 
-## WAVE 4 (10:58-11:50 IST): Theme 5 audit applied, Orchard stopped, research R2/R3 acted on
+## WAVE 4 (10:58-11:31 IST): Theme 5 audit applied, Orchard stopped, research R2/R3 acted on
 
 User input in this window: (1) a Theme 5 audit pasted with "choose what makes sense and apply it"; (2) "why is orchard reach being played ... kindly stop that and ignore that project"; (3) "switch the 3d models, the hand is from sketchfab i downloaded it free"; (4) "you can test phantom hand, just stay away from orchard reach".
 
@@ -203,3 +203,19 @@ Open flake: sim/live test_phantom_replay.py failed once (1 of 18) in five full r
 
 ### Queue for the editor (serial), after the driver releases the lock
 1. O2 + commit of the driver's change set. 2. Models merge + bake (user asked: switch to the 3D models). 3. U6 patch + integration lines (multicast lock, Bootstrap advertises only loadable games). 4. Finale/witness/slow-brush/agency patch + owed lines (ModuleTests.cs:130, `additionsEnabled` true in PhantomHandSettings.cs and the asset, manifest copies, full-run phase list). 5. Android target + APK. 6. L3 with Unity, both twin dialects.
+
+## WAVE 5 (11:30-13:10 IST): research R4 and R1 applied, first full run, U6 code, models, runbook, the audit in the game, operator app
+What landed on `main` (tests as each commit message states them):
+- 98b5cde, 808b4d3: rigged-hand credit in `CREDITS.md`, research R4; judge sheet leads with the flinch and the rating, fallback steps.
+- 15cca8d (11:49): first real full run in the editor; fixed: the live outbox re-sent every trial_event, contract values, sensor recorder. EditMode 383/383, PlayMode Phantom Hand 20/21.
+- 9fd4e18 (11:55): U6 code: Phantom Hand APK method, `phantom_endpoints.json`, multicast lock. EditMode 511/511.
+- 17ba2ee (12:01): research R1; D18-D20 (rating after both conditions, demo induction min(`induction_s`, 60), swap guard, stone volume).
+- 7f64e29 (12:31): 3D models in the game, rigged hand with CPU skinning. EditMode 514/514, PlayMode presentation tests 20/20.
+- a667def (12:33): `docs/PH_ON_DEVICE_RUNBOOK.md`; `tools/demo/sleeve_station.py` (38 tests); operator app on the team phone as the side-by-side build `com.opus.opus_app.pc`.
+- 29b0c1d (13:01): the audit in the game: witness regroup, Dissolve + Reveal (fallback), slow brush (`motor_soa_ms` 833), opt-in agency, rating after both conditions, background chunk writes. EditMode 618/618, PlayMode Phantom Hand 25/26.
+- 9a011a3 (13:02): seven prop GLB models, not wired. aec2aed (13:06): operator app live card, audience results mirror, embodiment report; flutter test +455.
+Open:
+- `PH_FullRun` is red on one bar: cues acked 88-91 % against 95 %. The editor main thread stalls 150-400 ms about 80 times per run. The test tool's polling and the chunk writes do not explain it. Cause not found.
+- Real passthrough for the Reveal needs a headset (only the fallback exists). The Quest APK was never built. L3 with Unity was not run. Nothing ran on a headset or on the real boards.
+- The seven props are not wired. Four Unity Asset Store packs named in `CREDITS.md` are not imported and must stay out of git. Meta asset terms are unchecked.
+- Cosmetic (7f64e29): the forearm tone is lighter than the hand; the brush hides part of the hand at stroke start.

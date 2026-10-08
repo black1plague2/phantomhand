@@ -433,7 +433,7 @@ The game's timing model depends on exact motor and link behaviour. The electroni
 
 | Parameter | Default | Range | Who measures | Where to report | Notes |
 |---|---|---|---|---|---|
-| `motor_soa_ms` | **100** | **60–300** | **Electronics team** (on your test bench, using Node A's SOA mode or the sim) | manifest + lab notes | Motor A→B onset gap; brush speed = 10 cm / motor_soa_ms; both motors must feel like ONE moving stroke. Measured by wearer in SOA mode |
+| `motor_soa_ms` | **833** | **60–1700** | **Electronics team** (on your test bench, using Node A's SOA mode or the sim) | manifest + lab notes | Motor A→B onset gap; brush speed = 10 cm / motor_soa_ms (833 ms = 12 cm/s, one tap per motor as the brush passes, 03-SPEC D16; 100–130 ms = the fast flick); in flick mode both motors must feel like ONE moving stroke. Measured by wearer in SOA mode |
 | Motor spin-up (ms) | — | 20–40 (target) | Electronics team | lab notes; fed to `--spinup` in integration | Time from PWM on to vibration visible on IMU. Measured with `tools/demo/run_pipeline.py --hardware --spinup` (being built by the software team; until then, read the IMU jolt after a single pulse with node_probe) |
 | `tactile_lead_ms` | **40** | **0–150** | Electronics team (tuned in joint test) | manifest | Delay to send the command early so touch lands in sync with the brush. Tuned by wearer in joint test: 20 SYNC strokes at 0/20/40/60/80 ms; pick "most simultaneous" |
 | Ack latency p95 | **< 100 ms** | — | Electronics team (measured on their lab bench) | lab notes; acceptance test | Send → ack round-trip (measured by the game via `cue_id` echo) |

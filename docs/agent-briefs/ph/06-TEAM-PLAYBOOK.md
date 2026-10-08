@@ -57,8 +57,10 @@ Vaibhav is team leader and representative (PRD). Roles below are a suggestion; k
 **Night before:** charge Quest, laptop, phone, power bank (nodes detached); APK installed; one demo_mode run;
 ≥ 20 spare electrodes, alcohol wipes, tape measure, spare motor, spare resistors, CH9102, both cables.
 
-**1 h before:** hotspot up (2.4 GHz); nodes on the bank → OLED shows IP; app/laptop plot sees both nodes; one
-self-run; observer screen (Flutter card or `live_plot.py --fullscreen`) facing the audience.
+**1 h before:** hotspot up (2.4 GHz); nodes on the bank → OLED shows IP; app card sees both nodes; one self-run;
+observer screen = the app's Observer view, facing the audience. `live_plot.py` only with the headset off, never as
+the audience screen while the headset runs with the real boards: the team's firmware streams to the last sender
+only, so the plot would take the sensor stream from the headset.
 
 **Per visitor (~4 min):**
 1. Consent (Bhavya): "This vibrates gently and reads your muscle activity with stickers. You can stop any time.
@@ -69,8 +71,9 @@ self-run; observer screen (Flutter card or `live_plot.py --fullscreen`) facing t
 5. Next person: reset gesture or the app button; wipe the headset and sleeve; fresh electrodes.
 
 **If something fails (PRD §13):** Node A off → run continues visual-only, call it the no-touch control; Node B off →
-flinch from IMU + hand tracking; hub off → the game records locally, uploads later, use the laptop plot; tracking
-poor → light, arm in view, recalibrate; APK broken → Quest Link from the laptop.
+flinch from IMU + hand tracking; hub off → the game records locally, uploads later (the laptop plot only with
+the headset off, same reason as in "1 h before"); tracking poor → light, arm in view; there is no recalibrate
+control, the "Next person" button restarts at Calibrate; APK broken → Quest Link from the laptop.
 
 ## 6. Pitch in three lines (numbers only from docs/PH_FACTS.md)
 
