@@ -48,5 +48,7 @@ namespace Opus.Shell
         public bool scriptedParticipantWithoutHeadset = true;
         [Tooltip("0 = a new random seed per run (logged); otherwise the fixed seed (tests).")]
         public int seed = 0;
+        [Tooltip("Headset: write every log line to a file and hand that file and the session folders, read-only, to any PC on the same Wi-Fi (TCP 8796, no authentication; tools/demo/quest_collect.py). Off for a headset on a network you do not trust.")]
+        public bool diagnosticsServer = true;
     }
 }

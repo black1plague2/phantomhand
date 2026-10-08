@@ -41,11 +41,12 @@ namespace Opus.Shell
         {
             AndroidMulticastLock.Acquire();   // Quest: without it Android drops the hub and node UDP beacons
             if (settings == null) settings = Resources.Load<PhantomHandSettings>(PhantomHandSettings.ResourcePath);
-            string forced = Environment.GetEnvironmentVariable("OPUS_GAME");
+            Func<string, string> env = PhantomHandOverrides.Env ?? Environment.GetEnvironmentVariable;   // the game scene's reader (tests)
+            string forced = env("OPUS_GAME");
             if (!string.IsNullOrEmpty(forced) && SceneFor(forced) != null) { Load(forced, "env OPUS_GAME"); return; }
 
             _wait = settings != null ? settings.bootstrapProgramWaitSec : 0f;
-            var ep = PhantomEndpoints.Resolve(Environment.GetEnvironmentVariable, settings);
+            var ep = PhantomEndpoints.Resolve(env, settings);
             if (_wait <= 0f) { Load(DefaultGame(), "no wait"); return; }
 
             _deviceId = (Application.isEditor ? "editor-" : "quest-") + SystemInfo.deviceUniqueIdentifier.Replace("-", "").Substring(0, 8).ToLowerInvariant();
@@ -98,19 +99,16 @@ namespace Opus.Shell
         {
             if (_loading) return;
             _loading = true;
-            // Let the ack leave before the socket goes away (the game scene's runner reconnects within a second).
+            // Let the ack leave before the socket goes away (the game scene's runner reconnects within a second). Not a coroutine: it
+            // dies with this scene before it has run, and a client that is never stopped keeps reconnecting under this headset's device
+            // id, so the hub drops the game's own link every second (first run on a headset, 8 Oct 2026: "Connected" and
+            // "Reconnecting" in turn, 2 s apart; the editor tests start in the game scene and never saw it).
             var c = _client; _client = null;
-            if (c != null) StartCoroutine(DisposeLater(c));
+            if (c != null) System.Threading.Tasks.Task.Delay(300).ContinueWith(_ => c.Dispose());
             string scene = SceneFor(gameId);
             if (!Application.CanStreamedLevelBeLoaded(scene)) { why += ", '" + gameId + "' is not in this build"; gameId = "phantom_hand"; scene = SceneFor(gameId); }
             Debug.Log($"[OPUS] Bootstrap: opening '{scene}' for game '{gameId}' ({why})");
             SceneManager.LoadScene(scene);
-        }
-
-        private static System.Collections.IEnumerator DisposeLater(LiveClient c)
-        {
-            yield return new WaitForSecondsRealtime(0.3f);
-            c.Dispose();
         }
 
         private void OnDestroy() { if (_client != null) _client.Dispose(); }

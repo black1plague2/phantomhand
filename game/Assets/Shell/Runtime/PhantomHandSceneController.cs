@@ -80,6 +80,11 @@ namespace Opus.Shell
         private int? _prevCond;
         private int _kinChunks;
         private string _boundGeometry;
+        private OpusSessionRunner _runner;
+        private PhantomStandbyCard _standby;
+        private float _standbyT;
+        private string _standbyIp;
+        private Func<string> _diag;
 
         private sealed class Ctx : ISessionContext
         {
@@ -95,6 +100,7 @@ namespace Opus.Shell
         public SleeveSensorClient NodeB { get { return _nodeB; } }
         public PhantomEndpoints Endpoints { get { return _ep; } }
         public PhantomAutoParticipant AutoParticipant { get { return _auto; } }
+        public PhantomStandbyCard StandbyCard { get { return _standby; } }
         public bool IsBound { get { return _bound; } }
         public int SensorChunksWritten { get; private set; }
         public int HapticEventsScheduled { get { return _cues != null ? _cues.Scheduled : 0; } }
@@ -186,7 +192,10 @@ namespace Opus.Shell
                 var runner = GetComponent<OpusSessionRunner>();
                 if (runner == null) runner = gameObject.AddComponent<OpusSessionRunner>();
                 runner.RunWithDemoDriver = _ep.FromEnvironment || driveSessionWithoutHeadset || PhantomHandOverrides.DriveSession == true;
+                _runner = runner;
             }
+            _diag = DiagnosticsLine;
+            DeviceDiagnostics.Status = _diag;
             Debug.Log("[PhantomHand] controller up: hands=" + (_useDemo ? "scripted (no headset)" : "REAL tracked hands") +
                       ", hub=" + (_ep.HubHost ?? "discover") + ", nodeA=" + (_ep.NodeAHost ?? "discover") + ", nodeB=" + (_ep.NodeBHost ?? "discover") +
                       ", discoveryPort=" + _ep.DiscoveryPort + ", ui=" + (uiPresenter != null) + ", arm=" + (armPresenter != null));
@@ -282,6 +291,7 @@ namespace Opus.Shell
             if (_module == null)
             {
                 if (_scripted != null) _scripted.Step();
+                TickStandby();
                 return;
             }
             // 2. module Tick (the scripted participant is an input device: it acts just before)
@@ -298,6 +308,58 @@ namespace Opus.Shell
             RecordFrame(now);
             if (_cues != null) _cues.Tick(now);
         }
+
+        /// <summary>Before the run: the three links and how to start (the both-hands pinch is the runner's), refreshed twice a second.</summary>
+        private void TickStandby()
+        {
+            if (_sessionUsed || _autoStartReason != null || !Application.isPlaying) return;
+            float hold = _runner != null ? _runner.PinchHoldProgress : 0f;
+            _standbyT -= Time.unscaledDeltaTime;
+            if (_standbyT > 0f && hold <= 0f) return;
+            if (_standbyT <= 0f) { _standbyT = 0.5f; _standbyIp = DeviceDiagnostics.LocalIPv4(); }
+            if (_standby == null)
+            {
+                Camera cam = anchors != null && anchors.cameraRig != null ? anchors.cameraRig.GetComponentInChildren<Camera>(true) : null;
+                if (cam == null) cam = Camera.main;
+                var at = anchors != null ? anchors.witnessPanel : null;
+                _standby = new PhantomStandbyCard(at != null ? at.position : new Vector3(0f, 1.30f, 0.95f),
+                                                  at != null ? at.rotation : Quaternion.Euler(8f, 0f, 0f), cam);
+            }
+            bool hub = HubConnected();
+            // An address given by hand (phantom_endpoints.json, the settings asset) switches the search off: say so, or a stale one looks like a dead app.
+            string fixedHub = !hub && !string.IsNullOrEmpty(_ep.HubHost) ? "  (only " + _ep.HubHost + " is tried: it was set by hand)" : "";
+            string body = "Operator app:   " + (hub ? "connected" : "not found yet") + fixedHub + "\n" +
+                          "Sleeve:   " + (_transportA.HasDevice ? "found" : "not found yet") + "\n" +
+                          "Muscle sensor:   " + (_transportB.HasDevice ? "found" : "not found yet") + "\n\n" +
+                          (_useDemo ? "No headset: the hands are scripted."
+                                    : hub ? "The operator starts the run, or pinch both hands for 2 seconds."
+                                          : "To start without the app: pinch both hands for 2 seconds.") + "\n" +
+                          "The run also works without the sleeve and the sensor.";
+            string foot = (DeviceDiagnostics.DeviceId ?? "") + "    " + (_standbyIp ?? "no network") +
+                          (DeviceDiagnostics.BoundPort > 0 ? "    logs: port " + DeviceDiagnostics.BoundPort : "");
+            _standby.Show("Ready", body, foot, hold);
+        }
+
+        private bool HubConnected() { return _runner != null && _runner.Client != null && _runner.Client.IsConnected; }
+
+        /// <summary>The scene in one line, for the health line of the device log (<see cref="DeviceDiagnostics.Status"/>): what an operator
+        /// app would show, for a run that has none.</summary>
+        private string DiagnosticsLine()
+        {
+            return "phase " + (_module != null ? PhNames.Of(_module.CurrentPhase) : "idle") +
+                   ", operator app " + (HubConnected() ? "connected" : "not connected") +
+                   ", sleeve " + NodeWord(_transportA, _nodeA) + ", muscle sensor " + NodeWord(_transportB, _nodeB) +
+                   ", strokes acked " + HapticEventsDelivered + " of " + HapticEventsScheduled +
+                   ", hands " + (_useDemo ? "scripted" : HandWord(HandSide.Left) + "/" + HandWord(HandSide.Right));
+        }
+
+        private static string NodeWord(UdpHapticTransport t, SleeveSensorClient c)
+        {
+            if (t == null || !t.HasDevice) return "not found";
+            return t.DeviceEndpoint + (c == null ? "" : c.Connected ? " streaming" : " silent");
+        }
+
+        private string HandWord(HandSide s) { return _hands != null && _hands.IsTracked(s) ? "tracked" : "lost"; }
 
         private void TrackHead(float dt)
         {
@@ -374,6 +436,7 @@ namespace Opus.Shell
         {
             if (_sessionUsed) Debug.LogWarning("[PhantomHand] StartNewSession on a scene that already ran: presenters are not rebound; reload instead.");
             _sessionUsed = true;
+            if (_standby != null) _standby.Hide();
             _clock = new SessionClock();
             _trace.Reset();
             _kinChunks = 0; SensorChunksWritten = 0;
@@ -622,6 +685,7 @@ namespace Opus.Shell
 
         private void OnDestroy()
         {
+            if (DeviceDiagnostics.Status == _diag) DeviceDiagnostics.Status = null;
             StopSleeveSafely("destroy");
             if (_module != null) _module.OnTrialEvent -= HandleModuleEvent;
             // Disposing a client disposes its (shared) transport; Stop() on a stopped transport is a no-op, so the order is free.

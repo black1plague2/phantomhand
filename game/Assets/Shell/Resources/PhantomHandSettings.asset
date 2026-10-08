@@ -25,3 +25,4 @@ MonoBehaviour:
   additionsEnabled: 1
   scriptedParticipantWithoutHeadset: 1
   seed: 0
+  diagnosticsServer: 1
