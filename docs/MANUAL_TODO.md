@@ -519,7 +519,7 @@ If the ports are still held after step 3, a reboot clears orphaned sockets uncon
 - [x] (human) **Rigged hand credit line.** Done 2026-10-08: the user sent the Sketchfab page; "Rigged hand" by Elena FF, CC BY-SA 4.0, recorded in `CREDITS.md` (README links to it).
 - [ ] (human, pitch) **Show the hand's credit.** CC BY-SA 4.0 requires credit wherever the model is shown publicly: put the one-line credit from `CREDITS.md` on a slide or a card on the demo table. Modified versions of the model stay under the same licence.
 - [ ] (human, before a public release build) **Licence terms of the Meta asset-library models** in `game/Assets/MetaAssets/` (table, stone, brush, sleeve, glove): check Meta's terms for redistribution in a public repo and add them to `CREDITS.md`.
-- [ ] (human, owner of the team phone) **Decide whether to uninstall the old operator app on the team phone.** The repo's debug APK is rejected as an update of the old `com.opus.opus_app` (it carries another PC's debug key, `INSTALL_FAILED_UPDATE_INCOMPATIBLE`), so a side-by-side build `com.opus.opus_app.pc` is installed beside it. Uninstalling the old app wipes its data; the other fix is to reuse the old PC's debug key. Until one of them is done, a build made from the repo reaches the phone only as a side-by-side copy. The `.pc` build predates the card rework in `aec2aed`. Details: `logs/sessions/2026-10-08-PH-A-SETUP-run1.md` (checkpoint 5). Source: PH-A-SETUP-run1.
+- [ ] (human, owner of the team phone) **Decide whether to uninstall the old operator app on the team phone.** The repo's debug APK is rejected as an update of the old `com.opus.opus_app` (it carries another PC's debug key, `INSTALL_FAILED_UPDATE_INCOMPATIBLE`), so a side-by-side build `com.opus.opus_app.pc` is installed beside it. Uninstalling the old app wipes its data; the other fix is to reuse the old PC's debug key. Until one of them is done, a build made from the repo reaches the phone only as a side-by-side copy. The `.pc` build on the phone is the release build of 16:07 on 8 Oct, made from `44bd27a` (it has the card rework and the one-button demo); it is rebuilt from a copy of `app\` in `H:\pcapp` that adds the `.pc` suffix (outside the repository). Details: `logs/sessions/2026-10-08-PH-A-SETUP-run1.md` (checkpoint 5). Source: PH-A-SETUP-run1.
 - [ ] (owner, one line) **`CLAUDE.md` still says Flutter is at `C:\flutter\bin`** (line 40, the Flutter section). On the current dev PC it is `H:\flutter\bin`, not on PATH, called by full path. `docs/agent-briefs/ph/02-RULES.md` already says so (a667def). Source: `docs/PH_ON_DEVICE_RUNBOOK.md` 2.4.
 - [ ] (electronics team, answers) **One supply per board, and where the sensor data goes.** Confirm in writing: (1) each board has its own supply and their grounds are not joined (so no shared bank for the two nodes); (2) a node sends its sensor data to the last sender only, back on UDP 8790, so the Quest must be the last to send and no laptop tool may talk to the nodes during a session. Their handoff §A says both and the contracts now assume it (`contracts/HAPTIC_PROTOCOL.md` v1.3, `03-SPEC.md` D3 and the power line). Source: `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §A, §B rows 4 and 13.
 - [ ] (human, Unity, optional) **Import the four Unity Asset Store packs named in `CREDITS.md`, only if they are wanted.** Pack Gesta Furniture #1, Stones, Dark Wave Paint Table 01, Mobile Books: in Unity's Package Manager (My Assets) download and import each. Keep them out of git: `CREDITS.md` says to use a git-ignored folder on the build PC, because the Asset Store licence lets the team ship a package in a built game but not publish its files. None is imported yet: still true at 14:45 on 8 Oct (they are not downloaded on this PC). After importing them, tell the session so they can be wired in and git-ignored. Source: `CREDITS.md`; wave 6 notes in `logs/sessions/2026-10-08-PH-O-RESUME-run1.md`.
@@ -592,18 +592,37 @@ Source of each item: `docs/PH_STATUS.md` (written 2026-10-08) and the CONTEXT.md
   delivered 68-91 % of the stroke cues; a run without the throttle delivered 98-100 % (112/114, 114/114). Why the CPU throttles (heat or
   a power limit) is not determined. Decide about cooling or the Dell thermal mode. No setting was changed. Until then a throttled
   editor run ends Inconclusive, by design. Source: commit 3fefd61; wave 6 notes in `logs/sessions/2026-10-08-PH-O-RESUME-run1.md`.
-- [ ] (human with a Quest 3) **Install the development APK on a Quest and run it.** Two APKs exist in
-  `releases/game/0.1.0` (both git-ignored, package `com.DefaultCompany.OPUS`). The release APK `chetna-phantom-hand.apk`
-  (85 951 560 bytes, 82.0 MB) was built on 8 Oct, 14:45 to 15:04, from commit 2629398, so it has the room props. It was checked by
-  content only. It is the APK to install for the demo. The development APK `chetna-phantom-hand-dev.apk` (131 430 360 bytes, 125.3 MB)
-  was rebuilt 15:09 to 15:22. It was not checked by content. While it was building, a second session saved uncommitted edits to
-  `PhMaterials.cs`, `VirtualArmRig.cs` and `ThreatDrop.cs` (15:11:05), so it may or may not contain them. It is not known to match a
-  commit and is to be rebuilt once those edits are committed. The first development APK (13:43, 95.7 MB, old room) was set aside as
-  `chetna-phantom-hand-dev.apk.prev`. No APK was installed, and nothing has run on a headset (no Quest is attached to this
-  PC). Follow `docs/PH_ON_DEVICE_RUNBOOK.md` 4.7 to 4.10: (1) connect the Quest to this PC by USB and accept the prompt inside the headset
-  until `adb devices` lists it as `device` (the repo has no Quest developer-mode steps); (2) `adb install -r` the APK; (3) start the hub
-  (runbook 4.2) and the nodes or the twin, then start the app; (4) if it finds neither hub nor nodes, write `phantom_endpoints.json`
-  (runbook 4.10); (5) send back what happened: what the headset showed, and the `adb logcat -d -s Unity` lines that contain "PhantomHand".
-  Do not share a development APK: it carries the editor bridge's address and token. Whether the release APK carries them was not
-  checked. Source: `docs/PH_ON_DEVICE_RUNBOOK.md` 4.7; `docs/PH_STATUS.md`
-  APK row.
+- [ ] (human with a Quest 3) **Install the RELEASE APK on a Quest and run it.** The file is
+  `releases/game/0.1.0/chetna-phantom-hand.apk` (git-ignored, package `com.DefaultCompany.OPUS`, 85 955 940 bytes, 82.0 MB), built on
+  8 Oct, 16:16 to 16:31, from the tree of commit 12ea430, so it has the room props and the Dissolve and dust fixes of 84e26b6. It was
+  checked by content (not debuggable, arm64-v8a, hand-tracking permission); 420 files of its data were scanned and none contains the
+  editor bridge's token or this PC's address. It was never installed and never run on a headset (no Quest is attached to this PC).
+  The other file in that folder, `chetna-phantom-hand-dev.apk` (131 436 166 bytes, built 15:46 to 16:01 from 84e26b6, not checked by
+  content), is a development APK for debugging on the device: do not install it for the demo and do not share it (see the last item).
+  The older APKs of the day were deleted. Follow `docs/PH_ON_DEVICE_RUNBOOK.md` 4.7 to 4.10: (1) connect the Quest to this PC by USB and
+  accept the prompt inside the headset until `adb devices` lists it as `device` (the repo has no Quest developer-mode steps); (2)
+  `adb install -r releases\game\0.1.0\chetna-phantom-hand.apk`; (3) start the hub (runbook 4.2) and the nodes or the twin, then start the
+  app; (4) if it finds neither hub nor nodes, write `phantom_endpoints.json` (runbook 4.10); (5) send back what happened: what the headset
+  showed, and the `adb logcat -d -s Unity` lines that contain "PhantomHand". Source: `docs/PH_ON_DEVICE_RUNBOOK.md` 4.7;
+  `docs/PH_STATUS.md` APK and APK-TOKEN rows.
+- [ ] (owner) **Look at the app demo on the team phone.** Open the operator app there (package `com.opus.opus_app.pc`, the build installed on
+  8 Oct at 16:07 from `releases/app/1.0.0/chetna-operator-app-pc.apk`) and tap "Run Phantom Hand demo" on the sign-in screen (the same
+  button is on the profile of "Demo participant (simulated)"). It plays by itself for about 85 s, with no headset, sleeve or hub: the live
+  card through all 14 phases (73 s), the audience results screen (12 s), then the demo participant's session report. Skip and Stop demo are
+  always on screen. The data is the game's recorded run of 8 Oct (scripted participant, sleeve simulator) and is labelled simulated
+  wherever it is shown: it shows what the screens look like, not a person's response. It was run on this phone at 16:08 through adb, and
+  the live card, the results screen and the report were seen there (`logs/sessions/screens/ph/phone/demo_01_signin.png` to
+  `demo_06_t94s.png`); a person's look at it is still open. The `.pc` build named in the item about the old operator app above is this
+  build. A second build, `releases/app/1.0.0/chetna-operator-app.apk` (package `com.opus.opus_app`, built 16:13 to 16:17), is for other
+  phones and is not installed on any phone. Source: `logs/sessions/2026-10-08-PH-A-DEMO-run1.md`; `docs/PH_STATUS.md` A-DEMO row.
+- [ ] (human, native Hindi speaker) **Check the Hindi of the app demo.** Read the demo's captions and labels in
+  `app/lib/shared/clinical/phantom_demo_strings.dart` (an EN and HI table: the button, its hint, the "Demo, simulated data" badge, Skip and
+  Stop, the "Simulated run" label and the 10 phase captions; the closing lines in Hindi are the game recording's own). They are new and
+  were not read by a native speaker. Report wrong words to Opus; the builder changes them. Same kind of check as the Hindi review item
+  above. Source: `logs/sessions/2026-10-08-PH-A-DEMO-run1.md` section 6; `docs/PH_STATUS.md` A-DEMO row.
+- [ ] (everyone) **Do not share `-dev.apk` files.** A development APK (`releases/game/0.1.0/chetna-phantom-hand-dev.apk` and any other
+  `-dev.apk`) carries the editor bridge's access token and this PC's LAN address in its bundled `DevAgentSettings` asset, as the Meta SDK
+  builds it. The bridge listens on every network interface, so the token is a credential for the Unity editor on this PC. A release APK
+  built with the build step of 12ea430 does not carry them. Never commit `game/Assets/Resources/DevAgentSettings.asset`. The older APKs
+  of 8 Oct (`*.apk.prev`), which carried the token, were deleted from `releases/game/0.1.0/`; any copy of one is to be deleted or kept
+  private. Source: commit 12ea430; `docs/PH_STATUS.md` APK-TOKEN row.
