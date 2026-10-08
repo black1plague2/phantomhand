@@ -1,0 +1,7 @@
+{
+  "type": "ack",
+  "device_id": "CHETNA_HAPTIC_001",
+  "cue_id": "stroke_18",
+  "accepted": false,
+  "timestamp_ms": 123600
+}

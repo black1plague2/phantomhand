@@ -78,6 +78,7 @@
         { "$ref": "#/$defs/emgBurst" },
         { "$ref": "#/$defs/display" },
         { "$ref": "#/$defs/subscribe" },
+        { "$ref": "#/$defs/keepalive" },
         { "$ref": "#/$defs/deviceStatus" },
         { "$ref": "#/$defs/deviceAck" }
       ]
@@ -173,12 +174,14 @@
     },
 
     "display": {
-      "description": "Game -> Node A: one line of OLED text. At most 12 characters, at most 2 per second.",
+      "description": "Game -> Node A: one line of OLED text. At most 12 characters, at most 2 per second. v0.2.1: the electronics team's firmware reads `mode`, the reference firmware and the twin read `text`; the game sends both with the same value, and either one alone is valid.",
       "type": "object",
-      "required": ["type", "text"],
+      "required": ["type"],
+      "anyOf": [{ "required": ["text"] }, { "required": ["mode"] }],
       "properties": {
         "type": { "const": "display" },
-        "text": { "type": "string", "maxLength": 12, "pattern": "^[\\x20-\\x7E]*$", "description": "printable ASCII; empty shows IDLE" }
+        "text": { "type": "string", "maxLength": 12, "pattern": "^[\\x20-\\x7E]*$", "description": "printable ASCII; empty shows IDLE" },
+        "mode": { "type": "string", "maxLength": 12, "pattern": "^[\\x20-\\x7E]*$", "description": "same line as `text` (electronics team dialect), e.g. SYNC / ASYNC" }
       }
     },
 
@@ -188,6 +191,15 @@
       "required": ["type"],
       "properties": {
         "type": { "const": "subscribe" }
+      }
+    },
+
+    "keepalive": {
+      "description": "v0.2.1. Game -> Node A or B, about once per second: feeds the firmware's 2 s motor watchdog and (electronics team firmware) marks the sender as the telemetry target. Sent in addition to ping and subscribe; nodes that do not know it ignore it.",
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "keepalive" }
       }
     },
 
@@ -212,12 +224,15 @@
     },
 
     "deviceAck": {
-      "description": "Node ack in the Electronics-contract dialect (cue_id + status). Firmware v0.5.0 also adds ack_id and ok.",
+      "description": "Node ack in the Electronics-contract dialect (cue_id + status). Firmware v0.5.0 also adds ack_id and ok. v0.2.1: the electronics team's firmware sends `accepted` (boolean) instead of `status`; false means the cue was NOT played (motor busy, 100 ms gap, duty budget, invalid motor/intensity) and must be recorded as not delivered.",
       "type": "object",
-      "required": ["type", "cue_id", "status", "timestamp_ms"],
+      "required": ["type", "cue_id", "timestamp_ms"],
+      "anyOf": [{ "required": ["status"] }, { "required": ["accepted"] }],
       "properties": {
         "type": { "const": "ack" },
         "cue_id": { "type": "string" },
+        "device_id": { "type": "string" },
+        "accepted": { "type": "boolean" },
         "status": { "enum": ["accepted", "executed", "rejected", "error"] },
         "timestamp_ms": { "type": "number", "minimum": 0 },
         "received_ms": { "type": "number", "minimum": 0 },

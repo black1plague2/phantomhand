@@ -14,6 +14,8 @@ JSON Schema definitions and validation for Chetna game manifests, events, sessio
 - **haptic-message.schema.json** / **haptic-device-command.schema.json**: haptic protocol v1.2 (two message families; stroke cue). See `HAPTIC_PROTOCOL.md`.
 - **live-message.schema.json**: live protocol; v0.2 adds operator commands and `game_state` / `trace`. See `LIVE_PROTOCOL.md`.
 
+**Version v0.2.1 (2026-10-08):** `haptic-message` only, backward compatible: node ack may carry `accepted` (boolean) instead of `status`; new wire message `keepalive`; `display` may carry `mode` next to (or instead of) `text`. See `HAPTIC_PROTOCOL.md` v1.3. `contracts_version` stays `"0.2"`.
+
 **Version v0.2 (2026-10-07):** backward compatible. `session-envelope.contracts_version` accepts `"0.1"` and `"0.2"`; every v0.1 fixture and session still validates. New event types, commands and schemas are additive. Schema `$id`s moved to `contracts/v0.2/`.
 
 ## Fixtures

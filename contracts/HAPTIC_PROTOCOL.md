@@ -82,6 +82,20 @@ Sent to Node A on UDP 8790 (device-level form, no `type`):
 
 **Session files.** Node data is recorded as `sens_###.json` (`schemas/sensor-file.schema.json`: columnar `emg_env` and `imu` streams). Events: see `schemas/event.schema.json`.
 
+## v1.3 — the electronics team's firmware dialect (2026-10-08, contracts v0.2.1)
+The boards run the electronics team's own sketches (`node_a_haptic`, `node_b_bio` v0.5.0), not `firmware/opus_sleeve`. Source: `docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md` §A (their text) and §B (the differences). The game speaks both dialects at once; all additions are backward compatible.
+
+| Topic | Rule |
+|---|---|
+| Node ids | Node A is `CHETNA_HAPTIC_001` on the real boards (`SLEEVE_001` in the reference firmware and older fixtures). The game matches a node by **`device_kind`** (`haptic` / `bio`), never by id; a discovery datagram without a kind is a legacy haptic node |
+| `ack` | `{"type":"ack","device_id","cue_id","accepted":true|false,"timestamp_ms"}`. **`accepted:false` = the cue was not played** (motor still running, 100 ms gap, duty budget used, invalid motor/intensity): record it as `delivered:false`. Precedence when several fields are present: `ok`, then `accepted`, then `status` |
+| `keepalive` | `{"type":"keepalive"}` to **each** node once per second, in addition to `ping` and `subscribe`. It feeds the 2 s watchdog and tells the node where to stream |
+| `display` | the game sends both fields with the same value: `{"type":"display","text":"SYNC","mode":"SYNC"}` (their firmware reads `mode`) |
+| Telemetry target | their firmware streams to the **last sender only** (no 3-subscriber list). While the game runs, no other tool may send to the nodes (`chetna_udp_tool.py`, `node_probe.py`, `live_plot.py` without `--hub`): it would take the stream away from the headset. A laptop watches through the hub |
+| `sensor_chunk` | 4 values per packet, 25 packets per second (schema allows 1–10 values) |
+| `sensor_data` | accelerometer only (gyro optional) |
+| `stop` | the game keeps sending the v1 form; the bare `{"type":"stop"}` is what their firmware documents. Open request to the team: confirm extra fields are ignored |
+
 ## Transport
 - v1 transport: **UDP datagrams, JSON, port 8790**, headset → sleeve; the sleeve answers on the same socket. Chosen because it is connectionless (a dropped sleeve never stalls the game loop), tiny, and implementable on an ESP32 in a few hundred lines.
 - Discovery: the sleeve broadcasts `hello` every 1 s to UDP 8791 (`{"opus_haptic":1,"device_id":…,"port":8790,"fw":"…"}`); the game listens and latches the first device, or takes a manual host from settings. A BLE transport may be added later behind the same `IHapticTransport` interface; no message changes.
