@@ -389,6 +389,35 @@ namespace Opus.Games.PhantomHand.Presentation
             set { if (_visualRoot != null) _visualRoot.gameObject.SetActive(value); }
         }
 
+        /// <summary>The most the hand turns at the wrist away from lying flat along the forearm.</summary>
+        public const float MaxWristDeg = 75f;
+
+        /// <summary>Turns the hand at the wrist so that it points along <paramref name="forward"/> with its back toward
+        /// <paramref name="dorsal"/> (world directions, as the real hand is held); the forearm stays where it lies. Limited to
+        /// <see cref="MaxWristDeg"/>, so one bad frame of tracking cannot turn the hand over.</summary>
+        public void SetHandOrientation(Vector3 forward, Vector3 dorsal)
+        {
+            if (_handRoot == null || forward.sqrMagnitude < 1e-6f || dorsal.sqrMagnitude < 1e-6f) return;
+            Vector3 f = transform.InverseTransformDirection(forward), d = transform.InverseTransformDirection(dorsal);
+            if (LeftArm) { f.x = -f.x; d.x = -d.x; }   // the hand lives under the mirrored visual
+            _handRoot.localRotation = Quaternion.RotateTowards(Quaternion.identity, Quaternion.LookRotation(f, d), MaxWristDeg);
+        }
+
+        /// <summary>The hand flat along the forearm again (the pose of the induction and of the stone).</summary>
+        public void ResetHandOrientation() { if (_handRoot != null) _handRoot.localRotation = Quaternion.identity; }
+
+        /// <summary>World direction the hand points in (wrist toward the fingers).</summary>
+        public Vector3 HandForwardWorld
+        {
+            get
+            {
+                if (_handRoot == null) return transform.forward;
+                Vector3 l = _handRoot.localRotation * Vector3.forward;
+                if (LeftArm) l.x = -l.x;
+                return transform.TransformDirection(l);
+            }
+        }
+
         /// <summary>0 = relaxed static pose, 1 = fist (agency / A5).</summary>
         public float Curl { get { return _curl; } set { _curl = Mathf.Clamp01(value); ApplyCurl(); } }
 
@@ -406,6 +435,15 @@ namespace Opus.Games.PhantomHand.Presentation
             }
             foreach (var j in _joints)
                 if (j.T != null) j.T.localRotation = Quaternion.Euler(Mathf.Lerp(j.RelaxedDeg, j.ClosedDeg, _curl), 0, 0);
+        }
+
+        /// <summary>Hands the 15 finger angles of a tracked hand to the rigged hand's bones. False without a rigged hand (the procedural hand and the glove mesh keep
+        /// using <see cref="Curl"/>); the last of Curl and ApplyHandPose wins.</summary>
+        public bool ApplyHandPose(in PhHandPose pose)
+        {
+            if (_rig == null || pose.FlexDeg == null || pose.FlexDeg.Length < PhHandPose.FlexCount) return false;
+            _rig.SetFlexion(pose.FlexDeg);
+            return true;
         }
 
         /// <summary>1 = opaque, 0 = invisible (A2 dissolve). Below 1 the arm renders with transparent twins of its materials.</summary>

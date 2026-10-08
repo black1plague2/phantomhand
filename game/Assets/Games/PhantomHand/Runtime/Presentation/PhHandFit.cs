@@ -239,6 +239,23 @@ namespace Opus.Games.PhantomHand.Presentation
             return null;
         }
 
+        /// <summary>Digit name of a PhHandPose finger number (0 = thumb, 1 = index .. 4 = pinky; <see cref="Digits"/> lists the thumb last).</summary>
+        public static string DigitOf(int finger)
+        {
+            return Digits[(finger + Digits.Length - 1) % Digits.Length];
+        }
+
+        /// <summary>Slot of a driven bone in PhHandPose.FlexDeg: finger * 3 + joint, where {digit}_01 / _02 / _03 turn at the base / middle / end joint of the digit
+        /// (index..pinky: MCP, PIP, DIP). The rig has three bones after the thumb's metacarpal (thumb_base), taken in order as the thumb's CMC, MCP and IP:
+        /// a guess to check against the picture. -1 for bones that are not driven.</summary>
+        public static int FlexIndex(string boneName)
+        {
+            for (int d = 0; d < Digits.Length; d++)
+                for (int s = 1; s <= 3; s++)
+                    if (boneName == Bone(Digits[d], s)) return ((d + 1) % Digits.Length) * 3 + (s - 1);
+            return -1;
+        }
+
         /// <summary>Flexion axis of a bone pointing along boneDir for a palm facing palmNormal: rotating boneDir about it by a positive angle turns it toward the palm.
         /// Zero when the bone points along the palm normal (degenerate).</summary>
         public static Vector3 FlexionAxis(Vector3 boneDir, Vector3 palmNormal)

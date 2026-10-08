@@ -38,6 +38,13 @@ namespace Opus.Games.PhantomHand.Presentation
         private PhPhase _phase = PhPhase.Idle;
         private bool _hasCalib, _bound;
         private HandSide _side = HandSide.Right;   // the stimulated arm
+        // the whole tracked hand, when the hand source gives it: the virtual hand then copies it finger by finger
+        private IHandSkeletonSource _skeleton;
+        private readonly Vector3[] _joints = new Vector3[HandSkeleton.JointCount];
+        private PhHandPose _pose, _poseTarget;
+        private bool _poseLive;
+        /// <summary>Tracking trembles; this much lag takes it out without the hand feeling late.</summary>
+        public const float MimicSmoothingS = 0.05f;
         private Vector3 _calibWrist, _calibAxis = Vector3.forward;
         private double _threatAtMs = -1;
         // A5 agency: where the muscle level comes from
@@ -52,6 +59,7 @@ namespace Opus.Games.PhantomHand.Presentation
             _module = module; _haptic = haptic; _clock = clock; _hands = hands; _nodeB = nodeB;
             var p = module.Params;
             _side = p.Arm;
+            _skeleton = hands as IHandSkeletonSource; _poseLive = false;
             if (anchors != null) anchors.LayOutFor(_side);
             if (arm == null) { arm = new GameObject("VirtualArm").AddComponent<VirtualArmRig>(); arm.transform.SetParent(transform, false); }
             arm.LeftArm = _side == HandSide.Left;
@@ -130,6 +138,18 @@ namespace Opus.Games.PhantomHand.Presentation
             p = default(Vector3); return false;
         }
 
+        /// <summary>The virtual hand takes the pose of the real one: every finger joint, and the turn of the hand at the wrist. Only
+        /// while the arm follows the real arm; nothing happens when the hand source has no skeleton or the hand is not tracked.</summary>
+        private void MimicHand()
+        {
+            if (_skeleton == null || !_skeleton.TryGetSkeleton(_side, _joints)) return;
+            if (!PhHandPoseSolver.TrySolve(_joints, _side, ref _poseTarget)) return;
+            PhHandPoseSolver.Smooth(ref _pose, in _poseTarget, _poseLive ? Time.deltaTime : 0f, MimicSmoothingS);
+            _poseLive = true;
+            arm.ApplyHandPose(in _pose);
+            arm.SetHandOrientation(_pose.Forward, _pose.Dorsal);
+        }
+
         /// <summary>The height of a wrist that rests on the virtual table.</summary>
         private float TableWristY()
         {
@@ -164,6 +184,7 @@ namespace Opus.Games.PhantomHand.Presentation
             {
                 case PhPhase.Calibrate:
                     if (RealWrist(out w)) arm.Follow(new Vector3(w.x, TableWristY(), w.z), RealAxis(w), 0f);
+                    MimicHand();
                     break;
                 case PhPhase.Agency:
                     if (RealWrist(out w)) arm.Follow(w, _hasCalib ? _calibAxis : Vector3.forward, (float)_module.Params.OffsetCm);
@@ -186,6 +207,7 @@ namespace Opus.Games.PhantomHand.Presentation
                     if (ra != arm.Alpha) arm.Alpha = ra;
                     if (!RealWrist(out w)) w = DefaultCalibration().Key;   // the calibrated wrist when the hand is not tracked
                     arm.Follow(w, _calibAxis, (float)RevealOffsetCm(t, _module.Params.OffsetCm));
+                    MimicHand();
                     break;
                 }
                 case PhPhase.Threat:
@@ -347,7 +369,8 @@ namespace Opus.Games.PhantomHand.Presentation
             arm.Unfreeze();
             arm.PlaceFromCalibration(_calibWrist, _calibAxis, (float)p.OffsetCm);
             if (!p.FollowDuringInduction) arm.Freeze();
-            arm.Curl = 0f; arm.Alpha = 1f; arm.Visible = true;
+            arm.Curl = 0f; arm.ResetHandOrientation(); _poseLive = false;   // the brush and the stone meet a flat, open hand
+            arm.Alpha = 1f; arm.Visible = true;
             brush.SetGeometry(arm.WristWorld, arm.ElbowDirection, arm.ForearmLengthM, arm.MotorAFromWristM, arm.MotorSpacingM, p.MotorSoaMs);
             brush.Visible = true;
             Driver.Begin(nowMs);
