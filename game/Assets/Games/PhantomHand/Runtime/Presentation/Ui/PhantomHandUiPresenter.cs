@@ -15,11 +15,16 @@ namespace Opus.Games.PhantomHand.Presentation
     /// </summary>
     public sealed class PhantomHandUiPresenter : MonoBehaviour
     {
-        public const double ConfirmDwellMs = 700;
+        public const double ConfirmDwellMs = 1000;
         /// <summary>How much higher or lower than the virtual table the real arm may rest and still calibrate (the room then moves to it).</summary>
-        public const double CalibrationHeightToleranceM = 0.18;
-        /// <summary>The wrist may be this far from the outline's wrist point on the table plane.</summary>
-        public const double CalibrationRadiusM = 0.04;
+        public const double CalibrationHeightToleranceM = 0.25;
+        /// <summary>The wrist may rest this far from the outline's wrist point on the table plane (the room then moves to it). The first
+        /// person on the headset rested 23 cm from it, where the real table and the sleeve's cable let the arm lie.</summary>
+        public const double CalibrationRadiusM = 0.35;
+        /// <summary>Resting means the wrist stays within this distance for the 2 seconds.</summary>
+        public const double CalibrationStillM = 0.03;
+        /// <summary>Nothing counts in the first moments of the phase: the hands that pinched to start the run are still in the air.</summary>
+        public const double CalibrationSettleMs = 2000;
 
         public PhantomAnchors anchors;
         [Tooltip("Optional: receives SetCalibration(wrist, forearmAxis) when the calibration is confirmed.")]
@@ -151,8 +156,9 @@ namespace Opus.Games.PhantomHand.Presentation
             {
                 case PhPhase.Calibrate:
                     CalibrationCommitted = false; _confirmAtMs = -1;
-                    Calibration = new CalibrationTracker(ToArr(CalibrationTarget()), CalibrationRadiusM, CalibrationTracker.HoldMs, CalibrationHeightToleranceM);
-                    _liftBy = _lifted = 0f;
+                    Calibration = new CalibrationTracker(ToArr(CalibrationTarget()), CalibrationRadiusM, CalibrationTracker.HoldMs, CalibrationHeightToleranceM, CalibrationStillM);
+                    _calibFromMs = nowMs + CalibrationSettleMs;
+                    _shiftBy = _shifted = Vector3.zero;
                     SetOutline(true, OutlineTeal);
                     break;
                 case PhPhase.ProbePre:
@@ -191,23 +197,26 @@ namespace Opus.Games.PhantomHand.Presentation
                            _hands.TryGetJointPose(PhArm.Wrist(_arm), out wrist, out _);
             if (tracked) _hands.TryGetJointPose(PhArm.Palm(_arm), out palm, out _);
             var fallback = anchors != null && anchors.armRestOutline != null ? ToArr(anchors.armRestOutline.forward) : null;
-            var st = Calibration.Update(now, tracked, wrist, palm, fallback);
+            var st = now < _calibFromMs ? CalibState.Waiting : Calibration.Update(now, tracked, wrist, palm, fallback);
 
-            string title = PhStrings.Get("calib_title", Lang);
+            string title = PhStrings.Get("calib_title", Lang, _arm);
             if (st == CalibState.Confirmed)
             {
                 if (_confirmAtMs < 0)
                 {
                     _confirmAtMs = now; PlayTick();
-                    // The arm rests on a real surface that is rarely as high as the virtual table. Move the room to the arm, not the
-                    // arm to the room: the camera rig glides up or down while "done" is shown, so that the resting wrist ends up
-                    // at table height and the virtual arm lies ON the table where the real one feels one.
-                    _liftBy = (float)(Calibration.Target[1] - Calibration.Wrist[1]); _lifted = 0f;
-                    if (Mathf.Abs(_liftBy) < 0.005f || anchors == null || anchors.cameraRig == null) _liftBy = 0f;
+                    // The arm rests where the real table, the chair and the sleeve's cable let it, rarely where and as high as the
+                    // virtual table expects it. Move the room to the arm, not the arm to the room: the camera rig glides while "done"
+                    // is shown, so that the resting wrist ends up on the outline's wrist point, at table height, and everything laid
+                    // out around that point (the table, the panels, the ruler) is where it was designed to be.
+                    _shiftBy = new Vector3((float)(Calibration.Target[0] - Calibration.Wrist[0]), (float)(Calibration.Target[1] - Calibration.Wrist[1]),
+                                           (float)(Calibration.Target[2] - Calibration.Wrist[2]));
+                    _shifted = Vector3.zero;
+                    if (_shiftBy.magnitude < 0.005f || anchors == null || anchors.cameraRig == null) _shiftBy = Vector3.zero;
                 }
                 SetOutline(true, PhUiKit.Good);
                 Instruction.Show(title, PhStrings.Get("calib_done", Lang), 1f, PhUiKit.Good, true);
-                Lift(Mathf.Clamp01((float)((now - _confirmAtMs) / ConfirmDwellMs)));
+                Glide(Mathf.Clamp01((float)((now - _confirmAtMs) / ConfirmDwellMs)));
                 if (now - _confirmAtMs >= ConfirmDwellMs) CommitCalibration();
                 return;
             }
@@ -216,25 +225,26 @@ namespace Opus.Games.PhantomHand.Presentation
             if (st == CalibState.Holding)
                 Instruction.Show(title, PhStrings.Get("calib_holding", Lang), (float)Calibration.Progress01, PhUiKit.Info, true);
             else
-                Instruction.Show(title, tracked ? "" : PhStrings.Get("calib_lost", Lang), 0f, tracked ? PhUiKit.Info : PhUiKit.Warn, true);
+                Instruction.Show(title, tracked ? "" : PhStrings.Get("calib_lost", Lang, _arm), 0f, tracked ? PhUiKit.Info : PhUiKit.Warn, true);
         }
 
-        private float _liftBy, _lifted;
+        private Vector3 _shiftBy, _shifted;
+        private double _calibFromMs;
 
-        /// <summary>The camera rig's share u (0..1, eased) of the vertical move that brings the resting wrist to table height.</summary>
-        private void Lift(float u)
+        /// <summary>The camera rig's share u (0..1, eased) of the move that brings the resting wrist onto the outline's wrist point.</summary>
+        private void Glide(float u)
         {
-            if (_liftBy == 0f) return;
-            float want = _liftBy * (u * u * (3f - 2f * u));
-            anchors.cameraRig.position += Vector3.up * (want - _lifted);
-            _lifted = want;
+            if (_shiftBy == Vector3.zero) return;
+            Vector3 want = _shiftBy * (u * u * (3f - 2f * u));
+            anchors.cameraRig.position += want - _shifted;
+            _shifted = want;
         }
 
         private void CommitCalibration()
         {
-            Lift(1f);
+            Glide(1f);
             var w = Calibration.Wrist; var a = Calibration.Axis;
-            w[1] += _liftBy;   // where the wrist is now that the room has moved
+            w[0] += _shiftBy.x; w[1] += _shiftBy.y; w[2] += _shiftBy.z;   // where the wrist is now that the room has moved
             var wv = new Vector3((float)w[0], (float)w[1], (float)w[2]);
             var av = new Vector3((float)a[0], (float)a[1], (float)a[2]);
             if (armPresenter != null) armPresenter.SetCalibration(wv, av);
@@ -263,7 +273,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 if (tip != null) { tip.target = null; tip.SetVisible(false); }
             }
             SetOutline(false, OutlineTeal);
-            Instruction.Show(PhStrings.ProbeInstruction(Lang), "", 0f, PhUiKit.Info, false);
+            Instruction.Show(PhStrings.ProbeInstruction(Lang, _arm), "", 0f, PhUiKit.Info, false);
         }
 
         private void EndProbeLook()
@@ -298,7 +308,7 @@ namespace Opus.Games.PhantomHand.Presentation
 
             var st = _module.FeedProbe(now, leftTracked, leftTip, rightWrist, rightIdx != null ? (double?)rightIdx[0] : null);
             LastProbeState = st;
-            string title = PhStrings.ProbeInstruction(Lang);
+            string title = PhStrings.ProbeInstruction(Lang, _arm);
             switch (st)
             {
                 case ProbeState.Confirmed:

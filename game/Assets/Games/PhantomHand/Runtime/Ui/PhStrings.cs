@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Opus.Sdk;
 
 namespace Opus.Games.PhantomHand
 {
@@ -15,14 +16,18 @@ namespace Opus.Games.PhantomHand
         private static readonly Dictionary<string, string[]> Table = new Dictionary<string, string[]>
         {
             // calibration
-            { "calib_title",      new[] { "Rest your right forearm inside the outline, palm down", "अपनी दाहिनी बांह रेखा के अंदर रखें, हथेली नीचे" } },
+            { "calib_title",      new[] { "Rest your right forearm near the outline, palm down, and hold still", "अपनी दाहिनी बांह रेखा के पास रखें, हथेली नीचे, और स्थिर रहें" } },
+            { "calib_title_left", new[] { "Rest your left forearm near the outline, palm down, and hold still", "अपनी बाईं बांह रेखा के पास रखें, हथेली नीचे, और स्थिर रहें" } },
             { "calib_holding",    new[] { "Hold still", "ऐसे ही रुकें" } },
             { "calib_done",       new[] { "Got it", "ठीक है" } },
             { "calib_lost",       new[] { "I can't see your right hand", "आपका दाहिना हाथ दिख नहीं रहा" } },
+            { "calib_lost_left",  new[] { "I can't see your left hand", "आपका बायाँ हाथ दिख नहीं रहा" } },
 
             // drift probe
             { "probe_title",      new[] { "Keep your right hand still. With your left index, point above the ruler to where you feel your right index is, then hold still.",
                                           "अपना दाहिना हाथ स्थिर रखें। बाएँ हाथ की तर्जनी से पैमाने के ऊपर वहाँ इशारा करें जहाँ आपको दाहिनी तर्जनी महसूस होती है, फिर रुकें।" } },
+            { "probe_title_left", new[] { "Keep your left hand still. With your right index, point above the ruler to where you feel your left index is, then hold still.",
+                                          "अपना बायाँ हाथ स्थिर रखें। दाहिने हाथ की तर्जनी से पैमाने के ऊपर वहाँ इशारा करें जहाँ आपको बाईं तर्जनी महसूस होती है, फिर रुकें।" } },
             { "probe_holding",    new[] { "Hold still", "ऐसे ही रुकें" } },
             { "probe_done",       new[] { "Recorded", "दर्ज हुआ" } },
             { "probe_arm_moved",  new[] { "Please put your arm back on the outline", "कृपया अपना हाथ वापस रेखा पर रखें" } },
@@ -88,6 +93,12 @@ namespace Opus.Games.PhantomHand
             return lang == Hi ? v[1] : v[0];
         }
 
+        /// <summary>The text for the stimulated arm: for a left arm the key's "_left" twin where there is one.</summary>
+        public static string Get(string key, string lang, HandSide arm)
+        {
+            return Get(arm == HandSide.Left && Table.ContainsKey(key + "_left") ? key + "_left" : key, lang);
+        }
+
         public static string Format(string key, string lang, params object[] args)
         {
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, Get(key, lang), args);
@@ -126,6 +137,6 @@ namespace Opus.Games.PhantomHand
             }
         }
 
-        public static string ProbeInstruction(string lang) { return Get("probe_title", lang); }
+        public static string ProbeInstruction(string lang, HandSide arm = HandSide.Right) { return Get("probe_title", lang, arm); }
     }
 }

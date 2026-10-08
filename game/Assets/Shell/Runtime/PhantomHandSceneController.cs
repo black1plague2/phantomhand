@@ -134,6 +134,20 @@ namespace Opus.Shell
 
         // ---- lifecycle ----------------------------------------------------------------------------------------------
 
+        // The scene is saved with a right arm lying beside its outline, and both stayed on show until the first run was bound: a
+        // wearer read "Sleeve arm: left" and saw a right arm with its outline on the right. Until then the scene now looks like
+        // every idle after a run: no arm, no outline, and the layout of the arm the Ready card names.
+        private void Start()
+        {
+            if (_bound) return;
+            if (anchors != null)
+            {
+                anchors.LayOutFor(_defaultArm == "left" ? HandSide.Left : HandSide.Right);
+                if (anchors.armRestOutline != null) anchors.armRestOutline.gameObject.SetActive(false);
+            }
+            if (armPresenter != null && armPresenter.arm != null) armPresenter.arm.Visible = false;
+        }
+
         private void Awake()
         {
             _mainThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId;

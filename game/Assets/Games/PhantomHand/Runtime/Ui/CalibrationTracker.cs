@@ -16,10 +16,11 @@ namespace Opus.Games.PhantomHand
         public const double HoldMs = 2000;
 
         private readonly double[] _target;
-        private readonly double _radius, _holdMs, _vertical;
+        private readonly double _radius, _holdMs, _vertical, _still;
         private double _startMs;
         private bool _started;
         private double _sx, _sy, _sz;
+        private double _ax, _ay, _az;      // where the wrist was when the current 2 s began
         private int _n;
 
         public CalibState State { get; private set; } = CalibState.Waiting;
@@ -32,10 +33,14 @@ namespace Opus.Games.PhantomHand
         /// <param name="verticalToleranceM">0 = the wrist must be within the radius in all three directions (a sphere). Above 0 the
         /// radius counts on the table plane only and the wrist may rest this much higher or lower than the target: a real table is
         /// rarely as high as the virtual one, and the presenter then moves the room to the arm (see PhantomHandUiPresenter).</param>
-        public CalibrationTracker(double[] targetWrist, double radiusM = RadiusM, double holdMs = HoldMs, double verticalToleranceM = 0)
+        /// <param name="stillRadiusM">0 = holding means staying inside the radius. Above 0 the radius is only the zone in which an arm
+        /// may rest, and holding means not moving: the 2 s begin again from wherever the wrist has strayed more than this far from
+        /// where they began. A person's arm rests where the real table and the sleeve's cable let it, not on a mark: on the headset
+        /// (9 Oct 2026) it lay 23 cm from the outline for a whole minute and nothing confirmed.</param>
+        public CalibrationTracker(double[] targetWrist, double radiusM = RadiusM, double holdMs = HoldMs, double verticalToleranceM = 0, double stillRadiusM = 0)
         {
             if (targetWrist == null || targetWrist.Length < 3) throw new ArgumentException("target wrist needs x,y,z");
-            _target = (double[])targetWrist.Clone(); _radius = radiusM; _holdMs = holdMs; _vertical = verticalToleranceM;
+            _target = (double[])targetWrist.Clone(); _radius = radiusM; _holdMs = holdMs; _vertical = verticalToleranceM; _still = stillRadiusM;
         }
 
         public double[] Target { get { return (double[])_target.Clone(); } }
@@ -59,7 +64,12 @@ namespace Opus.Games.PhantomHand
             LastDistanceM = d;
             if (d > _radius || (_vertical > 0 && Math.Abs(dy) > _vertical)) { Reset(); return State; }
 
-            if (!_started) { _started = true; _startMs = nowMs; _n = 0; _sx = _sy = _sz = 0; }
+            if (_still > 0 && _started)
+            {
+                double mx = wrist[0] - _ax, my = wrist[1] - _ay, mz = wrist[2] - _az;
+                if (mx * mx + my * my + mz * mz > _still * _still) { _started = false; Progress01 = 0; }   // it moved: count again from here
+            }
+            if (!_started) { _started = true; _startMs = nowMs; _n = 0; _sx = _sy = _sz = 0; _ax = wrist[0]; _ay = wrist[1]; _az = wrist[2]; }
             _sx += wrist[0]; _sy += wrist[1]; _sz += wrist[2]; _n++;
             double held = nowMs - _startMs;
             Progress01 = Math.Min(1.0, held / _holdMs);

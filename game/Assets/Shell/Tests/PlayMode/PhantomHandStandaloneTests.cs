@@ -147,6 +147,14 @@ namespace Opus.Shell.Tests.PlayMode
             StringAssert.Contains("Muscle sensor:   not found yet", body);
             StringAssert.Contains("works without the sleeve and the sensor", body);
             Assert.AreEqual(OpusSessionRunner.Phase.WaitingToStart, _runner.CurrentPhase, "nothing may start the run by itself");
+            // what stands on the table before the first run: on the headset (9 Oct) it was the scene as saved, a right arm beside its
+            // outline on the right, under a card that said "Sleeve arm: left"
+            var anchors = UnityEngine.Object.FindFirstObjectByType<Opus.Games.PhantomHand.PhantomAnchors>();
+            StringAssert.Contains("Sleeve arm:   left", body);
+            Assert.AreEqual(HandSide.Left, anchors.LayoutArm, "the layout of the arm the card names");
+            Assert.Less(anchors.armRestOutline.position.x, 0f, "the outline's place is on the left");
+            Assert.IsFalse(anchors.armRestOutline.gameObject.activeInHierarchy, "no outline before the calibration asks for it");
+            Assert.IsFalse(UnityEngine.Object.FindFirstObjectByType<Opus.Games.PhantomHand.Presentation.ArmThreatPresenter>().arm.Visible, "no arm lying on the table before a run");
             Picture(Path.Combine(Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..")), "sim", "out", "quest_diag"), "ready_card");
         }
 
