@@ -41,6 +41,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]  # .../OPUS  (was wrongly parent
 CONTRACTS_DIR = REPO_ROOT / "contracts"
 SESSION_FIXTURE = CONTRACTS_DIR / "fixtures" / "sessions" / "healthy"
 ANALYTICS_PY = REPO_ROOT / "analytics" / ".venv" / "Scripts" / "python.exe"
+if not ANALYTICS_PY.exists():  # single-venv layout (repo-root .venv): the running interpreter has opus_analytics too
+    ANALYTICS_PY = Path(sys.executable)
 VALIDATE_PY = CONTRACTS_DIR / "validate.py"
 
 

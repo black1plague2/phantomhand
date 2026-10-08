@@ -53,6 +53,8 @@ except ImportError as _exc:      # pragma: no cover - wrong venv
 VALIDATE_PY = REPO_ROOT / "contracts" / "validate.py"
 ANALYTICS_DIR = REPO_ROOT / "analytics"
 ANALYTICS_PY = ANALYTICS_DIR / ".venv" / "Scripts" / "python.exe"
+if not ANALYTICS_PY.exists():  # single-venv layout (repo-root .venv): the running interpreter has opus_analytics too
+    ANALYTICS_PY = Path(sys.executable)
 DART = Path("C:/flutter/bin/dart.bat")
 UNITY_EXE = Path(r"C:\Program Files\Unity\Hub\Editor\6000.4.6f1\Editor\Unity.exe")
 UNITY_LOCK = REPO_ROOT / "game" / ".ph_unity.lock"

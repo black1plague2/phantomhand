@@ -60,3 +60,6 @@ game/Assets/InitTestScene*.unity.meta
 
 # Phantom Hand: Unity agent lock
 game/.ph_unity.lock
+
+# Agent worktrees (local only)
+.claude/worktrees/

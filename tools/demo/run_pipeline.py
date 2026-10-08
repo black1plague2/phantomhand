@@ -79,6 +79,8 @@ except ImportError as _exc:  # pragma: no cover - exercised by the wrong-venv pa
 VALIDATE_PY = REPO_ROOT / "contracts" / "validate.py"
 ANALYTICS_DIR = REPO_ROOT / "analytics"
 ANALYTICS_PY = ANALYTICS_DIR / ".venv" / "Scripts" / "python.exe"
+if not ANALYTICS_PY.exists():  # single-venv layout (repo-root .venv): the running interpreter has opus_analytics too
+    ANALYTICS_PY = Path(sys.executable)
 
 # Goal thresholds (GOAL.md G2 / G9).
 G2_STATUS_LATENCY_MS = 250.0
