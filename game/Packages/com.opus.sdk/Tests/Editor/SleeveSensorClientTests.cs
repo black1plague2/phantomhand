@@ -385,5 +385,92 @@ namespace Opus.Sdk.Tests
             t.Receive(SensorData("A", 1, 0, 0, 9.8));
             Assert.AreEqual(0, c.Imu.Count);
         }
+
+        // ------------------------------------------------------------------ the electronics team's firmware as flashed (handoff 2026-10-08)
+
+        private const string BareKeepalive = "{\"type\":\"keepalive\"}";
+
+        [Test]
+        public void Keepalive_AlsoSendsTheBareKeepaliveDatagramOncePerSecond_StopsWithStop()
+        {
+            var c = Make(out var t, out var clock);
+            c.Start();
+            for (int i = 0; i < 100; i++) { c.Pump(); clock.Advance(100); }     // 10 s in 100 ms frames; the node never answers
+
+            Assert.AreEqual(10, t.Sent.Count(s => s == BareKeepalive), "a node never heard from still gets it");
+            var types = t.Sent.Select(s => JObject.Parse(s)["type"].Value<string>()).ToList();
+            Assert.AreEqual(10, types.Count(x => x == "subscribe"), "subscribe + ping are unchanged");
+            Assert.AreEqual(10, types.Count(x => x == "ping"));
+
+            c.Stop();
+            int n = t.Sent.Count;
+            for (int i = 0; i < 20; i++) { c.Pump(); clock.Advance(100); }
+            Assert.AreEqual(n, t.Sent.Count);
+        }
+
+        [Test]
+        public void Keepalive_GoesOnWhenTheNodeFallsSilent()
+        {
+            var c = Make(out var t, out var clock);
+            c.Start();
+            int Keepalives() => t.Sent.Count(s => s == BareKeepalive);
+            for (int i = 0; i < 30; i++) { c.Pump(); clock.Advance(100); }       // t = 0..2.9 s, nothing heard yet
+            Assert.AreEqual(3, Keepalives());
+
+            t.Receive(SensorData("CHETNA_HAPTIC_001", 1, 0, 0, 9.8));             // heard at t = 3.0 s
+            for (int i = 0; i < 60; i++) { c.Pump(); clock.Advance(100); }       // pumps at t = 3.0 .. 8.9 s
+            Assert.AreEqual(9, Keepalives(), "t = 0..8 s: silent since 3 s, still one per second so a power-cycled node re-attaches");
+            var types = t.Sent.Select(s => JObject.Parse(s)["type"].Value<string>()).ToList();
+            Assert.AreEqual(9, types.Count(x => x == "subscribe"));
+            Assert.AreEqual(9, types.Count(x => x == "ping"));
+        }
+
+        [Test]
+        public void Keepalive_NotSentWhileNoDeviceIsKnown()
+        {
+            var c = Make(out var t, out var clock);
+            t.HasDevice = false;
+            c.Start();
+            for (int i = 0; i < 30; i++) { c.Pump(); clock.Advance(100); }
+            Assert.IsEmpty(t.Sent);
+        }
+
+        [Test]
+        public void RealFirmware_NodeA_AccelOnlySensorData_UnderItsOwnId_IsAccepted()
+        {
+            var c = Make(out var t, out var clock);
+            clock.Advance(5000);
+            // verbatim from the handoff: accel only (no gyro), device_id CHETNA_HAPTIC_001, no device_kind
+            t.Receive("{\"type\":\"sensor_data\",\"device_id\":\"CHETNA_HAPTIC_001\",\"timestamp_ms\":123456,\"sensors\":{" +
+                      "\"imu_accel_x\":{\"value\":0.12,\"unit\":\"m/s2\",\"status\":\"ok\"}," +
+                      "\"imu_accel_y\":{\"value\":-0.05,\"unit\":\"m/s2\",\"status\":\"ok\"}," +
+                      "\"imu_accel_z\":{\"value\":9.81,\"unit\":\"m/s2\",\"status\":\"ok\"}}}");
+
+            Assert.AreEqual(0, c.MalformedCount);
+            Assert.IsTrue(c.Connected);
+            var s = c.Imu.Snapshot().Single();
+            Assert.AreEqual("CHETNA_HAPTIC_001", s.DeviceId);
+            Assert.AreEqual(0.12, s.Ax, 1e-9);
+            Assert.AreEqual(-0.05, s.Ay, 1e-9);
+            Assert.AreEqual(9.81, s.Az, 1e-9);
+            Assert.AreEqual(0.0, s.Gx + s.Gy + s.Gz, "gyro is optional");
+        }
+
+        [Test]
+        public void RealFirmware_NodeB_FourValueChunks_AreSpacedBySampleRate()
+        {
+            var c = Make(out var t, out var clock);
+            clock.Advance(5000);
+            // verbatim from the handoff: 4 values per packet, 25 packets per second
+            t.Receive("{\"type\":\"sensor_chunk\",\"device_id\":\"CHETNA_BIO_001\",\"device_kind\":\"bio\",\"timestamp_ms\":123456," +
+                      "\"sample_rate_hz\":100,\"emg_envelope\":[301.2,303.5,299.8,310.1],\"unit\":\"raw_adc\",\"status\":\"ok\"}");
+
+            Assert.AreEqual(0, c.MalformedCount);
+            var s = c.Emg.Snapshot();
+            Assert.AreEqual(4, s.Length);
+            Assert.AreEqual(301.2, s[0].Value, 1e-9);
+            for (int i = 1; i < 4; i++) Assert.AreEqual(s[0].TMs + 10.0 * i, s[i].TMs, 1e-9, "10 ms apart at 100 Hz");
+            Assert.AreEqual(5000, s[3].TMs, 1e-9, "the last sample lands on the receive time");
+        }
     }
 }

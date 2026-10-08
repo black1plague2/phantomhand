@@ -163,10 +163,13 @@ namespace Opus.Games.PhantomHand.Presentation
         {
             var rt = (RectTransform)panel;
             ClearChildren(panel);
-            var canvas = panel.GetComponent<Canvas>() ?? panel.gameObject.AddComponent<Canvas>();
+            // explicit == null: in the Editor GetComponent returns a "fake null" that `??` does not treat as null
+            var canvas = panel.GetComponent<Canvas>();
+            if (canvas == null) canvas = panel.gameObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
             if (worldCamera != null) canvas.worldCamera = worldCamera;
-            var scaler = panel.GetComponent<CanvasScaler>() ?? panel.gameObject.AddComponent<CanvasScaler>();
+            var scaler = panel.GetComponent<CanvasScaler>();
+            if (scaler == null) scaler = panel.gameObject.AddComponent<CanvasScaler>();
             scaler.dynamicPixelsPerUnit = 4f;
             if (panel.GetComponent<GraphicRaycaster>() == null) panel.gameObject.AddComponent<GraphicRaycaster>();
             rt.sizeDelta = new Vector2(wMm, hMm); rt.localScale = Vector3.one * 0.001f;

@@ -78,7 +78,8 @@ namespace Opus.Shell.Editor
                 cam.backgroundColor = new Color(0.10f, 0.10f, 0.11f);
                 cam.nearClipPlane = 0.02f; cam.farClipPlane = 30f;
             }
-            var settings = rig.GetComponent<RigRuntimeSettings>() ?? rig.AddComponent<RigRuntimeSettings>();
+            var settings = rig.GetComponent<RigRuntimeSettings>();
+            if (settings == null) settings = rig.AddComponent<RigRuntimeSettings>();   // not `??`: GetComponent returns a fake null in the Editor
             settings.rigRoot = rig.transform; settings.displayFrequencyHz = 72;
 
             // 3. materials
@@ -174,6 +175,7 @@ namespace Opus.Shell.Editor
             string audio = BuildAudio(root.transform, anchors);
             BuildPresentation(root.transform, anchors);   // U3: virtual arm, brush, stone, presenter
             AddUi(root.transform, anchors);               // U4: event system for poke, UI presenter
+            AddController(root);                          // U5: composition root (finds anchors + presenters itself in Awake)
 
             // 9. build settings: OrchardReach first, PhantomHand after it
             var list = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
@@ -484,7 +486,8 @@ namespace Opus.Shell.Editor
             }
             var pres = root.Find("Presentation");
             if (pres == null) throw new InvalidOperationException("Presentation root missing; run BuildPresentation first");
-            var ui = pres.GetComponent<PhantomHandUiPresenter>() ?? pres.gameObject.AddComponent<PhantomHandUiPresenter>();
+            var ui = pres.GetComponent<PhantomHandUiPresenter>();
+            if (ui == null) ui = pres.gameObject.AddComponent<PhantomHandUiPresenter>();
             ui.anchors = anchors;
             ui.armPresenter = pres.GetComponent<ArmThreatPresenter>();
             ui.attachPoke = true;
@@ -493,8 +496,14 @@ namespace Opus.Shell.Editor
                 if (t != null) t.gameObject.SetActive(false);
         }
 
+        /// <summary>U5: PhantomHandSceneController on the scene root (next to PhantomAnchors). Idempotent.</summary>
+        private static void AddController(GameObject root)
+        {
+            if (root.GetComponent<PhantomHandSceneController>() == null) root.AddComponent<PhantomHandSceneController>();
+        }
+
         /// <summary>U4 on an existing PhantomHand.unity without a full rebuild: adds the instruction panel anchor, resizes the panels,
-        /// adds the event system and the UI presenter.</summary>
+        /// adds the event system, the UI presenter and (U5) the scene controller.</summary>
         public static string BuildUi()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Leave Play mode first.");
@@ -508,6 +517,7 @@ namespace Opus.Shell.Editor
             Resize(anchors.witnessPanel, new Vector3(0f, 1.28f, 0.95f), 1.0f, 0.66f);
             Resize(anchors.hudPanel, new Vector3(-0.34f, 1.36f, 0.80f), 0.36f, 0.20f);
             AddUi(root, anchors);
+            AddController(anchors.gameObject);
             EditorUtility.SetDirty(anchors);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
@@ -627,10 +637,14 @@ namespace Opus.Shell.Editor
             var written = new List<string>();
             Vector3 eye = SeatedEye;
 
-            var instr = anchors.instructionPanel.GetComponent<PhInstructionPanel>() ?? anchors.instructionPanel.gameObject.AddComponent<PhInstructionPanel>();
-            var quest = anchors.questionnairePanel.GetComponent<PhQuestionnairePanel>() ?? anchors.questionnairePanel.gameObject.AddComponent<PhQuestionnairePanel>();
-            var wit = anchors.witnessPanel.GetComponent<PhWitnessPanel>() ?? anchors.witnessPanel.gameObject.AddComponent<PhWitnessPanel>();
-            var hud = anchors.hudPanel.GetComponent<PhHudPanel>() ?? anchors.hudPanel.gameObject.AddComponent<PhHudPanel>();
+            var instr = anchors.instructionPanel.GetComponent<PhInstructionPanel>();
+            if (instr == null) instr = anchors.instructionPanel.gameObject.AddComponent<PhInstructionPanel>();
+            var quest = anchors.questionnairePanel.GetComponent<PhQuestionnairePanel>();
+            if (quest == null) quest = anchors.questionnairePanel.gameObject.AddComponent<PhQuestionnairePanel>();
+            var wit = anchors.witnessPanel.GetComponent<PhWitnessPanel>();
+            if (wit == null) wit = anchors.witnessPanel.gameObject.AddComponent<PhWitnessPanel>();
+            var hud = anchors.hudPanel.GetComponent<PhHudPanel>();
+            if (hud == null) hud = anchors.hudPanel.gameObject.AddComponent<PhHudPanel>();
             instr.Build(cam); quest.Build(cam, false); wit.Build(cam, false); hud.Build(cam);
 
             // 1-3 calibration (lit room, outline visible)

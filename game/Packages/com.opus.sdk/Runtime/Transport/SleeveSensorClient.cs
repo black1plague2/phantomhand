@@ -61,7 +61,7 @@ namespace Opus.Sdk
             _transport.OnMessage += HandleMessage;
         }
 
-        /// <summary>Starts the transport (idempotent) and the 1 Hz subscribe + ping keepalive.</summary>
+        /// <summary>Starts the transport (idempotent) and the 1 Hz subscribe + ping + `keepalive` traffic.</summary>
         public void Start()
         {
             _transport.Start();
@@ -173,7 +173,7 @@ namespace Opus.Sdk
 
         // ---------------------------------------------------------------- main thread
 
-        /// <summary>Call every frame: sends the 1 Hz keepalive and raises queued events.</summary>
+        /// <summary>Call every frame: sends the 1 Hz subscribe / ping / keepalive (enqueue only, never blocks) and raises queued events.</summary>
         public void Pump()
         {
             double now = _clock.NowMs;
@@ -189,6 +189,9 @@ namespace Opus.Sdk
                         ["v"] = 1, ["type"] = "ping", ["id"] = Guid.NewGuid().ToString(),
                         ["ts_ms"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     }.ToString(Newtonsoft.Json.Formatting.None));
+                    // The bare keepalive the real firmware's 2 s watchdog is fed by. Sent to a silent node too: a fresh
+                    // or power-cycled node only streams to a peer it has heard from.
+                    _transport.Send("{\"type\":\"keepalive\"}");
                 }
             }
 

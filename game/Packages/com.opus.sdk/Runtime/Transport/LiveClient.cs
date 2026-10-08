@@ -42,6 +42,7 @@ namespace Opus.Sdk
         private readonly Func<JObject> _versionsProvider;
         private readonly Func<JArray> _gamesProvider;
         private readonly string _manualHost;
+        private readonly int _hubPort;
 
         private readonly LiveMessageFactory _factory = new LiveMessageFactory("headset");
         private readonly LiveMessageOutbox _outbox = new LiveMessageOutbox();
@@ -72,19 +73,30 @@ namespace Opus.Sdk
         public bool IsConnected => _connected;
         public double LastRttMs => _lastPongRttMs;
         public string ActiveSessionId => _sessionId;
+        /// <summary>The hub port the WebSocket and the HTTP uploads go to (<see cref="HubPort"/> unless the constructor was given another).</summary>
+        public int ActiveHubPort => _hubPort;
 
         /// <param name="deviceId">Stable per-install id (e.g. SystemInfo.deviceUniqueIdentifier).</param>
         /// <param name="versionsProvider">Returns {"shell": "...", "sdk": "...", "games": {...}} for hello.payload.versions.</param>
         /// <param name="gamesProvider">Returns [{"id":..,"version":..}, ...] for hello.payload.games.</param>
         /// <param name="manualHost">If set, skip UDP discovery and connect directly (pairing-code / manual-IP fallback).</param>
-        public LiveClient(string deviceId, Func<JObject> versionsProvider, Func<JArray> gamesProvider = null, string manualHost = null)
+        /// <param name="hubPort">TCP port of the hub's WebSocket + HTTP server (default 8787); out of range falls back to 8787.</param>
+        public LiveClient(string deviceId, Func<JObject> versionsProvider, Func<JArray> gamesProvider = null, string manualHost = null, int hubPort = HubPort)
         {
             _deviceId = deviceId;
             _versionsProvider = versionsProvider;
             _gamesProvider = gamesProvider;
             _manualHost = manualHost;
+            _hubPort = hubPort >= 1 && hubPort <= 65535 ? hubPort : HubPort;
             _pairToken = PlayerPrefs.GetString(PairTokenPrefKey, null);
         }
+
+        /// <summary>`ws://host:port/opus/v1/live`.</summary>
+        public static Uri BuildWsUri(string host, int port) => new Uri($"ws://{host}:{port}{WsPath}");
+
+        /// <summary>`http://host:port/opus/v1/sessions/{session_id}/files/{name}`.</summary>
+        public static string BuildUploadUrl(string host, int port, string sessionId, string name) =>
+            $"http://{host}:{port}/opus/v1/sessions/{Uri.EscapeDataString(sessionId)}/files/{Uri.EscapeDataString(name)}";
 
         public void Start()
         {
@@ -205,7 +217,7 @@ namespace Opus.Sdk
                 }
                 byte[] bytes = System.IO.File.ReadAllBytes(absolutePath);
                 string sha256 = Sha256Hex(bytes);
-                string url = $"http://{_hostForHttp}:{HubPort}/opus/v1/sessions/{Uri.EscapeDataString(sessionId)}/files/{Uri.EscapeDataString(name)}";
+                string url = BuildUploadUrl(_hostForHttp, _hubPort, sessionId, name);
 
                 using var req = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT);
                 req.uploadHandler = new UploadHandlerRaw(bytes);
@@ -305,7 +317,7 @@ namespace Opus.Sdk
             _ws = ws;
             try
             {
-                var uri = new Uri($"ws://{host}:{HubPort}{WsPath}");
+                var uri = BuildWsUri(host, _hubPort);
                 await ws.ConnectAsync(uri, ct);
             }
             catch (Exception e)

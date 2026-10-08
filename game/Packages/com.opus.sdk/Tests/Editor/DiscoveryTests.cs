@@ -24,6 +24,12 @@ namespace Opus.Sdk.Tests
         private const string NodeBPrd = "{\"type\":\"device_discovery\",\"device_id\":\"CHETNA_BIO_001\",\"device_kind\":\"bio\"," +
             "\"firmware_version\":\"0.5.0\",\"command_port\":8790,\"status\":\"available\",\"motor_count\":0,\"timestamp_ms\":2000}";
         private const string LegacyHello = "{\"opus_haptic\":1,\"device_id\":\"sleeve-01\",\"port\":8790,\"fw\":\"0.1.0\"}";
+        // Verbatim from docs/PH_ELECTRONICS_HANDOFF_FROM_TEAM.md section A (the firmware as flashed 2026-10-08): the real Node A id is
+        // CHETNA_HAPTIC_001, the contract and the fixtures say SLEEVE_001. Both must latch; the node KIND decides, never the id.
+        private const string RealNodeA = "{\"type\":\"device_discovery\",\"device_id\":\"CHETNA_HAPTIC_001\",\"device_kind\":\"haptic\"," +
+            "\"firmware_version\":\"0.5.0\",\"command_port\":8790,\"status\":\"available\",\"motor_count\":2,\"timestamp_ms\":123456}";
+        private const string RealNodeB = "{\"type\":\"device_discovery\",\"device_id\":\"CHETNA_BIO_001\",\"device_kind\":\"bio\"," +
+            "\"firmware_version\":\"0.5.0\",\"command_port\":8790,\"status\":\"available\",\"motor_count\":0,\"timestamp_ms\":123456}";
 
         private static readonly IPAddress HostA = IPAddress.Parse("192.168.43.20");
         private static readonly IPAddress HostB = IPAddress.Parse("192.168.43.21");
@@ -211,6 +217,182 @@ namespace Opus.Sdk.Tests
                 }
                 Assert.IsTrue(t.HasDevice, "beacon received through the shared socket");
                 Assert.AreEqual(new IPEndPoint(IPAddress.Loopback, 28790), t.DeviceEndpoint);
+            }
+        }
+
+        // ------------------------------------------------------------------ node matching: by kind, not by id
+
+        [Test]
+        public void Parse_RealFirmwareBeacons_AreMatchedByKind()
+        {
+            var a = DiscoveryHub.Parse(RealNodeA, HostA);
+            Assert.AreEqual("haptic", a.DeviceKind);
+            Assert.AreEqual("CHETNA_HAPTIC_001", a.DeviceId);
+            Assert.AreEqual(8790, a.CommandPort);
+            Assert.AreEqual("0.5.0", a.Firmware);
+            Assert.IsFalse(a.Legacy);
+
+            var b = DiscoveryHub.Parse(RealNodeB, HostB);
+            Assert.AreEqual("bio", b.DeviceKind);
+            Assert.AreEqual("CHETNA_BIO_001", b.DeviceId);
+
+            Assert.IsTrue(DiscoveryFilter.Haptic.Matches(a));
+            Assert.IsFalse(DiscoveryFilter.Haptic.Matches(b));
+            Assert.IsTrue(DiscoveryFilter.Bio.Matches(b));
+            Assert.IsFalse(DiscoveryFilter.Bio.Matches(a));
+        }
+
+        [Test]
+        public void Filter_TheKindDecides_TheIdNever()
+        {
+            // a haptic node whatever it is called, and a bio node even if its id looks like a haptic one
+            foreach (string id in new[] { "SLEEVE_001", "CHETNA_HAPTIC_001", "CHETNA_BIO_001", "anything-else", "" })
+            {
+                var haptic = DiscoveryHub.Parse(RealNodeA.Replace("CHETNA_HAPTIC_001", id), HostA);
+                Assert.IsTrue(DiscoveryFilter.Haptic.Matches(haptic), "haptic id '" + id + "'");
+                Assert.IsFalse(DiscoveryFilter.Bio.Matches(haptic), "haptic id '" + id + "'");
+            }
+            foreach (string id in new[] { "CHETNA_BIO_001", "CHETNA_HAPTIC_001", "SLEEVE_001" })
+            {
+                var bio = DiscoveryHub.Parse(RealNodeB.Replace("CHETNA_BIO_001", id), HostB);
+                Assert.IsFalse(DiscoveryFilter.Haptic.Matches(bio), "bio id '" + id + "'");
+                Assert.IsTrue(DiscoveryFilter.Bio.Matches(bio), "bio id '" + id + "'");
+            }
+        }
+
+        [Test]
+        public void Parse_LegacyHello_WithoutAKind_StaysHaptic_WhateverItsId()
+        {
+            foreach (string id in new[] { "sleeve-01", "SLEEVE_001", "CHETNA_HAPTIC_001" })
+            {
+                var i = DiscoveryHub.Parse("{\"opus_haptic\":1,\"device_id\":\"" + id + "\",\"port\":8790,\"fw\":\"0.5.0\"}", HostA);
+                Assert.AreEqual("haptic", i.DeviceKind, id);
+                Assert.IsTrue(DiscoveryFilter.Haptic.Matches(i), id);
+                Assert.IsFalse(DiscoveryFilter.Bio.Matches(i), id);
+            }
+            var nullKind = DiscoveryHub.Parse("{\"opus_haptic\":1,\"device_id\":\"x\",\"device_kind\":null,\"port\":8790}", HostA);
+            Assert.AreEqual("haptic", nullKind.DeviceKind, "a null kind is no kind");
+        }
+
+        [Test]
+        public void Transport_DefaultFilter_LatchesNodeA_UnderTheContractIdAndTheRealId()
+        {
+            int port = 28821;
+            foreach (string id in new[] { "SLEEVE_001", "CHETNA_HAPTIC_001", "anything-else" })
+            {
+                using (var t = new UdpHapticTransport(discoveryPort: port))
+                {
+                    t.Start();
+                    DiscoveryHub.Dispatch(port, RealNodeB, HostB);
+                    Assert.IsFalse(t.HasDevice, "the bio node is never taken for Node A (" + id + ")");
+                    DiscoveryHub.Dispatch(port, RealNodeA.Replace("CHETNA_HAPTIC_001", id), HostA);
+                    Assert.IsTrue(t.HasDevice, id);
+                    Assert.AreEqual(id, t.LatchedDeviceId);
+                    Assert.AreEqual(new IPEndPoint(HostA, 8790), t.DeviceEndpoint);
+                }
+                port++;
+            }
+        }
+
+        [Test]
+        public void Hub_RealTwoNodeSession_EachTransportLatchesItsKind_InEitherArrivalOrder()
+        {
+            int port = 28825;
+            foreach (bool bioFirst in new[] { true, false })
+            {
+                using (var haptic = new UdpHapticTransport(filter: DiscoveryFilter.Haptic, discoveryPort: port))
+                using (var bio = new UdpHapticTransport(filter: DiscoveryFilter.Bio, discoveryPort: port))
+                {
+                    haptic.Start();
+                    bio.Start();
+                    string first = bioFirst ? RealNodeB : RealNodeA, second = bioFirst ? RealNodeA : RealNodeB;
+                    IPAddress firstHost = bioFirst ? HostB : HostA, secondHost = bioFirst ? HostA : HostB;
+                    DiscoveryHub.Dispatch(port, first, firstHost);
+                    DiscoveryHub.Dispatch(port, second, secondHost);
+
+                    Assert.AreEqual("CHETNA_HAPTIC_001", haptic.LatchedDeviceId);
+                    Assert.AreEqual(HostA, haptic.DeviceEndpoint.Address);
+                    Assert.AreEqual("CHETNA_BIO_001", bio.LatchedDeviceId);
+                    Assert.AreEqual(HostB, bio.DeviceEndpoint.Address);
+                }
+                port++;
+            }
+        }
+    }
+
+    /// <summary>Windows reports an ICMP "port unreachable" from an earlier send as SocketException 10054 (WSAECONNRESET) on the
+    /// NEXT receive of a UDP socket, which used to end the receive loop for good (U5 log, open issue 2). Every SDK UDP receive
+    /// loop must swallow exactly that error and keep receiving; any other socket error keeps ending it.</summary>
+    public class UdpConnResetTests
+    {
+        [Test]
+        public void IsConnReset_IsTrueFor10054Only()
+        {
+            Assert.IsTrue(UdpConnReset.IsConnReset(new SocketException(10054)));
+            Assert.IsTrue(UdpConnReset.IsConnReset(new SocketException((int)SocketError.ConnectionReset)));
+            foreach (var other in new[] { SocketError.ConnectionRefused, SocketError.ConnectionAborted, SocketError.OperationAborted,
+                                          SocketError.Interrupted, SocketError.TimedOut, SocketError.NetworkUnreachable, SocketError.HostUnreachable,
+                                          SocketError.MessageSize, SocketError.AccessDenied, SocketError.Shutdown })
+                Assert.IsFalse(UdpConnReset.IsConnReset(new SocketException((int)other)), other.ToString());
+            Assert.IsFalse(UdpConnReset.IsConnReset(null));
+            Assert.AreEqual(-1744830452, UdpConnReset.SioUdpConnReset, "SIO_UDP_CONNRESET");
+        }
+
+        private static int ClosedUdpPort()
+        {
+            using (var probe = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0))) return ((IPEndPoint)probe.Client.LocalEndPoint).Port;
+        }
+
+        [Test]
+        public void Disable_NeverThrows_IsWindowsOnly_AndWhereItWorksTheOsStopsReportingTheReset()
+        {
+            Assert.IsFalse(UdpConnReset.Disable(null));
+            using (var udp = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0)))
+            {
+                bool disabled = UdpConnReset.Disable(udp.Client);
+                if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                {
+                    Assert.IsFalse(disabled, "SIO_UDP_CONNRESET is a Windows ioctl; elsewhere the loops rely on IsConnReset alone");
+                    return;
+                }
+                if (!disabled) return;   // this runtime cannot issue the ioctl: the exception handler is the fallback (Transport_KeepsReceiving_... covers it)
+
+                // a send to a closed port: Windows would answer the next receive with 10054; with the report switched off it just waits
+                udp.Send(new byte[] { 1 }, 1, new IPEndPoint(IPAddress.Loopback, ClosedUdpPort()));
+                udp.Client.ReceiveTimeout = 700;
+                var ex = Assert.Throws<SocketException>(() => udp.Client.Receive(new byte[16]));
+                Assert.AreEqual(SocketError.TimedOut, ex.SocketErrorCode, "a timeout, not WSAECONNRESET");
+            }
+        }
+
+        [Test]
+        public void Transport_KeepsReceiving_AfterSendsToAClosedPort()
+        {
+            int closedPort = ClosedUdpPort();   // a UDP port nothing listens on (bound once, then released)
+
+            using (var t = new UdpHapticTransport("127.0.0.1", commandPort: closedPort, discoveryPort: 28830))
+            {
+                var got = new System.Collections.Concurrent.ConcurrentQueue<string>();
+                t.OnMessage += got.Enqueue;
+                t.Start();
+
+                // each send to the closed port makes a Windows socket throw 10054 from its next receive; the old loop ended there.
+                // There is no signal for "the ICMP has come back", so give it a moment: too short only makes the test less
+                // sensitive, it can never make it fail.
+                for (int i = 0; i < 5; i++) { t.Send("{\"type\":\"ping\"}"); Thread.Sleep(30); }
+
+                // now the node comes up on that very port and talks to the transport's command socket
+                using (var node = new UdpClient(new IPEndPoint(IPAddress.Loopback, closedPort)))
+                {
+                    var reply = Encoding.UTF8.GetBytes("{\"type\":\"status\",\"device_id\":\"CHETNA_HAPTIC_001\"}");
+                    var sw = Stopwatch.StartNew();
+                    while (got.IsEmpty && sw.ElapsedMilliseconds < 5000)
+                    {
+                        node.Send(reply, reply.Length, new IPEndPoint(IPAddress.Loopback, t.LocalPort));
+                        Thread.Sleep(20);
+                    }
+                }
+                Assert.IsFalse(got.IsEmpty, "the receive loop must survive WSAECONNRESET and still deliver the node's datagram");
             }
         }
     }

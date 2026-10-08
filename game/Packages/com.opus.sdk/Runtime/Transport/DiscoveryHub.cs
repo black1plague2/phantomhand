@@ -188,6 +188,7 @@ namespace Opus.Sdk
                 try
                 {
                     var socket = new UdpClient();
+                    UdpConnReset.Disable(socket.Client);
                     socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                     socket.ExclusiveAddressUse = false;
                     socket.Client.Bind(new IPEndPoint(IPAddress.Any, port));
@@ -218,6 +219,7 @@ namespace Opus.Sdk
                     UdpReceiveResult result;
                     try { result = await entry.Socket.ReceiveAsync(); }
                     catch (ObjectDisposedException) { break; }
+                    catch (SocketException e) when (UdpConnReset.IsConnReset(e)) { continue; } // WSAECONNRESET: keep listening
                     catch (SocketException) { break; }
                     Dispatch(port, Encoding.UTF8.GetString(result.Buffer), result.RemoteEndPoint.Address);
                 }

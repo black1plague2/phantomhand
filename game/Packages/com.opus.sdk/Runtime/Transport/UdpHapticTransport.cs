@@ -75,6 +75,7 @@ namespace Opus.Sdk
             try
             {
                 _cmdSocket = new UdpClient(0); // ephemeral local port; the node replies to whatever src port we send from
+                UdpConnReset.Disable(_cmdSocket.Client); // Windows: a send to a node that just went away must not end the receive loop
                 LocalPort = ((IPEndPoint)_cmdSocket.Client.LocalEndPoint).Port;
             }
             catch (Exception e)
@@ -172,12 +173,45 @@ namespace Opus.Sdk
                     UdpReceiveResult result;
                     try { result = await _cmdSocket.ReceiveAsync(); }
                     catch (ObjectDisposedException) { break; }
+                    catch (SocketException e) when (UdpConnReset.IsConnReset(e)) { continue; } // WSAECONNRESET: an earlier send hit a closed port; keep listening
                     catch (SocketException) { break; }
                     string json = Encoding.UTF8.GetString(result.Buffer);
                     OnMessage?.Invoke(json);
                 }
             }
             catch (OperationCanceledException) { }
+        }
+    }
+
+    /// <summary>
+    /// On Windows a UDP socket that sent a datagram to a closed port (a node that is not up yet, or just lost power)
+    /// gets the ICMP "port unreachable" back as SocketException 10054 (WSAECONNRESET) on its NEXT receive. That is not a
+    /// failure of the socket, so the SDK's UDP receive loops (<see cref="UdpHapticTransport"/>, <see cref="DiscoveryHub"/>)
+    /// swallow exactly that error and keep receiving; other socket errors still end the loop. <see cref="Disable"/>
+    /// switches the report off at the source where the OS supports it (SIO_UDP_CONNRESET); <see cref="IsConnReset"/> is
+    /// the fallback for everywhere else. (LiveClient's one-shot hub-beacon receive never sends from its socket, so Windows
+    /// cannot raise the error there.)
+    /// </summary>
+    public static class UdpConnReset
+    {
+        public const int WsaConnReset = 10054;
+        /// <summary>SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12.</summary>
+        public const int SioUdpConnReset = -1744830452;
+
+        public static bool IsConnReset(SocketException e) =>
+            e != null && (e.ErrorCode == WsaConnReset || e.SocketErrorCode == SocketError.ConnectionReset);
+
+        /// <summary>Asks Windows not to report ICMP port-unreachable as WSAECONNRESET on this socket. Returns false when
+        /// that is not available (other OS, or the call failed); callers rely on <see cref="IsConnReset"/> then.</summary>
+        public static bool Disable(Socket socket)
+        {
+            if (socket == null || Environment.OSVersion.Platform != PlatformID.Win32NT) return false;
+            try
+            {
+                socket.IOControl(SioUdpConnReset, new byte[] { 0, 0, 0, 0 }, null);
+                return true;
+            }
+            catch (Exception) { return false; }
         }
     }
 }

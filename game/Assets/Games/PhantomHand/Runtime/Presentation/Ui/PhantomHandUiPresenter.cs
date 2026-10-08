@@ -53,7 +53,8 @@ namespace Opus.Games.PhantomHand.Presentation
             _module = module; _haptic = haptic; _nodeA = nodeA; _nodeB = nodeB; _clock = clock; _hands = hands;
             if (module.Params != null && (module.Params.VoiceoverLang == PhStrings.Hi || module.Params.VoiceoverLang == PhStrings.En))
                 Lang = module.Params.VoiceoverLang;
-            if (anchors == null) anchors = GetComponentInParent<PhantomAnchors>() ?? FindFirstObjectByType<PhantomAnchors>();
+            if (anchors == null) anchors = GetComponentInParent<PhantomAnchors>();
+            if (anchors == null) anchors = FindFirstObjectByType<PhantomAnchors>();
             Camera cam = null;
             if (anchors != null && anchors.cameraRig != null) cam = anchors.cameraRig.GetComponentInChildren<Camera>(true);
             if (cam == null) cam = Camera.main;
@@ -85,7 +86,9 @@ namespace Opus.Games.PhantomHand.Presentation
                 go.SetActive(false);
                 t = go.transform;
             }
-            return t.GetComponent<T>() ?? t.gameObject.AddComponent<T>();
+            var c = t.GetComponent<T>();
+            if (c == null) c = t.gameObject.AddComponent<T>();
+            return c;
         }
 
         private void BuildSfx()

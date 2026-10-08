@@ -267,11 +267,15 @@ namespace Opus.Games.PhantomHand.Tests
         }
 
         [Test]
-        public void SceneIsInBuildSettings_AfterOrchardReach_AndHasNoOrchardObjects()
+        public void SceneIsInBuildSettings_AfterBootstrap_AndHasNoOrchardObjects()
         {
-            var paths = EditorBuildSettings.scenes.Select(s => s.path).ToList();
-            Assert.Greater(paths.IndexOf(ScenePath), paths.IndexOf("Assets/Scenes/OrchardReach.unity"));
-            Assert.GreaterOrEqual(paths.IndexOf("Assets/Scenes/OrchardReach.unity"), 0);
+            // U5 build order (BootstrapSceneBuilder.SetBuildSettings): Bootstrap is build index 0, then the game scenes.
+            // OrchardReach may still follow as a fallback until its removal; it is deliberately not asserted here.
+            var scenes = EditorBuildSettings.scenes;
+            var paths = scenes.Select(s => s.path).ToList();
+            Assert.AreEqual("Assets/Scenes/Bootstrap.unity", paths[0], "Bootstrap must be build index 0");
+            Assert.Greater(paths.IndexOf(ScenePath), 0, "PhantomHand must be in the build settings after Bootstrap");
+            Assert.IsTrue(scenes[paths.IndexOf(ScenePath)].enabled, "PhantomHand must be enabled in the build settings");
             foreach (var n in new[] { "OrchardTable", "OrchardGround", "OrchardReachSceneController", "OrchardSun", "Basket" })
                 Assert.IsNull(GameObject.Find(n), n + " must not be in the Phantom Hand scene");
         }

@@ -61,6 +61,21 @@ namespace Opus.Sdk.Tests
         }
 
         [Test]
+        public void Imu_FromTheRealNodeA_IsRecordedUnderItsOwnId()
+        {
+            // the firmware as flashed calls Node A CHETNA_HAPTIC_001; the contract and fixtures say SLEEVE_001. Neither is assumed.
+            foreach (string id in new[] { "CHETNA_HAPTIC_001", "SLEEVE_001" })
+            {
+                var r = new SensorRecorder("s", SessionClock.Manual(0), Path.Combine(_dir, id));
+                for (int i = 0; i < 10; i++) r.AddImu(Imu(1000 + 10.0 * i, id));
+                r.AddImu(new ImuSample { DeviceId = id, TMs = 1100, Ax = 0, Ay = 0, Az = 9.8 });   // accel only: the gyro stays 0
+                r.Flush();
+                Assert.AreEqual(id, Read(Path.Combine(_dir, id, "sens_000.json"))["imu"]["device_id"].Value<string>());
+                Assert.AreEqual(0, r.DroppedForeign, id);
+            }
+        }
+
+        [Test]
         public void Chunks_RollEvery5Seconds_OnSampleTime()
         {
             var clock = SessionClock.Manual(0);

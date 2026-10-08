@@ -1,3 +1,6 @@
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using NUnit.Framework;
 using Newtonsoft.Json.Linq;
 using Opus.Sdk;
@@ -121,6 +124,68 @@ namespace Opus.Sdk.Tests
             Assert.IsFalse(dedup.IsDuplicate("a"));
             Assert.IsTrue(dedup.IsDuplicate("a"));
             Assert.IsFalse(dedup.IsDuplicate("b"));
+        }
+    }
+
+    /// <summary>The optional hubPort argument (default 8787) reaches the sockets: the ws:// URI, the HTTP upload URL and the real
+    /// TCP connect. The connect test runs against a local TcpListener on an ephemeral port, never on 8787.</summary>
+    public class LiveClientHubPortTests
+    {
+        private static LiveClient Make(int? port = null) => port.HasValue
+            ? new LiveClient("hubport-test", () => new JObject(), null, "127.0.0.1", port.Value)
+            : new LiveClient("hubport-test", () => new JObject(), null, "127.0.0.1");
+
+        [Test]
+        public void DefaultHubPort_Is8787()
+        {
+            Assert.AreEqual(8787, LiveClient.HubPort);
+            Assert.AreEqual(8787, Make().ActiveHubPort);
+        }
+
+        [Test]
+        public void ExplicitHubPort_IsKept_AndOutOfRangeFallsBackToTheDefault()
+        {
+            Assert.AreEqual(40123, Make(40123).ActiveHubPort);
+            Assert.AreEqual(65535, Make(65535).ActiveHubPort);
+            foreach (int bad in new[] { 0, -1, 65536, 100000 }) Assert.AreEqual(8787, Make(bad).ActiveHubPort, "port " + bad);
+        }
+
+        [Test]
+        public void Urls_CarryThePort()
+        {
+            Assert.AreEqual("ws://192.168.43.5:8787/opus/v1/live", LiveClient.BuildWsUri("192.168.43.5", LiveClient.HubPort).ToString());
+            Assert.AreEqual("ws://127.0.0.1:40123/opus/v1/live", LiveClient.BuildWsUri("127.0.0.1", 40123).ToString());
+            Assert.AreEqual("http://127.0.0.1:40123/opus/v1/sessions/s%201/files/sens_000.json",
+                            LiveClient.BuildUploadUrl("127.0.0.1", 40123, "s 1", "sens_000.json"));
+        }
+
+        [Test]
+        public void CustomHubPort_ReachesTheSocket()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            var client = Make(port);
+            try
+            {
+                client.Start();
+                var accepted = listener.AcceptTcpClientAsync();
+                Assert.IsTrue(accepted.Wait(10000), "the client never connected to the custom hub port " + port);
+                using (var peer = accepted.Result)
+                {
+                    peer.ReceiveTimeout = 5000;
+                    var buffer = new byte[4096];
+                    int n = peer.GetStream().Read(buffer, 0, buffer.Length);
+                    string request = Encoding.ASCII.GetString(buffer, 0, n);
+                    StringAssert.StartsWith("GET /opus/v1/live", request);
+                    StringAssert.Contains(":" + port, request, "the Host header names the custom port");
+                }
+            }
+            finally
+            {
+                client.Dispose();
+                listener.Stop();
+            }
         }
     }
 }

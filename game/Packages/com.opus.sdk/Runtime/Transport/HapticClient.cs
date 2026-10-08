@@ -308,12 +308,16 @@ namespace Opus.Sdk
                 sb.Append(ch);
             }
             _recentDisplayMs.Enqueue(nowMs);
-            SendEnvelope(new JObject { ["type"] = "display", ["text"] = sb.ToString() });
+            // The contract fake reads `text`, the real firmware reads `mode`: send the same line in both.
+            string line = sb.ToString();
+            SendEnvelope(new JObject { ["type"] = "display", ["text"] = line, ["mode"] = line });
             return true;
         }
 
         /// <summary>Start the once-per-second ping + subscribe (firmware watchdog FR-FW-04 and the subscriber
-        /// list, 03-SPEC D3). The first pair goes out on the next Pump. Keepalives do not touch the cue watchdog.</summary>
+        /// list, 03-SPEC D3) plus the bare `{"type":"keepalive"}` the real firmware's 2 s watchdog is fed by. The first
+        /// set goes out on the next Pump and goes on for a silent node too: a power-cycled node only streams to a peer
+        /// it has heard from. Keepalives do not touch the cue watchdog.</summary>
         public void StartKeepalive(double nowMs)
         {
             _keepaliveActive = true;
@@ -336,6 +340,7 @@ namespace Opus.Sdk
                 ["ts_ms"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             });
             SendEnvelope(new JObject { ["type"] = "subscribe" });
+            SendEnvelope(new JObject { ["type"] = "keepalive" });
         }
 
         /// <summary>Call once per frame: drains the watchdog. If no cue has been sent in
@@ -464,7 +469,8 @@ namespace Opus.Sdk
 
                 case "ack":
                     // v1 ack: {ack_id, ok}. Electronics-team contract ack: {cue_id, status: accepted|executed|
-                    // rejected|error}. Accept either so the physical sleeve and the simulator are interchangeable.
+                    // rejected|error}. Real firmware ack: {cue_id, accepted: bool}. "accepted" is a success exactly
+                    // like "executed". Accept all three so the physical sleeve and the simulator are interchangeable.
                     string ackId = obj["ack_id"]?.Value<string>() ?? obj["cue_id"]?.Value<string>();
                     HapticCueRecord record = null;
                     lock (_pendingByCueId)
@@ -474,8 +480,8 @@ namespace Opus.Sdk
                     }
                     if (record != null)
                     {
-                        string st = obj["status"]?.Value<string>();
-                        record.Delivered = obj["ok"]?.Value<bool?>() ?? (st == null || st == "accepted" || st == "executed");
+                        string st = obj["status"]?.Type == JTokenType.String ? obj["status"].Value<string>() : null;
+                        record.Delivered = AckSucceeded(obj, st);
                         // HandleMessage runs on a background thread (per IHapticTransport's OnMessage contract)
                         // with no access to the main-thread SessionClock unless the owner supplied Clock; without
                         // it only delivery is flagged here and latency is computed where the ack is consumed.
@@ -486,6 +492,18 @@ namespace Opus.Sdk
                     }
                     break;
             }
+        }
+
+        /// <summary>Did the node take the cue? `ok` (v1) wins, then the boolean `accepted` (real firmware), then the
+        /// `status` text (accepted and executed are both successes; rejected, error and anything else are not). An ack
+        /// that carries none of them is a plain receipt and counts as delivered.</summary>
+        private static bool AckSucceeded(JObject ack, string status)
+        {
+            var ok = ack["ok"];
+            if (ok != null && ok.Type == JTokenType.Boolean) return ok.Value<bool>();
+            var accepted = ack["accepted"];
+            if (accepted != null && accepted.Type == JTokenType.Boolean) return accepted.Value<bool>();
+            return status == null || status == "accepted" || status == "executed";
         }
 
         public void Dispose()

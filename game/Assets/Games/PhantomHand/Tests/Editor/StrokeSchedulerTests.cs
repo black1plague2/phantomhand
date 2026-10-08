@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Opus.Games.PhantomHand.Presentation;
+using Opus.Sdk;
 
 namespace Opus.Games.PhantomHand.Tests
 {
@@ -158,6 +161,255 @@ namespace Opus.Games.PhantomHand.Tests
             var m = new PhaseStateMachine(p, additions: true);
             var l = new StrokeScheduler(p, 1).Plan(PhCondition.Sync, 0, m.InductionPhaseMs);
             Assert.Less(l.Last().EndMs, 75000);
+        }
+    }
+
+    /// <summary>
+    /// StrokeDriver after pause + resume (U5 log, open issue 3). The operator's pause calls HapticClient.Stop, which cancels every
+    /// queued stroke cue; nothing queued them again, so the touch ended with the pause. Here the driver, the module and a real
+    /// HapticClient (over a recording transport) run frame by frame on a manual clock, in the composition root's order:
+    /// haptic Pump, module Tick, brush, driver Tick. EditMode has no BrushRig, so the "brush" reports every pass exactly at its
+    /// plan time (what the animation measures to within a frame) through StrokeDriver.OnPass.
+    /// </summary>
+    public class StrokeDriverTests
+    {
+        private const string Sync = "{\"condition_order\":\"sync_first\",\"induction_s\":40}";
+        private const string Async = "{\"condition_order\":\"async_first\",\"induction_s\":40}";
+
+        private sealed class DriverSession : ISessionContext
+        {
+            public SessionClock Clock { get; } = SessionClock.Manual();
+            public int BlockIndex { get { return 0; } }
+        }
+
+        private sealed class DriverTransport : IHapticTransport
+        {
+            public readonly List<string> Sent = new List<string>();
+            public bool HasDevice { get; set; } = true;
+            public event Action<string> OnMessage { add { } remove { } }
+            public event Action OnDeviceKnown { add { } remove { } }
+            public void Start() { }
+            public void Stop() { }
+            public void Send(string json) { Sent.Add(json); }
+            public void Dispose() { }
+        }
+
+        private sealed class Fx
+        {
+            public const double FrameMs = 10;
+            public readonly DriverSession S = new DriverSession();
+            public readonly PhantomHandModule M = new PhantomHandModule();
+            public readonly DriverTransport T = new DriverTransport();
+            public readonly HapticClient H;
+            public readonly StrokeDriver D;
+            public readonly List<TrialEvent> Ev = new List<TrialEvent>();
+            public readonly List<HapticCueRecord> Cues = new List<HapticCueRecord>();
+            private readonly HashSet<string> _passed = new HashSet<string>();
+
+            public Fx(string paramsJson)
+            {
+                M.OnTrialEvent += Ev.Add;
+                M.Configure(Ph.P(paramsJson), S);
+                H = new HapticClient(T);
+                H.OnCueRecorded += Cues.Add;
+                D = new StrokeDriver(M, H, null);
+            }
+
+            public double Now { get { return S.Clock.NowMs; } }
+            public double Lead { get { return M.Params.TactileLeadMs; } }
+
+            public void Step()
+            {
+                S.Clock.Advance(FrameMs);
+                H.Pump(Now);
+                M.Tick(Now);
+                if (!D.Active) return;
+                foreach (var s in M.CurrentStrokes)
+                {
+                    if (s.PassAMs <= Now && _passed.Add(s.Index + "a")) D.OnPass(s.Index, 0, s.PassAMs);
+                    if (s.PassBMs <= Now && _passed.Add(s.Index + "b")) D.OnPass(s.Index, 1, s.PassBMs);
+                }
+                D.Tick(Now);
+            }
+
+            public void RunTo(double ms) { while (Now < ms) Step(); }
+
+            public void ToInduction()
+            {
+                M.Begin();
+                Step();
+                Assert.IsTrue(M.SubmitCalibration(new[] { 0.0, 0.75, 0.3 }, new[] { 0.0, 0.0, 1.0 }, true));
+                Step();
+                Assert.AreEqual(PhPhase.ProbePre, M.CurrentPhase);
+                Assert.IsTrue(M.SubmitProbe(new ProbeResult { When = "pre", Confirmed = true, PerceivedXm = -0.16, ActualXm = 0.0, DriftCm = 0 }));
+                Assert.AreEqual(PhPhase.Induction, M.CurrentPhase);
+                D.Begin(Now);                  // the presenter does this on the phase change
+            }
+
+            /// <summary>What PhantomHandSceneController.PauseSession does.</summary>
+            public void Pause() { M.Pause(); H.Stop(); }
+
+            /// <summary>Every stroke command that reached the wire, in order.</summary>
+            public List<JObject> Strokes() { return T.Sent.Select(s => JObject.Parse(s)).Where(o => (string)o["cue"] == "stroke").ToList(); }
+
+            public List<TrialEvent> StrokeEvents() { return Ev.Where(e => e.Type == "stroke").ToList(); }
+
+            public static JObject Data(TrialEvent e) { return JObject.FromObject(e.Data); }
+        }
+
+        private static string Key(int motor, double playAtMs) { return motor + "@" + (long)Math.Round(playAtMs); }
+        private static string Key(JObject sent) { return Key(sent["motor"].Value<int>(), sent["play_at_ms"].Value<double>()); }
+
+        [Test]
+        public void PauseThenResume_SchedulesTheRemainingCuesAgain_AtTheirOriginalPlanTimes()
+        {
+            var f = new Fx(Sync);
+            f.ToInduction();
+            var plan = f.M.CurrentStrokes;
+            f.RunTo(f.M.InductionStartMs + 6000);
+            int sentBefore = f.Strokes().Count;
+            Assert.Greater(sentBefore, 8, "a few strokes went out before the pause");
+
+            f.Pause();
+            Assert.AreEqual(0, f.H.PendingStrokeCount, "HapticClient.Stop cancelled the whole queue");
+            f.RunTo(f.Now + 3000);                         // the clock runs on while paused, and so does the brush
+            Assert.AreEqual(sentBefore, f.Strokes().Count, "nothing is sent while paused");
+
+            f.M.Resume();
+            double resumedAt = f.Now;
+            var ahead = new List<string>();
+            foreach (var s in plan)
+            {
+                if (s.CueMotor0Ms - f.Lead >= resumedAt) ahead.Add(Key(0, s.CueMotor0Ms));
+                if (s.CueMotor1Ms - f.Lead >= resumedAt) ahead.Add(Key(1, s.CueMotor1Ms));
+            }
+            Assert.Greater(ahead.Count, 30, "most of the induction is still ahead");
+            Assert.AreEqual(ahead.Count, f.H.PendingStrokeCount, "every cue that is still ahead is queued again, and nothing else");
+
+            f.RunTo(plan.Last().EndMs + 1000);
+            var after = f.Strokes().Skip(sentBefore).ToList();
+            CollectionAssert.AreEquivalent(ahead, after.Select(Key).ToList(),
+                "the cues sent after the resume are exactly the ones still ahead, at the plan's own landing times, each once");
+
+            // touch against sight: every one left within a frame of (plan time - lead), and in SYNC the plan time IS the brush pass
+            var resent = f.Cues.Where(r => r.Cue == "stroke" && r.SentMs.HasValue && r.SentMs.Value >= resumedAt).ToList();
+            Assert.AreEqual(ahead.Count, resent.Count);
+            foreach (var r in resent)
+            {
+                double late = r.SentMs.Value - (r.PlayAtMs.Value - f.Lead);
+                Assert.GreaterOrEqual(late, 0.0, "never early");
+                Assert.Less(late, Fx.FrameMs + 1e-6, "within one frame of its plan time");
+            }
+            var events = f.StrokeEvents();
+            var indices = events.Select(e => Fx.Data(e)["index"].Value<int>()).ToList();
+            Assert.AreEqual(indices.Count, indices.Distinct().Count(), "one stroke event per stroke");
+            int nullErr = 0;
+            foreach (var e in events.Where(e => e.TMs >= resumedAt))
+            {
+                var d = Fx.Data(e);
+                if (d["timing_err_ms"].Type == JTokenType.Null) { nullErr++; continue; }   // a cue due while paused is never sent late
+                double err = d["timing_err_ms"].Value<double>();
+                Assert.GreaterOrEqual(err, 0.0);
+                Assert.Less(err, Fx.FrameMs + 1e-6, "SYNC touch lands with the visual pass, as before the pause");
+            }
+            Assert.LessOrEqual(nullErr, 1, "at most the one stroke the resume cut through has a missing send time");
+        }
+
+        [Test]
+        public void ResumeWithoutAStop_QueuesNothingTwice()
+        {
+            var f = new Fx(Sync);
+            f.ToInduction();
+            f.RunTo(f.M.InductionStartMs + 3000);
+            f.M.Pause();                                   // the module is paused but nobody cancelled the sleeve queue
+            int pending = f.H.PendingStrokeCount;
+            Assert.Greater(pending, 0);
+            f.M.Resume();
+            Assert.AreEqual(pending, f.H.PendingStrokeCount, "no cue was cancelled, so none is scheduled again");
+            f.RunTo(f.M.CurrentStrokes.Last().EndMs + 1000);
+            var keys = f.Strokes().Select(Key).ToList();
+            Assert.AreEqual(keys.Count, keys.Distinct().Count(), "every cue went out exactly once");
+        }
+
+        [Test]
+        public void TwoPauses_EveryCueOutsideThePauseWindowsIsSentExactlyOnce_AndNoneInsideThem()
+        {
+            var f = new Fx(Sync);
+            f.ToInduction();
+            var windows = new List<double[]>();
+            foreach (double after in new[] { 4000.0, 9000.0 })
+            {
+                f.RunTo(f.M.InductionStartMs + after);
+                double from = f.Now;
+                f.Pause();
+                f.RunTo(f.Now + 2500);
+                f.M.Resume();
+                windows.Add(new[] { from, f.Now });
+            }
+            f.RunTo(f.M.CurrentStrokes.Last().EndMs + 1000);
+
+            var expected = new List<string>();
+            foreach (var s in f.M.CurrentStrokes)
+            {
+                if (!windows.Any(w => s.CueMotor0Ms - f.Lead > w[0] && s.CueMotor0Ms - f.Lead < w[1])) expected.Add(Key(0, s.CueMotor0Ms));
+                if (!windows.Any(w => s.CueMotor1Ms - f.Lead > w[0] && s.CueMotor1Ms - f.Lead < w[1])) expected.Add(Key(1, s.CueMotor1Ms));
+            }
+            CollectionAssert.AreEquivalent(expected, f.Strokes().Select(Key).ToList(), "sent exactly once outside the windows");
+            foreach (var w in windows)
+                Assert.IsFalse(f.Cues.Any(r => r.SentMs.HasValue && r.SentMs.Value > w[0] && r.SentMs.Value < w[1]), "nothing is sent while paused");
+        }
+
+        [Test]
+        public void AsyncStrokeCaughtByAShortPause_StillGetsItsStrokeEvent_OnceItsCuesGoOut()
+        {
+            var f = new Fx(Async);
+            f.ToInduction();
+            var k = f.M.CurrentStrokes[6];
+            f.RunTo(k.PassBMs + 50);                       // both passes are done; the two delayed cues (about 600 ms after the passes) are still queued
+            Assert.Greater(k.CueMotor0Ms - f.Lead, f.Now);
+            Assert.Greater(k.CueMotor1Ms - f.Lead, f.Now);
+
+            f.Pause();
+            f.RunTo(f.Now + 150);
+            Assert.AreEqual(0, f.StrokeEvents().Count(e => Fx.Data(e)["index"].Value<int>() == k.Index), "the paused module refuses stroke events");
+            f.M.Resume();
+            int ahead = f.M.CurrentStrokes.Sum(s => (s.CueMotor0Ms - f.Lead >= f.Now ? 1 : 0) + (s.CueMotor1Ms - f.Lead >= f.Now ? 1 : 0));
+            Assert.AreEqual(ahead, f.H.PendingStrokeCount, "every cue still ahead is queued again, the two of the stroke the pause cut through included");
+            f.RunTo(f.M.CurrentStrokes.Last().EndMs + 1500);
+
+            var mine = f.StrokeEvents().Select(Fx.Data).Where(d => d["index"].Value<int>() == k.Index).ToList();
+            Assert.AreEqual(1, mine.Count, "the stroke the pause cut through is recorded, once");
+            Assert.AreNotEqual(JTokenType.Null, mine[0]["cue_a_send_ms"].Type, "both cues were sent after the resume");
+            Assert.AreNotEqual(JTokenType.Null, mine[0]["cue_b_send_ms"].Type);
+            Assert.AreEqual(k.Swapped, mine[0]["swapped"].Value<bool>());
+            var all = f.StrokeEvents().Select(e => Fx.Data(e)["index"].Value<int>()).ToList();
+            Assert.AreEqual(all.Count, all.Distinct().Count(), "one stroke event per stroke");
+        }
+
+        [Test]
+        public void Begin_Twice_StillQueuesEachCueOnlyOnceOnResume()
+        {
+            var f = new Fx(Sync);
+            f.ToInduction();
+            f.D.Begin(f.Now);                              // the next induction / a restart: must not leave a second subscription behind
+            f.RunTo(f.M.InductionStartMs + 3000);
+            f.Pause();
+            f.RunTo(f.Now + 1000);
+            f.M.Resume();
+            int expected = f.M.CurrentStrokes.Sum(s => (s.CueMotor0Ms - f.Lead >= f.Now ? 1 : 0) + (s.CueMotor1Ms - f.Lead >= f.Now ? 1 : 0));
+            Assert.AreEqual(expected, f.H.PendingStrokeCount);
+        }
+
+        [Test]
+        public void AfterTheInductionEnded_AResumeSchedulesNothing()
+        {
+            var f = new Fx(Sync);
+            f.ToInduction();
+            f.RunTo(f.M.InductionStartMs + 3000);
+            f.Pause();
+            f.D.End(f.Now);                                // the presenter ends the driver when the phase leaves the induction
+            f.M.Resume();
+            Assert.AreEqual(0, f.H.PendingStrokeCount);
         }
     }
 }

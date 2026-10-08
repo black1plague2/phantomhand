@@ -9,6 +9,8 @@ namespace Opus.Games.PhantomHand.Presentation
     /// reports the MEASURED pass times and the haptic client the actual cue SENDS (HapticCueRecord.SentMs); once a stroke has both
     /// passes and both cues resolved it is submitted to the module as a stroke event. For SYNC the module computes
     /// timing_err_ms = send + lead - measured pass. OLED: "SYNC"/"ASYNC" at the start, "IDLE" at the end. Plain C#, no Unity types.
+    /// Pause + resume: pausing makes the shell call HapticClient.Stop, which cancels every queued cue. On the module's `resume`
+    /// event the cues that are still ahead are scheduled again at their original plan times (see <see cref="Reschedule"/>).
     /// </summary>
     public sealed class StrokeDriver
     {
@@ -17,6 +19,8 @@ namespace Opus.Games.PhantomHand.Presentation
             public StrokePlan Plan;
             public double? PassA, PassB, Send0, Send1;
             public bool Resolved0, Resolved1, Submitted;
+            public bool Cancelled0, Cancelled1;   // the cue was cancelled by HapticClient.Stop (a pause) and not yet scheduled again
+            public bool Refused;                  // the module refused the stroke event (it was paused): a cue scheduled again earns it another try
         }
 
         private readonly PhantomHandModule _module;
@@ -40,7 +44,8 @@ namespace Opus.Games.PhantomHand.Presentation
             End(nowMs, false);
             var plan = _module.CurrentStrokes;
             var p = _module.Params;
-            _recs.Clear(); _cues.Clear(); Submitted = 0;
+            _recs.Clear(); lock (_cues) _cues.Clear(); Submitted = 0;
+            _module.OnTrialEvent += OnModuleEvent;
             if (_haptic != null)
             {
                 _haptic.Enabled = p.HapticsEnabled;
@@ -54,8 +59,11 @@ namespace Opus.Games.PhantomHand.Presentation
                 if (_haptic == null) { r.Resolved0 = r.Resolved1 = true; continue; }
                 string id0 = _haptic.ScheduleStroke(0, s.CueMotor0Ms, p.TactileLeadMs);
                 string id1 = _haptic.ScheduleStroke(1, s.CueMotor1Ms, p.TactileLeadMs);
-                _cues[id0] = new KeyValuePair<int, int>(s.Index, 0);
-                _cues[id1] = new KeyValuePair<int, int>(s.Index, 1);
+                lock (_cues)
+                {
+                    _cues[id0] = new KeyValuePair<int, int>(s.Index, 0);
+                    _cues[id1] = new KeyValuePair<int, int>(s.Index, 1);
+                }
             }
             if (_brush != null)
             {
@@ -85,6 +93,7 @@ namespace Opus.Games.PhantomHand.Presentation
         public void End(double nowMs, bool showIdle = true)
         {
             if (!_active) return;
+            _module.OnTrialEvent -= OnModuleEvent;
             if (_haptic != null)
             {
                 _haptic.CancelPendingStrokes();
@@ -96,7 +105,8 @@ namespace Opus.Games.PhantomHand.Presentation
             _active = false;
         }
 
-        private void OnPass(int stroke, int slot, double ms)
+        /// <summary>A measured brush pass (BrushRig.OnPass is wired to this). Public so a test or preview can report passes without a BrushRig.</summary>
+        public void OnPass(int stroke, int slot, double ms)
         {
             Rec r;
             if (!_recs.TryGetValue(stroke, out r)) return;
@@ -106,11 +116,49 @@ namespace Opus.Games.PhantomHand.Presentation
         private void OnCue(HapticCueRecord rec)
         {
             KeyValuePair<int, int> key;
-            if (rec.Cue != "stroke" || rec.CueId == null || !_cues.TryGetValue(rec.CueId, out key)) return;
+            if (rec.Cue != "stroke" || rec.CueId == null) return;
+            lock (_cues) { if (!_cues.TryGetValue(rec.CueId, out key)) return; }   // acks arrive on the receive thread, Requeue adds on the main thread
             Rec r;
             if (!_recs.TryGetValue(key.Key, out r)) return;
-            if (key.Value == 0) { r.Send0 = rec.SentMs; r.Resolved0 = true; }
-            else { r.Send1 = rec.SentMs; r.Resolved1 = true; }
+            bool cancelled = rec.Reason == "cancelled";
+            if (key.Value == 0) { r.Send0 = rec.SentMs; r.Resolved0 = true; r.Cancelled0 = cancelled; }
+            else { r.Send1 = rec.SentMs; r.Resolved1 = true; r.Cancelled1 = cancelled; }
+        }
+
+        private void OnModuleEvent(TrialEvent e)
+        {
+            if (e.Type == "resume") Reschedule(e.TMs);
+        }
+
+        /// <summary>
+        /// Pause + resume. The pause makes the shell call HapticClient.Stop, which cancels every queued cue, and nothing queued
+        /// them again, so the touch ended with the pause. The brush is a pure function of the session clock and keeps its plan
+        /// through a pause, so every cancelled cue that is still ahead is scheduled again at its ORIGINAL plan time with the
+        /// same tactile lead: the touch stays exactly as far from the visual pass as the plan made it (SYNC: on it, ASYNC: the
+        /// delay). A cue whose moment passed during the pause is not sent late; it stays cancelled. Cues that were never
+        /// cancelled (still queued, or already sent) are left alone, so nothing is sent twice.
+        /// </summary>
+        private void Reschedule(double nowMs)
+        {
+            if (!_active || _haptic == null) return;
+            double lead = _module.Params.TactileLeadMs;
+            foreach (var s in _module.CurrentStrokes)
+            {
+                Rec r;
+                if (!_recs.TryGetValue(s.Index, out r)) continue;
+                if (r.Cancelled0) Requeue(r, 0, s.CueMotor0Ms, lead, nowMs);
+                if (r.Cancelled1) Requeue(r, 1, s.CueMotor1Ms, lead, nowMs);
+            }
+        }
+
+        private void Requeue(Rec r, int motor, double cueMs, double leadMs, double nowMs)
+        {
+            if (cueMs - leadMs < nowMs) return;   // its moment has passed: never send a touch late
+            string id = _haptic.ScheduleStroke(motor, cueMs, leadMs);
+            lock (_cues) _cues[id] = new KeyValuePair<int, int>(r.Plan.Index, motor);
+            if (motor == 0) { r.Cancelled0 = false; r.Resolved0 = false; r.Send0 = null; }
+            else { r.Cancelled1 = false; r.Resolved1 = false; r.Send1 = null; }
+            if (r.Refused) { r.Refused = false; r.Submitted = false; }
         }
 
         private void Submit(Rec r)
@@ -125,6 +173,7 @@ namespace Opus.Games.PhantomHand.Presentation
                 CueBSendMs = r.Send1,
                 Swapped = r.Plan.Swapped,
             })) Submitted++;
+            else r.Refused = true;
         }
     }
 }

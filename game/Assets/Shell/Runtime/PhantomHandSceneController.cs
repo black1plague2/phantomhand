@@ -385,6 +385,8 @@ namespace Opus.Shell
 
             _nodeA = new SleeveSensorClient(_transportA, _clock); _nodeA.Start();
             _nodeB = new SleeveSensorClient(_transportB, _clock); _nodeB.Start();
+            // Node B emg_burst -> events.ndjson (PRD 9.4, 03-SPEC 7); raised from SleeveSensorClient.Pump on the main thread
+            _nodeB.OnEmgBurst += b => module.SubmitEmgBurst(b.Peak, b.BaselineRms, b.DeviceMs);
             _haptic.StartKeepalive(_clock.NowMs);
 
             _cues = new HapticCueEventAdapter { Trial = () => _module != null ? _module.CurrentConditionIndex : null };

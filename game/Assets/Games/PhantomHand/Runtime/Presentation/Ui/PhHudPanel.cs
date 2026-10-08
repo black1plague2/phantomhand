@@ -10,7 +10,9 @@ namespace Opus.Games.PhantomHand.Presentation
     /// </summary>
     public sealed class PhHudPanel : MonoBehaviour
     {
-        public const float WidthMm = 360f, HeightMm = 200f, MainHeightMm = 112f;
+        // U4 fix (UiPanelTests.Hud_TextFits): the phase word and the time left are stacked instead of side by side ("Watch the hand" /
+        // "A few questions" and the HI words wrapped in the old 190 mm column), and the spectator block (3 lines, HI ~82 mm) gets a taller box.
+        public const float WidthMm = 360f, HeightMm = 260f, MainHeightMm = 144f;
 
         private GameObject _chipSleeve, _chipEmg, _spectatorBox, _pinchBar;
         private Text _chipSleeveText, _chipEmgText, _phase, _time, _spectator;
@@ -30,8 +32,8 @@ namespace Opus.Games.PhantomHand.Presentation
             PhUiKit.Box(rt, "AccentBar", 0, 0, WidthMm, 5, PhUiKit.Oxblood);
             _chipSleeve = Chip(rt, "ChipSleeve", 12, 14, 164, out _chipSleeveText);
             _chipEmg = Chip(rt, "ChipEmg", 184, 14, 164, out _chipEmgText);
-            _phase = PhUiKit.Label(rt, "Phase", "", 32, PhUiKit.Ink, 16, 56, 190, 48, TextAnchor.MiddleLeft, FontStyle.Bold);
-            _time = PhUiKit.Label(rt, "Time", "", 26, PhUiKit.InkDim, 206, 60, 142, 44, TextAnchor.MiddleRight);
+            _phase = PhUiKit.Label(rt, "Phase", "", 32, PhUiKit.Ink, 16, 54, WidthMm - 32, 48, TextAnchor.MiddleLeft, FontStyle.Bold);
+            _time = PhUiKit.Label(rt, "Time", "", 26, PhUiKit.InkDim, 16, 102, WidthMm - 32, 38, TextAnchor.MiddleLeft);
             var box = PhUiKit.Box(rt, "SpectatorBox", 0, MainHeightMm + 4, WidthMm, HeightMm - MainHeightMm - 4, PhUiKit.PanelBg);
             _spectatorBox = box.gameObject;
             _spectator = PhUiKit.Label(box.transform, "Spectator", "", 22, PhUiKit.Ink, 16, 8, WidthMm - 32, HeightMm - MainHeightMm - 20, TextAnchor.UpperLeft);

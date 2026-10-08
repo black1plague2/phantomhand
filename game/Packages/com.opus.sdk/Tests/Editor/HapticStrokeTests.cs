@@ -335,5 +335,218 @@ namespace Opus.Sdk.Tests
             Assert.IsFalse(c.SendDisplay("SYNC", 5000));
             Assert.AreEqual(1, t.Sent.Count);
         }
+
+        // ------------------------------------------------------------------ the electronics team's firmware as flashed (handoff 2026-10-08)
+
+        /// <summary>A client with one stroke cue sent and waiting for its ack, plus every record raised for it.</summary>
+        private static string PendingStroke(out HapticClient c, out FakeHapticTransport t, out List<HapticCueRecord> records)
+        {
+            c = Make(out t);
+            var list = new List<HapticCueRecord>();
+            c.OnCueRecorded += list.Add;
+            records = list;
+            string id = c.ScheduleStroke(0, 100, 0);
+            c.Pump(100);
+            return id;
+        }
+
+        private static string AckJson(string cueId, string fields) => "{\"type\":\"ack\",\"cue_id\":\"" + cueId + "\"" + fields + "}";
+
+        [Test]
+        public void Ack_RealFirmwareShape_AcceptedTrue_IsDeliveredWithLatency()
+        {
+            var clock = SessionClock.Manual(0);
+            var c = Make(out var t);
+            c.Clock = () => clock.NowMs;
+            var recs = new List<HapticCueRecord>();
+            c.OnCueRecorded += recs.Add;
+            string id = c.ScheduleStroke(0, 1000, 40);
+            clock.Advance(960);
+            c.Pump(clock.NowMs);
+            clock.Advance(14);
+
+            // the ack exactly as the electronics team documents it: boolean `accepted`, no `status`, no `ok`
+            t.Receive("{\"type\":\"ack\",\"device_id\":\"CHETNA_HAPTIC_001\",\"cue_id\":\"" + id + "\",\"accepted\":true,\"timestamp_ms\":123500}");
+
+            Assert.AreEqual(2, recs.Count, "raised again when the ack lands");
+            Assert.IsTrue(recs[0].Delivered);
+            Assert.AreEqual(14.0, recs[0].AckLatencyMs.Value, 1e-9);
+            Assert.IsNull(recs[0].Reason);
+        }
+
+        [Test]
+        public void Ack_EveryDialect_DeliveredAndReason()
+        {
+            // fields added to {"type":"ack","cue_id":...}; every status the SDK knew keeps working, `accepted` joins `executed`
+            var cases = new[]
+            {
+                new { Fields = ",\"accepted\":true", Delivered = true, Reason = (string)null },
+                new { Fields = ",\"accepted\":false", Delivered = false, Reason = "rejected" },
+                new { Fields = ",\"accepted\":false,\"error_code\":\"CUE_GAP\"", Delivered = false, Reason = "CUE_GAP" },
+                new { Fields = ",\"status\":\"accepted\"", Delivered = true, Reason = (string)null },
+                new { Fields = ",\"status\":\"executed\"", Delivered = true, Reason = (string)null },
+                new { Fields = ",\"status\":\"rejected\"", Delivered = false, Reason = "rejected" },
+                new { Fields = ",\"status\":\"error\",\"error_code\":\"INVALID_MOTOR\"", Delivered = false, Reason = "INVALID_MOTOR" },
+                new { Fields = ",\"status\":\"mystery\"", Delivered = false, Reason = "mystery" },
+                new { Fields = ",\"status\":\"accepted\",\"ok\":true", Delivered = true, Reason = (string)null },
+                new { Fields = ",\"status\":\"rejected\",\"ok\":false,\"error_code\":\"DUTY_CYCLE_LIMIT\"", Delivered = false, Reason = "DUTY_CYCLE_LIMIT" },
+                new { Fields = ",\"ok\":true", Delivered = true, Reason = (string)null },
+                new { Fields = ",\"ok\":false", Delivered = false, Reason = "rejected" },
+                new { Fields = "", Delivered = true, Reason = (string)null },
+            };
+            foreach (var k in cases)
+            {
+                string id = PendingStroke(out var c, out var t, out var recs);
+                t.Receive(AckJson(id, k.Fields));
+                Assert.AreEqual(2, recs.Count, k.Fields);
+                Assert.AreEqual(k.Delivered, recs[0].Delivered, k.Fields);
+                Assert.AreEqual(k.Reason, recs[0].Reason, k.Fields);
+            }
+        }
+
+        [Test]
+        public void Ack_V1Dialect_AckIdAndOk_StillWorks()
+        {
+            string id = PendingStroke(out var c, out var t, out var recs);
+            t.Receive("{\"v\":1,\"type\":\"ack\",\"id\":\"x\",\"ts_ms\":1,\"ack_id\":\"" + id + "\",\"ok\":true}");
+            Assert.IsTrue(recs[0].Delivered);
+
+            id = PendingStroke(out c, out t, out recs);
+            t.Receive("{\"v\":1,\"type\":\"ack\",\"id\":\"x\",\"ts_ms\":1,\"ack_id\":\"" + id + "\",\"ok\":false}");
+            Assert.IsFalse(recs[0].Delivered);
+            Assert.AreEqual("rejected", recs[0].Reason);
+        }
+
+        [Test]
+        public void Ack_WithOddlyTypedFields_NeverThrows_AndFallsBackToTheReceiptRule()
+        {
+            string id = PendingStroke(out var c, out var t, out var recs);
+            Assert.DoesNotThrow(() => t.Receive(AckJson(id, ",\"ok\":{\"x\":1},\"accepted\":\"yes\",\"status\":5")));
+            Assert.IsTrue(recs[0].Delivered, "none of the three fields is usable: a plain receipt");
+        }
+
+        [Test]
+        public void Ack_ForACueNobodySent_IsIgnored()
+        {
+            PendingStroke(out var c, out var t, out var recs);
+            int before = recs.Count;
+            t.Receive(AckJson("stroke_999", ",\"accepted\":true"));
+            Assert.AreEqual(before, recs.Count);
+        }
+
+        [Test]
+        public void Keepalive_AlsoSendsTheBareKeepaliveDatagramOncePerSecond()
+        {
+            var c = Make(out var t);
+            c.StartKeepalive(0);
+            for (double now = 0; now < 10000; now += 50) c.Pump(now);
+
+            Assert.AreEqual(10, OfType(t, "keepalive").Count);
+            Assert.AreEqual(10, OfType(t, "ping").Count, "ping + subscribe go on unchanged");
+            Assert.AreEqual(10, OfType(t, "subscribe").Count);
+            CollectionAssert.AreEqual(Enumerable.Repeat("{\"type\":\"keepalive\"}", 10).ToArray(),
+                                      t.Sent.Where(s => s.Contains("keepalive")).ToArray(), "the bare form, nothing else in the datagram");
+            Assert.IsEmpty(OfType(t, "stop"), "a keepalive never counts as a cue for the software watchdog");
+
+            c.StopKeepalive();
+            int before = t.Sent.Count;
+            for (double now = 10000; now < 12000; now += 50) c.Pump(now);
+            Assert.AreEqual(before, t.Sent.Count, "stops with StopKeepalive");
+        }
+
+        [Test]
+        public void Keepalive_GoesOnForASilentNode_SoItCanReattach()
+        {
+            var c = Make(out var t);
+            c.StartKeepalive(0);
+            const string status = "{\"type\":\"status\",\"device_id\":\"CHETNA_HAPTIC_001\"}";
+            c.Pump(0);
+            t.Receive(status);                                                  // heard at t = 0
+            double now = 0;
+            for (; now <= 3000; now += 100) c.Pump(now);
+            Assert.AreEqual(4, OfType(t, "keepalive").Count, "t = 0, 1, 2, 3 s");
+
+            for (; now <= 8000; now += 100) c.Pump(now);                        // silent since t = 0
+            Assert.AreEqual(9, OfType(t, "keepalive").Count, "t = 0..8 s: a silent (power-cycled) node still gets one per second");
+            Assert.AreEqual(9, OfType(t, "ping").Count);
+            Assert.AreEqual(9, OfType(t, "subscribe").Count);
+        }
+
+        [Test]
+        public void Keepalive_NotSentWhileNoDeviceIsKnown_AndStartsWhenOneAppears()
+        {
+            var c = Make(out var t);
+            t.HasDevice = false;
+            c.StartKeepalive(0);
+            for (double now = 0; now < 3000; now += 100) c.Pump(now);
+            Assert.IsEmpty(OfType(t, "keepalive"));
+
+            t.HasDevice = true;
+            for (double now = 3000; now < 3900; now += 100) c.Pump(now);
+            Assert.AreEqual(1, OfType(t, "keepalive").Count, "the next second boundary after a device appears");
+        }
+
+        [Test]
+        public void Keepalive_PumpOnlyEnqueues_SoARealTransportNeverBlocksTheGameThread()
+        {
+            // 192.0.2.1 is the documentation range: nobody answers. The transport queues the datagram and a worker writes it.
+            using (var transport = new UdpHapticTransport("192.0.2.1", commandPort: 9, discoveryPort: 28840))
+            {
+                var c = new HapticClient(transport) { Enabled = true };
+                transport.Start();
+                c.StartKeepalive(0);
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                for (double now = 0; now < 30000; now += 20) c.Pump(now);      // 30 s of game time
+                sw.Stop();
+                Assert.Less(sw.ElapsedMilliseconds, 2000, "1500 frames with keepalive traffic took " + sw.ElapsedMilliseconds + " ms");
+            }
+        }
+
+        [Test]
+        public void Display_CarriesTheSameLineInTextAndMode()
+        {
+            var c = Make(out var t);
+            Assert.IsTrue(c.SendDisplay("SYNC", 0));
+            var d = OfType(t, "display")[0];
+            Assert.AreEqual("SYNC", d["text"].Value<string>(), "the contract fake reads text");
+            Assert.AreEqual("SYNC", d["mode"].Value<string>(), "the real firmware reads mode");
+            Assert.AreEqual(new[] { "type", "text", "mode" }, d.Properties().Select(p => p.Name).ToArray(), "nothing else rides along");
+
+            Assert.IsTrue(c.SendDisplay("ASYNC CONDITION LONG", 600));
+            var l = OfType(t, "display")[1];
+            Assert.AreEqual("ASYNC CONDIT", l["text"].Value<string>());
+            Assert.AreEqual("ASYNC CONDIT", l["mode"].Value<string>(), "the same 12-character, printable-ASCII line in both");
+
+            Assert.IsTrue(c.SendDisplay("SéYN\tC\n", 1200));
+            Assert.AreEqual("SYNC", OfType(t, "display")[2]["mode"].Value<string>());
+
+            Assert.IsTrue(c.SendDisplay("", 1800));
+            var e = OfType(t, "display")[3];
+            Assert.AreEqual("", e["text"].Value<string>(), "empty stays empty in text (the contract says the device shows IDLE)");
+            Assert.AreEqual("", e["mode"].Value<string>());
+        }
+
+        [Test]
+        public void Stroke_ScheduledAgainAfterStop_IsSentAtTheOriginalPlayAt()
+        {
+            // What the pause/resume fix in StrokeDriver relies on: Stop() cancels the queue but leaves the client usable.
+            var c = Make(out var t);
+            var recs = new List<HapticCueRecord>();
+            c.OnCueRecorded += recs.Add;
+            string first = c.ScheduleStroke(0, 5000, 40);
+            c.Pump(1000);
+            c.Stop();                                                    // the pause
+            Assert.AreEqual(0, c.PendingStrokeCount);
+            Assert.AreEqual("cancelled", recs.Single(r => r.CueId == first).Reason);
+
+            string again = c.ScheduleStroke(0, 5000, 40);                // the resume: same landing time, new cue id
+            Assert.AreNotEqual(first, again);
+            c.Pump(4959);
+            Assert.IsEmpty(Strokes(t));
+            c.Pump(4960);
+            var s = Strokes(t).Single();
+            Assert.AreEqual(again, s["cue_id"].Value<string>());
+            Assert.AreEqual(5000, s["play_at_ms"].Value<long>());
+        }
     }
 }

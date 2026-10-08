@@ -101,7 +101,7 @@ namespace Opus.Shell.Tests
             Assert.AreEqual(400.0, (double)tr["t0_ms"], 1e-9);
             var e = (JArray)tr["emg_env"];
             Assert.AreEqual(10, e.Count);
-            Assert.AreEqual(422.5, (double)e[0], 0.1, "mean of the samples at 400..440 ms");
+            Assert.AreEqual(420.0, (double)e[0], 0.1, "mean of the five 100 Hz samples at 400, 410, 420, 430, 440 ms = 420 (bin [400, 450))");
             Assert.AreEqual(9.8, (double)((JArray)tr["accel_mag"])[3], 1e-6);
             // second call: continues exactly where the first stopped, no overlap
             var tr2 = d.Build(Series(900, 1500, 10, t => t), Series(900, 1500, 10, t => 9.8), 1500);
