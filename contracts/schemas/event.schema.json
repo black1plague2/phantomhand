@@ -91,7 +91,7 @@
       "required": ["data"],
       "properties": { "data": { "type": "object", "required": ["impact_ms", "impact_pos", "ok"], "properties": {
         "impact_ms": { "type": "number", "minimum": 0, "description": "session ms of stone contact; the 1.5 s response window starts here" },
-        "impact_pos": { "$ref": "#/$defs/vec3" },
+        "impact_pos": { "$ref": "#/$defs/vec3OrNull", "description": "meters, calibration space; null when the arm was never calibrated (the operator skipped the calibration, or it failed): ok is false then" },
         "ok": { "type": "boolean", "description": "false if the stone missed the virtual hand" }
       } } } } },
 
