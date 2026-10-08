@@ -213,6 +213,33 @@ namespace Opus.Shell
 
         private void OnApplicationQuit() => OnDestroy();
 
+        private bool _slept, _pausedByHeadset;
+
+        /// <summary>
+        /// The headset was taken off (true) or put on again (false). Phantom Hand only.
+        /// A run does not go on without its participant: the phases run on wall time, and on the first headset night (8 Oct 2026) a
+        /// run that sat 7 minutes off the head ended as "completed" within a second of waking, every remaining phase expired at once.
+        /// So the run is paused the way the operator's Pause does it, and resumed on waking unless the operator paused it.
+        /// The link to the hub is rebuilt on waking: a hub that missed our pongs while we slept has written this headset off, although
+        /// the socket still carries our messages (the operator's card showed "offline" for a headset that was running).
+        /// </summary>
+        private void OnApplicationPause(bool paused)
+        {
+            if (!_driveSession || _orchard != null) return;
+            if (paused)
+            {
+                _slept = true;
+                if (CurrentPhase == Phase.Running) { _host.PauseSession(); CurrentPhase = Phase.Paused; _pausedByHeadset = true; }
+                return;
+            }
+            if (!_slept) return;   // Unity also reports "not paused" once at start
+            _slept = false;
+            _client?.Reconnect();
+            if (_pausedByHeadset && CurrentPhase == Phase.Paused) { _host.ResumeSession(); CurrentPhase = Phase.Running; }
+            _pausedByHeadset = false;
+            Debug.Log("[OPUS] headset back on: link to the hub rebuilt" + (CurrentPhase == Phase.Running ? ", run resumed" : ""));
+        }
+
         // ---- per frame ---------------------------------------------------------------------------------
 
         private void Update()

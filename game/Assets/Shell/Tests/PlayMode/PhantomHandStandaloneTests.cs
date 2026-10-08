@@ -99,6 +99,43 @@ namespace Opus.Shell.Tests.PlayMode
             Assert.IsFalse((bool)running.GetValue(client), "the launch scene's hub client is still running after the game scene opened");
         }
 
+        /// <summary>Taking the headset off pauses the run and putting it on again resumes it: the phase and its time left stand still in
+        /// between. On the first headset night a run that sat off the head for 7 minutes ended as "completed" the moment it woke.</summary>
+        [UnityTest, Timeout(240000)]
+        public IEnumerator PH_Standalone_TakingTheHeadsetOff_PausesTheRun()
+        {
+            yield return OpenScene();
+            var controller = _controller; var runner = _runner;
+            runner.StartSession("test: as the both-hands pinch does");
+            float t0 = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup - t0 < 90f && (controller.Module == null || Opus.Games.PhantomHand.PhNames.Of(controller.Module.CurrentPhase) != "induction"))
+                yield return null;
+            Assert.AreEqual("induction", Opus.Games.PhantomHand.PhNames.Of(controller.Module.CurrentPhase), "the run never reached the induction");
+            yield return new WaitForSecondsRealtime(1.0f);
+
+            runner.SendMessage("OnApplicationPause", true);
+            Assert.AreEqual(OpusSessionRunner.Phase.Paused, runner.CurrentPhase, "headset off: the run is paused");
+            double left = controller.Module.RemainingS(controller.Clock.NowMs);
+            yield return new WaitForSecondsRealtime(4.0f);
+            Assert.AreEqual("induction", Opus.Games.PhantomHand.PhNames.Of(controller.Module.CurrentPhase), "the phase must not move while the headset is off");
+            Assert.AreEqual(left, controller.Module.RemainingS(controller.Clock.NowMs), 0.05, "the time left in the phase must stand still while the headset is off");
+
+            runner.SendMessage("OnApplicationPause", false);
+            Assert.AreEqual(OpusSessionRunner.Phase.Running, runner.CurrentPhase, "headset on again: the run goes on");
+            yield return new WaitForSecondsRealtime(2.0f);
+            Assert.That(controller.Module.RemainingS(controller.Clock.NowMs), Is.InRange(left - 3.5, left - 1.0),
+                "2 s after waking 2 s of the phase have passed, not also the 4 s the headset was off");
+
+            // A pause the operator asked for is not undone by taking the headset off and putting it on.
+            controller.PauseSession();
+            typeof(OpusSessionRunner).GetProperty("CurrentPhase").SetValue(runner, OpusSessionRunner.Phase.Paused);
+            runner.SendMessage("OnApplicationPause", true);
+            runner.SendMessage("OnApplicationPause", false);
+            Assert.AreEqual(OpusSessionRunner.Phase.Paused, runner.CurrentPhase, "the operator's pause must survive the headset coming off and on");
+
+            runner.FinishSession("stopped_by_patient", upload: false);
+        }
+
         /// <summary>The card a person sees before a run, as text and as a picture (sim/out/quest_diag/ready_card.png) for a person to look at.</summary>
         [UnityTest, Timeout(120000)]
         public IEnumerator PH_Standalone_ReadyCard_SaysWhatIsMissingAndHowToStart()

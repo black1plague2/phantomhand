@@ -117,6 +117,13 @@ namespace Opus.Sdk
 
         public void Dispose() => Stop();
 
+        /// <summary>Drops the socket; the connection loop reconnects and replays (the outbox is kept). For a link that slept through the
+        /// hub's pings (a headset that was taken off): it still works from this side while the hub has written the headset off.</summary>
+        public void Reconnect()
+        {
+            try { _ws?.Abort(); } catch { /* best-effort */ }
+        }
+
         /// <summary>Call once per frame (e.g. MonoBehaviour.Update). Drains main-thread work and sends
         /// periodic status/ping. All timing uses <paramref name="nowMs"/> so tests can drive it deterministically.</summary>
         public void Pump(double nowMs)
