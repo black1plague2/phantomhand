@@ -163,6 +163,55 @@ void main() {
     });
   });
 
+  group('HubConnection liveness', () {
+    test('a headset that misses 3 pongs is disconnected AND its socket is closed', () async {
+      final fake = FakeLiveSocket();
+      final conn = HubConnection(
+        deviceId: 'headset-asleep',
+        socket: fake,
+        pairToken: '123456',
+        incoming: fake.incoming,
+        pingInterval: const Duration(milliseconds: 20),
+      );
+      var disconnected = 0;
+      conn.onDisconnected.listen((_) => disconnected++);
+      final deadline = DateTime.now().add(const Duration(seconds: 3));
+      while (!fake.closed && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+      expect(disconnected, 1, reason: 'the hub writes the headset off after 3 unanswered pings');
+      // The socket must go with it: a headset that was only asleep keeps its
+      // end open and would otherwise go on talking to a hub that shows it as
+      // offline. A closed socket makes it reconnect and say hello again.
+      expect(fake.closed, isTrue);
+      expect(fake.sent.where((m) => m['type'] == 'ping'), hasLength(3));
+    });
+
+    test('a headset that answers its pings stays connected', () async {
+      final fake = FakeLiveSocket();
+      final conn = HubConnection(
+        deviceId: 'headset-awake',
+        socket: fake,
+        pairToken: '123456',
+        incoming: fake.incoming,
+        pingInterval: const Duration(milliseconds: 20),
+      );
+      var answered = 0;
+      final deadline = DateTime.now().add(const Duration(milliseconds: 400));
+      while (DateTime.now().isBefore(deadline)) {
+        final pings = fake.sent.where((m) => m['type'] == 'ping').toList();
+        while (answered < pings.length) {
+          fake.receive(headsetMessage(type: 'pong', id: 'pong-$answered', seq: answered, payload: {'echo_ts_ms': 0}));
+          answered++;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+      expect(fake.closed, isFalse);
+      expect(answered, greaterThan(5));
+      await conn.close();
+    });
+  });
+
   group('validateLiveMessage', () {
     test('rejects a message missing required top-level fields', () {
       expect(validateLiveMessage({}), isNotNull);

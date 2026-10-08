@@ -252,7 +252,13 @@ class HubConnection {
   void _sendPing() {
     if (_closed) return;
     if (_missedPongs >= maxMissedPongs) {
-      _onDone();
+      // Close the socket too. A headset that was only asleep (taken off) keeps
+      // its end open and goes on sending when it wakes; with the socket left
+      // open the hub had written it off and still received its statuses, and
+      // the operator's card showed "offline" for a headset that was running
+      // (first headset night, 8 Oct 2026). A closed socket makes it say hello
+      // again.
+      unawaited(close());
       return;
     }
     _lastPingSentAt = DateTime.now();
