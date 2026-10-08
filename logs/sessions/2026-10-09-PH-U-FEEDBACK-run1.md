@@ -1,4 +1,4 @@
-# PH-U-FEEDBACK run 1 (2026-10-09, 00:15 to 01:30 IST, orchestrating session on the build PC): the owner's five points after the first runs in the headset
+# PH-U-FEEDBACK run 1 (2026-10-09, 00:15 to 02:20 IST, orchestrating session on the build PC): the owner's five points after the first runs in the headset
 
 The owner, after wearing the headset for the runs of PH-U-DIAG-run1, asked for five things: (1) both hands possible, one at a
 time, and for now the LEFT; (2) the camera at eye level by default; (3) the questions answerable by hand ("when the question is
@@ -19,6 +19,12 @@ headset can still show. Tags: **[V]** verified here with the command named, **[N
 Commits: 8184943 (interface), f30d4ff (left arm, fingertip press), c5307bc (seat, calibration, joints), 7b67165 (EMG plot),
 and the commit of the hand pose after it. EditMode 855/855; PlayMode `"PhantomHand|PH_"` 30/30 at c5307bc (589 s), run again
 after the hand pose: section 6.
+
+**Update, 02:20 (sections 9 to 13).** Point 4 has now been seen on the phone with data arriving live from a run (simulated
+muscle data). The phone's hub no longer stops when another app takes the screen (the cause of the lost headset every ten
+minutes was found on the phone and worked around in the app). A whole run of the game in the editor passed with the phone
+as its hub. The virtual hand now also turns palm up. Points 1, 2, 3 and 5 are still unseen on a headset: the Quest lay
+asleep, listed `unauthorized` by adb, all night; the build that carries them (section 12) is waiting for it.
 
 ## 1. The left arm
 The game was written for a right arm: the real arm rests at +x, the virtual one 15 cm toward the middle, the left index points
@@ -99,17 +105,102 @@ the EMG plot, the hub's two fixes and the manifest with "Which arm: left / right
    must come back to the same seat.
 2. The Ready card: "Sleeve arm: left".
 3. Calibration: the LEFT forearm in the outline (it is on the left now); the virtual arm lies where the real arm is and turns
-   with it; the fingers copy the real ones (a flat hand must look flat); after 2 s "done", and the room may glide a few
-   centimetres up or down.
+   with it; the fingers copy the real ones (a flat hand must look flat; turned palm up, the virtual hand turns too);
+   after 2 s "done", and the room may glide a few centimetres up or down.
 4. The dark probe: point with the RIGHT index finger.
 5. The induction: the virtual arm now lies to the right of the real one, flat and still; strokes on the sleeve.
 6. The questions: touch a number with a fingertip, or hold the fingertip over it for half a second; a dot shows the fingertip.
 7. On the phone: the muscle trace with its own axis, a dashed rest line, "x resting".
 
 ## 8. Not done
-- Nothing of this has run on a headset or a phone yet.
+- Nothing of this has run on a headset yet. (The phone: sections 9 and 10.)
 - A left-arm run recorded as left: `session.json` carries `stimulated_side` in its block's parameters; the analytics and the
   report do not use the side.
 - The Hindi strings were not touched; the Ready card and the hints of this night are English only.
-- The hand's wrist turns, the forearm does not: a hand rolled over (palm up) is limited to 75 degrees and twists at the wrist seam.
+- The hand's wrist turns, the forearm does not. Until c6ab2da a hand rolled over (palm up) stopped at 75 degrees; since then
+  it turns all the way, at the wrist seam (section 11).
 - The poke wiring of the panels (`AttachPoke`) is still there and still unused.
+
+## 9. After 01:30: why the phone lost the headset every ten minutes, and what the app does about it
+**Found on the phone.** Its own logs (`adb logcat -b events` and `-b system`) hold, every ten minutes from 23:23:06 to
+01:33:07 (14 entries), then seen live at 01:43:07, 01:53:07 and 02:03:06:
+`START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=<another app>} ... from uid 0`.
+A root job on the phone opens another app (the owner knows which) every ten minutes. Whatever had the screen goes to the
+background.
+
+**What that did to the hub.** Measured on the app build of 01:09 (Monitor open, the hub answering, then Home at 01:46:05):
+the hub answered at 0 s, no longer at 8 s, and not once in the 95 s watched; Android logged `am_freeze` for the app. A
+headset sees that as an operator app that is gone until somebody opens the app again. PH-U-DIAG-run1 (section 6) put the
+evening's lost hub down to a dozing phone. Whether that loss was a doze or this job cannot be told any more (the phone's
+log buffer starts at 23:23); from 23:23 on the phone was awake each time and the app was merely not in front. [V for the
+measurement; the link to the earlier loss is an inference]
+
+**What the app does now (commit 1671759).** While the hub runs, a foreground service (`HubKeepAliveService.kt`, type
+connectedDevice) keeps the process in the foreground class and holds a partial wake lock (12 h ceiling), so the hub goes
+on answering behind another app and with the screen off. `HubController` starts and stops it over one method channel.
+Its notice, "Chetna: the hub is running", is only shown when notifications are allowed for the app (not asked for); the
+service runs either way. Flutter 526/526.
+
+**Measured after** (installed 01:48:04): `dumpsys activity services` shows `isForeground=true types=0x00000010`, the wake
+lock `opus:hub` is held. Home at 01:48:32: every poll answered for the 67 s watched (process state 4, no freeze). Then one
+poll every 2 s from 01:50:02 to 02:05:01: 366 of 366 answered, with that other app on the screen from 01:53:07 to
+01:57:37 and again from 02:03:06 (`sim/out/quest_diag/hub_keepalive_poll.txt`). [V]
+
+**Not touched:** the root job. It is the owner's, and the operator app no longer needs it gone. After each install the app
+starts at "Sign in": Clinician, then the Monitor tab, starts the hub.
+
+## 10. One whole run of the game with the phone as its hub (01:57 to 02:02)
+`tools/demo/unity_phone_hub_run.py 192.168.242.162:8787 sim/out/phone_hub_run1 164cd676 twin` plays `PH_FullRun` in the
+open editor (the game as it runs on the headset, the scripted participant with its fingertip answers and whole hand)
+against the operator app on the phone; with `twin` the two boards are the simulated pair on the PC, so no motor ran.
+- The test passed (1/1, 288.7 s); the session it wrote validates (`contracts/validate.py` exit 0), analytics exit 0. [V]
+- The phone's hub answered 264 of 264 polls, had the headset connected in every poll from 73.5 s to 280.9 s, and reported
+  the 14 phases in order. The run began with the other app on the phone's screen: the hub took the game's connection
+  from the background. [V]
+- The live card on the phone (pictures in `sim/out/phone_hub_run1/`, git-ignored): "Brush and touch", ASYNC, the time
+  left, "Sleeve: Connected", "Muscle sensor: Connected", the link at 3 to 6 ms. Below it the muscle trace: its axis ran
+  from 190 to 2760 for the simulated bursts, "6.0x resting" beside the value, a marker at each burst. [V: `phone_095s.png`,
+  `phone_scrolled_1.png`, looked at] That is point 4 on the real phone with data arriving live. The muscle data was
+  simulated; a person's signal has not been on this plot yet.
+- It left one more session in the phone's list: `39a744a7-...`, from a device named `editor-...`. It is simulated.
+- The tool saves a picture only while the operator app has the screen, and asks the app back to the front otherwise.
+
+## 11. The hand turns palm up (commit c6ab2da)
+Until 01:50 the hand followed the real hand's orientation up to 75 degrees in any direction, so a hand turned palm up
+stopped a quarter of the way: the first thing a person tries. `VirtualArmRig.SetHandOrientation` now splits the turn in
+two: the part about the forearm's own axis (palm up, thumb up) is followed all the way round, the bend away from that axis
+keeps the 75 degree limit (a bad frame still cannot fold the hand back over the arm). The forearm itself does not turn;
+the seam lies under the sleeve's cuff. [V: `HandMimicPictureTests`, both arms: palm up, thumb up, palm up and lifted;
+`sim/out/quest_diag/hand_poses_left.png` and `_right.png`, now seven poses, looked at: the palm shows, the thumb changes
+sides as it should]
+
+A cross-check that was missing: the editor's scripted whole hand is drawn from anatomy (the thumb on the body's side, the
+fingers closing toward the table), the solver was written from the tracked hand's side. `ScriptedHands_WholeHand_
+ReadsAsFlatPalmDown_ThenAsAFist` feeds one to the other on either arm: back of the hand up, every finger joint 0 +/- 1.5
+degrees when flat, 80 / 95 / 60 +/- 6 as a fist. A sign the two did not share would have bent the fingers backwards on the
+headset too. EditMode 857/857. [V]
+
+## 12. Builds at 02:10 (they replace the table of section 6; none of the game builds has been installed on the Quest)
+
+| File | Built | Bytes | sha256 | Where it is |
+|---|---|---|---|---|
+| `releases/game/0.1.0/chetna-phantom-hand.apk` | 02:03 to 02:07 from c6ab2da, `result=Succeeded` | 91 873 506 | `a0f59ad079c71fe8e8c9563f99316cd2e9c66408ae2675e1e6ff92062c223a1d` | on this PC only |
+| `releases/app/1.0.0/chetna-operator-app-pc.apk` | 01:44 from the tree of 1671759 | 65 706 328 | `36c41e87e187d9e83c9cb112ba117641fbc2b9879021e7c62eab12343eece34a` | on the team phone since 01:48:04 |
+| `releases/app/1.0.0/chetna-operator-app.apk` | 02:05 from 1671759 | 65 706 316 | `3dd0004ab10e16e98bc7d880fa4d51b916c16aefff000dd7ce04d1f6223689b6` | on this PC only |
+
+The game APK: the bridge token 0 hits in 875 entries, this PC's address 0 hits; `PhFingerTouch`, `PhHandPoseSolver`, `PhSeat`,
+`stimulated_side`, "Sleeve arm" and `TryGetSkeleton` are in it. The file of 01:34 (`a5ff2b58...7664`, the same without the
+palm-up turn) is kept beside it as `.apk.prev`. The phone APKs of 01:09 are in `releases/app/1.0.0/old/`.
+The Quest still runs the build of 23:12 on 8 Oct, which has none of the five points. With the new phone app that old build
+still starts a run (an unknown `stimulated_side` is a warning, not a refusal), on the right arm.
+
+## 13. What is left, and who can do it
+1. **Install the game build.** Only with the headset awake: adb lists it as `unauthorized` while it sleeps. Put it on with
+   the cable in, accept the debugging prompt if one shows. A watcher on this PC is waiting for that moment
+   (`adb get-state`), the orchestrating session then installs and starts the build.
+   By hand: `adb -s 2G97C5ZH4T02Q7 install -r releases\game\0.1.0\chetna-phantom-hand.apk`.
+2. **Look at points 1, 2, 3 and 5 in the headset**, in the order of section 7. Added to step 3 of that list: turn the hand
+   palm up; the virtual hand must turn with it.
+3. **A person's muscle signal on the phone's trace.** The plot was seen with simulated bursts only; the sensor on a person
+   gave 1.39 times rest for its one event on 8 Oct (PH-U-DIAG-run1), which is a matter of the electrodes, not of the plot.
+4. Unchanged from section 8: Hindi for the night's new strings, the side in analytics and the report, the unused poke wiring.

@@ -149,9 +149,14 @@ Format: `YYYY-MM-DD | track | model | summary | commit/tag`
 2026-10-08 | PH-A | sonnet+opus | The hub's discovery beacon replaces its own socket (silent after the phone had dozed while HTTP answered). Nine tests, Flutter 505/505. 21c42d5
 2026-10-08 | PH-O | opus | One whole run through headset, both boards and the phone, the Quest on battery: 113 of 113 sent strokes acked (median 45 ms, 95 % under 285 ms), EMG 99.8 Hz and IMU 99.4 Hz recorded on the headset, 72 frames per second with 9 slow frames in 20 548, the session valid. PH-U-DIAG-run1 section 8
 
-## 2026-10-09, 00:15 to 01:30 IST: the owner's five points after the first headset runs (from `git log` and PH-U-FEEDBACK-run1)
+## 2026-10-09, 00:15 to 01:30 IST: the owner's five points after the first headset runs (from `git log` and PH-U-FEEDBACK-run1; continued to 02:20)
 2026-10-09 | PH-U | opus | The stimulated arm can be the left one, now the default (`stimulated_side`, three manifest copies); the layout, the virtual arm, the drift's sign and the scripted participant mirror. f30d4ff
 2026-10-09 | PH-U | opus | A tracked fingertip presses the questionnaire's buttons (touch, or 0.6 s over one): the scene has no poke interactor and draws no hands, so nothing could press them on the headset. f30d4ff
 2026-10-09 | PH-U | opus | The wearer is seated at the scene's eye point (the camera rig moves; also after the system's recentre); the calibration takes an arm at any table height, shows the arm where it really is, and moves the room to it. c5307bc
 2026-10-09 | PH-A | sonnet+opus | The live EMG trace follows the signal instead of a fixed 0 to 3000 axis; a rest line and "x resting". Flutter 526/526. 7b67165
 2026-10-09 | PH-U | sonnet+opus | The virtual hand copies the real one: 15 finger joints and the wrist from 21 tracked joints. EditMode 855/855, pose sheets looked at for both arms.
+2026-10-09 | PH-U | opus | The editor's scripted participant answers by fingertip and has a whole hand, so both new paths run end to end without a headset. 2a40bdd
+2026-10-09 | PH-A | opus | The phone's hub keeps answering while another app has the screen (a foreground service while the hub runs). Cause found on the team phone: a root job opens another app every 10 minutes and Android stopped serving the operator app within 8 s. After: 366 of 366 polls over 15 minutes. 1671759
+2026-10-09 | PH-U | opus | The virtual hand turns palm up and thumb up with the real one (only the bend at the wrist keeps its 75 degree limit); a cross-check of the scripted hand against the solver on either arm. EditMode 857/857. c6ab2da
+2026-10-09 | PH-S | opus | `tools/demo/unity_phone_hub_run.py`: the game in the editor with the phone as its hub, real or simulated boards. One run with the simulated pair: test passed, 14 phases, the hub answered 264 of 264 polls, the live card and the muscle trace seen on the phone. c6ab2da
+2026-10-09 | PH-O | opus | Quest release build 8 (02:07, from c6ab2da), not installed: the headset slept, `unauthorized` on adb, all night. PH-U-FEEDBACK-run1 sections 9 to 13
